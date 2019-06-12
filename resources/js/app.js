@@ -3,8 +3,11 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+// Import the vuex store with its modules for managing state
+import store from './store/store'
 
 window.Vue = require('vue');
+Vue.config.productionTip = false
 
 // Register all Vue components in the components file for global access and cleaner code
 require('./components.js');
@@ -16,5 +19,6 @@ require('./components.js');
  */
 
 const app = new Vue({
+    store,
     el: '#app',
 });

@@ -17,6 +17,9 @@
         <!-- Flexbox Grid -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.css">
 
+        <!-- Vuex -->
+        <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script>
+
         @include('window-js')
     </head>
     <body>
