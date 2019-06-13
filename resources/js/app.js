@@ -5,11 +5,14 @@
  */
 // Import the vuex store with its modules for managing state
 import store from './store/store'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
 
 window.Vue = require('vue');
 Vue.config.productionTip = false
 
-// Register all Vue components in the components file for global access and cleaner code
+// Register all Vue components in    the components file for global access and cleaner code
 require('./components.js');
 
 /**
@@ -17,7 +20,7 @@ require('./components.js');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
+Vue.use(VueAxios, axios)
 const app = new Vue({
     store,
     el: '#app',

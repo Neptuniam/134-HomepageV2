@@ -5,7 +5,7 @@
         <meta name="csrf-token" content="{{csrf_token()}}">
 
         <title>
-            134 HomepageV2
+            The 134 HomepageV2
         </title>
 
         <!-- UIkit JS -->
