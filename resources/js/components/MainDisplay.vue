@@ -1,12 +1,10 @@
 <template>
-    <div class="homepage">
-        <div class="row">
-            <div class="col-xs-6">
-                <weather />
-            </div>
-            <div class="col-xs-6">
-                <WidgetsDisplay />
-            </div>
+    <div class="homepage row middle-xs">
+        <div class="col-xs-6">
+            <weather />
+        </div>
+        <div class="col-xs-6">
+            <widgets />
         </div>
     </div>
 </template>
@@ -37,12 +35,24 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
     .homepage {
         height: 100vh;
         width: 100vw;
         overflow: hidden;
 
-        background: url('../../images/backgrounds/earthPorn.jpg');
+        background: url('../../images/backgrounds/SOSA21I.jpg');
+        background-repeat:no-repeat;
+        background-size:cover;
+        /* opacity: 0.85; */
+        /* filter: alpha(opacity=50); */
+    }
+
+    .nopadding {
+        padding: 0;
+    }
+
+    .nomargin {
+        margin: 0;
     }
 </style>

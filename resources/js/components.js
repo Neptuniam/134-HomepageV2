@@ -1,7 +1,7 @@
-Vue.component('maindisplay', require('./components/MainDisplay.vue').default);
+Vue.component('maindisplay', require('./components/maindisplay.vue').default);
 
-Vue.component('weather', require('./components/WeatherDisplay.vue').default);
-Vue.component('WidgetsDisplay', require('./components/WidgetsDisplay.vue').default);
+Vue.component('weather', require('./components/weatherdisplay.vue').default);
+Vue.component('widgets', require('./components/widgetsdisplay.vue').default);
 
 
 // Location services
