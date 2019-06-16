@@ -2,7 +2,7 @@
     <div class="row">
         <div v-if="response" class="weatherDisplay col-xs" style="margin-left: 5%; width: 100%;">
             <div class="row">
-                <span class="location">{{response.location.name}}, {{response.location.region}}</span>
+                <span class="location">{{response.location.name}}, {{response.location.region}}</span> ??????
             </div>
 
             <div class="row middle-xs">
