@@ -2,7 +2,7 @@
     <div class="row">
         <div v-if="response" class="weatherDisplay col-xs" style="margin-left: 5%; width: 100%;">
             <div class="row">
-                <span class="location">{{response.location.name}}, {{response.location.region}}</span> 
+                <span class="location">{{response.location.name}}, {{response.location.region}}</span>
             </div>
 
             <div class="row middle-xs">
@@ -17,6 +17,16 @@
             <div class="row">
                 <span class="curText">{{response.current.condition.text}}</span>
             </div>
+
+            <div v-if="travelObj" class="row center-xs travelText">
+                <span>Leave at {{travelObj.departureTime}} to arrive at {{travelObj.arrivalLoc}} by: {{travelObj.arrivalTime}}.  via:&nbsp;</span>
+                <a @click="showMap = !showMap">{{travelObj.method}}</a>
+            </div>
+            <!-- <div v-show="showMap" class="row fullWidth"> -->
+                <!-- <div class="col-xs-12"> -->
+                    <maps />
+                <!-- </div> -->
+            <!-- </div> -->
 
             <div class="row">
                 <div v-for="day in response.forecast.forecastday" class="col-xs">
@@ -33,7 +43,6 @@
 
                     <span class="forecastText">{{day.day.condition.text}}</span>
                 </div>
-
             </div>
         </div>
     </div>
@@ -44,20 +53,24 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     data: function() {
         return {
-            response: null
+            response: null,
+            showMap: false
         }
     },
     computed: {
         ...mapGetters('settings', {
-            location: 'getLocation',
+            location:  'getLocation',
+            travelObj: 'getTravelObj',
         }),
         query: function() {
             return "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q="+this.location+"&days=7"
         },
     },
     watch: {
-        query: function() {
-            this.axios.get(this.query).then(response => {
+        location: function() {
+            // Perform the Weather query anytime the users location changes
+            let query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q="+this.location+"&days=7"
+            this.axios.get(query).then(response => {
                 this.response = response.data
             })
         }
@@ -68,7 +81,7 @@ export default {
 <style scoped>
     .weatherdisplay {
         margin-left: 5%;
-        padding-left: 5%;
+        /* padding-left: 5%; */
         width: 100%;
     }
 
@@ -77,9 +90,15 @@ export default {
         color: white;
     }
 
+    .travelText {
+        text-align: center;
+        font-size: 3.5vh;
+        color: white;
+    }
+
     .curText {
         font-size: 5vh;
-        margin-bottom: 18vh;
+        margin-bottom: 15vh;
         color: white;
     }
 
@@ -87,7 +106,7 @@ export default {
         width: 15vh;
         height: 15vh;
     }
-    .curTemp{
+    .curTemp {
         font-size: 5vh;
         color: white;
     }
@@ -101,7 +120,7 @@ export default {
         color: white;
     }
     .forecastText {
-        /* font-size: 1vh; */
-        color: white;
+        font-size: 1.5vh;
+        color: silver;
     }
 </style>

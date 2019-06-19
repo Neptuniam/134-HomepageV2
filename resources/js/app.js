@@ -7,13 +7,24 @@
 import store from './store/store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import VueGeolocation from 'vue-browser-geolocation';
+import * as VueGoogleMaps from 'vue2-google-maps'
 
 
 window.Vue = require('vue');
 Vue.config.productionTip = false
 
-// Register all Vue components in    the components file for global access and cleaner code
+// Register all Vue components in a components file for global access and cleaner code
 require('./components.js');
+
+const EventBus = new Vue();
+Object.defineProperties(Vue.prototype, {
+    $bus: {
+        get: function() {
+            return EventBus;
+        }
+    }
+});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -21,6 +32,16 @@ require('./components.js');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 Vue.use(VueAxios, axios)
+Vue.use(VueGeolocation);
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM',
+    libraries: 'places', // This is required if you use the Autocomplete plugin
+  },
+})
+
+
 const app = new Vue({
     store,
     el: '#app',

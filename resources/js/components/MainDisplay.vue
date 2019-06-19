@@ -4,7 +4,7 @@
             <weather />
         </div>
         <div class="col-xs-6">
-            <widgets />
+            <!-- <widgets /> -->
         </div>
     </div>
 </template>
@@ -46,6 +46,10 @@ export default {
         background-size:cover;
         /* opacity: 0.85; */
         /* filter: alpha(opacity=50); */
+    }
+
+    .fullWidth {
+        width: 100%;
     }
 
     .nopadding {
