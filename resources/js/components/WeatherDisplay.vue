@@ -73,7 +73,7 @@ export default {
             let query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q="+this.location+"&days=7"
             this.axios.get(query).then(weather => {
                 this.weather = weather.data
-                console.log('Weather weather');
+                console.log('%c Weather ', 'background: #222; color: #bada55');
                 console.log(weather.data);
             })
         }

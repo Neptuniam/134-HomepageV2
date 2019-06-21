@@ -13,3 +13,7 @@
 Route::get('/', function () {
     return view('master');
 });
+
+Route::group(['prefix'=>'background'],function(){
+    Route::get('/','Background@getBackground');
+});

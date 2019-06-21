@@ -32,7 +32,7 @@ export default {
             userLng: 'getLng',
         }),
         distanceToHome: function() {
-            if (this.userLat && this.userLng)
+            if (this.userLat && this.userLng) {}
                 return Math.sqrt((this.userLat - this.home.lat)*(this.userLat - this.home.lat) + (this.userLng - this.home.lng)*(this.userLng - this.home.lng));
         },
         distanceToWork: function() {
@@ -40,7 +40,7 @@ export default {
                 return Math.sqrt((this.userLat - this.work.lat)*(this.userLat - this.work.lat) + (this.userLng - this.work.lng)*(this.userLng - this.work.lng));
         },
         location: function() {
-            console.log('distanceToHome');
+            console.log('%c distanceToHome ', 'background: #222; color: #bada55');
             console.log(this.distanceToHome);
             // Based off our distance to keypoints set our start location
             if (this.distanceToHome < 0.05)
@@ -74,7 +74,7 @@ export default {
                 }, function(response, status) {
                     if (status === 'OK') {
                         _this.directions = response.routes[0].legs
-                        console.log('Directions');
+                        console.log('%c Directions ', 'background: #222; color: #bada55');
                         console.log(_this.directions);
 
                         _this.setAddress(_this.directions[0].start_address)

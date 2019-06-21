@@ -1,5 +1,6 @@
 <template>
-    <div class="homepage">
+    <!-- <div :class="['homepage', this.background]"> -->
+    <div class="homepage" id="background">
         <div class="transparent row">
             <div class="col-xs-6 ">
                 <weather />
@@ -28,10 +29,18 @@ export default {
         })
     },
     created: function() {
+        this.axios('/background/').then(background => {
+            console.log('%c Background ', 'background: #222; color: #bada55');
+            console.log(background.data);
+
+            document.body.style.background = "url('images/"+background.data+"')"
+            document.body.style.backgroundSize = "cover";
+        })
+
         // Retrieve the users location on created
         this.$getLocation(this.locationOptions).then(coordinates => {
             this.setLocation(coordinates)
-            console.log('location');
+            console.log('%c Location ', 'background: #222; color: #bada55');
             console.log(coordinates);
         });
     },
@@ -43,14 +52,7 @@ export default {
         height: 100vh;
         width: 100vw;
         overflow: hidden;
-
-        background: url('../../images/backgrounds/SOSA21I.jpg');
-        background-repeat:no-repeat;
-        background-size:cover;
-
         color: black;
-        /* opacity: 0.85; */
-        /* filter: alpha(opacity=50); */
     }
 
     .seperator {

@@ -1758,6 +1758,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -1774,11 +1775,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   created: function created() {
     var _this = this;
 
-    // Retrieve the users location on created
+    this.axios('/background/').then(function (background) {
+      console.log('%c Background ', 'background: #222; color: #bada55');
+      console.log(background.data);
+      document.body.style.background = "url('images/" + background.data + "')";
+      document.body.style.backgroundSize = "cover";
+    }); // Retrieve the users location on created
+
     this.$getLocation(this.locationOptions).then(function (coordinates) {
       _this.setLocation(coordinates);
 
-      console.log('location');
+      console.log('%c Location ', 'background: #222; color: #bada55');
       console.log(coordinates);
     });
   }
@@ -1846,13 +1853,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     userLng: 'getLng'
   }), {
     distanceToHome: function distanceToHome() {
-      if (this.userLat && this.userLng) return Math.sqrt((this.userLat - this.home.lat) * (this.userLat - this.home.lat) + (this.userLng - this.home.lng) * (this.userLng - this.home.lng));
+      if (this.userLat && this.userLng) {}
+
+      return Math.sqrt((this.userLat - this.home.lat) * (this.userLat - this.home.lat) + (this.userLng - this.home.lng) * (this.userLng - this.home.lng));
     },
     distanceToWork: function distanceToWork() {
       if (this.userLat && this.userLng) return Math.sqrt((this.userLat - this.work.lat) * (this.userLat - this.work.lat) + (this.userLng - this.work.lng) * (this.userLng - this.work.lng));
     },
     location: function location() {
-      console.log('distanceToHome');
+      console.log('%c distanceToHome ', 'background: #222; color: #bada55');
       console.log(this.distanceToHome); // Based off our distance to keypoints set our start location
 
       if (this.distanceToHome < 0.05) return this.home;else if (this.distanceToWork < 0.05) return this.work;else return {
@@ -1882,7 +1891,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }, function (response, status) {
           if (status === 'OK') {
             _this.directions = response.routes[0].legs;
-            console.log('Directions');
+            console.log('%c Directions ', 'background: #222; color: #bada55');
             console.log(_this.directions);
 
             _this.setAddress(_this.directions[0].start_address);
@@ -2018,7 +2027,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=" + this.location + "&days=7";
       this.axios.get(query).then(function (weather) {
         _this.weather = weather.data;
-        console.log('Weather weather');
+        console.log('%c Weather ', 'background: #222; color: #bada55');
         console.log(weather.data);
       });
     }
@@ -2110,13 +2119,12 @@ exports.push([module.i, "\n.favouritesBar[data-v-b2a083e4] {\n    /* margin: 75p
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var escape = __webpack_require__(/*! ../../../node_modules/css-loader/lib/url/escape.js */ "./node_modules/css-loader/lib/url/escape.js");
 exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
 // imports
 
 
 // module
-exports.push([module.i, "\n.homepage {\n    height: 100vh;\n    width: 100vw;\n    overflow: hidden;\n\n    background: url(" + escape(__webpack_require__(/*! ../../images/backgrounds/SOSA21I.jpg */ "./resources/images/backgrounds/SOSA21I.jpg")) + ");\n    background-repeat:no-repeat;\n    background-size:cover;\n\n    color: black;\n    /* opacity: 0.85; */\n    /* filter: alpha(opacity=50); */\n}\n.seperator {\n    border-left: 1px solid;\n}\n.seperator:nth-of-type(1) {\n    border-left: 0px solid;\n}\n.fullWidth {\n    width: 100%;\n}\n.nopadding {\n    padding: 0;\n}\n.nomargin {\n    margin: 0;\n}\n.textSpecial {\n    font-family: 'Poiret One', cursive;\n}\n.textTitle {\n    font-family: 'Arima Madurai', cursive;\n}\n.textBody {\n    font-family: 'Roboto';\n}\n.transparent {\n    background: rgba(240,240,240,0.3);\n    height: 100vh;\n    width: 100vw;\n}\n", ""]);
+exports.push([module.i, "\n.homepage {\n    height: 100vh;\n    width: 100vw;\n    overflow: hidden;\n    color: black;\n}\n.seperator {\n    border-left: 1px solid;\n}\n.seperator:nth-of-type(1) {\n    border-left: 0px solid;\n}\n.fullWidth {\n    width: 100%;\n}\n.nopadding {\n    padding: 0;\n}\n.nomargin {\n    margin: 0;\n}\n.textSpecial {\n    font-family: 'Poiret One', cursive;\n}\n.textTitle {\n    font-family: 'Arima Madurai', cursive;\n}\n.textBody {\n    font-family: 'Roboto';\n}\n.transparent {\n    background: rgba(240,240,240,0.3);\n    height: 100vh;\n    width: 100vw;\n}\n", ""]);
 
 // exports
 
@@ -2224,33 +2232,6 @@ function toComment(sourceMap) {
 	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
 
 	return '/*# ' + data + ' */';
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/lib/url/escape.js":
-/*!***************************************************!*\
-  !*** ./node_modules/css-loader/lib/url/escape.js ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = function escape(url) {
-    if (typeof url !== 'string') {
-        return url
-    }
-    // If url is already wrapped in quotes, remove them
-    if (/^['"].*['"]$/.test(url)) {
-        url = url.slice(1, -1);
-    }
-    // Should url be wrapped?
-    // See https://drafts.csswg.org/css-values-3/#urls
-    if (/["'() \t\n]/.test(url)) {
-        return '"' + url.replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"'
-    }
-
-    return url
 }
 
 
@@ -3823,7 +3804,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "homepage" }, [
+  return _c("div", { staticClass: "homepage", attrs: { id: "background" } }, [
     _c("div", { staticClass: "transparent row" }, [
       _c("div", { staticClass: "col-xs-6 " }, [_c("weather")], 1),
       _vm._v(" "),
@@ -19757,17 +19738,6 @@ try {
 
 module.exports = g;
 
-
-/***/ }),
-
-/***/ "./resources/images/backgrounds/SOSA21I.jpg":
-/*!**************************************************!*\
-  !*** ./resources/images/backgrounds/SOSA21I.jpg ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "/images/SOSA21I.jpg?5ad858dfb7c8db0134d20832217cbbc2";
 
 /***/ }),
 
