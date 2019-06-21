@@ -20,6 +20,10 @@
         <!-- Vuex -->
         <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script>
 
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Noto+Serif|Nova+Flat|Poiret+One&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Playball|Roboto|Arima+Madurai" rel="stylesheet">
+
         @include('window-js')
     </head>
     <body>

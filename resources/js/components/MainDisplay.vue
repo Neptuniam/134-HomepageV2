@@ -1,10 +1,12 @@
 <template>
-    <div class="homepage row middle-xs">
-        <div class="col-xs-6">
-            <weather />
-        </div>
-        <div class="col-xs-6">
-            <!-- <widgets /> -->
+    <div class="homepage">
+        <div class="transparent row">
+            <div class="col-xs-6 ">
+                <weather />
+            </div>
+            <div class="col-xs-6 ">
+                <!-- <widgets /> -->
+            </div>
         </div>
     </div>
 </template>
@@ -28,8 +30,9 @@ export default {
     created: function() {
         // Retrieve the users location on created
         this.$getLocation(this.locationOptions).then(coordinates => {
-            console.log(coordinates);
             this.setLocation(coordinates)
+            console.log('location');
+            console.log(coordinates);
         });
     },
 }
@@ -44,8 +47,18 @@ export default {
         background: url('../../images/backgrounds/SOSA21I.jpg');
         background-repeat:no-repeat;
         background-size:cover;
+
+        color: black;
         /* opacity: 0.85; */
         /* filter: alpha(opacity=50); */
+    }
+
+    .seperator {
+        border-left: 1px solid;
+    }
+
+    .seperator:nth-of-type(1) {
+        border-left: 0px solid;
     }
 
     .fullWidth {
@@ -58,5 +71,23 @@ export default {
 
     .nomargin {
         margin: 0;
+    }
+
+    .textSpecial {
+        font-family: 'Poiret One', cursive;
+    }
+
+    .textTitle {
+        font-family: 'Arima Madurai', cursive;
+    }
+
+    .textBody {
+        font-family: 'Roboto';
+    }
+
+    .transparent {
+        background: rgba(240,240,240,0.3);
+        height: 100vh;
+        width: 100vw;
     }
 </style>

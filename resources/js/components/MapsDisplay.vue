@@ -74,8 +74,11 @@ export default {
                 }, function(response, status) {
                     if (status === 'OK') {
                         _this.directions = response.routes[0].legs
+                        console.log('Directions');
                         console.log(_this.directions);
-                        _this.setDisplay()
+
+                        _this.setAddress(_this.directions[0].start_address)
+                        _this.parseTravelTime(_this.directions[0].duration.value)
                         directionsDisplay.setDirections(response);
                     } else {
                         window.alert('Directions request failed due to ' + status);
@@ -84,22 +87,9 @@ export default {
             }
 
             calculateAndDisplayRoute(directionsService, directionsDisplay, this.location, this.destination);
-            // _this.parseTravelTime(_this.directions[0].duration.text)
         })
     },
     methods: {
-        // timeConvert(time) {
-        //     // Check correct time format and split into components
-        //     time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-        //
-        //     if (time.length > 1) { // If time format correct
-        //         time = time.slice (1);  // Remove full string match value
-        //         time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
-        //         time[0] = +time[0] % 12 || 12; // Adjust hours
-        //     }
-        //     return time.join (''); // return adjusted time or original string
-        // },
-
         timeConvert(time) {
             var hour = time.getHours(), minute = time.getMinutes()
 
@@ -123,8 +113,6 @@ export default {
                 days: 0
             }
 
-            // travelObj.departureTime = this.timeConvert(travelObj.departureTime.getHours()+":"+travelObj.departureTime.getMinutes())
-            // travelObj.arrivalTime = this.timeConvert(travelObj.arrivalTime.getHours()+":"+travelObj.arrivalTime.getMinutes())
             travelObj.departureTime = this.timeConvert(travelObj.departureTime)
             travelObj.arrivalTime = this.timeConvert(travelObj.arrivalTime)
 
@@ -132,13 +120,9 @@ export default {
             this.setTravelObj(travelObj)
         },
 
-        setDisplay: function() {
-            this.parseTravelTime(this.directions[0].duration.value)
-            // console.log(this.parseTravelTime(this.directions[0].duration.text.split(' ')));
-        },
-
         ...mapActions('settings', {
-            setTravelObj: 'setTravelObj'
+            setTravelObj: 'setTravelObj',
+            setAddress: 'setAddress',
         })
     }
 }

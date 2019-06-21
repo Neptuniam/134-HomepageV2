@@ -1688,6 +1688,49 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/favouritesBar.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/favouritesBar.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maindisplay.vue?vue&type=script&lang=js&":
 /*!**********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/maindisplay.vue?vue&type=script&lang=js& ***!
@@ -1702,6 +1745,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
 //
 //
 //
@@ -1731,9 +1776,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     // Retrieve the users location on created
     this.$getLocation(this.locationOptions).then(function (coordinates) {
-      console.log(coordinates);
-
       _this.setLocation(coordinates);
+
+      console.log('location');
+      console.log(coordinates);
     });
   }
 });
@@ -1836,9 +1882,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }, function (response, status) {
           if (status === 'OK') {
             _this.directions = response.routes[0].legs;
+            console.log('Directions');
             console.log(_this.directions);
 
-            _this.setDisplay();
+            _this.setAddress(_this.directions[0].start_address);
+
+            _this.parseTravelTime(_this.directions[0].duration.value);
 
             directionsDisplay.setDirections(response);
           } else {
@@ -1847,21 +1896,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         });
       }
 
-      calculateAndDisplayRoute(directionsService, directionsDisplay, _this2.location, _this2.destination); // _this.parseTravelTime(_this.directions[0].duration.text)
+      calculateAndDisplayRoute(directionsService, directionsDisplay, _this2.location, _this2.destination);
     });
   },
   methods: _objectSpread({
-    // timeConvert(time) {
-    //     // Check correct time format and split into components
-    //     time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-    //
-    //     if (time.length > 1) { // If time format correct
-    //         time = time.slice (1);  // Remove full string match value
-    //         time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
-    //         time[0] = +time[0] % 12 || 12; // Adjust hours
-    //     }
-    //     return time.join (''); // return adjusted time or original string
-    // },
     timeConvert: function timeConvert(time) {
       var hour = time.getHours(),
           minute = time.getMinutes();
@@ -1877,19 +1915,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         method: 'Driving',
         departureTime: date,
         arrivalTime: new Date(date.getTime() + duration * 1000),
-        days: 0 // travelObj.departureTime = this.timeConvert(travelObj.departureTime.getHours()+":"+travelObj.departureTime.getMinutes())
-        // travelObj.arrivalTime = this.timeConvert(travelObj.arrivalTime.getHours()+":"+travelObj.arrivalTime.getMinutes())
-
+        days: 0
       };
       travelObj.departureTime = this.timeConvert(travelObj.departureTime);
       travelObj.arrivalTime = this.timeConvert(travelObj.arrivalTime);
       this.setTravelObj(travelObj);
-    },
-    setDisplay: function setDisplay() {
-      this.parseTravelTime(this.directions[0].duration.value); // console.log(this.parseTravelTime(this.directions[0].duration.text.split(' ')));
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
-    setTravelObj: 'setTravelObj'
+    setTravelObj: 'setTravelObj',
+    setAddress: 'setAddress'
   }))
 });
 
@@ -1957,22 +1991,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      response: null,
-      showMap: false
+      months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
+      days: ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"],
+      weather: null // showMap: false
+
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
     location: 'getLocation',
-    travelObj: 'getTravelObj'
+    travelObj: 'getTravelObj',
+    address: 'getAddress'
   }), {
-    query: function query() {
-      return "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=" + this.location + "&days=7";
+    date: function date() {
+      return new Date();
     }
   }),
   watch: {
@@ -1981,8 +2016,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       // Perform the Weather query anytime the users location changes
       var query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=" + this.location + "&days=7";
-      this.axios.get(query).then(function (response) {
-        _this.response = response.data;
+      this.axios.get(query).then(function (weather) {
+        _this.weather = weather.data;
+        console.log('Weather weather');
+        console.log(weather.data);
       });
     }
   }
@@ -2047,6 +2084,25 @@ exports.push([module.i, "\n.vue-street-view-pano-container {\n  position: relati
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/favouritesBar.vue?vue&type=style&index=0&id=b2a083e4&scoped=true&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/favouritesBar.vue?vue&type=style&index=0&id=b2a083e4&scoped=true&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.favouritesBar[data-v-b2a083e4] {\n    /* margin: 75px 0; */\n\n    /* margin-top: 100px; */\n    /* width: 500px; */\n}\n.favButtons[data-v-b2a083e4] {\n    width: 80%;\n    height: 80%;\n\n    /* margin: 10px; */\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maindisplay.vue?vue&type=style&index=0&lang=css&":
 /*!*****************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/maindisplay.vue?vue&type=style&index=0&lang=css& ***!
@@ -2060,7 +2116,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.homepage {\n    height: 100vh;\n    width: 100vw;\n    overflow: hidden;\n\n    background: url(" + escape(__webpack_require__(/*! ../../images/backgrounds/SOSA21I.jpg */ "./resources/images/backgrounds/SOSA21I.jpg")) + ");\n    background-repeat:no-repeat;\n    background-size:cover;\n    /* opacity: 0.85; */\n    /* filter: alpha(opacity=50); */\n}\n.fullWidth {\n    width: 100%;\n}\n.nopadding {\n    padding: 0;\n}\n.nomargin {\n    margin: 0;\n}\n", ""]);
+exports.push([module.i, "\n.homepage {\n    height: 100vh;\n    width: 100vw;\n    overflow: hidden;\n\n    background: url(" + escape(__webpack_require__(/*! ../../images/backgrounds/SOSA21I.jpg */ "./resources/images/backgrounds/SOSA21I.jpg")) + ");\n    background-repeat:no-repeat;\n    background-size:cover;\n\n    color: black;\n    /* opacity: 0.85; */\n    /* filter: alpha(opacity=50); */\n}\n.seperator {\n    border-left: 1px solid;\n}\n.seperator:nth-of-type(1) {\n    border-left: 0px solid;\n}\n.fullWidth {\n    width: 100%;\n}\n.nopadding {\n    padding: 0;\n}\n.nomargin {\n    margin: 0;\n}\n.textSpecial {\n    font-family: 'Poiret One', cursive;\n}\n.textTitle {\n    font-family: 'Arima Madurai', cursive;\n}\n.textBody {\n    font-family: 'Roboto';\n}\n.transparent {\n    background: rgba(240,240,240,0.3);\n    height: 100vh;\n    width: 100vw;\n}\n", ""]);
 
 // exports
 
@@ -2079,7 +2135,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.weatherdisplay[data-v-6b0ec34e] {\n    margin-left: 5%;\n    /* padding-left: 5%; */\n    width: 100%;\n}\n.location[data-v-6b0ec34e] {\n    font-size: 9vh;\n    color: white;\n}\n.travelText[data-v-6b0ec34e] {\n    text-align: center;\n    font-size: 3.5vh;\n    color: white;\n}\n.curText[data-v-6b0ec34e] {\n    font-size: 5vh;\n    margin-bottom: 15vh;\n    color: white;\n}\n.curIcon[data-v-6b0ec34e] {\n    width: 15vh;\n    height: 15vh;\n}\n.curTemp[data-v-6b0ec34e] {\n    font-size: 5vh;\n    color: white;\n}\n.forecastIcon[data-v-6b0ec34e] {\n    width: 7.5vh;\n    height: 7.5vh;\n}\n.forecastTemp[data-v-6b0ec34e] {\n    font-size: 2.5vh;\n    color: white;\n}\n.forecastText[data-v-6b0ec34e] {\n    font-size: 1.5vh;\n    color: silver;\n}\n", ""]);
+exports.push([module.i, "\n.date[data-v-6b0ec34e] {\n    font-size: 1.2rem;\n    position: absolute;\n    top: 10px;\n    right: 30px;\n}\n.weatherDisplay[data-v-6b0ec34e] {\n    height: 100%;\n    width: 100%;\n}\n.location[data-v-6b0ec34e] {\n    font-size: 10vh;\n}\n.curIcon[data-v-6b0ec34e] {\n    width: 17vh;\n    height: 17vh;\n}\n.curText[data-v-6b0ec34e] {\n    font-size: 6.5vh;\n}\n.forecastIcon[data-v-6b0ec34e] {\n    width: 8vh;\n    height: 8vh;\n}\n.forecastTemp[data-v-6b0ec34e] {\n    font-size: 3vh;\n}\n.forecastDay[data-v-6b0ec34e] {\n    font-size: 2vh;\n}\n.travelText[data-v-6b0ec34e] {\n    text-align: center;\n    font-size: 4.5vh;\n    margin-top: 15vh;\n}\na[data-v-6b0ec34e] {\n    color: black;\n}\n", ""]);
 
 // exports
 
@@ -2668,6 +2724,36 @@ options.transform = transform
 options.insertInto = undefined;
 
 var update = __webpack_require__(/*! ../../../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/favouritesBar.vue?vue&type=style&index=0&id=b2a083e4&scoped=true&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/favouritesBar.vue?vue&type=style&index=0&id=b2a083e4&scoped=true&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./favouritesBar.vue?vue&type=style&index=0&id=b2a083e4&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/favouritesBar.vue?vue&type=style&index=0&id=b2a083e4&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -3593,6 +3679,135 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/favouritesBar.vue?vue&type=template&id=b2a083e4&scoped=true&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/favouritesBar.vue?vue&type=template&id=b2a083e4&scoped=true& ***!
+  \****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row center-xs middle-xs favouritesBar" }, [
+      _c("div", { staticClass: "col-xs" }, [
+        _c("a", { attrs: { href: "https://www.reddit.com/" } }, [
+          _c("img", {
+            staticClass: "favButtons",
+            attrs: {
+              src: "images/favouritesIcons//Reddit-The-Official-App-Icon.png"
+            }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-xs" }, [
+        _c(
+          "a",
+          { attrs: { href: "https://www.youtube.com/feed/subscriptions" } },
+          [
+            _c("img", {
+              staticClass: "favButtons",
+              attrs: { src: "images/favouritesIcons//youtube.png" }
+            })
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-xs" }, [
+        _c("a", { attrs: { href: "https://www.netflix.com/browse" } }, [
+          _c("img", {
+            staticClass: "favButtons",
+            attrs: { src: "images/favouritesIcons//netflix.png" }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-xs" }, [
+        _c(
+          "a",
+          {
+            attrs: {
+              href: "https://easyweb.td.com/waw/idp/login.htm?execution=e1s1"
+            }
+          },
+          [
+            _c("img", {
+              staticClass: "favButtons",
+              attrs: { src: "images/favouritesIcons//TD-bank-icon.png" }
+            })
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-xs" }, [
+        _c(
+          "a",
+          { attrs: { href: "https://drive.google.com/drive/my-drive" } },
+          [
+            _c("img", {
+              staticClass: "favButtons",
+              attrs: { src: "images/favouritesIcons//googleDrive.png" }
+            })
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-xs" }, [
+        _c(
+          "a",
+          { attrs: { href: "https://www.google.ca/maps?hl=en&tab=wl" } },
+          [
+            _c("img", {
+              staticClass: "favButtons",
+              attrs: { src: "images/favouritesIcons//maps.png" }
+            })
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-xs" }, [
+        _c(
+          "a",
+          { attrs: { href: "https://courselink.uoguelph.ca/d2l/home" } },
+          [
+            _c("img", {
+              staticClass: "favButtons",
+              attrs: { src: "images/favouritesIcons//guelph-icon.png" }
+            })
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-xs" }, [
+        _c("a", { attrs: { href: "https://github.com/" } }, [
+          _c("img", {
+            staticClass: "favButtons",
+            attrs: { src: "images/favouritesIcons//gitIcon.png" }
+          })
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maindisplay.vue?vue&type=template&id=f480f124&":
 /*!**************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/maindisplay.vue?vue&type=template&id=f480f124& ***!
@@ -3608,10 +3823,12 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "homepage row middle-xs" }, [
-    _c("div", { staticClass: "col-xs-6" }, [_c("weather")], 1),
-    _vm._v(" "),
-    _c("div", { staticClass: "col-xs-6" })
+  return _c("div", { staticClass: "homepage" }, [
+    _c("div", { staticClass: "transparent row" }, [
+      _c("div", { staticClass: "col-xs-6 " }, [_c("weather")], 1),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-xs-6 " })
+    ])
   ])
 }
 var staticRenderFns = []
@@ -3689,120 +3906,160 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row" }, [
-    _vm.response
-      ? _c(
-          "div",
-          {
-            staticClass: "weatherDisplay col-xs",
-            staticStyle: { "margin-left": "5%", width: "100%" }
-          },
-          [
-            _c("div", { staticClass: "row" }, [
-              _c("span", { staticClass: "location" }, [
-                _vm._v(
-                  _vm._s(_vm.response.location.name) +
-                    ", " +
-                    _vm._s(_vm.response.location.region)
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row middle-xs" }, [
-              _c("div", { staticClass: "col-xs-2" }, [
-                _c("img", {
-                  staticClass: "curIcon",
-                  attrs: {
-                    src: _vm.response.current.condition.icon,
-                    alt: "Condition Icon"
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-xs curTemp" }, [
-                _c("span", [
-                  _vm._v(_vm._s(_vm.response.current.feelslike_c) + "°C")
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c("span", { staticClass: "curText" }, [
-                _vm._v(_vm._s(_vm.response.current.condition.text))
-              ])
-            ]),
-            _vm._v(" "),
-            _vm.travelObj
-              ? _c("div", { staticClass: "row center-xs travelText" }, [
-                  _c("span", [
-                    _vm._v(
-                      "Leave at " +
-                        _vm._s(_vm.travelObj.departureTime) +
-                        " to arrive at " +
-                        _vm._s(_vm.travelObj.arrivalLoc) +
-                        " by: " +
-                        _vm._s(_vm.travelObj.arrivalTime) +
-                        ".  via: "
-                    )
+  return _c(
+    "div",
+    {
+      staticClass: "row middle-xs weatherDisplay",
+      staticStyle: { "margin-left": "5%", width: "100%" }
+    },
+    [
+      _c("div", { staticClass: "date textBody" }, [
+        _vm._v(
+          " " +
+            _vm._s(_vm.date.getDate()) +
+            " " +
+            _vm._s(_vm.months[_vm.date.getMonth()]) +
+            " " +
+            _vm._s(_vm.date.getFullYear()) +
+            "\n    "
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col-xs" },
+        [
+          _vm.weather
+            ? _c("div", [
+                _c(
+                  "div",
+                  { staticClass: "row", attrs: { "uk-tooltip": _vm.address } },
+                  [
+                    _c("span", { staticClass: "location textTitle" }, [
+                      _vm._v(
+                        _vm._s(_vm.weather.location.name) +
+                          ", " +
+                          _vm._s(_vm.weather.location.region)
+                      )
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "row middle-xs curDescription" }, [
+                  _c("div", { staticClass: "col-xs-2" }, [
+                    _c("img", {
+                      staticClass: "curIcon",
+                      attrs: {
+                        src: _vm.weather.current.condition.icon,
+                        alt: "Condition Icon"
+                      }
+                    })
                   ]),
                   _vm._v(" "),
                   _c(
-                    "a",
+                    "div",
                     {
-                      on: {
-                        click: function($event) {
-                          _vm.showMap = !_vm.showMap
-                        }
-                      }
+                      staticClass: "col-xs uk-text-truncate curText textTitle"
                     },
-                    [_vm._v(_vm._s(_vm.travelObj.method))]
-                  )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c("maps"),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "row" },
-              _vm._l(_vm.response.forecast.forecastday, function(day) {
-                return _c("div", { staticClass: "col-xs" }, [
-                  _c("div", { staticClass: "row" }, [
-                    _c("div", { staticClass: "col-xs-8 nopadding nomargin" }, [
-                      _c("img", {
-                        staticClass: "forecastIcon",
-                        attrs: {
-                          src: day.day.condition.icon,
-                          alt: "Condition Icon"
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-xs nopadding nomargin" }, [
-                      _c("span", { staticClass: "forecastTemp" }, [
-                        _vm._v(_vm._s(Math.round(day.day.maxtemp_c)))
+                    [
+                      _c("span", [
+                        _vm._v(_vm._s(_vm.weather.current.feelslike_c) + "°C -")
                       ]),
                       _vm._v(" "),
-                      _c("br"),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "forecastTemp" }, [
-                        _vm._v(_vm._s(Math.round(day.day.mintemp_c)))
+                      _c("span", {}, [
+                        _vm._v(_vm._s(_vm.weather.current.condition.text))
                       ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "forecastText" }, [
-                    _vm._v(_vm._s(day.day.condition.text))
-                  ])
-                ])
-              }),
-              0
-            )
-          ],
-          1
-        )
-      : _vm._e()
-  ])
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "row center-xs middle-xs textBody" },
+                  _vm._l(_vm.weather.forecast.forecastday, function(day) {
+                    return _c(
+                      "div",
+                      {
+                        staticClass: "col-xs",
+                        attrs: { "uk-tooltip": day.day.condition.text }
+                      },
+                      [
+                        _c("div", { staticClass: "row" }, [
+                          _c(
+                            "div",
+                            { staticClass: "col-xs-8 nopadding nomargin" },
+                            [
+                              _c("img", {
+                                staticClass: "forecastIcon",
+                                attrs: {
+                                  src: day.day.condition.icon,
+                                  alt: "Condition Icon"
+                                }
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "col-xs nopadding nomargin" },
+                            [
+                              _c("span", { staticClass: "forecastTemp" }, [
+                                _vm._v(_vm._s(Math.round(day.day.maxtemp_c)))
+                              ]),
+                              _vm._v(" "),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "forecastTemp" }, [
+                                _vm._v(_vm._s(Math.round(day.day.mintemp_c)))
+                              ])
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "forecastDay" }, [
+                          _vm._v(_vm._s(_vm.days[new Date(day.date).getDay()]))
+                        ])
+                      ]
+                    )
+                  }),
+                  0
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("maps"),
+          _vm._v(" "),
+          _vm.travelObj
+            ? _c("div", { staticClass: "row center-xs travelText textBody" }, [
+                _vm._v(
+                  "\n            Leave at " +
+                    _vm._s(_vm.travelObj.departureTime) +
+                    " to arrive at " +
+                    _vm._s(_vm.travelObj.arrivalLoc) +
+                    " by: " +
+                    _vm._s(_vm.travelObj.arrivalTime) +
+                    ".  via: \n            "
+                ),
+                _c(
+                  "a",
+                  {
+                    on: {
+                      click: function($event) {
+                        _vm.showMap = !_vm.showMap
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.travelObj.method))]
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("favourites")
+        ],
+        1
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -19588,7 +19845,95 @@ var app = new Vue({
 Vue.component('maindisplay', __webpack_require__(/*! ./components/maindisplay.vue */ "./resources/js/components/maindisplay.vue")["default"]);
 Vue.component('weather', __webpack_require__(/*! ./components/weatherdisplay.vue */ "./resources/js/components/weatherdisplay.vue")["default"]);
 Vue.component('maps', __webpack_require__(/*! ./components/mapsdisplay.vue */ "./resources/js/components/mapsdisplay.vue")["default"]);
+Vue.component('favourites', __webpack_require__(/*! ./components/favouritesBar.vue */ "./resources/js/components/favouritesBar.vue")["default"]);
 Vue.component('widgets', __webpack_require__(/*! ./components/widgetsdisplay.vue */ "./resources/js/components/widgetsdisplay.vue")["default"]);
+
+/***/ }),
+
+/***/ "./resources/js/components/favouritesBar.vue":
+/*!***************************************************!*\
+  !*** ./resources/js/components/favouritesBar.vue ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _favouritesBar_vue_vue_type_template_id_b2a083e4_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./favouritesBar.vue?vue&type=template&id=b2a083e4&scoped=true& */ "./resources/js/components/favouritesBar.vue?vue&type=template&id=b2a083e4&scoped=true&");
+/* harmony import */ var _favouritesBar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./favouritesBar.vue?vue&type=script&lang=js& */ "./resources/js/components/favouritesBar.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _favouritesBar_vue_vue_type_style_index_0_id_b2a083e4_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./favouritesBar.vue?vue&type=style&index=0&id=b2a083e4&scoped=true&lang=css& */ "./resources/js/components/favouritesBar.vue?vue&type=style&index=0&id=b2a083e4&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _favouritesBar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _favouritesBar_vue_vue_type_template_id_b2a083e4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _favouritesBar_vue_vue_type_template_id_b2a083e4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "b2a083e4",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/favouritesBar.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/favouritesBar.vue?vue&type=script&lang=js&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/favouritesBar.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_favouritesBar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./favouritesBar.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/favouritesBar.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_favouritesBar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/favouritesBar.vue?vue&type=style&index=0&id=b2a083e4&scoped=true&lang=css&":
+/*!************************************************************************************************************!*\
+  !*** ./resources/js/components/favouritesBar.vue?vue&type=style&index=0&id=b2a083e4&scoped=true&lang=css& ***!
+  \************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_favouritesBar_vue_vue_type_style_index_0_id_b2a083e4_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./favouritesBar.vue?vue&type=style&index=0&id=b2a083e4&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/favouritesBar.vue?vue&type=style&index=0&id=b2a083e4&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_favouritesBar_vue_vue_type_style_index_0_id_b2a083e4_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_favouritesBar_vue_vue_type_style_index_0_id_b2a083e4_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_favouritesBar_vue_vue_type_style_index_0_id_b2a083e4_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_favouritesBar_vue_vue_type_style_index_0_id_b2a083e4_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_favouritesBar_vue_vue_type_style_index_0_id_b2a083e4_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/favouritesBar.vue?vue&type=template&id=b2a083e4&scoped=true&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/favouritesBar.vue?vue&type=template&id=b2a083e4&scoped=true& ***!
+  \**********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_favouritesBar_vue_vue_type_template_id_b2a083e4_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./favouritesBar.vue?vue&type=template&id=b2a083e4&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/favouritesBar.vue?vue&type=template&id=b2a083e4&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_favouritesBar_vue_vue_type_template_id_b2a083e4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_favouritesBar_vue_vue_type_template_id_b2a083e4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
@@ -19916,7 +20261,8 @@ __webpack_require__.r(__webpack_exports__);
 var state = {
   lat: null,
   lng: null,
-  travelObj: null
+  travelObj: null,
+  address: null
 };
 var getters = {
   getLat: function getLat(state) {
@@ -19930,6 +20276,9 @@ var getters = {
   },
   getTravelObj: function getTravelObj(state) {
     return state.travelObj;
+  },
+  getAddress: function getAddress(state) {
+    return state.address;
   }
 };
 var mutations = {
@@ -19941,6 +20290,9 @@ var mutations = {
   },
   setTravelObj: function setTravelObj(state, payload) {
     state.travelObj = payload;
+  },
+  setAddress: function setAddress(state, payload) {
+    state.address = payload;
   }
 };
 var actions = {
@@ -19952,6 +20304,10 @@ var actions = {
   setTravelObj: function setTravelObj(_ref2, payload) {
     var commit = _ref2.commit;
     commit('setTravelObj', payload);
+  },
+  setAddress: function setAddress(_ref3, payload) {
+    var commit = _ref3.commit;
+    commit('setAddress', payload);
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
