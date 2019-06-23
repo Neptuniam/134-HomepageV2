@@ -1,23 +1,31 @@
 <template>
-    <div v-if="location">
-        <gmap-map v-show="false" ref="map" :center="location" :zoom="15" style="width: 100%; height: 300px">
-            <gmap-marker :position="this.location" />
-            <gmap-marker :position="this.destination" />
-        </gmap-map>
+    <div>
+        <div class="row center-xs travelText textBody uk-text-truncate">
+            Leave at {{departureTime}} to arrive at {{start.title}} by {{arrivalTime}}. Via:&nbsp;
+            <a @click="showMap = !showMap">{{travelMethod}}</a>
+        </div>
+
+        <div v-if="start">
+            <gmap-map v-show="false" ref="map" :center="start" :zoom="15" style="width: 100%; height: 300px">
+                <gmap-marker :position="this.start" />
+                <gmap-marker :position="this.destination" />
+            </gmap-map>
+        </div>
     </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import DateTime from './DateTime'
 
 export default {
+    extends: DateTime,
     data: function() {
         return {
             showMap: true,
             directions: null,
             departureTime: null,
             arrivalTime: null,
-            method: 'DRIVING',
 
             //Important Addresses
             home   : { title: 'Home',    lat: 51.018350,     lng: -114.313620 },
@@ -31,6 +39,13 @@ export default {
             userLat: 'getLat',
             userLng: 'getLng',
         }),
+        location: function() {
+            return {
+                title: 'loc',
+                lat: this.userLat,
+                lng: this.userLng
+            }
+        },
         distanceToHome: function() {
             if (this.userLat && this.userLng) {}
                 return Math.sqrt((this.userLat - this.home.lat)*(this.userLat - this.home.lat) + (this.userLng - this.home.lng)*(this.userLng - this.home.lng));
@@ -39,24 +54,24 @@ export default {
             if (this.userLat && this.userLng)
                 return Math.sqrt((this.userLat - this.work.lat)*(this.userLat - this.work.lat) + (this.userLng - this.work.lng)*(this.userLng - this.work.lng));
         },
-        location: function() {
+        start: function() {
             console.log('%c distanceToHome ', 'background: #222; color: #bada55');
             console.log(this.distanceToHome);
-            // Based off our distance to keypoints set our start location
+
+            // Based off our distance to keypoints set our start start
             if (this.distanceToHome < 0.05)
                 return this.home
             else if (this.distanceToWork < 0.05)
                 return this.work
             else
-                return {
-                    title: 'loc',
-                    lat: this.userLat,
-                    lng: this.userLng
-                }
+                return this.location
         },
         destination: function() {
             return this.distanceToHome < 0.05 ? this.work : this.home
-        }
+        },
+        travelMethod: function() {
+            return 'Driving'
+        },
     },
     mounted: function() {
         this.$refs.map.$mapPromise.then(() => {
@@ -78,7 +93,7 @@ export default {
                         console.log(_this.directions);
 
                         _this.setAddress(_this.directions[0].start_address)
-                        _this.parseTravelTime(_this.directions[0].duration.value)
+                        _this.parseTravelData(_this.directions[0].duration.value)
                         directionsDisplay.setDirections(response);
                     } else {
                         window.alert('Directions request failed due to ' + status);
@@ -86,42 +101,25 @@ export default {
                 });
             }
 
-            calculateAndDisplayRoute(directionsService, directionsDisplay, this.location, this.destination);
+            calculateAndDisplayRoute(directionsService, directionsDisplay, this.start, this.destination);
         })
     },
     methods: {
-        timeConvert(time) {
-            var hour = time.getHours(), minute = time.getMinutes()
-
-            if (hour >= 12)
-                hour -= 12
-
-            if (minute < 10)
-                minute = "0" + minute
-
-            return hour+":"+minute
-        },
-
-        parseTravelTime(duration) {
+        parseTravelData(duration) {
             var date = new Date()
-            var travelObj = {
-                departureLoc: this.location.title,
-                arrivalLoc: this.destination.title,
-                method: 'Driving',
-                departureTime: date,
-                arrivalTime: new Date(date.getTime() + duration*1000),
-                days: 0
-            }
 
-            travelObj.departureTime = this.timeConvert(travelObj.departureTime)
-            travelObj.arrivalTime = this.timeConvert(travelObj.arrivalTime)
+            this.departureTime = date
+            this.arrivalTime = new Date(date.getTime() + duration*1000)
 
+            // Prettify the times for display
+            this.departureTime = this.convert24To12(this.departureTime.getHours()) + ':' +
+                                 this.zeroPadding(this.departureTime.getMinutes(), 2)
 
-            this.setTravelObj(travelObj)
+            this.arrivalTime = this.convert24To12(this.arrivalTime.getHours()) + ':' +
+                               this.zeroPadding(this.arrivalTime.getMinutes(), 2)
         },
 
         ...mapActions('settings', {
-            setTravelObj: 'setTravelObj',
             setAddress: 'setAddress',
         })
     }
@@ -129,4 +127,12 @@ export default {
 </script>
 
 <style scoped>
+    .travelText {
+        text-align: center;
+        font-size: 4vh;
+        margin-top: 15vh;
+    }
+    a {
+        color: black;
+    }
 </style>

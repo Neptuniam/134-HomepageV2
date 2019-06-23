@@ -1,36 +1,36 @@
 const state = {
+    showHome: true,
+    address: null,
     lat: null,
     lng: null,
-    travelObj: null,
-    address: null,
 }
 const getters = {
+    getShowHome: (state) => state.showHome,
+    getAddress: (state) => state.address,
+
     getLat:  (state) => state.lat,
     getLng:  (state) => state.lng,
     getLocation: (state) => state.lat+','+state.lng,
-
-    getTravelObj: (state) => state.travelObj,
-    getAddress: (state) => state.address,
 }
 const mutations = {
+    setShowHome: (state, payload) => { state.showHome = payload; },
+    setAddress: (state, payload) => { state.address = payload; },
     setLat: (state, payload) => { state.lat = payload; },
     setLng: (state, payload) => { state.lng = payload; },
-    setTravelObj: (state, payload) => { state.travelObj = payload; },
-    setAddress: (state, payload) => { state.address = payload; }
 }
 const actions = {
-    setLocation: ({commit}, payload) => {
-        commit('setLat', payload.lat);
-        commit('setLng', payload.lng);
-    },
-
-    setTravelObj: ({commit}, payload) => {
-        commit('setTravelObj', payload);
+    setShowHome: ({commit}, payload) => {
+        commit('setShowHome', payload);
     },
 
     setAddress: ({commit}, payload) => {
         commit('setAddress', payload);
-    }
+    },
+
+    setLocation: ({commit}, payload) => {
+        commit('setLat', payload.lat);
+        commit('setLng', payload.lng);
+    },
 }
 
 export default {

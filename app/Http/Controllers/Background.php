@@ -1,13 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-//
-// use Auth;
-// use App\Feature;
-// use App\Permission;
-// use App\PluginSubMenu;
-// use Illuminate\Http\Request;
-use Storage;
 
 class Background extends Controller {
     function getBackground() {
@@ -21,6 +13,4 @@ class Background extends Controller {
         return $path;
     }
 }
-
-  // getBackground();
 ?>
