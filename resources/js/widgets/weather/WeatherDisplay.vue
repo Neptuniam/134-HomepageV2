@@ -48,15 +48,10 @@ export default {
             address:   'getAddress',
         }),
     },
-    watch: {
-        location: function() {
-            // Perform the Weather query anytime the users location changes
-            this.getWeather()
-        }
-    },
     created: function() {
         // Update the weather every 10 minutes
         // setInterval(this.getWeather, 600000)
+        this.getWeather()
     },
     methods: {
         getWeather() {

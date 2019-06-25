@@ -1,20 +1,26 @@
 <template>
-    <div class="row center-xs middle-xs  nomargin">
+    <div class="row center-xs middle-xs nomargin">
         <div class="col-xs-8">
-            <weather />
-
-            <maps />
-
-            <favourites />
-
-            <Calendar />
+            <div v-for="widget in activeWidgets">
+                <component :is="widget.title" />
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
+    computed: {
+        activeWidgets: function() {
+            if (this.widgets)
+                return this.widgets.filter(widget => widget.status == 1)
+        },
 
+        ...mapGetters('settings', {
+            widgets: 'getWidgets'
+        })
+    },
 }
 </script>
 

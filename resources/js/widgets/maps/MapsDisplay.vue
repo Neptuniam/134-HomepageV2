@@ -16,7 +16,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import DateTime from './DateTime'
+import DateTime from '../DateTime'
 
 export default {
     extends: DateTime,
@@ -38,6 +38,7 @@ export default {
         ...mapGetters('settings', {
             userLat: 'getLat',
             userLng: 'getLng',
+            locations: 'getLocations',
         }),
         location: function() {
             return {
@@ -46,13 +47,21 @@ export default {
                 lng: this.userLng
             }
         },
+        homeLoc: function() {
+            if (this.locations)
+                return this.locations.find(location => location.favourite == 'Home')
+        },
+        favLoc: function() {
+            if (this.locations)
+                return this.locations.find(location => location.favourite == 'Favourite')
+        },
         distanceToHome: function() {
-            if (this.userLat && this.userLng) {}
-                return Math.sqrt((this.userLat - this.home.lat)*(this.userLat - this.home.lat) + (this.userLng - this.home.lng)*(this.userLng - this.home.lng));
+            if (this.userLat && this.userLng && this.homeLoc)
+                return Math.sqrt((this.userLat - this.homeLoc.lat)*(this.userLat - this.homeLoc.lat) + (this.userLng - this.homeLoc.lng)*(this.userLng - this.homeLoc.lng));
         },
         distanceToWork: function() {
-            if (this.userLat && this.userLng)
-                return Math.sqrt((this.userLat - this.work.lat)*(this.userLat - this.work.lat) + (this.userLng - this.work.lng)*(this.userLng - this.work.lng));
+            if (this.userLat && this.userLng && this.favLoc)
+                return Math.sqrt((this.userLat - this.favLoc.lat)*(this.userLat - this.favLoc.lat) + (this.userLng - this.favLoc.lng)*(this.userLng - this.favLoc.lng));
         },
         start: function() {
             console.log('%c distanceToHome ', 'background: #222; color: #bada55');

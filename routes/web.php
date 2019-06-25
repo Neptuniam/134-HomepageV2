@@ -14,6 +14,28 @@ Route::get('/', function () {
     return view('master');
 });
 
-Route::group(['prefix'=>'background'],function(){
+Route::group(['prefix'=>'background'], function(){
     Route::get('/','Background@getBackground');
+});
+
+
+Route::group(['prefix'=>'settings'], function(){
+    Route::group(['prefix'=>'widgets'], function(){
+        Route::get('/','Settings@fetchWidgets');
+        Route::put('/','Settings@updateWidget');
+    });
+
+    Route::group(['prefix'=>'locations'], function(){
+        Route::get('/', 'Settings@fetchLocations');
+        Route::post('/','Settings@createLocation');
+        Route::put('/', 'Settings@updateLocation');
+        Route::put('/delete', 'Settings@deleteLocation');
+    });
+
+    Route::group(['prefix'=>'favourites'], function(){
+        Route::get('/', 'Settings@fetchFavourites');
+        Route::post('/','Settings@createFavourite');
+        Route::put('/', 'Settings@updateFavourite');
+        Route::put('/delete', 'Settings@deleteFavourite');
+    });
 });

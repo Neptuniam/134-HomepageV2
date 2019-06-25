@@ -1,12 +1,10 @@
 <template>
-    <div class="row middle-xs homepage transparent" id="background">
-        <div class="pageControl">
-            <a @click="setShowHome(!showHome)" class="uk-icon" :uk-icon="'icon: '+ controlIcon +'; ratio: 2;'" />
-        </div>
+    <div class="row center-xs middle-xs homepage transparent" id="background">
+        <a @click="setShowHome(!showHome)" class="uk-icon pageControl" :uk-icon="'icon: '+ controlIcon +'; ratio: 2;'" />
 
         <DateTime />
 
-        <div v-show="showHome == true">
+        <div v-if="showHome == true">
             <Home />
         </div>
         <div v-if="showHome == false">
@@ -59,9 +57,21 @@ export default {
         ...mapActions('settings', {
             setLocation: 'setLocation',
             setShowHome: 'setShowHome',
+            fetchWidgets: 'fetchWidgets',
+            fetchLocations: 'fetchLocations',
+            fetchFavourites: 'fetchFavourites',
         })
     },
     created: function() {
+        // Fetch User Settings
+        this.fetchWidgets()
+
+        // Fetch Users Locations
+        this.fetchLocations()
+
+        // Fetch Users Favourites
+        this.fetchFavourites()
+
         // Update the users location every 10 minutes
         // setInterval(this.getLocation, 10000)
         this.getLocation()
@@ -77,7 +87,7 @@ export default {
     .homepage {
         /* height: 100vh;
         width: 100vw; */
-        /* overflow: hidden; */
+            overflow: hidden;
         color: black;
     }
 

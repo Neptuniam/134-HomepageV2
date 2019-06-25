@@ -24,25 +24,25 @@ export default {
             weekDays: ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"],
             today: new Date(),
             days: [{
-                date: 5,
-                todos: ['Homepage']
-            }, {
-                date: 6,
-                todos: []
-            }, {
                 date: 0,
                 todos: ['Homepage']
             }, {
                 date: 1,
-                todos: ['Homepage', 'Homepage']
-            }, {
-                date: 2,
                 todos: []
             }, {
+                date: 2,
+                todos: ['Homepage']
+            }, {
                 date: 3,
-                todos: ['Homepage', 'Homepage', 'Homepage']
+                todos: ['Homepage', 'Homepage']
             }, {
                 date: 4,
+                todos: []
+            }, {
+                date: 5,
+                todos: ['Homepage', 'Homepage', 'Homepage']
+            }, {
+                date: 6,
                 todos: []
             },
         ]
