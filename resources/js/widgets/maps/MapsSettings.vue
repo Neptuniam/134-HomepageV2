@@ -3,9 +3,9 @@
         <div class="row center-xs fullWidth">
             <div class="col-xs-8">
                 <div class="row fullWidth">
-                    <span class="col-xs start-xs uk-form-label" for="form-stacked-select">Home Location</span>
+                    <span class="col-xs start-xs uk-form-label textColor textTitle" for="form-stacked-select">Home Location</span>
 
-                    <span v-if="homeLoc" class="col-xs end-xs uk-form-label">{{homeLoc.title}}</span>
+                    <span v-if="homeLoc" class="col-xs end-xs uk-form-label textColor textTitle">{{homeLoc.title}}</span>
                 </div>
 
                 <div class="uk-form-controls fullWidth">
@@ -22,9 +22,9 @@
         <div class="row center-xs fullWidth">
             <div class="col-xs-8">
                 <div class="row fullWidth">
-                    <span class="col-xs start-xs uk-form-label" for="form-stacked-select">Favourite Location</span>
+                    <span class="col-xs start-xs uk-form-label textColor textTitle" for="form-stacked-select">Favourite Location</span>
 
-                    <span v-if="favLoc" class="col-xs end-xs uk-form-label">{{favLoc.title}}</span>
+                    <span v-if="favLoc" class="col-xs end-xs uk-form-label textColor textTitle">{{favLoc.title}}</span>
                 </div>
 
                 <div class="uk-form-controls fullWidth">
@@ -38,7 +38,7 @@
             </div>
         </div>
 
-        <table class="uk-table uk-table-striped">
+        <table class="uk-table">
             <thead>
                 <tr>
                     <th>Title</th>
@@ -50,10 +50,10 @@
             </thead>
             <tbody>
                 <tr v-for="location in locations">
-                    <td> <input type="text" class="fullWidth uk-input" v-model="location.title"> </td>
-                    <td> <input type="text" class="fullWidth uk-input" v-model="location.address"> </td>
-                    <td> <input type="text" class="fullWidth uk-input" v-model="location.lat"> </td>
-                    <td> <input type="text" class="fullWidth uk-input" v-model="location.lng"> </td>
+                    <td> <input type="text" class="fullWidth textBody uk-input" v-model="location.title"> </td>
+                    <td> <input type="text" class="fullWidth textBody uk-input" v-model="location.address"> </td>
+                    <td> <input type="text" class="fullWidth textBody uk-input" v-model="location.lat"> </td>
+                    <td> <input type="text" class="fullWidth textBody uk-input" v-model="location.lng"> </td>
                     <td class="uk-button-group">
                         <button class="uk-button uk-button-primary uk-button-small" @click="updateLocation(location)">
                             <span uk-icon="pencil"></span>
@@ -64,10 +64,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <td> <input type="text" class="fullWidth uk-input" v-model="newLocation.title"> </td>
-                    <td> <input type="text" class="fullWidth uk-input" v-model="newLocation.address"> </td>
-                    <td> <input type="text" class="fullWidth uk-input" v-model="newLocation.lat"> </td>
-                    <td> <input type="text" class="fullWidth uk-input" v-model="newLocation.lng"> </td>
+                    <td> <input type="text" class="fullWidth textBody uk-input" v-model="newLocation.title"> </td>
+                    <td> <input type="text" class="fullWidth textBody uk-input" v-model="newLocation.address"> </td>
+                    <td> <input type="text" class="fullWidth textBody uk-input" v-model="newLocation.lat"> </td>
+                    <td> <input type="text" class="fullWidth textBody uk-input" v-model="newLocation.lng"> </td>
                     <td>
                         <button class="uk-button uk-button-primary uk-button-small"
                                @click="updateLocation(newLocation); newLocation={id: null, title: '', address: '', lng: '', lat: '', favourite: null}">
@@ -145,4 +145,12 @@ export default {
         padding: 0;
         height: 2.4rem;
     }
+
+    tr th {
+        text-align: center;
+    }
+
+    /* tr:nth-child(even) {
+        background: rgba(240,240,240,1);
+    } */
 </style>

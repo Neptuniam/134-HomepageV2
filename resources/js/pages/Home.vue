@@ -25,5 +25,7 @@ export default {
 </script>
 
 <style scoped>
-
+    /* .row {
+        color: #29375E;
+    } */
 </style>

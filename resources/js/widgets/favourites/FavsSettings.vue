@@ -1,5 +1,5 @@
 <template>
-    <table class="uk-table uk-table-striped">
+    <table class="uk-table">
         <thead>
             <tr>
                 <th>Title</th>
@@ -71,4 +71,12 @@ export default {
         padding: 0;
         height: 2.4rem;
     }
+
+    tr th {
+        text-align: center;
+    }
+
+    /* tr:nth-child(even) {
+        background: rgba(240,240,240,1);
+    } */
 </style>

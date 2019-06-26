@@ -1,5 +1,5 @@
 <template>
-    <div class="row center-xs middle-xs homepage transparent" id="background">
+    <div class="row center-xs middle-xs homepage transparent nomargin" id="background">
         <a @click="setShowHome(!showHome)" class="uk-icon pageControl" :uk-icon="'icon: '+ controlIcon +'; ratio: 2;'" />
 
         <DateTime />
@@ -125,11 +125,11 @@ export default {
     }
 
     .textSpecial {
-        font-family: 'Poiret One', cursive;
+        font-family: 'Arima Madurai', cursive;
     }
 
     .textTitle {
-        font-family: 'Arima Madurai', cursive;
+        font-family: 'Poiret One', cursive;
     }
 
     .textBody {

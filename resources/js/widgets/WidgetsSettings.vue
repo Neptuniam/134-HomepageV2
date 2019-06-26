@@ -1,5 +1,5 @@
 <template>
-    <table class="uk-table uk-table-striped">
+    <table class="uk-table">
         <thead>
             <tr>
                 <th>Widget Title</th>
@@ -10,7 +10,10 @@
             <tr v-for="widget in widgets" class="textBody">
                 <td>{{widget.title}}</td>
                 <td>
-                    <a @click="toggleStatus(widget)">{{readable[widget.status]}}</a>
+                    <button type="button" :class="['uk-button uk-button-small', color(widget)]" @click="toggleStatus(widget)">
+                        {{readable[widget.status]}}
+                    </button>
+                    <!-- <a @click="toggleStatus(widget)">{{readable[widget.status]}}</a> -->
                 </td>
             </tr>
         </tbody>
@@ -33,6 +36,10 @@ export default {
     },
 
     methods: {
+        color(widget) {
+            return widget.status ? 'uk-button-default' : 'uk-button-danger'
+        },
+
         toggleStatus(widget) {
             widget.status == 1 ? widget.status = 0 : widget.status = 1
             this.updateWidget(widget)
@@ -46,5 +53,10 @@ export default {
 </script>
 
 <style scoped>
-
+    tr th {
+        text-align: center;
+    }
+    /* tr {
+        background: rgba(240,240,240,1);
+    } */
 </style>

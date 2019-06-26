@@ -2,13 +2,13 @@
     <div class="row middle-xs weatherDisplay">
         <div class="col-xs">
             <div v-if="weather">
-                <div class="row center-xs bottom-xs location textTitle" :uk-tooltip="address">
+                <div class="row center-xs bottom-xs location textSpecial" :uk-tooltip="address">
                     {{weather.location.name}}, {{weather.location.region}}
                 </div>
 
                 <div class="row center-xs middle-xs curDescription nopadding">
                     <img :src="weather.current.condition.icon" alt="Condition Icon" class="curIcon">
-                    <div class="uk-text-truncate curText textTitle">
+                    <div class="uk-text-truncate curText textSpecial">
                         {{weather.current.feelslike_c}}&deg;C - {{weather.current.condition.text}}
                     </div>
                 </div>
