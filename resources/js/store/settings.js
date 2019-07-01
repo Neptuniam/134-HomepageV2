@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const state = {
-    showHome: true  ,
+    showHome: false,
     address: null,
     lat: null,
     lng: null,

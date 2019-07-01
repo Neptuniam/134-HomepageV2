@@ -62,7 +62,7 @@
                         <button class="uk-button uk-button-primary uk-button-small" @click="updateLocation(location)">
                             <span uk-icon="pencil"></span>
                         </button>
-                        <button class="uk-button uk-button-secondary uk-button-small" @click="deleteLocation(location)">
+                        <button class="uk-button uk-button-danger uk-button-small" @click="deleteLocation(location)">
                             <span uk-icon="trash"></span>
                         </button>
                     </td>
@@ -124,11 +124,17 @@ export default {
 </script>
 
 <style scoped>
+    tr th {
+        text-align: center;
+        padding: 30px 0 0 0;
+    }
+
     .uk-form-label {
         padding-left: 7%;
     }
 
-    tr th {
-        text-align: center;
+    .uk-button {
+        height: 40px;
+        width: 50px;
     }
 </style>

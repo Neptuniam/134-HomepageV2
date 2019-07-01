@@ -1,10 +1,10 @@
 <template>
-    <div class="row center-xs middle-xs homepage transparent nomargin" id="background" :style="'background: rgba(240,240,240,'+transparency+');'">
+    <div class="row center-xs middle-xs homepage transparent nomargin uk-animation-fade" id="background" :style="'background: rgba(240,240,240,'+transparency+');'">
         <a @click="setShowHome(!showHome)" class="uk-icon pageControl" :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" />
 
         <DateTime />
 
-        <div v-if="showHome == true">
+        <div v-show="showHome == true">
             <Home />
         </div>
         <div v-if="showHome == false">
@@ -29,7 +29,7 @@ export default {
             return this.showHome ? 'cog' : 'home'
         },
         transparency: function() {
-            return this.showHome ? 0.35 : 0.55
+            return this.showHome ? 0.35 : 0.65
         },
 
         ...mapGetters('settings', {

@@ -1,7 +1,7 @@
 <template>
     <div class="row center-xs middle-xs fullWidth textColor">
         <div class="col-xs-4">
-            <div v-if="activeUser" class="row center-xs fullWidth">
+            <div v-if="activeUser" class="row center-xs fullWidth nomargin">
                 <h2 class="textTitle">Welcome, {{activeUser.name}}!</h2>
             </div>
 
@@ -17,7 +17,7 @@
             <span class="row uk-form-label fullWidth textColor textBody">Password</span>
 
             <div class="uk-form-controls fullWidth">
-                <input type="pass" name="pass" v-model="pass" class="uk-input textBody fullWidth">
+                <input type="password" name="pass" v-model="pass" class="uk-input textBody fullWidth">
             </div>
 
             <br>

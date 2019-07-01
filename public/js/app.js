@@ -1763,7 +1763,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1771,8 +1770,8 @@ __webpack_require__.r(__webpack_exports__);
         suppressScrollX: true
       },
       activeTab: {
-        title: 'Favourites',
-        src: 'FavSettings'
+        title: 'Account',
+        src: 'LoginSettings'
       },
       tabs: [{
         title: 'Account',
@@ -1837,7 +1836,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.showHome ? 'cog' : 'home';
     },
     transparency: function transparency() {
-      return this.showHome ? 0.35 : 0.55;
+      return this.showHome ? 0.35 : 0.65;
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
     showHome: 'getShowHome'
@@ -2221,6 +2220,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
 //
 //
 //
@@ -2738,7 +2738,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Settings {\n    width: 100vw;\n}\n.footer {\n    position: absolute;\n    bottom: 0;\n}\n.scrollSpace {\n    height: 70vh;\n    width: 100%;\n}\n.uk-tab>*>a {\n    font-size: 1.5rem;\n    color: grey;\n}\n.textColor, .Settings h1, h2, h4, h5, .uk-tab > .uk-active > a {\n    color: black;\n}\ninput, .uk-input, .uk-select {\n    border-radius: 30px;\n    background: rgba(30,30,30,0.5);\n    color: white;\n}\n.uk-table th {\n    color: black;\n}\n.uk-table td {\n    padding: 10px 5px;\n}\n\n/* h1 {\n    margin: 15px;\n}\n\nh5 {\n    margin: 10px 0;\n} */\n", ""]);
+exports.push([module.i, "\n.Settings {\n    height: 100vh;\n    width: 100vw;\n}\n.footer {\n    position: absolute;\n    bottom: 0;\n}\n.scrollSpace {\n    height: 69vh;\n    width: 100%;\n}\n.uk-tab>*>a {\n    font-size: 4vh;\n    color: grey;\n}\n.textColor, .Settings h1, h2, h4, h5, .uk-tab > .uk-active > a {\n    color: black;\n}\ninput, select, .uk-input, .uk-select {\n    border-radius: 30px;\n    background: rgba(30,30,30,0.5);\n    color: white;\n}\ninput:focus, select:focus, .uk-input:focus, .uk-select:focus {\n    border-radius: 30px;\n    background: rgba(50,50,50,0.7);\n    color: white;\n}\ninput:-webkit-autofill,\ninput:-webkit-autofill:hover,\ninput:-webkit-autofill:focus,\ninput:-webkit-autofill:active  {\n    -webkit-box-shadow: 0 0 0 30px rgba(50,50,50,0.7) inset !important;\n    -webkit-text-fill-color: white !important;\n}\n.uk-table th {\n    color: black;\n}\n.uk-table td {\n    padding: 10px 5px;\n}\nh1 {\n    font-size: 6.5vh;\n    margin: 0.5% 0 0 0;\n}\nh5 a {\n    color: #333;\n}\n\n/* h1 {\n    margin: 15px;\n}\n\nh5 {\n    margin: 10px 0;\n} */\n", ""]);
 
 // exports
 
@@ -2814,7 +2814,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.rowHeight[data-v-10acad64] {\n    height: 2.5rem;\n}\n.widgetTitle[data-v-10acad64] {\n    font-size: 1.3rem;\n}\n\n/* tr th {\n    text-align: center;\n} */\n/* tr {\n    background: rgba(240,240,240,1);\n} */\n", ""]);
+exports.push([module.i, "\n.rowHeight[data-v-10acad64] {\n    height: 2.5rem;\n}\n.widgetTitle[data-v-10acad64] {\n    font-size: 1.3rem;\n}\n", ""]);
 
 // exports
 
@@ -2871,7 +2871,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* td {\n    height: 100%;\n} */\n\n/* .uk-button {\n    padding: 0;\n    height: 2.4rem;\n} */\ntr th[data-v-e2019a9c] {\n    text-align: center;\n}\n.posWidth[data-v-e2019a9c] {\n    width: 30px;\n}\n\n/* tr:nth-child(even) {\n    background: rgba(240,240,240,1);\n} */\n", ""]);
+exports.push([module.i, "\ntr th[data-v-e2019a9c] {\n    text-align: center;\n    padding: 0;\n}\n.posWidth[data-v-e2019a9c] {\n    width: 60px;\n}\n.uk-button[data-v-e2019a9c] {\n    height: 40px;\n    width: 50px;\n}\n", ""]);
 
 // exports
 
@@ -2909,7 +2909,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.uk-form-label[data-v-b8bb28f8] {\n    padding-left: 7%;\n}\ntr th[data-v-b8bb28f8] {\n    text-align: center;\n}\n", ""]);
+exports.push([module.i, "\ntr th[data-v-b8bb28f8] {\n    text-align: center;\n    padding: 30px 0 0 0;\n}\n.uk-form-label[data-v-b8bb28f8] {\n    padding-left: 7%;\n}\n.uk-button[data-v-b8bb28f8] {\n    height: 40px;\n    width: 50px;\n}\n", ""]);
 
 // exports
 
@@ -4785,70 +4785,70 @@ var render = function() {
     "div",
     { staticClass: "row center-xs middle-xs nomargin Settings" },
     [
-      _c(
-        "div",
-        { staticClass: "col-xs-12 fullWidth background" },
-        [
-          _c("h1", { staticClass: "textSpecial" }, [
-            _vm._v("Your " + _vm._s(_vm.activeTab.title))
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row center-xs" }, [
-            _c(
-              "ul",
-              { staticClass: "col-xs-4", attrs: { "uk-tab": "" } },
-              _vm._l(_vm.tabs, function(tab) {
-                return _c("li", [
-                  _c(
-                    "a",
-                    {
-                      staticClass:
-                        "uk-text-capitalize textTitle tabsTitle noselect",
-                      on: {
-                        click: function($event) {
-                          _vm.activeTab = tab
-                        }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(tab.title) +
-                          "\n                    "
-                      )
-                    ]
+      _c("div", { staticClass: "row center-xs fullWidth nospacing" }, [
+        _c("h1", { staticClass: "textSpecial" }, [
+          _vm._v("Your " + _vm._s(_vm.activeTab.title))
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row center-xs nospacing" }, [
+        _c(
+          "ul",
+          { attrs: { "uk-tab": "" } },
+          _vm._l(_vm.tabs, function(tab) {
+            return _c("li", [
+              _c(
+                "a",
+                {
+                  staticClass:
+                    "uk-text-capitalize textTitle tabsTitle noselect",
+                  on: {
+                    click: function($event) {
+                      _vm.activeTab = tab
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(tab.title) +
+                      "\n                "
                   )
-                ])
-              }),
-              0
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "vue-custom-scrollbar",
-            {
-              staticClass: "scrollSpace",
-              attrs: { settings: _vm.scrollSettings }
-            },
-            [_c(_vm.activeTab.src, { tag: "component" })],
-            1
-          )
-        ],
+                ]
+              )
+            ])
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "vue-custom-scrollbar",
+        {
+          staticClass: "scrollSpace nospacing",
+          attrs: { settings: _vm.scrollSettings }
+        },
+        [_c(_vm.activeTab.src, { tag: "component" })],
         1
       ),
       _vm._v(" "),
-      _c("h5", { staticClass: "row fullWidth center-xs footer textBody" }, [
-        _vm._v(
-          "\n        HomepageV2 copyright © " +
-            _vm._s(1900 + new Date().getYear()) +
-            "\n        "
-        ),
-        _c("a", { attrs: { href: "https://ljones.ca", target: "_blank" } }, [
-          _vm._v(" Liam Jones")
-        ]),
-        _vm._v(". All Rights Reserved.\n    ")
-      ])
-    ]
+      _c(
+        "h5",
+        { staticClass: "row fullWidth center-xs footer textBody nospacing" },
+        [
+          _vm._v(
+            "\n        HomepageV2 copyright © " +
+              _vm._s(1900 + new Date().getYear()) +
+              " of  \n        "
+          ),
+          _c("a", { attrs: { href: "https://ljones.ca", target: "_blank" } }, [
+            _vm._v(" Liam Jones")
+          ]),
+          _vm._v(". All Rights Reserved.\n    ")
+        ]
+      )
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -4876,7 +4876,8 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "row center-xs middle-xs homepage transparent nomargin",
+      staticClass:
+        "row center-xs middle-xs homepage transparent nomargin uk-animation-fade",
       style: "background: rgba(240,240,240," + _vm.transparency + ");",
       attrs: { id: "background" }
     },
@@ -4893,7 +4894,21 @@ var render = function() {
       _vm._v(" "),
       _c("DateTime"),
       _vm._v(" "),
-      _vm.showHome == true ? _c("div", [_c("Home")], 1) : _vm._e(),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.showHome == true,
+              expression: "showHome == true"
+            }
+          ]
+        },
+        [_c("Home")],
+        1
+      ),
       _vm._v(" "),
       _vm.showHome == false ? _c("div", [_c("Settings")], 1) : _vm._e()
     ],
@@ -4960,7 +4975,7 @@ var render = function() {
     [
       _c("div", { staticClass: "col-xs-4" }, [
         _vm.activeUser
-          ? _c("div", { staticClass: "row center-xs fullWidth" }, [
+          ? _c("div", { staticClass: "row center-xs fullWidth nomargin" }, [
               _c("h2", { staticClass: "textTitle" }, [
                 _vm._v("Welcome, " + _vm._s(_vm.activeUser.name) + "!")
               ])
@@ -5016,7 +5031,7 @@ var render = function() {
               }
             ],
             staticClass: "uk-input textBody fullWidth",
-            attrs: { type: "pass", name: "pass" },
+            attrs: { type: "password", name: "pass" },
             domProps: { value: _vm.pass },
             on: {
               input: function($event) {
@@ -5378,7 +5393,7 @@ var render = function() {
               _c(
                 "button",
                 {
-                  staticClass: "uk-button uk-button-secondary uk-button-small",
+                  staticClass: "uk-button uk-button-danger uk-button-small",
                   on: {
                     click: function($event) {
                       return _vm.deleteFavourite(favourite)
@@ -5516,13 +5531,19 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Title")]),
+        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Title")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Link")]),
+        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Link")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Image Source")]),
+        _c("th", { staticClass: "uk-text-capitalize" }, [
+          _vm._v("Image Source")
+        ]),
         _vm._v(" "),
-        _c("th", { staticClass: "posWidth" }, [_vm._v("Position")])
+        _c("th", { staticClass: "uk-text-capitalize posWidth" }, [
+          _vm._v("Position")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Edit")])
       ])
     ])
   }
@@ -5572,7 +5593,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("Driving")]
+              [_vm._v(_vm._s(_vm.travelMethod))]
             )
           ]
         )
@@ -5934,8 +5955,7 @@ var render = function() {
                 _c(
                   "button",
                   {
-                    staticClass:
-                      "uk-button uk-button-secondary uk-button-small",
+                    staticClass: "uk-button uk-button-danger uk-button-small",
                     on: {
                       click: function($event) {
                         return _vm.deleteLocation(location)
@@ -22251,7 +22271,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
 var state = {
-  showHome: true,
+  showHome: false,
   address: null,
   lat: null,
   lng: null,

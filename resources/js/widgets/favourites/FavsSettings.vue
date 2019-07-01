@@ -2,10 +2,11 @@
     <table class="uk-table">
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Link</th>
-                <th>Image Source</th>
-                <th class="posWidth">Position</th>
+                <th class="uk-text-capitalize">Title</th>
+                <th class="uk-text-capitalize">Link</th>
+                <th class="uk-text-capitalize">Image Source</th>
+                <th class="uk-text-capitalize posWidth">Position</th>
+                <th class="uk-text-capitalize">Edit</th>
             </tr>
         </thead>
         <tbody>
@@ -18,7 +19,7 @@
                     <button class="uk-button uk-button-primary uk-button-small" @click="updateFavourite(favourite)">
                         <span uk-icon="pencil"></span>
                     </button>
-                    <button class="uk-button uk-button-secondary uk-button-small" @click="deleteFavourite(favourite)">
+                    <button class="uk-button uk-button-danger uk-button-small" @click="deleteFavourite(favourite)">
                         <span uk-icon="trash"></span>
                     </button>
                 </td>
@@ -63,24 +64,17 @@ export default {
 </script>
 
 <style scoped>
-    /* td {
-        height: 100%;
-    } */
-
-    /* .uk-button {
-        padding: 0;
-        height: 2.4rem;
-    } */
-
     tr th {
         text-align: center;
+        padding: 0;
     }
 
     .posWidth {
-        width: 30px;
+        width: 60px;
     }
 
-    /* tr:nth-child(even) {
-        background: rgba(240,240,240,1);
-    } */
+    .uk-button {
+        height: 40px;
+        width: 50px;
+    }
 </style>

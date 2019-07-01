@@ -2,7 +2,7 @@
     <div>
         <div v-if="destination" class="row center-xs travelText textBody uk-text-truncate">
             Leave at {{departureTime}} to arrive at {{destination.title}} by {{arrivalTime}}. Via:&nbsp;
-            <a @click="showMap = !showMap">Driving</a>
+            <a @click="showMap = !showMap">{{travelMethod}}</a>
         </div>
 
         <div v-show="false">

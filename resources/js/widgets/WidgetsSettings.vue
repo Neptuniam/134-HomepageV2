@@ -62,11 +62,4 @@ export default {
     .widgetTitle {
         font-size: 1.3rem;
     }
-
-    /* tr th {
-        text-align: center;
-    } */
-    /* tr {
-        background: rgba(240,240,240,1);
-    } */
 </style>
