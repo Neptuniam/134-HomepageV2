@@ -5,7 +5,7 @@
                 <th>Title</th>
                 <th>Link</th>
                 <th>Image Source</th>
-                <th>Position</th>
+                <th class="posWidth">Position</th>
             </tr>
         </thead>
         <tbody>
@@ -27,8 +27,8 @@
                 <td> <input type="text" class="fullWidth uk-input" v-model="newFavourite.title"> </td>
                 <td> <input type="text" class="fullWidth uk-input" v-model="newFavourite.url"> </td>
                 <td> <input type="text" class="fullWidth uk-input" v-model="newFavourite.src"> </td>
-                <td> <input type="number" class="uk-input" v-model="newFavourite.pos"> </td>
-                <td>
+                <td> <input type="number" class="posWidth uk-input" v-model="newFavourite.pos"> </td>
+                <td class="posWidth">
                     <button class="uk-button uk-button-primary uk-button-small"
                            @click="updateFavourite(newFavourite); newFavourite={id: null, title: '', url: '', src: ''}">
                         <span uk-icon="plus"></span>
@@ -63,17 +63,21 @@ export default {
 </script>
 
 <style scoped>
-    td {
+    /* td {
         height: 100%;
-    }
+    } */
 
-    .uk-button {
+    /* .uk-button {
         padding: 0;
         height: 2.4rem;
-    }
+    } */
 
     tr th {
         text-align: center;
+    }
+
+    .posWidth {
+        width: 30px;
     }
 
     /* tr:nth-child(even) {

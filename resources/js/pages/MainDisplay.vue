@@ -1,5 +1,5 @@
 <template>
-    <div class="row center-xs middle-xs homepage transparent nomargin" id="background">
+    <div class="row center-xs middle-xs homepage transparent nomargin" id="background" :style="'background: rgba(240,240,240,'+transparency+');'">
         <a @click="setShowHome(!showHome)" class="uk-icon pageControl" :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" />
 
         <DateTime />
@@ -28,6 +28,9 @@ export default {
         controlIcon: function() {
             return this.showHome ? 'cog' : 'home'
         },
+        transparency: function() {
+            return this.showHome ? 0.35 : 0.55
+        },
 
         ...mapGetters('settings', {
             showHome: 'getShowHome',
@@ -51,11 +54,6 @@ export default {
 
         ...mapActions('settings', {
             setLocation: 'setLocation',
-            // fetchWidgets: 'fetchWidgets',
-            // fetchLocations: 'fetchLocations',
-            // fetchMapsSettings: 'fetchMapsSettings',
-            // fetchFavourites: 'fetchFavourites',
-
             setShowHome: 'setShowHome',
             fetchUser: 'fetchUser',
             fetchUsers: 'fetchUsers',
@@ -85,7 +83,7 @@ export default {
     }
 
     .transparent {
-        background: rgba(240,240,240,0.35);
+        /* background: rgba(240,240,240,0.75); */
         height: 100vh;
         width: 100vw;
     }

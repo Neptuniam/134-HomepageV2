@@ -1760,6 +1760,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1767,10 +1771,13 @@ __webpack_require__.r(__webpack_exports__);
         suppressScrollX: true
       },
       activeTab: {
-        title: 'Widgets',
-        src: 'WidgetsSettings'
+        title: 'Favourites',
+        src: 'FavSettings'
       },
       tabs: [{
+        title: 'Account',
+        src: 'LoginSettings'
+      }, {
         title: 'Widgets',
         src: 'WidgetsSettings'
       }, {
@@ -1779,9 +1786,6 @@ __webpack_require__.r(__webpack_exports__);
       }, {
         title: 'Favourites',
         src: 'FavSettings'
-      }, {
-        title: 'Account',
-        src: 'LoginSettings'
       }]
     };
   }
@@ -1831,6 +1835,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({
     controlIcon: function controlIcon() {
       return this.showHome ? 'cog' : 'home';
+    },
+    transparency: function transparency() {
+      return this.showHome ? 0.35 : 0.55;
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
     showHome: 'getShowHome'
@@ -1853,10 +1860,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
     setLocation: 'setLocation',
-    // fetchWidgets: 'fetchWidgets',
-    // fetchLocations: 'fetchLocations',
-    // fetchMapsSettings: 'fetchMapsSettings',
-    // fetchFavourites: 'fetchFavourites',
     setShowHome: 'setShowHome',
     fetchUser: 'fetchUser',
     fetchUsers: 'fetchUsers'
@@ -2544,6 +2547,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2734,7 +2738,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Settings {\n    width: 100vw;\n    color: white;\n}\n.background {\n    border-radius: 30px;\n\n    background: #0F2027;\n    background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027);\n}\n.scrollSpace {\n    height: 75vh;\n    width: 100%;\n}\n.uk-tab>*>a {\n    font-size: 1.5rem;\n}\n.textColor, h1, h2, .uk-button, .uk-tab > .uk-active > a, h4, h5 {\n    color: white;\n}\ninput, .uk-input, .uk-select {\n    border-radius: 30px;\n\n    background-color: #29375E;\n    border-color: #29375E;\n    color: #DCE7F9;\n}\n.uk-table td {\n    padding: 10px 5px;\n}\nh1 {\n    margin: 15px;\n}\nh5 {\n    margin: 10px 0;\n}\n", ""]);
+exports.push([module.i, "\n.Settings {\n    width: 100vw;\n}\n.footer {\n    position: absolute;\n    bottom: 0;\n}\n.scrollSpace {\n    height: 70vh;\n    width: 100%;\n}\n.uk-tab>*>a {\n    font-size: 1.5rem;\n    color: grey;\n}\n.textColor, .Settings h1, h2, h4, h5, .uk-tab > .uk-active > a {\n    color: black;\n}\ninput, .uk-input, .uk-select {\n    border-radius: 30px;\n    background: rgba(30,30,30,0.5);\n    color: white;\n}\n.uk-table th {\n    color: black;\n}\n.uk-table td {\n    padding: 10px 5px;\n}\n\n/* h1 {\n    margin: 15px;\n}\n\nh5 {\n    margin: 10px 0;\n} */\n", ""]);
 
 // exports
 
@@ -2753,7 +2757,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.homepage {\n    overflow: hidden;\n    color: black;\n}\n.transparent {\n    background: rgba(240,240,240,0.35);\n    height: 100vh;\n    width: 100vw;\n}\n.pageControl {\n    position: absolute;\n    top: 0px;\n    left: 0px;\n\n    width: 9vw;\n    margin: 2vh;\n}\n.pageControl:hover {\n    color: white;\n}\n.fullWidth {\n    width: 100%;\n}\n.fullHeight {\n    height: 100%;\n}\n.nopadding {\n    padding: 0;\n}\n.nomargin {\n    margin: 0;\n}\n.nospacing {\n    margin: 0;\n    padding: 0;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive;\n}\n.textBody {\n    font-family: 'Roboto';\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
+exports.push([module.i, "\n.homepage {\n    overflow: hidden;\n    color: black;\n}\n.transparent {\n    /* background: rgba(240,240,240,0.75); */\n    height: 100vh;\n    width: 100vw;\n}\n.pageControl {\n    position: absolute;\n    top: 0px;\n    left: 0px;\n\n    width: 9vw;\n    margin: 2vh;\n}\n.pageControl:hover {\n    color: white;\n}\n.fullWidth {\n    width: 100%;\n}\n.fullHeight {\n    height: 100%;\n}\n.nopadding {\n    padding: 0;\n}\n.nomargin {\n    margin: 0;\n}\n.nospacing {\n    margin: 0;\n    padding: 0;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive;\n}\n.textBody {\n    font-family: 'Roboto';\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
 
 // exports
 
@@ -2810,7 +2814,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.rowHeight[data-v-10acad64] {\n    height: 2.5rem;\n}\n\n/* tr th {\n    text-align: center;\n} */\n/* tr {\n    background: rgba(240,240,240,1);\n} */\n", ""]);
+exports.push([module.i, "\n.rowHeight[data-v-10acad64] {\n    height: 2.5rem;\n}\n.widgetTitle[data-v-10acad64] {\n    font-size: 1.3rem;\n}\n\n/* tr th {\n    text-align: center;\n} */\n/* tr {\n    background: rgba(240,240,240,1);\n} */\n", ""]);
 
 // exports
 
@@ -2867,7 +2871,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\ntd[data-v-e2019a9c] {\n    height: 100%;\n}\n.uk-button[data-v-e2019a9c] {\n    padding: 0;\n    height: 2.4rem;\n}\ntr th[data-v-e2019a9c] {\n    text-align: center;\n}\n\n/* tr:nth-child(even) {\n    background: rgba(240,240,240,1);\n} */\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* td {\n    height: 100%;\n} */\n\n/* .uk-button {\n    padding: 0;\n    height: 2.4rem;\n} */\ntr th[data-v-e2019a9c] {\n    text-align: center;\n}\n.posWidth[data-v-e2019a9c] {\n    width: 30px;\n}\n\n/* tr:nth-child(even) {\n    background: rgba(240,240,240,1);\n} */\n", ""]);
 
 // exports
 
@@ -4783,10 +4787,41 @@ var render = function() {
     [
       _c(
         "div",
-        { staticClass: "col-xs-10 fullWidth background" },
+        { staticClass: "col-xs-12 fullWidth background" },
         [
           _c("h1", { staticClass: "textSpecial" }, [
             _vm._v("Your " + _vm._s(_vm.activeTab.title))
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row center-xs" }, [
+            _c(
+              "ul",
+              { staticClass: "col-xs-4", attrs: { "uk-tab": "" } },
+              _vm._l(_vm.tabs, function(tab) {
+                return _c("li", [
+                  _c(
+                    "a",
+                    {
+                      staticClass:
+                        "uk-text-capitalize textTitle tabsTitle noselect",
+                      on: {
+                        click: function($event) {
+                          _vm.activeTab = tab
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(tab.title) +
+                          "\n                    "
+                      )
+                    ]
+                  )
+                ])
+              }),
+              0
+            )
           ]),
           _vm._v(" "),
           _c(
@@ -4795,57 +4830,24 @@ var render = function() {
               staticClass: "scrollSpace",
               attrs: { settings: _vm.scrollSettings }
             },
-            [
-              _c(
-                "ul",
-                { attrs: { "uk-tab": "" } },
-                _vm._l(_vm.tabs, function(tab) {
-                  return _c("li", [
-                    _c(
-                      "a",
-                      {
-                        staticClass:
-                          "uk-text-capitalize textTitle tabsTitle noselect",
-                        on: {
-                          click: function($event) {
-                            _vm.activeTab = tab
-                          }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(tab.title) +
-                            "\n                    "
-                        )
-                      ]
-                    )
-                  ])
-                }),
-                0
-              ),
-              _vm._v(" "),
-              _c(_vm.activeTab.src, { tag: "component" })
-            ],
+            [_c(_vm.activeTab.src, { tag: "component" })],
             1
-          ),
-          _vm._v(" "),
-          _c("h5", { staticClass: "textBody" }, [
-            _vm._v(
-              "\n            HomepageV2 copyright © " +
-                _vm._s(1900 + new Date().getYear()) +
-                "\n             "
-            ),
-            _c(
-              "a",
-              { attrs: { href: "https://ljones.ca", target: "_blank" } },
-              [_vm._v("Liam Jones")]
-            ),
-            _vm._v(". All Rights Reserved.\n         ")
-          ])
+          )
         ],
         1
-      )
+      ),
+      _vm._v(" "),
+      _c("h5", { staticClass: "row fullWidth center-xs footer textBody" }, [
+        _vm._v(
+          "\n        HomepageV2 copyright © " +
+            _vm._s(1900 + new Date().getYear()) +
+            "\n        "
+        ),
+        _c("a", { attrs: { href: "https://ljones.ca", target: "_blank" } }, [
+          _vm._v(" Liam Jones")
+        ]),
+        _vm._v(". All Rights Reserved.\n    ")
+      ])
     ]
   )
 }
@@ -4875,6 +4877,7 @@ var render = function() {
     "div",
     {
       staticClass: "row center-xs middle-xs homepage transparent nomargin",
+      style: "background: rgba(240,240,240," + _vm.transparency + ");",
       attrs: { id: "background" }
     },
     [
@@ -4957,14 +4960,16 @@ var render = function() {
     [
       _c("div", { staticClass: "col-xs-4" }, [
         _vm.activeUser
-          ? _c("div", { staticClass: "row center-xs fullWidth textTitle" }, [
-              _c("h2", [_vm._v("Welcome, " + _vm._s(_vm.activeUser.name))])
+          ? _c("div", { staticClass: "row center-xs fullWidth" }, [
+              _c("h2", { staticClass: "textTitle" }, [
+                _vm._v("Welcome, " + _vm._s(_vm.activeUser.name) + "!")
+              ])
             ])
           : _vm._e(),
         _vm._v(" "),
         _c(
           "span",
-          { staticClass: "row uk-form-label fullWidth textColor textTitle" },
+          { staticClass: "row uk-form-label fullWidth textColor textBody" },
           [_vm._v("Username")]
         ),
         _vm._v(" "),
@@ -4996,7 +5001,7 @@ var render = function() {
         _vm._v(" "),
         _c(
           "span",
-          { staticClass: "row uk-form-label fullWidth textColor textTitle" },
+          { staticClass: "row uk-form-label fullWidth textColor textBody" },
           [_vm._v("Password")]
         ),
         _vm._v(" "),
@@ -5077,7 +5082,7 @@ var render = function() {
           "div",
           { staticClass: "row center-xs middle-xs fullWidth rowHeight" },
           [
-            _c("div", { staticClass: "col-xs-3" }, [
+            _c("div", { staticClass: "col-xs-3 widgetTitle" }, [
               _vm._v("\n            " + _vm._s(widget.title) + "\n        ")
             ]),
             _vm._v(" "),
@@ -5469,7 +5474,7 @@ var render = function() {
                   expression: "newFavourite.pos"
                 }
               ],
-              staticClass: "uk-input",
+              staticClass: "posWidth uk-input",
               attrs: { type: "number" },
               domProps: { value: _vm.newFavourite.pos },
               on: {
@@ -5483,7 +5488,7 @@ var render = function() {
             })
           ]),
           _vm._v(" "),
-          _c("td", [
+          _c("td", { staticClass: "posWidth" }, [
             _c(
               "button",
               {
@@ -5517,7 +5522,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Image Source")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Position")])
+        _c("th", { staticClass: "posWidth" }, [_vm._v("Position")])
       ])
     ])
   }
@@ -5619,9 +5624,7 @@ var render = function() {
           _c("div", { staticClass: "col-xs-3" }, [
             _c(
               "span",
-              {
-                staticClass: "row uk-form-label fullWidth textColor textTitle"
-              },
+              { staticClass: "row uk-form-label fullWidth textColor textBody" },
               [_vm._v("Home Location")]
             ),
             _vm._v(" "),
@@ -5684,9 +5687,7 @@ var render = function() {
           _c("div", { staticClass: "col-xs-3" }, [
             _c(
               "span",
-              {
-                staticClass: "row uk-form-label fullWidth textColor textTitle"
-              },
+              { staticClass: "row uk-form-label fullWidth textColor textBody" },
               [_vm._v("Favourite Location")]
             ),
             _vm._v(" "),
@@ -5749,9 +5750,7 @@ var render = function() {
           _c("div", { staticClass: "col-xs-3" }, [
             _c(
               "span",
-              {
-                staticClass: "row uk-form-label fullWidth textColor textTitle"
-              },
+              { staticClass: "row uk-form-label fullWidth textColor textBody" },
               [_vm._v("Transportation Method")]
             ),
             _vm._v(" "),
@@ -5794,6 +5793,8 @@ var render = function() {
                   }
                 },
                 [
+                  _c("option", { attrs: { value: "" } }),
+                  _vm._v(" "),
                   _c("option", { attrs: { value: "DRIVING" } }, [
                     _vm._v("Driving")
                   ]),
@@ -22250,7 +22251,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
 var state = {
-  showHome: false,
+  showHome: true,
   address: null,
   lat: null,
   lng: null,

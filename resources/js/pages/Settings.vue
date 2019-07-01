@@ -1,24 +1,28 @@
 <template>
     <div class="row center-xs middle-xs nomargin Settings">
-        <div class="col-xs-10 fullWidth background">
+        <div class="col-xs-12 fullWidth background">
             <h1 class="textSpecial">Your {{activeTab.title}}</h1>
-            <vue-custom-scrollbar :settings="scrollSettings" class="scrollSpace">
-                <ul uk-tab>
+
+            <div class="row center-xs">
+                <ul uk-tab class="col-xs-4">
                     <li v-for="tab in tabs">
                         <a class="uk-text-capitalize textTitle tabsTitle noselect" @click="activeTab = tab">
                             {{tab.title}}
                         </a>
                     </li>
                 </ul>
+            </div>
 
+            <vue-custom-scrollbar :settings="scrollSettings" class="scrollSpace">
                 <component :is="activeTab.src" />
             </vue-custom-scrollbar>
 
-            <h5 class="textBody">
-                HomepageV2 copyright &copy; {{1900+new Date().getYear()}}
-                 <a href="https://ljones.ca" target="_blank">Liam Jones</a>. All Rights Reserved.
-             </h5>
         </div>
+
+        <h5 class="row fullWidth center-xs footer textBody">
+            HomepageV2 copyright &copy; {{1900+new Date().getYear()}}
+            <a href="https://ljones.ca" target="_blank"> Liam Jones</a>. All Rights Reserved.
+        </h5>
     </div>
 </template>
 
@@ -30,10 +34,13 @@ export default {
                 suppressScrollX: true
             },
             activeTab: {
-                title: 'Widgets',
-                src: 'WidgetsSettings'
+                title: 'Favourites',
+                src: 'FavSettings'
             },
             tabs: [{
+                    title: 'Account',
+                    src: 'LoginSettings'
+                }, {
                     title: 'Widgets',
                     src: 'WidgetsSettings'
                 }, {
@@ -42,9 +49,6 @@ export default {
                 }, {
                     title: 'Favourites',
                     src: 'FavSettings'
-                }, {
-                    title: 'Account',
-                    src: 'LoginSettings'
                 },
             ]
         }
@@ -55,49 +59,48 @@ export default {
 <style>
     .Settings {
         width: 100vw;
-        color: white;
     }
 
-    .background {
-        border-radius: 30px;
-
-        background: #0F2027;
-        background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);
-        background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027);
+    .footer {
+        position: absolute;
+        bottom: 0;
     }
 
     .scrollSpace {
-        height: 75vh;
+        height: 70vh;
         width: 100%;
     }
 
     .uk-tab>*>a {
         font-size: 1.5rem;
+        color: grey;
     }
 
-    .textColor, h1, h2, .uk-button, .uk-tab > .uk-active > a, h4, h5 {
-        color: white;
+    .textColor, .Settings h1, h2, h4, h5, .uk-tab > .uk-active > a {
+        color: black;
     }
 
     input, .uk-input, .uk-select {
         border-radius: 30px;
+        background: rgba(30,30,30,0.5);
+        color: white;
+    }
 
-        background-color: #29375E;
-        border-color: #29375E;
-        color: #DCE7F9;
+    .uk-table th {
+        color: black;
     }
 
     .uk-table td {
         padding: 10px 5px;
     }
 
-    h1 {
+    /* h1 {
         margin: 15px;
     }
 
     h5 {
         margin: 10px 0;
-    }
+    } */
 </style>
 
 

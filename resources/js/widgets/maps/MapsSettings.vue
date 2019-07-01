@@ -2,7 +2,7 @@
     <div class="row">
         <div v-if="userSettings" class="row center-xs middle-xs fullWidth">
             <div class="col-xs-3">
-                <span class="row uk-form-label fullWidth textColor textTitle">Home Location</span>
+                <span class="row uk-form-label fullWidth textColor textBody">Home Location</span>
 
                 <div class="uk-form-controls fullWidth">
                     <select class="uk-select" @change="updateMapSettings(userSettings)" v-model="userSettings.home_id">
@@ -15,7 +15,7 @@
             </div>
 
             <div class="col-xs-3">
-                <span class="row uk-form-label fullWidth textColor textTitle">Favourite Location</span>
+                <span class="row uk-form-label fullWidth textColor textBody">Favourite Location</span>
 
                 <div class="uk-form-controls fullWidth">
                     <select class="uk-select" @change="updateMapSettings(userSettings)" v-model="userSettings.fav_id">
@@ -28,10 +28,11 @@
             </div>
 
             <div class="col-xs-3">
-                <span class="row uk-form-label fullWidth textColor textTitle">Transportation Method</span>
+                <span class="row uk-form-label fullWidth textColor textBody">Transportation Method</span>
 
                 <div class="uk-form-controls fullWidth">
                     <select class="uk-select" @change="updateMapSettings(userSettings)" v-model="userSettings.method">
+                        <option value=""></option>
                         <option value="DRIVING">Driving</option>
                         <option value="TRANSIT">Bus</option>
                         <option value="WALKING">Walking</option>

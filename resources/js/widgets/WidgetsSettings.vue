@@ -10,7 +10,7 @@
         </div>
 
         <div v-for="widget in widgets" class="row center-xs middle-xs fullWidth rowHeight">
-            <div class="col-xs-3">
+            <div class="col-xs-3 widgetTitle">
                 {{widget.title}}
             </div>
             <div class="col-xs-3">
@@ -57,6 +57,10 @@ export default {
 <style scoped>
     .rowHeight {
         height: 2.5rem;
+    }
+
+    .widgetTitle {
+        font-size: 1.3rem;
     }
 
     /* tr th {
