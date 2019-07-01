@@ -1,10 +1,10 @@
 <template>
-    <div class="row center-xs middle-xs homepage transparent nomargin" id="background">
-        <a @click="setShowHome(!showHome)" class="uk-icon pageControl" :uk-icon="'icon: '+ controlIcon +'; ratio: 2;'" />
+    <div class="row center-xs middle-xs homepage transparent nomargin uk-animation-fade" id="background" :style="'background: rgba(240,240,240,'+transparency+');'">
+        <a @click="setShowHome(!showHome)" class="uk-icon pageControl" :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" />
 
         <DateTime />
 
-        <div v-if="showHome == true">
+        <div v-show="showHome == true">
             <Home />
         </div>
         <div v-if="showHome == false">
@@ -28,6 +28,9 @@ export default {
         controlIcon: function() {
             return this.showHome ? 'cog' : 'home'
         },
+        transparency: function() {
+            return this.showHome ? 0.35 : 0.65
+        },
 
         ...mapGetters('settings', {
             showHome: 'getShowHome',
@@ -38,17 +41,12 @@ export default {
             // Retrieve the users location on created
             this.$getLocation(this.locationOptions).then(coordinates => {
                 this.setLocation(coordinates)
-                console.log('%c Location ', 'background: #222; color: #bada55');
-                console.log(coordinates);
             });
         },
 
         getBackground() {
             // Hit the random background endpoint
             this.axios('/background/').then(background => {
-                console.log('%c Background ', 'background: #222; color: #bada55');
-                console.log(background.data);
-
                 document.body.style.background = "url('images/"+background.data+"')"
                 document.body.style.backgroundSize = "cover";
             })
@@ -57,20 +55,15 @@ export default {
         ...mapActions('settings', {
             setLocation: 'setLocation',
             setShowHome: 'setShowHome',
-            fetchWidgets: 'fetchWidgets',
-            fetchLocations: 'fetchLocations',
-            fetchFavourites: 'fetchFavourites',
+            fetchUser: 'fetchUser',
+            fetchUsers: 'fetchUsers',
         })
     },
     created: function() {
-        // Fetch User Settings
-        this.fetchWidgets()
-
-        // Fetch Users Locations
-        this.fetchLocations()
-
-        // Fetch Users Favourites
-        this.fetchFavourites()
+        this.fetchUser().then(() => {
+            console.log(this.$store.getters['getUser']);
+        })
+        this.fetchUsers()
 
         // Update the users location every 10 minutes
         // setInterval(this.getLocation, 10000)
@@ -85,14 +78,12 @@ export default {
 
 <style>
     .homepage {
-        /* height: 100vh;
-        width: 100vw; */
-            overflow: hidden;
+        overflow: hidden;
         color: black;
     }
 
     .transparent {
-        background: rgba(240,240,240,0.35);
+        /* background: rgba(240,240,240,0.75); */
         height: 100vh;
         width: 100vw;
     }
@@ -103,17 +94,18 @@ export default {
         left: 0px;
 
         width: 9vw;
-    }
-
-    .uk-icon {
         margin: 2vh;
     }
-    a:hover {
+
+    .pageControl:hover {
         color: white;
     }
 
     .fullWidth {
         width: 100%;
+    }
+    .fullHeight {
+        height: 100%;
     }
 
     .nopadding {
@@ -122,6 +114,11 @@ export default {
 
     .nomargin {
         margin: 0;
+    }
+
+    .nospacing {
+        margin: 0;
+        padding: 0;
     }
 
     .textSpecial {
@@ -134,5 +131,14 @@ export default {
 
     .textBody {
         font-family: 'Roboto';
+    }
+
+    .noselect {
+      -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+         -khtml-user-select: none; /* Konqueror HTML */
+           -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version,(Chrome and Opera) */
     }
 </style>

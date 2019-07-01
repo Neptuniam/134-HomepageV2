@@ -86,1037 +86,6 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./node_modules/Vuex/dist/vuex.esm.js":
-/*!********************************************!*\
-  !*** ./node_modules/Vuex/dist/vuex.esm.js ***!
-  \********************************************/
-/*! exports provided: default, Store, install, mapState, mapMutations, mapGetters, mapActions, createNamespacedHelpers */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Store", function() { return Store; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "install", function() { return install; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapState", function() { return mapState; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapMutations", function() { return mapMutations; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapGetters", function() { return mapGetters; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapActions", function() { return mapActions; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNamespacedHelpers", function() { return createNamespacedHelpers; });
-/**
- * vuex v3.1.1
- * (c) 2019 Evan You
- * @license MIT
- */
-function applyMixin (Vue) {
-  var version = Number(Vue.version.split('.')[0]);
-
-  if (version >= 2) {
-    Vue.mixin({ beforeCreate: vuexInit });
-  } else {
-    // override init and inject vuex init procedure
-    // for 1.x backwards compatibility.
-    var _init = Vue.prototype._init;
-    Vue.prototype._init = function (options) {
-      if ( options === void 0 ) options = {};
-
-      options.init = options.init
-        ? [vuexInit].concat(options.init)
-        : vuexInit;
-      _init.call(this, options);
-    };
-  }
-
-  /**
-   * Vuex init hook, injected into each instances init hooks list.
-   */
-
-  function vuexInit () {
-    var options = this.$options;
-    // store injection
-    if (options.store) {
-      this.$store = typeof options.store === 'function'
-        ? options.store()
-        : options.store;
-    } else if (options.parent && options.parent.$store) {
-      this.$store = options.parent.$store;
-    }
-  }
-}
-
-var target = typeof window !== 'undefined'
-  ? window
-  : typeof global !== 'undefined'
-    ? global
-    : {};
-var devtoolHook = target.__VUE_DEVTOOLS_GLOBAL_HOOK__;
-
-function devtoolPlugin (store) {
-  if (!devtoolHook) { return }
-
-  store._devtoolHook = devtoolHook;
-
-  devtoolHook.emit('vuex:init', store);
-
-  devtoolHook.on('vuex:travel-to-state', function (targetState) {
-    store.replaceState(targetState);
-  });
-
-  store.subscribe(function (mutation, state) {
-    devtoolHook.emit('vuex:mutation', mutation, state);
-  });
-}
-
-/**
- * Get the first item that pass the test
- * by second argument function
- *
- * @param {Array} list
- * @param {Function} f
- * @return {*}
- */
-
-/**
- * forEach for object
- */
-function forEachValue (obj, fn) {
-  Object.keys(obj).forEach(function (key) { return fn(obj[key], key); });
-}
-
-function isObject (obj) {
-  return obj !== null && typeof obj === 'object'
-}
-
-function isPromise (val) {
-  return val && typeof val.then === 'function'
-}
-
-function assert (condition, msg) {
-  if (!condition) { throw new Error(("[vuex] " + msg)) }
-}
-
-function partial (fn, arg) {
-  return function () {
-    return fn(arg)
-  }
-}
-
-// Base data struct for store's module, package with some attribute and method
-var Module = function Module (rawModule, runtime) {
-  this.runtime = runtime;
-  // Store some children item
-  this._children = Object.create(null);
-  // Store the origin module object which passed by programmer
-  this._rawModule = rawModule;
-  var rawState = rawModule.state;
-
-  // Store the origin module's state
-  this.state = (typeof rawState === 'function' ? rawState() : rawState) || {};
-};
-
-var prototypeAccessors = { namespaced: { configurable: true } };
-
-prototypeAccessors.namespaced.get = function () {
-  return !!this._rawModule.namespaced
-};
-
-Module.prototype.addChild = function addChild (key, module) {
-  this._children[key] = module;
-};
-
-Module.prototype.removeChild = function removeChild (key) {
-  delete this._children[key];
-};
-
-Module.prototype.getChild = function getChild (key) {
-  return this._children[key]
-};
-
-Module.prototype.update = function update (rawModule) {
-  this._rawModule.namespaced = rawModule.namespaced;
-  if (rawModule.actions) {
-    this._rawModule.actions = rawModule.actions;
-  }
-  if (rawModule.mutations) {
-    this._rawModule.mutations = rawModule.mutations;
-  }
-  if (rawModule.getters) {
-    this._rawModule.getters = rawModule.getters;
-  }
-};
-
-Module.prototype.forEachChild = function forEachChild (fn) {
-  forEachValue(this._children, fn);
-};
-
-Module.prototype.forEachGetter = function forEachGetter (fn) {
-  if (this._rawModule.getters) {
-    forEachValue(this._rawModule.getters, fn);
-  }
-};
-
-Module.prototype.forEachAction = function forEachAction (fn) {
-  if (this._rawModule.actions) {
-    forEachValue(this._rawModule.actions, fn);
-  }
-};
-
-Module.prototype.forEachMutation = function forEachMutation (fn) {
-  if (this._rawModule.mutations) {
-    forEachValue(this._rawModule.mutations, fn);
-  }
-};
-
-Object.defineProperties( Module.prototype, prototypeAccessors );
-
-var ModuleCollection = function ModuleCollection (rawRootModule) {
-  // register root module (Vuex.Store options)
-  this.register([], rawRootModule, false);
-};
-
-ModuleCollection.prototype.get = function get (path) {
-  return path.reduce(function (module, key) {
-    return module.getChild(key)
-  }, this.root)
-};
-
-ModuleCollection.prototype.getNamespace = function getNamespace (path) {
-  var module = this.root;
-  return path.reduce(function (namespace, key) {
-    module = module.getChild(key);
-    return namespace + (module.namespaced ? key + '/' : '')
-  }, '')
-};
-
-ModuleCollection.prototype.update = function update$1 (rawRootModule) {
-  update([], this.root, rawRootModule);
-};
-
-ModuleCollection.prototype.register = function register (path, rawModule, runtime) {
-    var this$1 = this;
-    if ( runtime === void 0 ) runtime = true;
-
-  if (true) {
-    assertRawModule(path, rawModule);
-  }
-
-  var newModule = new Module(rawModule, runtime);
-  if (path.length === 0) {
-    this.root = newModule;
-  } else {
-    var parent = this.get(path.slice(0, -1));
-    parent.addChild(path[path.length - 1], newModule);
-  }
-
-  // register nested modules
-  if (rawModule.modules) {
-    forEachValue(rawModule.modules, function (rawChildModule, key) {
-      this$1.register(path.concat(key), rawChildModule, runtime);
-    });
-  }
-};
-
-ModuleCollection.prototype.unregister = function unregister (path) {
-  var parent = this.get(path.slice(0, -1));
-  var key = path[path.length - 1];
-  if (!parent.getChild(key).runtime) { return }
-
-  parent.removeChild(key);
-};
-
-function update (path, targetModule, newModule) {
-  if (true) {
-    assertRawModule(path, newModule);
-  }
-
-  // update target module
-  targetModule.update(newModule);
-
-  // update nested modules
-  if (newModule.modules) {
-    for (var key in newModule.modules) {
-      if (!targetModule.getChild(key)) {
-        if (true) {
-          console.warn(
-            "[vuex] trying to add a new module '" + key + "' on hot reloading, " +
-            'manual reload is needed'
-          );
-        }
-        return
-      }
-      update(
-        path.concat(key),
-        targetModule.getChild(key),
-        newModule.modules[key]
-      );
-    }
-  }
-}
-
-var functionAssert = {
-  assert: function (value) { return typeof value === 'function'; },
-  expected: 'function'
-};
-
-var objectAssert = {
-  assert: function (value) { return typeof value === 'function' ||
-    (typeof value === 'object' && typeof value.handler === 'function'); },
-  expected: 'function or object with "handler" function'
-};
-
-var assertTypes = {
-  getters: functionAssert,
-  mutations: functionAssert,
-  actions: objectAssert
-};
-
-function assertRawModule (path, rawModule) {
-  Object.keys(assertTypes).forEach(function (key) {
-    if (!rawModule[key]) { return }
-
-    var assertOptions = assertTypes[key];
-
-    forEachValue(rawModule[key], function (value, type) {
-      assert(
-        assertOptions.assert(value),
-        makeAssertionMessage(path, key, type, value, assertOptions.expected)
-      );
-    });
-  });
-}
-
-function makeAssertionMessage (path, key, type, value, expected) {
-  var buf = key + " should be " + expected + " but \"" + key + "." + type + "\"";
-  if (path.length > 0) {
-    buf += " in module \"" + (path.join('.')) + "\"";
-  }
-  buf += " is " + (JSON.stringify(value)) + ".";
-  return buf
-}
-
-var Vue; // bind on install
-
-var Store = function Store (options) {
-  var this$1 = this;
-  if ( options === void 0 ) options = {};
-
-  // Auto install if it is not done yet and `window` has `Vue`.
-  // To allow users to avoid auto-installation in some cases,
-  // this code should be placed here. See #731
-  if (!Vue && typeof window !== 'undefined' && window.Vue) {
-    install(window.Vue);
-  }
-
-  if (true) {
-    assert(Vue, "must call Vue.use(Vuex) before creating a store instance.");
-    assert(typeof Promise !== 'undefined', "vuex requires a Promise polyfill in this browser.");
-    assert(this instanceof Store, "store must be called with the new operator.");
-  }
-
-  var plugins = options.plugins; if ( plugins === void 0 ) plugins = [];
-  var strict = options.strict; if ( strict === void 0 ) strict = false;
-
-  // store internal state
-  this._committing = false;
-  this._actions = Object.create(null);
-  this._actionSubscribers = [];
-  this._mutations = Object.create(null);
-  this._wrappedGetters = Object.create(null);
-  this._modules = new ModuleCollection(options);
-  this._modulesNamespaceMap = Object.create(null);
-  this._subscribers = [];
-  this._watcherVM = new Vue();
-
-  // bind commit and dispatch to self
-  var store = this;
-  var ref = this;
-  var dispatch = ref.dispatch;
-  var commit = ref.commit;
-  this.dispatch = function boundDispatch (type, payload) {
-    return dispatch.call(store, type, payload)
-  };
-  this.commit = function boundCommit (type, payload, options) {
-    return commit.call(store, type, payload, options)
-  };
-
-  // strict mode
-  this.strict = strict;
-
-  var state = this._modules.root.state;
-
-  // init root module.
-  // this also recursively registers all sub-modules
-  // and collects all module getters inside this._wrappedGetters
-  installModule(this, state, [], this._modules.root);
-
-  // initialize the store vm, which is responsible for the reactivity
-  // (also registers _wrappedGetters as computed properties)
-  resetStoreVM(this, state);
-
-  // apply plugins
-  plugins.forEach(function (plugin) { return plugin(this$1); });
-
-  var useDevtools = options.devtools !== undefined ? options.devtools : Vue.config.devtools;
-  if (useDevtools) {
-    devtoolPlugin(this);
-  }
-};
-
-var prototypeAccessors$1 = { state: { configurable: true } };
-
-prototypeAccessors$1.state.get = function () {
-  return this._vm._data.$$state
-};
-
-prototypeAccessors$1.state.set = function (v) {
-  if (true) {
-    assert(false, "use store.replaceState() to explicit replace store state.");
-  }
-};
-
-Store.prototype.commit = function commit (_type, _payload, _options) {
-    var this$1 = this;
-
-  // check object-style commit
-  var ref = unifyObjectStyle(_type, _payload, _options);
-    var type = ref.type;
-    var payload = ref.payload;
-    var options = ref.options;
-
-  var mutation = { type: type, payload: payload };
-  var entry = this._mutations[type];
-  if (!entry) {
-    if (true) {
-      console.error(("[vuex] unknown mutation type: " + type));
-    }
-    return
-  }
-  this._withCommit(function () {
-    entry.forEach(function commitIterator (handler) {
-      handler(payload);
-    });
-  });
-  this._subscribers.forEach(function (sub) { return sub(mutation, this$1.state); });
-
-  if (
-     true &&
-    options && options.silent
-  ) {
-    console.warn(
-      "[vuex] mutation type: " + type + ". Silent option has been removed. " +
-      'Use the filter functionality in the vue-devtools'
-    );
-  }
-};
-
-Store.prototype.dispatch = function dispatch (_type, _payload) {
-    var this$1 = this;
-
-  // check object-style dispatch
-  var ref = unifyObjectStyle(_type, _payload);
-    var type = ref.type;
-    var payload = ref.payload;
-
-  var action = { type: type, payload: payload };
-  var entry = this._actions[type];
-  if (!entry) {
-    if (true) {
-      console.error(("[vuex] unknown action type: " + type));
-    }
-    return
-  }
-
-  try {
-    this._actionSubscribers
-      .filter(function (sub) { return sub.before; })
-      .forEach(function (sub) { return sub.before(action, this$1.state); });
-  } catch (e) {
-    if (true) {
-      console.warn("[vuex] error in before action subscribers: ");
-      console.error(e);
-    }
-  }
-
-  var result = entry.length > 1
-    ? Promise.all(entry.map(function (handler) { return handler(payload); }))
-    : entry[0](payload);
-
-  return result.then(function (res) {
-    try {
-      this$1._actionSubscribers
-        .filter(function (sub) { return sub.after; })
-        .forEach(function (sub) { return sub.after(action, this$1.state); });
-    } catch (e) {
-      if (true) {
-        console.warn("[vuex] error in after action subscribers: ");
-        console.error(e);
-      }
-    }
-    return res
-  })
-};
-
-Store.prototype.subscribe = function subscribe (fn) {
-  return genericSubscribe(fn, this._subscribers)
-};
-
-Store.prototype.subscribeAction = function subscribeAction (fn) {
-  var subs = typeof fn === 'function' ? { before: fn } : fn;
-  return genericSubscribe(subs, this._actionSubscribers)
-};
-
-Store.prototype.watch = function watch (getter, cb, options) {
-    var this$1 = this;
-
-  if (true) {
-    assert(typeof getter === 'function', "store.watch only accepts a function.");
-  }
-  return this._watcherVM.$watch(function () { return getter(this$1.state, this$1.getters); }, cb, options)
-};
-
-Store.prototype.replaceState = function replaceState (state) {
-    var this$1 = this;
-
-  this._withCommit(function () {
-    this$1._vm._data.$$state = state;
-  });
-};
-
-Store.prototype.registerModule = function registerModule (path, rawModule, options) {
-    if ( options === void 0 ) options = {};
-
-  if (typeof path === 'string') { path = [path]; }
-
-  if (true) {
-    assert(Array.isArray(path), "module path must be a string or an Array.");
-    assert(path.length > 0, 'cannot register the root module by using registerModule.');
-  }
-
-  this._modules.register(path, rawModule);
-  installModule(this, this.state, path, this._modules.get(path), options.preserveState);
-  // reset store to update getters...
-  resetStoreVM(this, this.state);
-};
-
-Store.prototype.unregisterModule = function unregisterModule (path) {
-    var this$1 = this;
-
-  if (typeof path === 'string') { path = [path]; }
-
-  if (true) {
-    assert(Array.isArray(path), "module path must be a string or an Array.");
-  }
-
-  this._modules.unregister(path);
-  this._withCommit(function () {
-    var parentState = getNestedState(this$1.state, path.slice(0, -1));
-    Vue.delete(parentState, path[path.length - 1]);
-  });
-  resetStore(this);
-};
-
-Store.prototype.hotUpdate = function hotUpdate (newOptions) {
-  this._modules.update(newOptions);
-  resetStore(this, true);
-};
-
-Store.prototype._withCommit = function _withCommit (fn) {
-  var committing = this._committing;
-  this._committing = true;
-  fn();
-  this._committing = committing;
-};
-
-Object.defineProperties( Store.prototype, prototypeAccessors$1 );
-
-function genericSubscribe (fn, subs) {
-  if (subs.indexOf(fn) < 0) {
-    subs.push(fn);
-  }
-  return function () {
-    var i = subs.indexOf(fn);
-    if (i > -1) {
-      subs.splice(i, 1);
-    }
-  }
-}
-
-function resetStore (store, hot) {
-  store._actions = Object.create(null);
-  store._mutations = Object.create(null);
-  store._wrappedGetters = Object.create(null);
-  store._modulesNamespaceMap = Object.create(null);
-  var state = store.state;
-  // init all modules
-  installModule(store, state, [], store._modules.root, true);
-  // reset vm
-  resetStoreVM(store, state, hot);
-}
-
-function resetStoreVM (store, state, hot) {
-  var oldVm = store._vm;
-
-  // bind store public getters
-  store.getters = {};
-  var wrappedGetters = store._wrappedGetters;
-  var computed = {};
-  forEachValue(wrappedGetters, function (fn, key) {
-    // use computed to leverage its lazy-caching mechanism
-    // direct inline function use will lead to closure preserving oldVm.
-    // using partial to return function with only arguments preserved in closure enviroment.
-    computed[key] = partial(fn, store);
-    Object.defineProperty(store.getters, key, {
-      get: function () { return store._vm[key]; },
-      enumerable: true // for local getters
-    });
-  });
-
-  // use a Vue instance to store the state tree
-  // suppress warnings just in case the user has added
-  // some funky global mixins
-  var silent = Vue.config.silent;
-  Vue.config.silent = true;
-  store._vm = new Vue({
-    data: {
-      $$state: state
-    },
-    computed: computed
-  });
-  Vue.config.silent = silent;
-
-  // enable strict mode for new vm
-  if (store.strict) {
-    enableStrictMode(store);
-  }
-
-  if (oldVm) {
-    if (hot) {
-      // dispatch changes in all subscribed watchers
-      // to force getter re-evaluation for hot reloading.
-      store._withCommit(function () {
-        oldVm._data.$$state = null;
-      });
-    }
-    Vue.nextTick(function () { return oldVm.$destroy(); });
-  }
-}
-
-function installModule (store, rootState, path, module, hot) {
-  var isRoot = !path.length;
-  var namespace = store._modules.getNamespace(path);
-
-  // register in namespace map
-  if (module.namespaced) {
-    store._modulesNamespaceMap[namespace] = module;
-  }
-
-  // set state
-  if (!isRoot && !hot) {
-    var parentState = getNestedState(rootState, path.slice(0, -1));
-    var moduleName = path[path.length - 1];
-    store._withCommit(function () {
-      Vue.set(parentState, moduleName, module.state);
-    });
-  }
-
-  var local = module.context = makeLocalContext(store, namespace, path);
-
-  module.forEachMutation(function (mutation, key) {
-    var namespacedType = namespace + key;
-    registerMutation(store, namespacedType, mutation, local);
-  });
-
-  module.forEachAction(function (action, key) {
-    var type = action.root ? key : namespace + key;
-    var handler = action.handler || action;
-    registerAction(store, type, handler, local);
-  });
-
-  module.forEachGetter(function (getter, key) {
-    var namespacedType = namespace + key;
-    registerGetter(store, namespacedType, getter, local);
-  });
-
-  module.forEachChild(function (child, key) {
-    installModule(store, rootState, path.concat(key), child, hot);
-  });
-}
-
-/**
- * make localized dispatch, commit, getters and state
- * if there is no namespace, just use root ones
- */
-function makeLocalContext (store, namespace, path) {
-  var noNamespace = namespace === '';
-
-  var local = {
-    dispatch: noNamespace ? store.dispatch : function (_type, _payload, _options) {
-      var args = unifyObjectStyle(_type, _payload, _options);
-      var payload = args.payload;
-      var options = args.options;
-      var type = args.type;
-
-      if (!options || !options.root) {
-        type = namespace + type;
-        if ( true && !store._actions[type]) {
-          console.error(("[vuex] unknown local action type: " + (args.type) + ", global type: " + type));
-          return
-        }
-      }
-
-      return store.dispatch(type, payload)
-    },
-
-    commit: noNamespace ? store.commit : function (_type, _payload, _options) {
-      var args = unifyObjectStyle(_type, _payload, _options);
-      var payload = args.payload;
-      var options = args.options;
-      var type = args.type;
-
-      if (!options || !options.root) {
-        type = namespace + type;
-        if ( true && !store._mutations[type]) {
-          console.error(("[vuex] unknown local mutation type: " + (args.type) + ", global type: " + type));
-          return
-        }
-      }
-
-      store.commit(type, payload, options);
-    }
-  };
-
-  // getters and state object must be gotten lazily
-  // because they will be changed by vm update
-  Object.defineProperties(local, {
-    getters: {
-      get: noNamespace
-        ? function () { return store.getters; }
-        : function () { return makeLocalGetters(store, namespace); }
-    },
-    state: {
-      get: function () { return getNestedState(store.state, path); }
-    }
-  });
-
-  return local
-}
-
-function makeLocalGetters (store, namespace) {
-  var gettersProxy = {};
-
-  var splitPos = namespace.length;
-  Object.keys(store.getters).forEach(function (type) {
-    // skip if the target getter is not match this namespace
-    if (type.slice(0, splitPos) !== namespace) { return }
-
-    // extract local getter type
-    var localType = type.slice(splitPos);
-
-    // Add a port to the getters proxy.
-    // Define as getter property because
-    // we do not want to evaluate the getters in this time.
-    Object.defineProperty(gettersProxy, localType, {
-      get: function () { return store.getters[type]; },
-      enumerable: true
-    });
-  });
-
-  return gettersProxy
-}
-
-function registerMutation (store, type, handler, local) {
-  var entry = store._mutations[type] || (store._mutations[type] = []);
-  entry.push(function wrappedMutationHandler (payload) {
-    handler.call(store, local.state, payload);
-  });
-}
-
-function registerAction (store, type, handler, local) {
-  var entry = store._actions[type] || (store._actions[type] = []);
-  entry.push(function wrappedActionHandler (payload, cb) {
-    var res = handler.call(store, {
-      dispatch: local.dispatch,
-      commit: local.commit,
-      getters: local.getters,
-      state: local.state,
-      rootGetters: store.getters,
-      rootState: store.state
-    }, payload, cb);
-    if (!isPromise(res)) {
-      res = Promise.resolve(res);
-    }
-    if (store._devtoolHook) {
-      return res.catch(function (err) {
-        store._devtoolHook.emit('vuex:error', err);
-        throw err
-      })
-    } else {
-      return res
-    }
-  });
-}
-
-function registerGetter (store, type, rawGetter, local) {
-  if (store._wrappedGetters[type]) {
-    if (true) {
-      console.error(("[vuex] duplicate getter key: " + type));
-    }
-    return
-  }
-  store._wrappedGetters[type] = function wrappedGetter (store) {
-    return rawGetter(
-      local.state, // local state
-      local.getters, // local getters
-      store.state, // root state
-      store.getters // root getters
-    )
-  };
-}
-
-function enableStrictMode (store) {
-  store._vm.$watch(function () { return this._data.$$state }, function () {
-    if (true) {
-      assert(store._committing, "do not mutate vuex store state outside mutation handlers.");
-    }
-  }, { deep: true, sync: true });
-}
-
-function getNestedState (state, path) {
-  return path.length
-    ? path.reduce(function (state, key) { return state[key]; }, state)
-    : state
-}
-
-function unifyObjectStyle (type, payload, options) {
-  if (isObject(type) && type.type) {
-    options = payload;
-    payload = type;
-    type = type.type;
-  }
-
-  if (true) {
-    assert(typeof type === 'string', ("expects string as the type, but found " + (typeof type) + "."));
-  }
-
-  return { type: type, payload: payload, options: options }
-}
-
-function install (_Vue) {
-  if (Vue && _Vue === Vue) {
-    if (true) {
-      console.error(
-        '[vuex] already installed. Vue.use(Vuex) should be called only once.'
-      );
-    }
-    return
-  }
-  Vue = _Vue;
-  applyMixin(Vue);
-}
-
-/**
- * Reduce the code which written in Vue.js for getting the state.
- * @param {String} [namespace] - Module's namespace
- * @param {Object|Array} states # Object's item can be a function which accept state and getters for param, you can do something for state and getters in it.
- * @param {Object}
- */
-var mapState = normalizeNamespace(function (namespace, states) {
-  var res = {};
-  normalizeMap(states).forEach(function (ref) {
-    var key = ref.key;
-    var val = ref.val;
-
-    res[key] = function mappedState () {
-      var state = this.$store.state;
-      var getters = this.$store.getters;
-      if (namespace) {
-        var module = getModuleByNamespace(this.$store, 'mapState', namespace);
-        if (!module) {
-          return
-        }
-        state = module.context.state;
-        getters = module.context.getters;
-      }
-      return typeof val === 'function'
-        ? val.call(this, state, getters)
-        : state[val]
-    };
-    // mark vuex getter for devtools
-    res[key].vuex = true;
-  });
-  return res
-});
-
-/**
- * Reduce the code which written in Vue.js for committing the mutation
- * @param {String} [namespace] - Module's namespace
- * @param {Object|Array} mutations # Object's item can be a function which accept `commit` function as the first param, it can accept anthor params. You can commit mutation and do any other things in this function. specially, You need to pass anthor params from the mapped function.
- * @return {Object}
- */
-var mapMutations = normalizeNamespace(function (namespace, mutations) {
-  var res = {};
-  normalizeMap(mutations).forEach(function (ref) {
-    var key = ref.key;
-    var val = ref.val;
-
-    res[key] = function mappedMutation () {
-      var args = [], len = arguments.length;
-      while ( len-- ) args[ len ] = arguments[ len ];
-
-      // Get the commit method from store
-      var commit = this.$store.commit;
-      if (namespace) {
-        var module = getModuleByNamespace(this.$store, 'mapMutations', namespace);
-        if (!module) {
-          return
-        }
-        commit = module.context.commit;
-      }
-      return typeof val === 'function'
-        ? val.apply(this, [commit].concat(args))
-        : commit.apply(this.$store, [val].concat(args))
-    };
-  });
-  return res
-});
-
-/**
- * Reduce the code which written in Vue.js for getting the getters
- * @param {String} [namespace] - Module's namespace
- * @param {Object|Array} getters
- * @return {Object}
- */
-var mapGetters = normalizeNamespace(function (namespace, getters) {
-  var res = {};
-  normalizeMap(getters).forEach(function (ref) {
-    var key = ref.key;
-    var val = ref.val;
-
-    // The namespace has been mutated by normalizeNamespace
-    val = namespace + val;
-    res[key] = function mappedGetter () {
-      if (namespace && !getModuleByNamespace(this.$store, 'mapGetters', namespace)) {
-        return
-      }
-      if ( true && !(val in this.$store.getters)) {
-        console.error(("[vuex] unknown getter: " + val));
-        return
-      }
-      return this.$store.getters[val]
-    };
-    // mark vuex getter for devtools
-    res[key].vuex = true;
-  });
-  return res
-});
-
-/**
- * Reduce the code which written in Vue.js for dispatch the action
- * @param {String} [namespace] - Module's namespace
- * @param {Object|Array} actions # Object's item can be a function which accept `dispatch` function as the first param, it can accept anthor params. You can dispatch action and do any other things in this function. specially, You need to pass anthor params from the mapped function.
- * @return {Object}
- */
-var mapActions = normalizeNamespace(function (namespace, actions) {
-  var res = {};
-  normalizeMap(actions).forEach(function (ref) {
-    var key = ref.key;
-    var val = ref.val;
-
-    res[key] = function mappedAction () {
-      var args = [], len = arguments.length;
-      while ( len-- ) args[ len ] = arguments[ len ];
-
-      // get dispatch function from store
-      var dispatch = this.$store.dispatch;
-      if (namespace) {
-        var module = getModuleByNamespace(this.$store, 'mapActions', namespace);
-        if (!module) {
-          return
-        }
-        dispatch = module.context.dispatch;
-      }
-      return typeof val === 'function'
-        ? val.apply(this, [dispatch].concat(args))
-        : dispatch.apply(this.$store, [val].concat(args))
-    };
-  });
-  return res
-});
-
-/**
- * Rebinding namespace param for mapXXX function in special scoped, and return them by simple object
- * @param {String} namespace
- * @return {Object}
- */
-var createNamespacedHelpers = function (namespace) { return ({
-  mapState: mapState.bind(null, namespace),
-  mapGetters: mapGetters.bind(null, namespace),
-  mapMutations: mapMutations.bind(null, namespace),
-  mapActions: mapActions.bind(null, namespace)
-}); };
-
-/**
- * Normalize the map
- * normalizeMap([1, 2, 3]) => [ { key: 1, val: 1 }, { key: 2, val: 2 }, { key: 3, val: 3 } ]
- * normalizeMap({a: 1, b: 2, c: 3}) => [ { key: 'a', val: 1 }, { key: 'b', val: 2 }, { key: 'c', val: 3 } ]
- * @param {Array|Object} map
- * @return {Object}
- */
-function normalizeMap (map) {
-  return Array.isArray(map)
-    ? map.map(function (key) { return ({ key: key, val: key }); })
-    : Object.keys(map).map(function (key) { return ({ key: key, val: map[key] }); })
-}
-
-/**
- * Return a function expect two param contains namespace and map. it will normalize the namespace and then the param's function will handle the new namespace and the map.
- * @param {Function} fn
- * @return {Function}
- */
-function normalizeNamespace (fn) {
-  return function (namespace, map) {
-    if (typeof namespace !== 'string') {
-      map = namespace;
-      namespace = '';
-    } else if (namespace.charAt(namespace.length - 1) !== '/') {
-      namespace += '/';
-    }
-    return fn(namespace, map)
-  }
-}
-
-/**
- * Search a special module from store by namespace. if module not exist, print error message.
- * @param {Object} store
- * @param {String} helper
- * @param {String} namespace
- * @return {Object}
- */
-function getModuleByNamespace (store, helper, namespace) {
-  var module = store._modulesNamespaceMap[namespace];
-  if ( true && !module) {
-    console.error(("[vuex] module namespace not found in " + helper + "(): " + namespace));
-  }
-  return module
-}
-
-var index_esm = {
-  Store: Store,
-  install: install,
-  version: '3.1.1',
-  mapState: mapState,
-  mapMutations: mapMutations,
-  mapGetters: mapGetters,
-  mapActions: mapActions,
-  createNamespacedHelpers: createNamespacedHelpers
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (index_esm);
-
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
-
-/***/ }),
-
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -2786,6 +1755,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2793,21 +1770,22 @@ __webpack_require__.r(__webpack_exports__);
         suppressScrollX: true
       },
       activeTab: {
+        title: 'Account',
+        src: 'LoginSettings'
+      },
+      tabs: [{
+        title: 'Account',
+        src: 'LoginSettings'
+      }, {
         title: 'Widgets',
         src: 'WidgetsSettings'
-      },
-      widgets: {
-        title: 'Widgets',
-        src: 'WidgetsSettings'
-      },
-      maps: {
+      }, {
         title: 'Maps',
         src: 'MapsSettings'
-      },
-      favs: {
-        title: 'Favourite Links',
+      }, {
+        title: 'Favourites',
         src: 'FavSettings'
-      }
+      }]
     };
   }
 });
@@ -2856,6 +1834,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({
     controlIcon: function controlIcon() {
       return this.showHome ? 'cog' : 'home';
+    },
+    transparency: function transparency() {
+      return this.showHome ? 0.35 : 0.65;
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
     showHome: 'getShowHome'
@@ -2867,16 +1848,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       // Retrieve the users location on created
       this.$getLocation(this.locationOptions).then(function (coordinates) {
         _this.setLocation(coordinates);
-
-        console.log('%c Location ', 'background: #222; color: #bada55');
-        console.log(coordinates);
       });
     },
     getBackground: function getBackground() {
       // Hit the random background endpoint
       this.axios('/background/').then(function (background) {
-        console.log('%c Background ', 'background: #222; color: #bada55');
-        console.log(background.data);
         document.body.style.background = "url('images/" + background.data + "')";
         document.body.style.backgroundSize = "cover";
       });
@@ -2884,17 +1860,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
     setLocation: 'setLocation',
     setShowHome: 'setShowHome',
-    fetchWidgets: 'fetchWidgets',
-    fetchLocations: 'fetchLocations',
-    fetchFavourites: 'fetchFavourites'
+    fetchUser: 'fetchUser',
+    fetchUsers: 'fetchUsers'
   })),
   created: function created() {
-    // Fetch User Settings
-    this.fetchWidgets(); // Fetch Users Locations
+    var _this2 = this;
 
-    this.fetchLocations(); // Fetch Users Favourites
-
-    this.fetchFavourites(); // Update the users location every 10 minutes
+    this.fetchUser().then(function () {
+      console.log(_this2.$store.getters['getUser']);
+    });
+    this.fetchUsers(); // Update the users location every 10 minutes
     // setInterval(this.getLocation, 10000)
 
     this.getLocation(); // Update the background every 1 minute
@@ -2961,6 +1936,104 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/LoginSettings.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/LoginSettings.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      name: null,
+      pass: null
+    };
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
+    users: 'getUsers',
+    activeUser: 'getUser'
+  })),
+  methods: _objectSpread({
+    login: function login() {
+      var _this = this;
+
+      // Attempt to match the provided login credentials to an existing user
+      var newUser = this.users.find(function (user) {
+        return user.name === _this.name && user.pass === _this.pass;
+      }); // If a user was found with matching credentials allow the login
+
+      if (newUser) {
+        console.log("Valid Login Provided");
+        console.log(newUser); // Logout the previous user
+
+        if (this.activeUser) {
+          this.activeUser.active = 0;
+          this.updateUser(this.activeUser);
+        }
+
+        newUser.active = 1;
+        this.updateUser(newUser);
+        this.setActiveUser(newUser);
+      } else {
+        console.log("Invalid Login");
+      }
+    }
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
+    updateUser: 'updateUser',
+    setActiveUser: 'setActiveUser' // fetchUser: 'fetchUser',
+    // fetchUsers: 'fetchUsers',
+    // fetchWidgets: 'fetchWidgets',
+    // fetchLocations: 'fetchLocations',
+    // fetchMapsSettings: 'fetchMapsSettings',
+    // fetchFavourites: 'fetchFavourites',
+
+  }))
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/WidgetsSettings.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/WidgetsSettings.vue?vue&type=script&lang=js& ***!
@@ -2975,6 +2048,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
 //
 //
 //
@@ -3092,7 +2167,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var Vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! Vuex */ "./node_modules/Vuex/dist/vuex.esm.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -3118,7 +2193,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     favsOrder: function favsOrder() {
       if (this.favourites) return this.favourites.sort(this.byPos);
     }
-  }, Object(Vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
     favourites: 'getFavourites'
   })),
   methods: {
@@ -3145,6 +2220,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
 //
 //
 //
@@ -3240,7 +2316,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3256,92 +2331,70 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
     userLat: 'getLat',
     userLng: 'getLng',
-    locations: 'getLocations'
+    locations: 'getLocations',
+    mapsSettings: 'getMapsSettings'
   }), {
-    location: function location() {
+    userSettings: function userSettings() {
+      if (this.mapsSettings) return this.mapsSettings.find(function (user) {
+        return user.name === 'Liam';
+      });
+    },
+    loc: function loc() {
       return {
         title: 'loc',
         lat: this.userLat,
         lng: this.userLng
       };
     },
-    homeLoc: function homeLoc() {
-      if (this.locations) return this.locations.find(function (location) {
-        return location.favourite == 'Home';
-      });
+    home: function home() {
+      var _this2 = this;
+
+      if (this.locations && this.userSettings) {
+        var loc = this.locations.find(function (location) {
+          return location.id === _this2.userSettings.home_id;
+        });
+        return {
+          title: loc.title,
+          lat: parseFloat(loc.lat),
+          lng: parseFloat(loc.lng)
+        };
+      }
     },
-    favLoc: function favLoc() {
-      if (this.locations) return this.locations.find(function (location) {
-        return location.favourite == 'Favourite';
-      });
+    fav: function fav() {
+      var _this3 = this;
+
+      if (this.locations && this.userSettings) {
+        var loc = this.locations.find(function (location) {
+          return location.id === _this3.userSettings.fav_id;
+        });
+        return {
+          title: loc.title,
+          lat: parseFloat(loc.lat),
+          lng: parseFloat(loc.lng)
+        };
+      }
     },
     distanceToHome: function distanceToHome() {
-      if (this.userLat && this.userLng && this.homeLoc) return Math.sqrt((this.userLat - this.homeLoc.lat) * (this.userLat - this.homeLoc.lat) + (this.userLng - this.homeLoc.lng) * (this.userLng - this.homeLoc.lng));
+      if (this.userLat && this.home) return Math.sqrt((this.userLat - this.home.lat) * (this.userLat - this.home.lat) + (this.userLng - this.home.lng) * (this.userLng - this.home.lng));
     },
-    distanceToWork: function distanceToWork() {
-      if (this.userLat && this.userLng && this.favLoc) return Math.sqrt((this.userLat - this.favLoc.lat) * (this.userLat - this.favLoc.lat) + (this.userLng - this.favLoc.lng) * (this.userLng - this.favLoc.lng));
+    distanceToFav: function distanceToFav() {
+      if (this.userLat && this.fav) return Math.sqrt((this.userLat - this.fav.lat) * (this.userLat - this.fav.lat) + (this.userLng - this.fav.lng) * (this.userLng - this.fav.lng));
     },
     start: function start() {
-      // Based off our distance to keypoints set our start start
-      if (this.distanceToHome < 0.05) return {
-        title: this.homeLoc.title,
-        lat: parseFloat(this.homeLoc.lat),
-        lng: parseFloat(this.homeLoc.lng)
-      };else if (this.distanceToWork < 0.05) return {
-        title: this.favLoc.title,
-        lat: parseFloat(this.favLoc.lat),
-        lng: parseFloat(this.favLoc.lng)
-      };
-      return this.location;
+      if (this.distanceToHome < 0.05) return this.home;else if (this.distanceToFav < 0.05) return this.fav;
+      return this.loc;
     },
     destination: function destination() {
-      if (this.homeLoc && this.favLoc) return this.distanceToHome < 0.05 ? {
-        title: this.favLoc.title,
-        lat: parseFloat(this.favLoc.lat),
-        lng: parseFloat(this.favLoc.lng)
-      } : {
-        title: this.homeLoc.title,
-        lat: parseFloat(this.homeLoc.lat),
-        lng: parseFloat(this.homeLoc.lng)
-      };
+      if (this.distanceToHome) return this.distanceToHome < 0.05 ? this.fav : this.home;
     },
     travelMethod: function travelMethod() {
-      return 'DRIVING';
+      if (this.userSettings) return this.userSettings.method;
     }
   }),
-  mounted: function mounted() {
-    var _this2 = this;
-
-    this.$refs.map.$mapPromise.then(function () {
-      var _this = _this2;
-      var directionsService = new google.maps.DirectionsService();
-      var directionsDisplay = new google.maps.DirectionsRenderer();
-      directionsDisplay.setMap(_this2.$refs.map.$mapObject); //google maps API's direction service
-
-      function calculateAndDisplayRoute(directionsService, directionsDisplay, start, destination) {
-        directionsService.route({
-          origin: start,
-          destination: destination,
-          travelMode: _this.travelMethod
-        }, function (response, status) {
-          if (status === 'OK') {
-            _this.directions = response.routes[0].legs;
-            console.log('%c Directions ', 'background: #222; color: #bada55');
-            console.log(_this.directions);
-
-            _this.setAddress(_this.directions[0].start_address);
-
-            _this.parseTravelData(_this.directions[0].duration.value);
-
-            directionsDisplay.setDirections(response);
-          } else {
-            window.alert('Directions request failed due to ' + status);
-          }
-        });
-      }
-
-      calculateAndDisplayRoute(directionsService, directionsDisplay, _this2.start, _this2.destination);
-    });
+  watch: {
+    destination: function destination() {
+      this.getDirections();
+    }
   },
   methods: _objectSpread({
     parseTravelData: function parseTravelData(duration) {
@@ -3351,6 +2404,40 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       this.departureTime = this.convert24To12(this.departureTime.getHours()) + ':' + this.zeroPadding(this.departureTime.getMinutes(), 2);
       this.arrivalTime = this.convert24To12(this.arrivalTime.getHours()) + ':' + this.zeroPadding(this.arrivalTime.getMinutes(), 2);
+    },
+    getDirections: function getDirections() {
+      var _this4 = this;
+
+      this.$refs.map.$mapPromise.then(function () {
+        var _this = _this4;
+        var directionsService = new google.maps.DirectionsService();
+        var directionsDisplay = new google.maps.DirectionsRenderer();
+        directionsDisplay.setMap(_this4.$refs.map.$mapObject); //google maps API's direction service
+
+        function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+          directionsService.route({
+            origin: _this.start,
+            destination: _this.destination,
+            travelMode: _this.travelMethod
+          }, function (response, status) {
+            if (status === 'OK') {
+              _this.directions = response.routes[0].legs;
+              console.log('%c Directions ', 'background: #222; color: #bada55');
+              console.log(_this.directions);
+
+              _this.setAddress(_this.directions[0].start_address);
+
+              _this.parseTravelData(_this.directions[0].duration.value);
+
+              directionsDisplay.setDirections(response);
+            } else {
+              window.alert('Directions request failed due to ' + status);
+            }
+          });
+        }
+
+        calculateAndDisplayRoute(directionsService, directionsDisplay, _this4.start, _this4.destination);
+      });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
     setAddress: 'setAddress'
@@ -3456,6 +2543,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -3472,37 +2564,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   computed: _objectSpread({
     remainingLocations: function remainingLocations() {
-      if (this.locations) return this.locations.filter(function (location) {
-        return location.favourite == null;
-      });
+      if (this.locations) return this.locations; // return this.locations.filter(location => location.favourite == null)
     },
-    homeLoc: function homeLoc() {
-      if (this.locations) return this.locations.find(function (location) {
-        return location.favourite == 'Home';
-      });
-    },
-    favLoc: function favLoc() {
-      if (this.locations) return this.locations.find(function (location) {
-        return location.favourite == 'Favourite';
+    userSettings: function userSettings() {
+      if (this.mapsSettings) return this.mapsSettings.find(function (user) {
+        return user.name === 'Liam';
       });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
-    locations: 'getLocations'
+    locations: 'getLocations',
+    mapsSettings: 'getMapsSettings'
   })),
-  methods: _objectSpread({
-    updateFavourite: function updateFavourite(event, option) {
-      var newFav = this.locations.find(function (location) {
-        return location.id == event.target.value;
-      });
-      var oldFav = option == 'Home' ? this.homeLoc : this.favLoc;
-      newFav.favourite = option;
-      this.updateLocation(newFav);
-      oldFav.favourite = null;
-      this.updateLocation(oldFav);
-    }
-  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
+  created: function created() {},
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
     updateLocation: 'updateLocation',
-    deleteLocation: 'deleteLocation'
+    deleteLocation: 'deleteLocation',
+    updateMapSettings: 'updateMapSettings'
   }))
 });
 
@@ -3553,10 +2630,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -3569,10 +2642,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     location: 'getLocation',
     address: 'getAddress'
   })),
-  created: function created() {
+  mounted: function mounted() {
     // Update the weather every 10 minutes
     // setInterval(this.getWeather, 600000)
     this.getWeather();
+  },
+  watch: {
+    // Update the weather display whenever the location changes
+    location: function location() {
+      this.getWeather();
+    }
   },
   methods: {
     getWeather: function getWeather() {
@@ -3659,7 +2738,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Settings {\n    width: 100vw;\n\n    color: white;\n}\n.background {\n    border-radius: 30px;\n    /* background-color: #29375E; */\n\n    background: #0F2027;  /* fallback for old browsers */  /* Chrome 10-25, Safari 5.1-6 */\n    background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */\n}\n.scrollSpace {\n    height: 75vh;\n    width: 100%;\n}\n.uk-tab>*>a {\n    font-size: 1.5rem;\n}\n.textColor, h1, .uk-button, .uk-tab > .uk-active > a, h4, h5 {\n    color: white;\n}\ninput, .uk-input, .uk-select {\n    border-radius: 30px;\n\n    background-color: #29375E;\n    border-color: #29375E;\n    color: #DCE7F9;\n}\n.uk-table td {\n    padding: 10px 5px;\n}\nh1 {\n    margin: 15px;\n}\nh5 {\n    margin: 10px 0;\n}\n", ""]);
+exports.push([module.i, "\n.Settings {\n    height: 100vh;\n    width: 100vw;\n}\n.footer {\n    position: absolute;\n    bottom: 0;\n}\n.scrollSpace {\n    height: 69vh;\n    width: 100%;\n}\n.uk-tab>*>a {\n    font-size: 4vh;\n    color: grey;\n}\n.textColor, .Settings h1, h2, h4, h5, .uk-tab > .uk-active > a {\n    color: black;\n}\ninput, select, .uk-input, .uk-select {\n    border-radius: 30px;\n    background: rgba(30,30,30,0.5);\n    color: white;\n}\ninput:focus, select:focus, .uk-input:focus, .uk-select:focus {\n    border-radius: 30px;\n    background: rgba(50,50,50,0.7);\n    color: white;\n}\ninput:-webkit-autofill,\ninput:-webkit-autofill:hover,\ninput:-webkit-autofill:focus,\ninput:-webkit-autofill:active  {\n    -webkit-box-shadow: 0 0 0 30px rgba(50,50,50,0.7) inset !important;\n    -webkit-text-fill-color: white !important;\n}\n.uk-table th {\n    color: black;\n}\n.uk-table td {\n    padding: 10px 5px;\n}\nh1 {\n    font-size: 6.5vh;\n    margin: 0.5% 0 0 0;\n}\nh5 a {\n    color: #333;\n}\n\n/* h1 {\n    margin: 15px;\n}\n\nh5 {\n    margin: 10px 0;\n} */\n", ""]);
 
 // exports
 
@@ -3678,7 +2757,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.homepage {\n    /* height: 100vh;\n    width: 100vw; */\n        overflow: hidden;\n    color: black;\n}\n.transparent {\n    background: rgba(240,240,240,0.35);\n    height: 100vh;\n    width: 100vw;\n}\n.pageControl {\n    position: absolute;\n    top: 0px;\n    left: 0px;\n\n    width: 9vw;\n}\n.uk-icon {\n    margin: 2vh;\n}\na:hover {\n    color: white;\n}\n.fullWidth {\n    width: 100%;\n}\n.nopadding {\n    padding: 0;\n}\n.nomargin {\n    margin: 0;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive;\n}\n.textBody {\n    font-family: 'Roboto';\n}\n", ""]);
+exports.push([module.i, "\n.homepage {\n    overflow: hidden;\n    color: black;\n}\n.transparent {\n    /* background: rgba(240,240,240,0.75); */\n    height: 100vh;\n    width: 100vw;\n}\n.pageControl {\n    position: absolute;\n    top: 0px;\n    left: 0px;\n\n    width: 9vw;\n    margin: 2vh;\n}\n.pageControl:hover {\n    color: white;\n}\n.fullWidth {\n    width: 100%;\n}\n.fullHeight {\n    height: 100%;\n}\n.nopadding {\n    padding: 0;\n}\n.nomargin {\n    margin: 0;\n}\n.nospacing {\n    margin: 0;\n    padding: 0;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive;\n}\n.textBody {\n    font-family: 'Roboto';\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
 
 // exports
 
@@ -3704,6 +2783,25 @@ exports.push([module.i, "\n.clock[data-v-6994ebce] {\n    position: absolute;\n 
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/LoginSettings.vue?vue&type=style&index=0&id=7cf8959e&scoped=true&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/LoginSettings.vue?vue&type=style&index=0&id=7cf8959e&scoped=true&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.uk-form-label[data-v-7cf8959e] {\n    padding-left: 7%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/WidgetsSettings.vue?vue&type=style&index=0&id=10acad64&scoped=true&lang=css&":
 /*!******************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/WidgetsSettings.vue?vue&type=style&index=0&id=10acad64&scoped=true&lang=css& ***!
@@ -3716,7 +2814,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ntr th[data-v-10acad64] {\n    text-align: center;\n}\n/* tr {\n    background: rgba(240,240,240,1);\n} */\n", ""]);
+exports.push([module.i, "\n.rowHeight[data-v-10acad64] {\n    height: 2.5rem;\n}\n.widgetTitle[data-v-10acad64] {\n    font-size: 1.3rem;\n}\n", ""]);
 
 // exports
 
@@ -3773,7 +2871,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\ntd[data-v-e2019a9c] {\n    height: 100%;\n}\n.uk-button[data-v-e2019a9c] {\n    padding: 0;\n    height: 2.4rem;\n}\ntr th[data-v-e2019a9c] {\n    text-align: center;\n}\n\n/* tr:nth-child(even) {\n    background: rgba(240,240,240,1);\n} */\n", ""]);
+exports.push([module.i, "\ntr th[data-v-e2019a9c] {\n    text-align: center;\n    padding: 0;\n}\n.posWidth[data-v-e2019a9c] {\n    width: 60px;\n}\n.uk-button[data-v-e2019a9c] {\n    height: 40px;\n    width: 50px;\n}\n", ""]);
 
 // exports
 
@@ -3811,7 +2909,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.selectLabel[data-v-b8bb28f8] {\n    text-align: left;\n}\n.selected[data-v-b8bb28f8] {\n    text-align: right;\n}\ntd[data-v-b8bb28f8], .uk-button-group[data-v-b8bb28f8] {\n    height: 100%;\n}\n.uk-button[data-v-b8bb28f8] {\n    padding: 0;\n    height: 2.4rem;\n}\ntr th[data-v-b8bb28f8] {\n    text-align: center;\n}\n\n/* tr:nth-child(even) {\n    background: rgba(240,240,240,1);\n} */\n", ""]);
+exports.push([module.i, "\ntr th[data-v-b8bb28f8] {\n    text-align: center;\n    padding: 30px 0 0 0;\n}\n.uk-form-label[data-v-b8bb28f8] {\n    padding-left: 7%;\n}\n.uk-button[data-v-b8bb28f8] {\n    height: 40px;\n    width: 50px;\n}\n", ""]);
 
 // exports
 
@@ -4498,6 +3596,36 @@ if(false) {}
 
 
 var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./DateTime.vue?vue&type=style&index=0&id=6994ebce&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/DateTime.vue?vue&type=style&index=0&id=6994ebce&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/LoginSettings.vue?vue&type=style&index=0&id=7cf8959e&scoped=true&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/LoginSettings.vue?vue&type=style&index=0&id=7cf8959e&scoped=true&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./LoginSettings.vue?vue&type=style&index=0&id=7cf8959e&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/LoginSettings.vue?vue&type=style&index=0&id=7cf8959e&scoped=true&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -5657,94 +4785,73 @@ var render = function() {
     "div",
     { staticClass: "row center-xs middle-xs nomargin Settings" },
     [
+      _c("div", { staticClass: "row center-xs fullWidth nospacing" }, [
+        _c("h1", { staticClass: "textSpecial" }, [
+          _vm._v("Your " + _vm._s(_vm.activeTab.title))
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row center-xs nospacing" }, [
+        _c(
+          "ul",
+          { attrs: { "uk-tab": "" } },
+          _vm._l(_vm.tabs, function(tab) {
+            return _c("li", [
+              _c(
+                "a",
+                {
+                  staticClass:
+                    "uk-text-capitalize textTitle tabsTitle noselect",
+                  on: {
+                    click: function($event) {
+                      _vm.activeTab = tab
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(tab.title) +
+                      "\n                "
+                  )
+                ]
+              )
+            ])
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
       _c(
-        "div",
-        { staticClass: "col-xs-10 fullWidth background" },
-        [
-          _c("h1", { staticClass: "textSpecial" }, [
-            _vm._v("Your " + _vm._s(_vm.activeTab.title))
-          ]),
-          _vm._v(" "),
-          _c(
-            "vue-custom-scrollbar",
-            {
-              staticClass: "scrollSpace",
-              attrs: { settings: _vm.scrollSettings }
-            },
-            [
-              _c("ul", { attrs: { "uk-tab": "" } }, [
-                _c("li", [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "uk-text-capitalize textTitle tabsTitle",
-                      on: {
-                        click: function($event) {
-                          _vm.activeTab = _vm.widgets
-                        }
-                      }
-                    },
-                    [_vm._v("Widgets")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "uk-text-capitalize textTitle tabsTitle",
-                      on: {
-                        click: function($event) {
-                          _vm.activeTab = _vm.maps
-                        }
-                      }
-                    },
-                    [_vm._v("Locations")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "uk-text-capitalize textTitle tabsTitle",
-                      on: {
-                        click: function($event) {
-                          _vm.activeTab = _vm.favs
-                        }
-                      }
-                    },
-                    [_vm._v("Favourites")]
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c(_vm.activeTab.src, { tag: "component" })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _vm._m(0)
-        ],
+        "vue-custom-scrollbar",
+        {
+          staticClass: "scrollSpace nospacing",
+          attrs: { settings: _vm.scrollSettings }
+        },
+        [_c(_vm.activeTab.src, { tag: "component" })],
         1
+      ),
+      _vm._v(" "),
+      _c(
+        "h5",
+        { staticClass: "row fullWidth center-xs footer textBody nospacing" },
+        [
+          _vm._v(
+            "\n        HomepageV2 copyright © " +
+              _vm._s(1900 + new Date().getYear()) +
+              " of  \n        "
+          ),
+          _c("a", { attrs: { href: "https://ljones.ca", target: "_blank" } }, [
+            _vm._v(" Liam Jones")
+          ]),
+          _vm._v(". All Rights Reserved.\n    ")
+        ]
       )
-    ]
+    ],
+    1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("h5", { staticClass: "textBody" }, [
-      _vm._v("HomepageV2 copyright (c) 2019 "),
-      _c("a", { attrs: { href: "https://ljones.ca", target: "_blank" } }, [
-        _vm._v("Liam Jones")
-      ]),
-      _vm._v(". All Rights Reserved.")
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -5769,7 +4876,9 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "row center-xs middle-xs homepage transparent nomargin",
+      staticClass:
+        "row center-xs middle-xs homepage transparent nomargin uk-animation-fade",
+      style: "background: rgba(240,240,240," + _vm.transparency + ");",
       attrs: { id: "background" }
     },
     [
@@ -5785,7 +4894,21 @@ var render = function() {
       _vm._v(" "),
       _c("DateTime"),
       _vm._v(" "),
-      _vm.showHome == true ? _c("div", [_c("Home")], 1) : _vm._e(),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.showHome == true,
+              expression: "showHome == true"
+            }
+          ]
+        },
+        [_c("Home")],
+        1
+      ),
       _vm._v(" "),
       _vm.showHome == false ? _c("div", [_c("Settings")], 1) : _vm._e()
     ],
@@ -5831,6 +4954,124 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/LoginSettings.vue?vue&type=template&id=7cf8959e&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/LoginSettings.vue?vue&type=template&id=7cf8959e&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "row center-xs middle-xs fullWidth textColor" },
+    [
+      _c("div", { staticClass: "col-xs-4" }, [
+        _vm.activeUser
+          ? _c("div", { staticClass: "row center-xs fullWidth nomargin" }, [
+              _c("h2", { staticClass: "textTitle" }, [
+                _vm._v("Welcome, " + _vm._s(_vm.activeUser.name) + "!")
+              ])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "span",
+          { staticClass: "row uk-form-label fullWidth textColor textBody" },
+          [_vm._v("Username")]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "uk-form-controls fullWidth" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.name,
+                expression: "name"
+              }
+            ],
+            staticClass: "uk-input textBody fullWidth",
+            attrs: { type: "name", name: "name" },
+            domProps: { value: _vm.name },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.name = $event.target.value
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c(
+          "span",
+          { staticClass: "row uk-form-label fullWidth textColor textBody" },
+          [_vm._v("Password")]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "uk-form-controls fullWidth" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.pass,
+                expression: "pass"
+              }
+            ],
+            staticClass: "uk-input textBody fullWidth",
+            attrs: { type: "password", name: "pass" },
+            domProps: { value: _vm.pass },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.pass = $event.target.value
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c("div", { staticClass: "row center-xs" }, [
+          _c(
+            "button",
+            {
+              staticClass: "uk-button uk-button-primary textTitle",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.login()
+                }
+              }
+            },
+            [_vm._v("\n                Switch Accounts\n            ")]
+          )
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/WidgetsSettings.vue?vue&type=template&id=10acad64&scoped=true&":
 /*!***************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/WidgetsSettings.vue?vue&type=template&id=10acad64&scoped=true& ***!
@@ -5846,53 +5087,59 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("table", { staticClass: "uk-table" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "tbody",
+  return _c(
+    "div",
+    [
+      _vm._m(0),
+      _vm._v(" "),
       _vm._l(_vm.widgets, function(widget) {
-        return _c("tr", { staticClass: "textBody" }, [
-          _c("td", [_vm._v(_vm._s(widget.title))]),
-          _vm._v(" "),
-          _c("td", [
-            _c(
-              "button",
-              {
-                class: ["uk-button uk-button-small", _vm.color(widget)],
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.toggleStatus(widget)
+        return _c(
+          "div",
+          { staticClass: "row center-xs middle-xs fullWidth rowHeight" },
+          [
+            _c("div", { staticClass: "col-xs-3 widgetTitle" }, [
+              _vm._v("\n            " + _vm._s(widget.title) + "\n        ")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-xs-3" }, [
+              _c(
+                "button",
+                {
+                  class: ["uk-button uk-button-small", _vm.color(widget)],
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.toggleStatus(widget)
+                    }
                   }
-                }
-              },
-              [
-                _vm._v(
-                  "\n                    " +
-                    _vm._s(_vm.readable[widget.status]) +
-                    "\n                "
-                )
-              ]
-            )
-          ])
-        ])
-      }),
-      0
-    )
-  ])
+                },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.readable[widget.status]) +
+                      "\n            "
+                  )
+                ]
+              )
+            ])
+          ]
+        )
+      })
+    ],
+    2
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Widget Title")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Status")])
-      ])
+    return _c("div", { staticClass: "row center-xs fullWidth" }, [
+      _c("div", { staticClass: "col-xs-3" }, [
+        _c("h2", [_vm._v("Widget Title")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-xs-3" }, [_c("h2", [_vm._v("Status")])])
     ])
   }
 ]
@@ -6146,7 +5393,7 @@ var render = function() {
               _c(
                 "button",
                 {
-                  staticClass: "uk-button uk-button-secondary uk-button-small",
+                  staticClass: "uk-button uk-button-danger uk-button-small",
                   on: {
                     click: function($event) {
                       return _vm.deleteFavourite(favourite)
@@ -6242,7 +5489,7 @@ var render = function() {
                   expression: "newFavourite.pos"
                 }
               ],
-              staticClass: "uk-input",
+              staticClass: "posWidth uk-input",
               attrs: { type: "number" },
               domProps: { value: _vm.newFavourite.pos },
               on: {
@@ -6256,7 +5503,7 @@ var render = function() {
             })
           ]),
           _vm._v(" "),
-          _c("td", [
+          _c("td", { staticClass: "posWidth" }, [
             _c(
               "button",
               {
@@ -6284,13 +5531,19 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Title")]),
+        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Title")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Link")]),
+        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Link")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Image Source")]),
+        _c("th", { staticClass: "uk-text-capitalize" }, [
+          _vm._v("Image Source")
+        ]),
         _vm._v(" "),
-        _c("th", [_vm._v("Position")])
+        _c("th", { staticClass: "uk-text-capitalize posWidth" }, [
+          _vm._v("Position")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Edit")])
       ])
     ])
   }
@@ -6317,63 +5570,51 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "div",
-      { staticClass: "row center-xs travelText textBody uk-text-truncate" },
-      [
-        _vm._v(
-          "\n        Leave at " +
-            _vm._s(_vm.departureTime) +
-            " to arrive at " +
-            _vm._s(_vm.start.title) +
-            " by " +
-            _vm._s(_vm.arrivalTime) +
-            ". Via: \n        "
-        ),
-        _c(
-          "a",
-          {
-            on: {
-              click: function($event) {
-                _vm.showMap = !_vm.showMap
-              }
-            }
-          },
-          [_vm._v("Driving")]
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _vm.start
+    _vm.destination
       ? _c(
           "div",
+          { staticClass: "row center-xs travelText textBody uk-text-truncate" },
           [
+            _vm._v(
+              "\n        Leave at " +
+                _vm._s(_vm.departureTime) +
+                " to arrive at " +
+                _vm._s(_vm.destination.title) +
+                " by " +
+                _vm._s(_vm.arrivalTime) +
+                ". Via: \n        "
+            ),
             _c(
-              "gmap-map",
+              "a",
               {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: false,
-                    expression: "false"
+                on: {
+                  click: function($event) {
+                    _vm.showMap = !_vm.showMap
                   }
-                ],
-                ref: "map",
-                staticStyle: { width: "1px", height: "1px" },
-                attrs: { center: _vm.start, zoom: 15 }
+                }
               },
-              [
-                _c("gmap-marker", { attrs: { position: this.start } }),
-                _vm._v(" "),
-                _c("gmap-marker", { attrs: { position: this.destination } })
-              ],
-              1
+              [_vm._v(_vm._s(_vm.travelMethod))]
             )
-          ],
-          1
+          ]
         )
-      : _vm._e()
+      : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          { name: "show", rawName: "v-show", value: false, expression: "false" }
+        ]
+      },
+      [
+        _c("gmap-map", {
+          ref: "map",
+          staticStyle: { width: "1px", height: "1px" },
+          attrs: { center: _vm.start, zoom: 15 }
+        })
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = []
@@ -6399,111 +5640,199 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "row center-xs fullWidth" }, [
-      _c("div", { staticClass: "col-xs-8" }, [
-        _c("div", { staticClass: "row fullWidth" }, [
-          _c(
-            "span",
-            {
-              staticClass: "col-xs start-xs uk-form-label textColor textTitle",
-              attrs: { for: "form-stacked-select" }
-            },
-            [_vm._v("Home Location")]
-          ),
-          _vm._v(" "),
-          _vm.homeLoc
-            ? _c(
-                "span",
+    _vm.userSettings
+      ? _c("div", { staticClass: "row center-xs middle-xs fullWidth" }, [
+          _c("div", { staticClass: "col-xs-3" }, [
+            _c(
+              "span",
+              { staticClass: "row uk-form-label fullWidth textColor textBody" },
+              [_vm._v("Home Location")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "uk-form-controls fullWidth" }, [
+              _c(
+                "select",
                 {
-                  staticClass: "col-xs end-xs uk-form-label textColor textTitle"
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.userSettings.home_id,
+                      expression: "userSettings.home_id"
+                    }
+                  ],
+                  staticClass: "uk-select",
+                  on: {
+                    change: [
+                      function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.userSettings,
+                          "home_id",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      },
+                      function($event) {
+                        return _vm.updateMapSettings(_vm.userSettings)
+                      }
+                    ]
+                  }
                 },
-                [_vm._v(_vm._s(_vm.homeLoc.title))]
+                [
+                  _c("option", { attrs: { value: "" } }),
+                  _vm._v(" "),
+                  _vm._l(_vm.remainingLocations, function(location) {
+                    return _c("option", { domProps: { value: location.id } }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(location.title) +
+                          "\n                    "
+                      )
+                    ])
+                  })
+                ],
+                2
               )
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "uk-form-controls fullWidth" }, [
-          _c(
-            "select",
-            {
-              staticClass: "uk-select",
-              on: {
-                change: function($event) {
-                  return _vm.updateFavourite($event, "Home")
-                }
-              }
-            },
-            [
-              _c("option", { attrs: { value: "" } }),
-              _vm._v(" "),
-              _vm._l(_vm.remainingLocations, function(location) {
-                return _c("option", { domProps: { value: location.id } }, [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(location.title) +
-                      "\n                    "
-                  )
-                ])
-              })
-            ],
-            2
-          )
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "row center-xs fullWidth" }, [
-      _c("div", { staticClass: "col-xs-8" }, [
-        _c("div", { staticClass: "row fullWidth" }, [
-          _c(
-            "span",
-            {
-              staticClass: "col-xs start-xs uk-form-label textColor textTitle",
-              attrs: { for: "form-stacked-select" }
-            },
-            [_vm._v("Favourite Location")]
-          ),
+            ])
+          ]),
           _vm._v(" "),
-          _vm.favLoc
-            ? _c(
-                "span",
+          _c("div", { staticClass: "col-xs-3" }, [
+            _c(
+              "span",
+              { staticClass: "row uk-form-label fullWidth textColor textBody" },
+              [_vm._v("Favourite Location")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "uk-form-controls fullWidth" }, [
+              _c(
+                "select",
                 {
-                  staticClass: "col-xs end-xs uk-form-label textColor textTitle"
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.userSettings.fav_id,
+                      expression: "userSettings.fav_id"
+                    }
+                  ],
+                  staticClass: "uk-select",
+                  on: {
+                    change: [
+                      function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.userSettings,
+                          "fav_id",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      },
+                      function($event) {
+                        return _vm.updateMapSettings(_vm.userSettings)
+                      }
+                    ]
+                  }
                 },
-                [_vm._v(_vm._s(_vm.favLoc.title))]
+                [
+                  _c("option", { attrs: { value: "" } }),
+                  _vm._v(" "),
+                  _vm._l(_vm.remainingLocations, function(location) {
+                    return _c("option", { domProps: { value: location.id } }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(location.title) +
+                          "\n                    "
+                      )
+                    ])
+                  })
+                ],
+                2
               )
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "uk-form-controls fullWidth" }, [
-          _c(
-            "select",
-            {
-              staticClass: "uk-select",
-              on: {
-                change: function($event) {
-                  return _vm.updateFavourite($event, "Favourite")
-                }
-              }
-            },
-            [
-              _c("option", { attrs: { value: "" } }),
-              _vm._v(" "),
-              _vm._l(_vm.remainingLocations, function(location) {
-                return _c("option", { domProps: { value: location.id } }, [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(location.title) +
-                      "\n                    "
-                  )
-                ])
-              })
-            ],
-            2
-          )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-xs-3" }, [
+            _c(
+              "span",
+              { staticClass: "row uk-form-label fullWidth textColor textBody" },
+              [_vm._v("Transportation Method")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "uk-form-controls fullWidth" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.userSettings.method,
+                      expression: "userSettings.method"
+                    }
+                  ],
+                  staticClass: "uk-select",
+                  on: {
+                    change: [
+                      function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.userSettings,
+                          "method",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      },
+                      function($event) {
+                        return _vm.updateMapSettings(_vm.userSettings)
+                      }
+                    ]
+                  }
+                },
+                [
+                  _c("option", { attrs: { value: "" } }),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "DRIVING" } }, [
+                    _vm._v("Driving")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "TRANSIT" } }, [
+                    _vm._v("Bus")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "WALKING" } }, [
+                    _vm._v("Walking")
+                  ])
+                ]
+              )
+            ])
+          ])
         ])
-      ])
-    ]),
+      : _vm._e(),
     _vm._v(" "),
     _c("table", { staticClass: "uk-table" }, [
       _vm._m(0),
@@ -6512,7 +5841,7 @@ var render = function() {
         "tbody",
         [
           _vm._l(_vm.locations, function(location) {
-            return _c("tr", [
+            return _c("tr", { key: location.id }, [
               _c("td", [
                 _c("input", {
                   directives: [
@@ -6626,8 +5955,7 @@ var render = function() {
                 _c(
                   "button",
                   {
-                    staticClass:
-                      "uk-button uk-button-secondary uk-button-small",
+                    staticClass: "uk-button uk-button-danger uk-button-small",
                     on: {
                       click: function($event) {
                         return _vm.deleteLocation(location)
@@ -6773,15 +6101,15 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Title")]),
+        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Title")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Address")]),
+        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Address")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Lat")]),
+        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Lat")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Long")]),
+        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Long")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Save")])
+        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Edit")])
       ])
     ])
   }
@@ -6807,115 +6135,102 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row middle-xs weatherDisplay" }, [
-    _c("div", { staticClass: "col-xs" }, [
-      _vm.weather
-        ? _c("div", [
-            _c(
-              "div",
-              {
-                staticClass: "row center-xs bottom-xs location textSpecial",
-                attrs: { "uk-tooltip": _vm.address }
-              },
-              [
-                _vm._v(
-                  "\n                " +
-                    _vm._s(_vm.weather.location.name) +
-                    ", " +
-                    _vm._s(_vm.weather.location.region) +
-                    "\n            "
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "row center-xs middle-xs curDescription nopadding"
-              },
-              [
-                _c("img", {
-                  staticClass: "curIcon",
-                  attrs: {
-                    src: _vm.weather.current.condition.icon,
-                    alt: "Condition Icon"
-                  }
-                }),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "uk-text-truncate curText textSpecial" },
-                  [
-                    _vm._v(
-                      "\n                    " +
-                        _vm._s(_vm.weather.current.feelslike_c) +
-                        "°C - " +
-                        _vm._s(_vm.weather.current.condition.text) +
-                        "\n                "
-                    )
-                  ]
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "row center-xs middle-xs textBody" },
-              _vm._l(_vm.weather.forecast.forecastday, function(day) {
-                return _c(
-                  "div",
-                  {
-                    staticClass: "col-xs",
-                    attrs: { "uk-tooltip": day.day.condition.text }
-                  },
-                  [
-                    _c("div", { staticClass: "row" }, [
-                      _c(
-                        "div",
-                        { staticClass: "col-xs end-xs nopadding nomargin" },
-                        [
-                          _c("img", {
-                            staticClass: "forecastIcon",
-                            attrs: {
-                              src: day.day.condition.icon,
-                              alt: "Condition Icon"
-                            }
-                          })
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          staticClass:
-                            "col-xs-3 forecastTemp nopadding nomargin"
-                        },
-                        [
-                          _vm._v(
-                            "\n                            " +
-                              _vm._s(Math.round(day.day.maxtemp_c)) +
-                              "°\n                            " +
-                              _vm._s(Math.round(day.day.mintemp_c)) +
-                              "°\n                        "
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-xs-2" })
-                    ]),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "forecastDay" }, [
-                      _vm._v(_vm._s(_vm.days[new Date(day.date).getDay()]))
-                    ])
-                  ]
-                )
-              }),
-              0
+  return _vm.weather
+    ? _c("div", { staticClass: "weatherDisplay" }, [
+        _c(
+          "div",
+          {
+            staticClass: "row center-xs bottom-xs location textSpecial",
+            attrs: { "uk-tooltip": _vm.address }
+          },
+          [
+            _vm._v(
+              "\n        " +
+                _vm._s(_vm.weather.location.name) +
+                ", " +
+                _vm._s(_vm.weather.location.region) +
+                "\n    "
             )
-          ])
-        : _vm._e()
-    ])
-  ])
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "row center-xs middle-xs curDescription nopadding" },
+          [
+            _c("img", {
+              staticClass: "curIcon",
+              attrs: {
+                src: _vm.weather.current.condition.icon,
+                alt: "Condition Icon"
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "uk-text-truncate curText textSpecial" }, [
+              _vm._v(
+                "\n            " +
+                  _vm._s(_vm.weather.current.feelslike_c) +
+                  "°C - " +
+                  _vm._s(_vm.weather.current.condition.text) +
+                  "\n        "
+              )
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "row center-xs middle-xs textBody" },
+          _vm._l(_vm.weather.forecast.forecastday, function(day) {
+            return _c(
+              "div",
+              {
+                staticClass: "col-xs",
+                attrs: { "uk-tooltip": day.day.condition.text }
+              },
+              [
+                _c("div", { staticClass: "row" }, [
+                  _c(
+                    "div",
+                    { staticClass: "col-xs end-xs nopadding nomargin" },
+                    [
+                      _c("img", {
+                        staticClass: "forecastIcon",
+                        attrs: {
+                          src: day.day.condition.icon,
+                          alt: "Condition Icon"
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "col-xs-3 forecastTemp nopadding nomargin" },
+                    [
+                      _vm._v(
+                        "\n                    " +
+                          _vm._s(Math.round(day.day.maxtemp_c)) +
+                          "°\n                    " +
+                          _vm._s(Math.round(day.day.mintemp_c)) +
+                          "°\n                "
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-xs-2" })
+                ]),
+                _vm._v(" "),
+                _c("span", { staticClass: "forecastDay" }, [
+                  _vm._v(_vm._s(_vm.days[new Date(day.date).getDay()]))
+                ])
+              ]
+            )
+          }),
+          0
+        )
+      ])
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -22675,6 +21990,7 @@ Vue.component('Favourites', __webpack_require__(/*! ./widgets/favourites/FavsDis
 Vue.component('FavSettings', __webpack_require__(/*! ./widgets/favourites/FavsSettings.vue */ "./resources/js/widgets/favourites/FavsSettings.vue")["default"]);
 Vue.component('Calendar', __webpack_require__(/*! ./widgets/calendar/CalendarDisplay.vue */ "./resources/js/widgets/calendar/CalendarDisplay.vue")["default"]);
 Vue.component('WidgetsSettings', __webpack_require__(/*! ./widgets/WidgetsSettings.vue */ "./resources/js/widgets/WidgetsSettings.vue")["default"]);
+Vue.component('LoginSettings', __webpack_require__(/*! ./widgets/LoginSettings.vue */ "./resources/js/widgets/LoginSettings.vue")["default"]);
 Vue.component('DateTime', __webpack_require__(/*! ./widgets/DateTime.vue */ "./resources/js/widgets/DateTime.vue")["default"]); // Packages
 
 Vue.component('vueCustomScrollbar', __webpack_require__(/*! vue-custom-scrollbar */ "./node_modules/vue-custom-scrollbar/dist/vueScrollbar.umd.min.js"));
@@ -22962,8 +22278,11 @@ var state = {
   // Settings
   widgets: null,
   locations: null,
-  favourites: null // location: null,
-
+  favourites: null,
+  mapsSettings: null,
+  // Users
+  users: null,
+  user: null
 };
 var getters = {
   getShowHome: function getShowHome(state) {
@@ -22990,6 +22309,16 @@ var getters = {
   },
   getFavourites: function getFavourites(state) {
     return state.favourites;
+  },
+  getMapsSettings: function getMapsSettings(state) {
+    return state.mapsSettings;
+  },
+  // Users
+  getUsers: function getUsers(state) {
+    return state.users;
+  },
+  getUser: function getUser(state) {
+    return state.user;
   }
 };
 var mutations = {
@@ -23014,6 +22343,16 @@ var mutations = {
   },
   setFavourites: function setFavourites(state, payload) {
     state.favourites = payload;
+  },
+  setMapsSettings: function setMapsSettings(state, payload) {
+    state.mapsSettings = payload;
+  },
+  //Users
+  setUsers: function setUsers(state, payload) {
+    state.users = payload;
+  },
+  setUser: function setUser(state, payload) {
+    state.user = payload;
   }
 };
 var actions = {
@@ -23030,30 +22369,65 @@ var actions = {
     commit('setLat', payload.lat);
     commit('setLng', payload.lng);
   },
+  fetchUser: function fetchUser(_ref4) {
+    var commit = _ref4.commit,
+        dispatch = _ref4.dispatch;
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/users/user').then(function (response) {
+      console.log('%c Active User', 'background: #222; color: #bada55');
+      console.log(response.data);
+      dispatch('setActiveUser', response.data[0]);
+    });
+  },
+  setActiveUser: function setActiveUser(_ref5, payload) {
+    var commit = _ref5.commit,
+        dispatch = _ref5.dispatch;
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users/user', payload).then(function (result) {
+      commit('setUser', payload);
+      dispatch('fetchWidgets');
+      dispatch('fetchMapsSettings');
+      dispatch('fetchFavourites');
+    });
+  },
+  fetchUsers: function fetchUsers(_ref6) {
+    var commit = _ref6.commit;
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/users').then(function (response) {
+      console.log('%c Users', 'background: #222; color: #bada55');
+      console.log(response.data);
+      commit('setUsers', response.data);
+    });
+  },
+  updateUser: function updateUser(_ref7, payload) {
+    var commit = _ref7.commit,
+        dispatch = _ref7.dispatch;
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users', payload).then(function (response) {
+      dispatch('fetchUsers');
+    });
+  },
   // Settings
-  fetchWidgets: function fetchWidgets(_ref4) {
-    var commit = _ref4.commit;
+  fetchWidgets: function fetchWidgets(_ref8) {
+    var commit = _ref8.commit;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/widgets/').then(function (response) {
+      console.log('%c Widgets ', 'background: #222; color: #bada55');
+      console.log(response.data);
       commit('setWidgets', response.data);
     });
   },
-  updateWidget: function updateWidget(_ref5, payload) {
-    var commit = _ref5.commit;
-    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/widgets/', payload).then(function (response) {
-      console.log('Updated Widget');
-      console.log(response); // dispatch('fetchWidgets')
-    });
+  updateWidget: function updateWidget(_ref9, payload) {
+    var commit = _ref9.commit;
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/widgets/', payload);
   },
   // Location Controllers
-  fetchLocations: function fetchLocations(_ref6) {
-    var commit = _ref6.commit;
+  fetchLocations: function fetchLocations(_ref10) {
+    var commit = _ref10.commit;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/locations/').then(function (response) {
+      console.log('%c Locations ', 'background: #222; color: #bada55');
+      console.log(response.data);
       commit('setLocations', response.data);
     });
   },
-  updateLocation: function updateLocation(_ref7, payload) {
-    var commit = _ref7.commit,
-        dispatch = _ref7.dispatch;
+  updateLocation: function updateLocation(_ref11, payload) {
+    var commit = _ref11.commit,
+        dispatch = _ref11.dispatch;
 
     // If id is 0, we are creating a new location
     if (payload.id == null) {
@@ -23066,30 +22440,47 @@ var actions = {
       });
     }
   },
-  deleteLocation: function deleteLocation(_ref8, payload) {
-    var commit = _ref8.commit,
-        dispatch = _ref8.dispatch;
-    console.log(payload);
+  deleteLocation: function deleteLocation(_ref12, payload) {
+    var commit = _ref12.commit,
+        dispatch = _ref12.dispatch;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/locations/delete', payload).then(function (response) {
-      console.log(response.data);
       dispatch('fetchLocations');
     });
   },
+  // Update User's map settings
+  fetchMapsSettings: function fetchMapsSettings(_ref13) {
+    var commit = _ref13.commit,
+        dispatch = _ref13.dispatch;
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/locations/settings').then(function (response) {
+      console.log('%c Maps Settings ', 'background: #222; color: #bada55');
+      console.log(response.data);
+      commit('setMapsSettings', response.data);
+      dispatch('fetchLocations');
+    });
+  },
+  updateMapSettings: function updateMapSettings(_ref14, payload) {
+    var commit = _ref14.commit,
+        dispatch = _ref14.dispatch;
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/locations/settings', payload).then(function (response) {
+      dispatch('fetchMapsSettings');
+    });
+  },
   // Favourites Controllers
-  fetchFavourites: function fetchFavourites(_ref9) {
-    var commit = _ref9.commit;
+  fetchFavourites: function fetchFavourites(_ref15) {
+    var commit = _ref15.commit;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/favourites/').then(function (response) {
+      console.log('%c Favourites ', 'background: #222; color: #bada55');
+      console.log(response.data);
       commit('setFavourites', response.data);
     });
   },
-  updateFavourite: function updateFavourite(_ref10, payload) {
-    var commit = _ref10.commit,
-        dispatch = _ref10.dispatch;
+  updateFavourite: function updateFavourite(_ref16, payload) {
+    var commit = _ref16.commit,
+        dispatch = _ref16.dispatch;
 
     // If id is 0, we are creating a new location
     if (payload.id == null) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/settings/favourites/', payload).then(function (response) {
-        console.log(response);
         dispatch('fetchFavourites');
       });
     } else {
@@ -23098,9 +22489,9 @@ var actions = {
       });
     }
   },
-  deleteFavourite: function deleteFavourite(_ref11, payload) {
-    var commit = _ref11.commit,
-        dispatch = _ref11.dispatch;
+  deleteFavourite: function deleteFavourite(_ref17, payload) {
+    var commit = _ref17.commit,
+        dispatch = _ref17.dispatch;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/favourites/delete', payload).then(function (response) {
       dispatch('fetchFavourites');
     });
@@ -23224,6 +22615,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DateTime_vue_vue_type_template_id_6994ebce_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DateTime_vue_vue_type_template_id_6994ebce_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/widgets/LoginSettings.vue":
+/*!************************************************!*\
+  !*** ./resources/js/widgets/LoginSettings.vue ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _LoginSettings_vue_vue_type_template_id_7cf8959e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LoginSettings.vue?vue&type=template&id=7cf8959e&scoped=true& */ "./resources/js/widgets/LoginSettings.vue?vue&type=template&id=7cf8959e&scoped=true&");
+/* harmony import */ var _LoginSettings_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LoginSettings.vue?vue&type=script&lang=js& */ "./resources/js/widgets/LoginSettings.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _LoginSettings_vue_vue_type_style_index_0_id_7cf8959e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LoginSettings.vue?vue&type=style&index=0&id=7cf8959e&scoped=true&lang=css& */ "./resources/js/widgets/LoginSettings.vue?vue&type=style&index=0&id=7cf8959e&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _LoginSettings_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _LoginSettings_vue_vue_type_template_id_7cf8959e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _LoginSettings_vue_vue_type_template_id_7cf8959e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "7cf8959e",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/widgets/LoginSettings.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/widgets/LoginSettings.vue?vue&type=script&lang=js&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/widgets/LoginSettings.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginSettings_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./LoginSettings.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/LoginSettings.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginSettings_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/widgets/LoginSettings.vue?vue&type=style&index=0&id=7cf8959e&scoped=true&lang=css&":
+/*!*********************************************************************************************************!*\
+  !*** ./resources/js/widgets/LoginSettings.vue?vue&type=style&index=0&id=7cf8959e&scoped=true&lang=css& ***!
+  \*********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginSettings_vue_vue_type_style_index_0_id_7cf8959e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./LoginSettings.vue?vue&type=style&index=0&id=7cf8959e&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/LoginSettings.vue?vue&type=style&index=0&id=7cf8959e&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginSettings_vue_vue_type_style_index_0_id_7cf8959e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginSettings_vue_vue_type_style_index_0_id_7cf8959e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginSettings_vue_vue_type_style_index_0_id_7cf8959e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginSettings_vue_vue_type_style_index_0_id_7cf8959e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginSettings_vue_vue_type_style_index_0_id_7cf8959e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/widgets/LoginSettings.vue?vue&type=template&id=7cf8959e&scoped=true&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/widgets/LoginSettings.vue?vue&type=template&id=7cf8959e&scoped=true& ***!
+  \*******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginSettings_vue_vue_type_template_id_7cf8959e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./LoginSettings.vue?vue&type=template&id=7cf8959e&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/LoginSettings.vue?vue&type=template&id=7cf8959e&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginSettings_vue_vue_type_template_id_7cf8959e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginSettings_vue_vue_type_template_id_7cf8959e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

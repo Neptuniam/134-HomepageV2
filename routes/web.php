@@ -30,6 +30,9 @@ Route::group(['prefix'=>'settings'], function(){
         Route::post('/','Settings@createLocation');
         Route::put('/', 'Settings@updateLocation');
         Route::put('/delete', 'Settings@deleteLocation');
+
+        Route::get('/settings', 'Settings@fetchMapSettings');
+        Route::put('/settings', 'Settings@updateMapSettings');
     });
 
     Route::group(['prefix'=>'favourites'], function(){
@@ -37,5 +40,12 @@ Route::group(['prefix'=>'settings'], function(){
         Route::post('/','Settings@createFavourite');
         Route::put('/', 'Settings@updateFavourite');
         Route::put('/delete', 'Settings@deleteFavourite');
+    });
+
+    Route::group(['prefix'=>'users'], function(){
+        Route::get('/user','Settings@fetchUser');
+        Route::put('/user','Settings@setUser');
+        Route::get('/','Settings@fetchUsers');
+        Route::put('/','Settings@updateUser');
     });
 });

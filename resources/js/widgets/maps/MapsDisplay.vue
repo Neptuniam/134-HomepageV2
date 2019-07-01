@@ -1,15 +1,14 @@
 <template>
     <div>
-        <div class="row center-xs travelText textBody uk-text-truncate">
-            Leave at {{departureTime}} to arrive at {{start.title}} by {{arrivalTime}}. Via:&nbsp;
-            <a @click="showMap = !showMap">Driving</a>
+        <div v-if="destination" class="row center-xs travelText textBody uk-text-truncate">
+            Leave at {{departureTime}} to arrive at {{destination.title}} by {{arrivalTime}}. Via:&nbsp;
+            <a @click="showMap = !showMap">{{travelMethod}}</a>
         </div>
 
-        <div v-if="start">
-            <gmap-map v-show="false" ref="map" :center="start"
-                     :zoom="15" style="width: 1px; height: 1px">
-                <gmap-marker :position="this.start" />
-                <gmap-marker :position="this.destination" />
+        <div v-show="false">
+            <gmap-map ref="map" :center="start" :zoom="15" style="width: 1px; height: 1px">
+                <!-- <gmap-marker :position="this.start" />
+                <gmap-marker :position="this.destination" /> -->
             </gmap-map>
         </div>
     </div>
@@ -34,77 +33,60 @@ export default {
             userLat: 'getLat',
             userLng: 'getLng',
             locations: 'getLocations',
+            mapsSettings: 'getMapsSettings',
         }),
-        location: function() {
-            return {
-                title: 'loc',
-                lat: this.userLat,
-                lng: this.userLng
+        userSettings: function() {
+            if (this.mapsSettings)
+                return this.mapsSettings.find(user => user.name === 'Liam')
+        },
+
+        loc: function() {
+            return { title: 'loc', lat: this.userLat, lng: this.userLng }
+        },
+        home: function() {
+            if (this.locations && this.userSettings) {
+                let loc = this.locations.find(location => location.id === this.userSettings.home_id)
+                return { title: loc.title, lat: parseFloat(loc.lat), lng: parseFloat(loc.lng) }
             }
         },
-        homeLoc: function() {
-            if (this.locations)
-                return this.locations.find(location => location.favourite == 'Home')
+        fav: function() {
+            if (this.locations && this.userSettings) {
+                let loc = this.locations.find(location => location.id === this.userSettings.fav_id)
+                return { title: loc.title, lat: parseFloat(loc.lat), lng: parseFloat(loc.lng) }
+            }
         },
-        favLoc: function() {
-            if (this.locations)
-                return this.locations.find(location => location.favourite == 'Favourite')
-        },
+
         distanceToHome: function() {
-            if (this.userLat && this.userLng && this.homeLoc)
-                return Math.sqrt((this.userLat - this.homeLoc.lat)*(this.userLat - this.homeLoc.lat) + (this.userLng - this.homeLoc.lng)*(this.userLng - this.homeLoc.lng));
+            if (this.userLat && this.home)
+                return Math.sqrt((this.userLat - this.home.lat)*(this.userLat - this.home.lat) +
+                                 (this.userLng - this.home.lng)*(this.userLng - this.home.lng))
         },
-        distanceToWork: function() {
-            if (this.userLat && this.userLng && this.favLoc)
-                return Math.sqrt((this.userLat - this.favLoc.lat)*(this.userLat - this.favLoc.lat) + (this.userLng - this.favLoc.lng)*(this.userLng - this.favLoc.lng));
+        distanceToFav: function() {
+            if (this.userLat && this.fav)
+                return Math.sqrt((this.userLat - this.fav.lat)*(this.userLat - this.fav.lat) +
+                                 (this.userLng - this.fav.lng)*(this.userLng - this.fav.lng))
         },
+
         start: function() {
-            // Based off our distance to keypoints set our start start
             if (this.distanceToHome < 0.05)
-                return { title: this.homeLoc.title,    lat: parseFloat(this.homeLoc.lat),     lng: parseFloat(this.homeLoc.lng) }
-            else if (this.distanceToWork < 0.05)
-                return { title: this.favLoc.title,    lat: parseFloat(this.favLoc.lat),     lng: parseFloat(this.favLoc.lng) }
-            return this.location
+                return this.home
+            else if (this.distanceToFav < 0.05)
+                return this.fav
+            return this.loc
         },
         destination: function() {
-            if (this.homeLoc && this.favLoc)
-                return this.distanceToHome < 0.05 ? { title: this.favLoc.title, lat: parseFloat(this.favLoc.lat), lng: parseFloat(this.favLoc.lng) } :
-                                                    { title: this.homeLoc.title,lat: parseFloat(this.homeLoc.lat),lng: parseFloat(this.homeLoc.lng) }
+            if (this.distanceToHome)
+                return this.distanceToHome < 0.05 ? this.fav : this.home
         },
         travelMethod: function() {
-            return 'DRIVING'
+            if (this.userSettings)
+                return this.userSettings.method
         },
     },
-    mounted: function() {
-        this.$refs.map.$mapPromise.then(() => {
-            let _this = this
-            var directionsService = new google.maps.DirectionsService;
-            var directionsDisplay = new google.maps.DirectionsRenderer;
-            directionsDisplay.setMap(this.$refs.map.$mapObject);
-
-            //google maps API's direction service
-            function calculateAndDisplayRoute(directionsService, directionsDisplay, start, destination,) {
-                directionsService.route({
-                    origin: start,
-                    destination: destination,
-                    travelMode: _this.travelMethod
-                }, function(response, status) {
-                    if (status === 'OK') {
-                        _this.directions = response.routes[0].legs
-                        console.log('%c Directions ', 'background: #222; color: #bada55');
-                        console.log(_this.directions);
-
-                        _this.setAddress(_this.directions[0].start_address)
-                        _this.parseTravelData(_this.directions[0].duration.value)
-                        directionsDisplay.setDirections(response);
-                    } else {
-                        window.alert('Directions request failed due to ' + status);
-                    }
-                });
-            }
-
-            calculateAndDisplayRoute(directionsService, directionsDisplay, this.start, this.destination);
-        })
+    watch: {
+        destination: function() {
+            this.getDirections()
+        }
     },
     methods: {
         parseTravelData(duration) {
@@ -119,6 +101,38 @@ export default {
 
             this.arrivalTime = this.convert24To12(this.arrivalTime.getHours()) + ':' +
                                this.zeroPadding(this.arrivalTime.getMinutes(), 2)
+        },
+
+        getDirections() {
+            this.$refs.map.$mapPromise.then(() => {
+                let _this = this
+                var directionsService = new google.maps.DirectionsService;
+                var directionsDisplay = new google.maps.DirectionsRenderer;
+                directionsDisplay.setMap(this.$refs.map.$mapObject);
+
+                //google maps API's direction service
+                function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+                    directionsService.route({
+                        origin: _this.start,
+                        destination: _this.destination,
+                        travelMode: _this.travelMethod
+                    }, function(response, status) {
+                        if (status === 'OK') {
+                            _this.directions = response.routes[0].legs
+                            console.log('%c Directions ', 'background: #222; color: #bada55');
+                            console.log(_this.directions);
+
+                            _this.setAddress(_this.directions[0].start_address)
+                            _this.parseTravelData(_this.directions[0].duration.value)
+                            directionsDisplay.setDirections(response);
+                        } else {
+                            window.alert('Directions request failed due to ' + status);
+                        }
+                    });
+                }
+
+                calculateAndDisplayRoute(directionsService, directionsDisplay, this.start, this.destination);
+            })
         },
 
         ...mapActions('settings', {

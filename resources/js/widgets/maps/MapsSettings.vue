@@ -1,15 +1,11 @@
 <template>
     <div class="row">
-        <div class="row center-xs fullWidth">
-            <div class="col-xs-8">
-                <div class="row fullWidth">
-                    <span class="col-xs start-xs uk-form-label textColor textTitle" for="form-stacked-select">Home Location</span>
-
-                    <span v-if="homeLoc" class="col-xs end-xs uk-form-label textColor textTitle">{{homeLoc.title}}</span>
-                </div>
+        <div v-if="userSettings" class="row center-xs middle-xs fullWidth">
+            <div class="col-xs-3">
+                <span class="row uk-form-label fullWidth textColor textBody">Home Location</span>
 
                 <div class="uk-form-controls fullWidth">
-                    <select class="uk-select" @change="updateFavourite($event, 'Home')">
+                    <select class="uk-select" @change="updateMapSettings(userSettings)" v-model="userSettings.home_id">
                         <option value=""></option>
                         <option v-for="location in remainingLocations" :value="location.id">
                             {{location.title}}
@@ -17,18 +13,12 @@
                     </select>
                 </div>
             </div>
-        </div>
 
-        <div class="row center-xs fullWidth">
-            <div class="col-xs-8">
-                <div class="row fullWidth">
-                    <span class="col-xs start-xs uk-form-label textColor textTitle" for="form-stacked-select">Favourite Location</span>
-
-                    <span v-if="favLoc" class="col-xs end-xs uk-form-label textColor textTitle">{{favLoc.title}}</span>
-                </div>
+            <div class="col-xs-3">
+                <span class="row uk-form-label fullWidth textColor textBody">Favourite Location</span>
 
                 <div class="uk-form-controls fullWidth">
-                    <select class="uk-select" @change="updateFavourite($event, 'Favourite')">
+                    <select class="uk-select" @change="updateMapSettings(userSettings)" v-model="userSettings.fav_id">
                         <option value=""></option>
                         <option v-for="location in remainingLocations" :value="location.id">
                             {{location.title}}
@@ -36,20 +26,34 @@
                     </select>
                 </div>
             </div>
+
+            <div class="col-xs-3">
+                <span class="row uk-form-label fullWidth textColor textBody">Transportation Method</span>
+
+                <div class="uk-form-controls fullWidth">
+                    <select class="uk-select" @change="updateMapSettings(userSettings)" v-model="userSettings.method">
+                        <option value=""></option>
+                        <option value="DRIVING">Driving</option>
+                        <option value="TRANSIT">Bus</option>
+                        <option value="WALKING">Walking</option>
+                    </select>
+                </div>
+            </div>
         </div>
+
 
         <table class="uk-table">
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Address</th>
-                    <th>Lat</th>
-                    <th>Long</th>
-                    <th>Save</th>
+                    <th class="uk-text-capitalize">Title</th>
+                    <th class="uk-text-capitalize">Address</th>
+                    <th class="uk-text-capitalize">Lat</th>
+                    <th class="uk-text-capitalize">Long</th>
+                    <th class="uk-text-capitalize">Edit</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="location in locations">
+                <tr v-for="location in locations" :key="location.id">
                     <td> <input type="text" class="fullWidth textBody uk-input" v-model="location.title"> </td>
                     <td> <input type="text" class="fullWidth textBody uk-input" v-model="location.address"> </td>
                     <td> <input type="text" class="fullWidth textBody uk-input" v-model="location.lat"> </td>
@@ -58,11 +62,12 @@
                         <button class="uk-button uk-button-primary uk-button-small" @click="updateLocation(location)">
                             <span uk-icon="pencil"></span>
                         </button>
-                        <button class="uk-button uk-button-secondary uk-button-small" @click="deleteLocation(location)">
+                        <button class="uk-button uk-button-danger uk-button-small" @click="deleteLocation(location)">
                             <span uk-icon="trash"></span>
                         </button>
                     </td>
                 </tr>
+
                 <tr>
                     <td> <input type="text" class="fullWidth textBody uk-input" v-model="newLocation.title"> </td>
                     <td> <input type="text" class="fullWidth textBody uk-input" v-model="newLocation.address"> </td>
@@ -93,64 +98,43 @@ export default {
     computed: {
         remainingLocations: function() {
             if (this.locations)
-                return this.locations.filter(location => location.favourite == null)
+                return this.locations
+                // return this.locations.filter(location => location.favourite == null)
         },
-        homeLoc: function() {
-            if (this.locations)
-                return this.locations.find(location => location.favourite == 'Home')
-        },
-        favLoc: function() {
-            if (this.locations)
-                return this.locations.find(location => location.favourite == 'Favourite')
+        userSettings: function() {
+            if (this.mapsSettings)
+                return this.mapsSettings.find(user => user.name === 'Liam')
         },
 
         ...mapGetters('settings', {
             locations: 'getLocations',
+            mapsSettings: 'getMapsSettings',
         })
     },
+    created: function() {
+    },
     methods: {
-        updateFavourite(event, option) {
-            let newFav = this.locations.find(location => location.id == event.target.value)
-            let oldFav = option == 'Home' ? this.homeLoc : this.favLoc
-
-            newFav.favourite = option
-            this.updateLocation(newFav)
-
-            oldFav.favourite = null
-            this.updateLocation(oldFav)
-        },
-
         ...mapActions('settings', {
             updateLocation: 'updateLocation',
             deleteLocation: 'deleteLocation',
+            updateMapSettings: 'updateMapSettings',
         })
     },
 }
 </script>
 
 <style scoped>
-    .selectLabel {
-        text-align: left;
+    tr th {
+        text-align: center;
+        padding: 30px 0 0 0;
     }
 
-    .selected {
-        text-align: right;
-    }
-
-    td, .uk-button-group {
-        height: 100%;
+    .uk-form-label {
+        padding-left: 7%;
     }
 
     .uk-button {
-        padding: 0;
-        height: 2.4rem;
+        height: 40px;
+        width: 50px;
     }
-
-    tr th {
-        text-align: center;
-    }
-
-    /* tr:nth-child(even) {
-        background: rgba(240,240,240,1);
-    } */
 </style>

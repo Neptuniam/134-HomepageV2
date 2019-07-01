@@ -1,19 +1,27 @@
 <template>
     <div class="row center-xs middle-xs nomargin Settings">
-        <div class="col-xs-10 fullWidth background">
+        <div class="row center-xs fullWidth nospacing">
             <h1 class="textSpecial">Your {{activeTab.title}}</h1>
-            <vue-custom-scrollbar :settings="scrollSettings" class="scrollSpace">
-                <ul uk-tab>
-                    <li><a class="uk-text-capitalize textTitle tabsTitle" @click="activeTab = widgets">Widgets</a></li>
-                    <li><a class="uk-text-capitalize textTitle tabsTitle" @click="activeTab = maps">Locations</a></li>
-                    <li><a class="uk-text-capitalize textTitle tabsTitle" @click="activeTab = favs">Favourites</a></li>
-                </ul>
-
-                <component :is="activeTab.src" />
-            </vue-custom-scrollbar>
-
-            <h5 class="textBody">HomepageV2 copyright (c) 2019 <a href="https://ljones.ca" target="_blank">Liam Jones</a>. All Rights Reserved.</h5>
         </div>
+
+        <div class="row center-xs nospacing">
+            <ul uk-tab>
+                <li v-for="tab in tabs">
+                    <a class="uk-text-capitalize textTitle tabsTitle noselect" @click="activeTab = tab">
+                        {{tab.title}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <vue-custom-scrollbar :settings="scrollSettings" class="scrollSpace nospacing">
+            <component :is="activeTab.src" />
+        </vue-custom-scrollbar>
+
+        <h5 class="row fullWidth center-xs footer textBody nospacing">
+            HomepageV2 copyright &copy; {{1900+new Date().getYear()}} of &nbsp;
+            <a href="https://ljones.ca" target="_blank"> Liam Jones</a>. All Rights Reserved.
+        </h5>
     </div>
 </template>
 
@@ -25,21 +33,23 @@ export default {
                 suppressScrollX: true
             },
             activeTab: {
-                title: 'Widgets',
-                src: 'WidgetsSettings'
+                title: 'Account',
+                src: 'LoginSettings'
             },
-            widgets: {
-                title: 'Widgets',
-                src: 'WidgetsSettings'
-            },
-            maps: {
-                title: 'Maps',
-                src: 'MapsSettings'
-            },
-            favs: {
-                title: 'Favourite Links',
-                src: 'FavSettings'
-            }
+            tabs: [{
+                    title: 'Account',
+                    src: 'LoginSettings'
+                }, {
+                    title: 'Widgets',
+                    src: 'WidgetsSettings'
+                }, {
+                    title: 'Maps',
+                    src: 'MapsSettings'
+                }, {
+                    title: 'Favourites',
+                    src: 'FavSettings'
+                },
+            ]
         }
     },
 }
@@ -47,40 +57,51 @@ export default {
 
 <style>
     .Settings {
+        height: 100vh;
         width: 100vw;
-
-        color: white;
     }
 
-    .background {
-        border-radius: 30px;
-        /* background-color: #29375E; */
-
-        background: #0F2027;  /* fallback for old browsers */
-        background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+    .footer {
+        position: absolute;
+        bottom: 0;
     }
 
     .scrollSpace {
-        height: 75vh;
+        height: 69vh;
         width: 100%;
     }
 
     .uk-tab>*>a {
-        font-size: 1.5rem;
+        font-size: 4vh;
+        color: grey;
     }
 
-    .textColor, h1, .uk-button, .uk-tab > .uk-active > a, h4, h5 {
+    .textColor, .Settings h1, h2, h4, h5, .uk-tab > .uk-active > a {
+        color: black;
+    }
+
+    input, select, .uk-input, .uk-select {
+        border-radius: 30px;
+        background: rgba(30,30,30,0.5);
         color: white;
     }
 
-    input, .uk-input, .uk-select {
+    input:focus, select:focus, .uk-input:focus, .uk-select:focus {
         border-radius: 30px;
+        background: rgba(50,50,50,0.7);
+        color: white;
+    }
 
-        background-color: #29375E;
-        border-color: #29375E;
-        color: #DCE7F9;
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active  {
+        -webkit-box-shadow: 0 0 0 30px rgba(50,50,50,0.7) inset !important;
+        -webkit-text-fill-color: white !important;
+    }
+
+    .uk-table th {
+        color: black;
     }
 
     .uk-table td {
@@ -88,21 +109,28 @@ export default {
     }
 
     h1 {
+        font-size: 6.5vh;
+        margin: 0.5% 0 0 0;
+    }
+
+    h5 a {
+        color: #333;
+    }
+
+    /* h1 {
         margin: 15px;
     }
 
     h5 {
         margin: 10px 0;
-    }
+    } */
 </style>
 
 
 <!-- mysql -->
-<!-- create table if not exists favourites (
+create table if not exists users (
     id int auto_increment,
-    title varchar(100),
-    url varchar(200) not null,
-    src varchar(20) not null,
-    pos int,
+    name varchar(50) not null,
+    pass varchar(50) not null,
     primary key (id)
-); -->
+);

@@ -2,10 +2,11 @@
     <table class="uk-table">
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Link</th>
-                <th>Image Source</th>
-                <th>Position</th>
+                <th class="uk-text-capitalize">Title</th>
+                <th class="uk-text-capitalize">Link</th>
+                <th class="uk-text-capitalize">Image Source</th>
+                <th class="uk-text-capitalize posWidth">Position</th>
+                <th class="uk-text-capitalize">Edit</th>
             </tr>
         </thead>
         <tbody>
@@ -18,7 +19,7 @@
                     <button class="uk-button uk-button-primary uk-button-small" @click="updateFavourite(favourite)">
                         <span uk-icon="pencil"></span>
                     </button>
-                    <button class="uk-button uk-button-secondary uk-button-small" @click="deleteFavourite(favourite)">
+                    <button class="uk-button uk-button-danger uk-button-small" @click="deleteFavourite(favourite)">
                         <span uk-icon="trash"></span>
                     </button>
                 </td>
@@ -27,8 +28,8 @@
                 <td> <input type="text" class="fullWidth uk-input" v-model="newFavourite.title"> </td>
                 <td> <input type="text" class="fullWidth uk-input" v-model="newFavourite.url"> </td>
                 <td> <input type="text" class="fullWidth uk-input" v-model="newFavourite.src"> </td>
-                <td> <input type="number" class="uk-input" v-model="newFavourite.pos"> </td>
-                <td>
+                <td> <input type="number" class="posWidth uk-input" v-model="newFavourite.pos"> </td>
+                <td class="posWidth">
                     <button class="uk-button uk-button-primary uk-button-small"
                            @click="updateFavourite(newFavourite); newFavourite={id: null, title: '', url: '', src: ''}">
                         <span uk-icon="plus"></span>
@@ -63,20 +64,17 @@ export default {
 </script>
 
 <style scoped>
-    td {
-        height: 100%;
+    tr th {
+        text-align: center;
+        padding: 0;
+    }
+
+    .posWidth {
+        width: 60px;
     }
 
     .uk-button {
-        padding: 0;
-        height: 2.4rem;
+        height: 40px;
+        width: 50px;
     }
-
-    tr th {
-        text-align: center;
-    }
-
-    /* tr:nth-child(even) {
-        background: rgba(240,240,240,1);
-    } */
 </style>
