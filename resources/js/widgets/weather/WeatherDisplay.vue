@@ -1,33 +1,29 @@
 <template>
-    <div class="row middle-xs weatherDisplay">
-        <div class="col-xs">
-            <div v-if="weather">
-                <div class="row center-xs bottom-xs location textSpecial" :uk-tooltip="address">
-                    {{weather.location.name}}, {{weather.location.region}}
-                </div>
+    <div v-if="weather" class="weatherDisplay">
+        <div class="row center-xs bottom-xs location textSpecial" :uk-tooltip="address">
+            {{weather.location.name}}, {{weather.location.region}}
+        </div>
 
-                <div class="row center-xs middle-xs curDescription nopadding">
-                    <img :src="weather.current.condition.icon" alt="Condition Icon" class="curIcon">
-                    <div class="uk-text-truncate curText textSpecial">
-                        {{weather.current.feelslike_c}}&deg;C - {{weather.current.condition.text}}
-                    </div>
-                </div>
+        <div class="row center-xs middle-xs curDescription nopadding">
+            <img :src="weather.current.condition.icon" alt="Condition Icon" class="curIcon">
+            <div class="uk-text-truncate curText textSpecial">
+                {{weather.current.feelslike_c}}&deg;C - {{weather.current.condition.text}}
+            </div>
+        </div>
 
-                <div class="row center-xs middle-xs textBody">
-                    <div v-for="day in weather.forecast.forecastday" class="col-xs" :uk-tooltip="day.day.condition.text">
-                        <div class="row">
-                            <div class="col-xs end-xs nopadding nomargin">
-                                <img :src="day.day.condition.icon" alt="Condition Icon" class="forecastIcon">
-                            </div>
-                            <div class="col-xs-3 forecastTemp nopadding nomargin">
-                                {{Math.round(day.day.maxtemp_c)}}&deg;
-                                {{Math.round(day.day.mintemp_c)}}&deg;
-                            </div>
-                            <div class="col-xs-2" />
-                        </div>
-                        <span class="forecastDay">{{days[new Date(day.date).getDay()]}}</span>
+        <div class="row center-xs middle-xs textBody">
+            <div v-for="day in weather.forecast.forecastday" class="col-xs" :uk-tooltip="day.day.condition.text">
+                <div class="row">
+                    <div class="col-xs end-xs nopadding nomargin">
+                        <img :src="day.day.condition.icon" alt="Condition Icon" class="forecastIcon">
                     </div>
+                    <div class="col-xs-3 forecastTemp nopadding nomargin">
+                        {{Math.round(day.day.maxtemp_c)}}&deg;
+                        {{Math.round(day.day.mintemp_c)}}&deg;
+                    </div>
+                    <div class="col-xs-2" />
                 </div>
+                <span class="forecastDay">{{days[new Date(day.date).getDay()]}}</span>
             </div>
         </div>
     </div>
@@ -48,10 +44,16 @@ export default {
             address:   'getAddress',
         }),
     },
-    created: function() {
+    mounted: function() {
         // Update the weather every 10 minutes
         // setInterval(this.getWeather, 600000)
         this.getWeather()
+    },
+    watch: {
+        // Update the weather display whenever the location changes
+        location: function() {
+            this.getWeather()
+        }
     },
     methods: {
         getWeather() {

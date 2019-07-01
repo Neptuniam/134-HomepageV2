@@ -16,6 +16,7 @@ Vue.component('FavSettings',        require('./widgets/favourites/FavsSettings.v
 Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.vue').default);
 
 Vue.component('WidgetsSettings',    require('./widgets/WidgetsSettings.vue').default);
+Vue.component('LoginSettings',      require('./widgets/LoginSettings.vue').default);
 
 Vue.component('DateTime',           require('./widgets/DateTime.vue').default);
 

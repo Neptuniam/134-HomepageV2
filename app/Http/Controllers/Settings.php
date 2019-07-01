@@ -1,14 +1,34 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 
 class Settings extends Controller {
+    // Users
+    public function fetchUser() {
+        $user = DB::table('users')->where('active', 1)->get();
+        return $user;
+    }
+    public function setUser(Request $request) {
+        $user = $request->all();
+        session(['user' => $user]);
+    }
+
+    public function fetchUsers() {
+        return DB::table('users')->get();
+    }
+
+    public function updateUser(Request $request) {
+        $user = $request->all();
+        return DB::table('users')->where('id', $user['id'])->update($user);
+    }
+
     public function fetchWidgets() {
-        return DB::table('widgets')->get();
+        if ($user = session('user'))
+            return DB::table('widgets')->where('user_id', $user['id'])->get();
     }
 
     public function updateWidget(Request $request) {
@@ -16,24 +36,15 @@ class Settings extends Controller {
         return DB::table('widgets')->where('id', $widget['id'])->update($widget);
     }
 
-
-
+    // Saved Locations
     public function fetchLocations() {
-        return DB::table('locations')->get();
+        if ($user = session('user'))
+            return DB::table('locations')->where('user_id', $user['id'])->get();
     }
 
     public function createLocation(Request $request) {
         $location = $request->all();
         return DB::table('locations')->insertGetId($location);
-
-        // return DB::table('locations')->insertGetId([
-        //     'title'     => $location['title'],
-        //     'address'   => $location['address'],
-        //     'lat'       => $location['lat'],
-        //     'lng'       => $location['lng'],
-        //     'favourite' => null
-        //  ]
-        // );
     }
 
     public function updateLocation(Request $request) {
@@ -46,11 +57,21 @@ class Settings extends Controller {
         DB::table('locations')->where('id', '=', $location['id'])->delete();
     }
 
+    // User Maps Settings
+    public function fetchMapSettings() {
+        return DB::table('maps_user_settings')->get();
+    }
+
+    public function updateMapSettings(Request $request) {
+        $mapSettings = $request->all();
+        return DB::table('maps_user_settings')->where('id', $mapSettings['id'])->update($mapSettings);
+    }
 
 
     // Favourites
     public function fetchFavourites() {
-        return DB::table('favourites')->get();
+        if ($user = session('user'))
+            return DB::table('favourites')->where('user_id', $user['id'])->get();
     }
 
     public function createFavourite(Request $request) {

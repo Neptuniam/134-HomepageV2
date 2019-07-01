@@ -1,23 +1,25 @@
 <template>
-    <table class="uk-table">
-        <thead>
-            <tr>
-                <th>Widget Title</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="widget in widgets" class="textBody">
-                <td>{{widget.title}}</td>
-                <td>
-                    <button type="button" :class="['uk-button uk-button-small', color(widget)]" @click="toggleStatus(widget)">
-                        {{readable[widget.status]}}
-                    </button>
-                    <!-- <a @click="toggleStatus(widget)">{{readable[widget.status]}}</a> -->
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div>
+        <div class="row center-xs fullWidth">
+            <div class="col-xs-3">
+                <h2>Widget Title</h2>
+            </div>
+            <div class="col-xs-3">
+                <h2>Status</h2>
+            </div>
+        </div>
+
+        <div v-for="widget in widgets" class="row center-xs middle-xs fullWidth rowHeight">
+            <div class="col-xs-3">
+                {{widget.title}}
+            </div>
+            <div class="col-xs-3">
+                <button type="button" :class="['uk-button uk-button-small', color(widget)]" @click="toggleStatus(widget)">
+                    {{readable[widget.status]}}
+                </button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -53,9 +55,13 @@ export default {
 </script>
 
 <style scoped>
-    tr th {
-        text-align: center;
+    .rowHeight {
+        height: 2.5rem;
     }
+
+    /* tr th {
+        text-align: center;
+    } */
     /* tr {
         background: rgba(240,240,240,1);
     } */

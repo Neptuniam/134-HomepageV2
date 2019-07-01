@@ -10,7 +10,11 @@ const state = {
     widgets: null,
     locations: null,
     favourites: null,
-    // location: null,
+    mapsSettings: null,
+
+    // Users
+    users: null,
+    user: null,
 }
 const getters = {
     getShowHome: (state) => state.showHome,
@@ -24,6 +28,11 @@ const getters = {
     getWidgets: (state) => state.widgets,
     getLocations: (state) => state.locations,
     getFavourites: (state) => state.favourites,
+    getMapsSettings: (state) => state.mapsSettings,
+
+    // Users
+    getUsers: (state) => state.users,
+    getUser: (state) => state.user,
 }
 const mutations = {
     setShowHome: (state, payload) => { state.showHome = payload; },
@@ -33,9 +42,14 @@ const mutations = {
     setLng: (state, payload) => { state.lng = payload; },
 
     // Settings
-    setWidgets: (state, payload) => { state.widgets = payload; },
-    setLocations: (state, payload) => { state.locations = payload; },
-    setFavourites: (state, payload) => { state.favourites = payload; },
+    setWidgets: (state, payload) => { state.widgets = payload },
+    setLocations: (state, payload) => { state.locations = payload },
+    setFavourites: (state, payload) => { state.favourites = payload },
+    setMapsSettings: (state, payload) => { state.mapsSettings = payload },
+
+    //Users
+    setUsers: (state, payload) => {state.users = payload; },
+    setUser: (state, payload) => { state.user = payload; }
 }
 const actions = {
     setShowHome: ({commit}, payload) => {
@@ -52,24 +66,58 @@ const actions = {
     },
 
 
+    fetchUser: ({commit, dispatch}) => {
+        return axios.get('/settings/users/user').then(response => {
+            console.log('%c Active User', 'background: #222; color: #bada55');
+            console.log(response.data);
+            dispatch('setActiveUser', response.data[0])
+        })
+    },
+
+    setActiveUser: ({commit, dispatch}, payload) => {
+        axios.put('/settings/users/user', payload).then(result => {
+            commit('setUser', payload)
+
+            dispatch('fetchWidgets')
+            dispatch('fetchMapsSettings')
+            dispatch('fetchFavourites')
+        })
+    },
+
+    fetchUsers: ({commit}) => {
+        axios.get('/settings/users').then(response => {
+            console.log('%c Users', 'background: #222; color: #bada55');
+            console.log(response.data);
+            commit('setUsers', response.data)
+        })
+    },
+    updateUser: ({commit, dispatch}, payload) => {
+        axios.put('/settings/users',payload).then(response => {
+            dispatch('fetchUsers')
+        })
+    },
+
+
     // Settings
     fetchWidgets: ({commit}) => {
         axios.get('/settings/widgets/').then(response => {
+            console.log('%c Widgets ', 'background: #222; color: #bada55');
+            console.log(response.data);
+
             commit('setWidgets', response.data)
         })
     },
     updateWidget: ({commit}, payload) => {
-        axios.put('/settings/widgets/',payload).then(response => {
-            console.log('Updated Widget');
-            console.log(response);
-            // dispatch('fetchWidgets')
-        })
+        axios.put('/settings/widgets/',payload)
     },
 
 
     // Location Controllers
     fetchLocations: ({commit}) => {
         axios.get('/settings/locations/').then(response => {
+            console.log('%c Locations ', 'background: #222; color: #bada55');
+            console.log(response.data);
+
             commit('setLocations', response.data)
         })
     },
@@ -86,10 +134,23 @@ const actions = {
         }
     },
     deleteLocation: ({commit, dispatch}, payload) => {
-        console.log(payload);
         axios.put('/settings/locations/delete',payload).then(response => {
-            console.log(response.data);
             dispatch('fetchLocations')
+        })
+    },
+
+    // Update User's map settings
+    fetchMapsSettings: ({commit, dispatch}) => {
+        axios.get('/settings/locations/settings').then(response => {
+            console.log('%c Maps Settings ', 'background: #222; color: #bada55');
+            console.log(response.data);
+            commit('setMapsSettings', response.data)
+            dispatch('fetchLocations')
+        })
+    },
+    updateMapSettings: ({commit, dispatch}, payload) => {
+        axios.put('/settings/locations/settings',payload).then(response => {
+            dispatch('fetchMapsSettings')
         })
     },
 
@@ -97,6 +158,9 @@ const actions = {
     // Favourites Controllers
     fetchFavourites: ({commit}) => {
         axios.get('/settings/favourites/').then(response => {
+            console.log('%c Favourites ', 'background: #222; color: #bada55');
+            console.log(response.data);
+
             commit('setFavourites', response.data)
         })
     },
@@ -104,7 +168,6 @@ const actions = {
         // If id is 0, we are creating a new location
         if (payload.id == null) {
             axios.post('/settings/favourites/',payload).then(response => {
-                console.log(response);
                 dispatch('fetchFavourites')
             })
         } else {
