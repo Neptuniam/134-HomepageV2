@@ -15,9 +15,9 @@ class CreateMapsSettings extends Migration
     {
         Schema::create('maps_user_settings', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->int('user_id')->nullable(false);
-            $table->int('home_id');
-            $table->int('fav_id');
+            $table->integer('user_id')->nullable(false);
+            $table->integer('home_id');
+            $table->integer('fav_id');
             $table->string('method', 10)->default('DRIVING');
         });
     }

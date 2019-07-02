@@ -15,11 +15,11 @@ class CreateFavourites extends Migration
     {
         Schema::create('favourites', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->int('user_id')->nullable(false);
+            $table->integer('user_id')->nullable(false);
             $table->string('title', 100);
             $table->string('url', 200)->nullable(false);
             $table->string('src', 200)->nullable(false);
-            $table->int('pos')->nullable(false);
+            $table->integer('pos')->nullable(false);
         });
     }
 
