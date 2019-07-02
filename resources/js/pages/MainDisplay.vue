@@ -142,3 +142,15 @@ export default {
                 user-select: none; /* Non-prefixed version,(Chrome and Opera) */
     }
 </style>
+
+
+<!-- Pulling the Homepage:
+    git clone https://github.com/Neptuniam/134-HomepageV2
+    npm install
+    composer update/install
+    cp .env.example .env
+    php artisan key:generate
+    Configure Database settings in .env
+
+
+ -->
