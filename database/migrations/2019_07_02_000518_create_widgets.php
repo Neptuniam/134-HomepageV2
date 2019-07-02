@@ -15,7 +15,7 @@ class CreateWidgets extends Migration
     {
         Schema::create('widgets', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->int('user_id')->nullable(false);
+            $table->integer('user_id')->nullable(false);
             $table->string('title', 100)->nullable(false);
             $table->tinyInteger('status')->nullable(false)->default('0');
         });
