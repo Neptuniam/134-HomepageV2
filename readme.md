@@ -27,9 +27,9 @@ Welcome to the 134 Homepage V2 rebuilt in VueJS and Laravel
     Create a database called what you'd like    <br/>
     change these three lines in .env:   <br/>
     ```
-        DB_DATABASE=<the db you just created>   <br/>
-        DB_USERNAME=<your mysql username>   <br/>
-        DB_PASSWORD=<your mysql password (if needed)>   <br/>
+        DB_DATABASE=<the db you just created>
+        DB_USERNAME=<your mysql username>
+        DB_PASSWORD=<your mysql password (if needed)>
     ```
 
 6. Finalize your .env set up (I think you need to rerun this whenever you change .env)  <br/>
