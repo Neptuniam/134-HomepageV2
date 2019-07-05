@@ -18,10 +18,10 @@ Welcome to the 134 Homepage V2 rebuilt in VueJS and Laravel
 ------
 
 ### How to Install
-1. git clone https://github.com/Neptuniam/134-HomepageV2
-2. npm install
-3. composer install
-4. cp .env.example .env
+1. ```git clone https://github.com/Neptuniam/134-HomepageV2```
+2. ```npm install```
+3. ```composer install```
+4. ```cp .env.example .env```
 
 5. Configure Database settings in .env
     Create a database called what you'd like
@@ -31,15 +31,15 @@ Welcome to the 134 Homepage V2 rebuilt in VueJS and Laravel
         DB_PASSWORD=<your mysql password (if needed)>
 
 6. Finalize your .env set up (I think you need to rerun this whenever you change .env)
-    php artisan key:generate
+    ```php artisan key:generate```
 
 7. Set up your db with these commands
     Create the tables
-        php artisan migrate
+        ```php artisan migrate```
 
 8. Seed the tables with necessary data.
     This will create a profile with the user: 'User' and pass: 'user' and Liams favourites bar
-        php artisan db:seed
+        ```php artisan db:seed```
 
 You should be set to run the project now
 
