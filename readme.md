@@ -23,22 +23,24 @@ Welcome to the 134 Homepage V2 rebuilt in VueJS and Laravel
 3. ```composer install```
 4. ```cp .env.example .env```
 
-5. Configure Database settings in .env
-    Create a database called what you'd like
-    change these three lines in .env:
-        DB_DATABASE=<the db you just created>
-        DB_USERNAME=<your mysql username>
-        DB_PASSWORD=<your mysql password (if needed)>
+5. Configure Database settings in .env  <br/>
+    Create a database called what you'd like    <br/>
+    change these three lines in .env:   <br/>
+    ```
+        DB_DATABASE=<the db you just created>   <br/>
+        DB_USERNAME=<your mysql username>   <br/>
+        DB_PASSWORD=<your mysql password (if needed)>   <br/>
+    ```
 
-6. Finalize your .env set up (I think you need to rerun this whenever you change .env)
+6. Finalize your .env set up (I think you need to rerun this whenever you change .env)  <br/>
     ```php artisan key:generate```
 
-7. Set up your db with these commands
-    Create the tables
+7. Set up your db with these commands   <br/>
+    Create the tables   <br/>
         ```php artisan migrate```
 
-8. Seed the tables with necessary data.
-    This will create a profile with the user: 'User' and pass: 'user' and Liams favourites bar
+8. Seed the tables with necessary data. <br/>
+    This will create a profile with the user: 'User' and pass: 'user' and Liams favourites bar  <br/>
         ```php artisan db:seed```
 
 You should be set to run the project now
