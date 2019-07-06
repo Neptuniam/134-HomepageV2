@@ -51,10 +51,14 @@ You should be set to run the project now
 #### Depending on your current needs there are two approaches:
 
 1. Using the homepage:
+```
     npm run development (this builds the mot recent JavaScript, will take a minute)
     php artisan serve (this hosts the local server)
+```
 
 2. Developing. This involves using two tabs to host a hot build to rebuild the js as you make changes and the local server
 #### Note: You will likely have to refresh once the js is rebuilt to see your changes
+```
     npm run watch-poll (this will take a minute)
     php artisan serve
+```
