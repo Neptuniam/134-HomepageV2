@@ -67,15 +67,17 @@ const actions = {
 
 
     fetchUser: ({commit, dispatch}) => {
-        return axios.get('/settings/users/user').then(response => {
-            console.log('%c Active User', 'background: #222; color: #bada55');
-            console.log(response.data);
-            dispatch('setActiveUser', response.data[0])
+        let user = JSON.parse(window.localStorage.getItem('activeUser'))
+
+        axios.put('/settings/users/user', user).then(() => {
+            dispatch('setActiveUser', user)
         })
     },
 
+
     setActiveUser: ({commit, dispatch}, payload) => {
-        axios.put('/settings/users/user', payload).then(result => {
+        window.localStorage.setItem('activeUser', JSON.stringify(payload));
+        axios.put('/settings/users/user', payload).then(() => {
             commit('setUser', payload)
 
             dispatch('fetchWidgets')

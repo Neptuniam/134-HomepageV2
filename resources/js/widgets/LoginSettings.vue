@@ -57,13 +57,13 @@ export default {
                 console.log(newUser);
 
                 // Logout the previous user
-                if (this.activeUser) {
-                    this.activeUser.active = 0
-                    this.updateUser(this.activeUser)
-                }
+                // if (this.activeUser) {
+                //     this.activeUser.active = 0
+                //     this.updateUser(this.activeUser)
+                // }
 
-                newUser.active = 1
-                this.updateUser(newUser)
+                // newUser.active = 1
+                // this.updateUser(newUser)
                 this.setActiveUser(newUser)
             } else {
                 console.log("Invalid Login");

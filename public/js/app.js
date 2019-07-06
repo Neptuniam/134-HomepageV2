@@ -2007,14 +2007,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (newUser) {
         console.log("Valid Login Provided");
         console.log(newUser); // Logout the previous user
+        // if (this.activeUser) {
+        //     this.activeUser.active = 0
+        //     this.updateUser(this.activeUser)
+        // }
+        // newUser.active = 1
+        // this.updateUser(newUser)
 
-        if (this.activeUser) {
-          this.activeUser.active = 0;
-          this.updateUser(this.activeUser);
-        }
-
-        newUser.active = 1;
-        this.updateUser(newUser);
         this.setActiveUser(newUser);
       } else {
         console.log("Invalid Login");
@@ -22372,16 +22371,16 @@ var actions = {
   fetchUser: function fetchUser(_ref4) {
     var commit = _ref4.commit,
         dispatch = _ref4.dispatch;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/users/user').then(function (response) {
-      console.log('%c Active User', 'background: #222; color: #bada55');
-      console.log(response.data);
-      dispatch('setActiveUser', response.data[0]);
+    var user = JSON.parse(window.localStorage.getItem('activeUser'));
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users/user', user).then(function () {
+      dispatch('setActiveUser', user);
     });
   },
   setActiveUser: function setActiveUser(_ref5, payload) {
     var commit = _ref5.commit,
         dispatch = _ref5.dispatch;
-    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users/user', payload).then(function (result) {
+    window.localStorage.setItem('activeUser', JSON.stringify(payload));
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users/user', payload).then(function () {
       commit('setUser', payload);
       dispatch('fetchWidgets');
       dispatch('fetchMapsSettings');
