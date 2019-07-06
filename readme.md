@@ -39,8 +39,8 @@ Welcome to the 134 Homepage V2 rebuilt in VueJS and Laravel
     Create the tables   <br/>
         ```php artisan migrate```
 
-8. Seed the tables with necessary data. <br/>
-    This will create a profile with the user: 'User' and pass: 'user' and Liams favourites bar  <br/>
+8. Optional: Seed the tables with some of Liam's favourites. <br/>
+    This will create a profile with the user: 'Liam' and pass: 'liam' and Liams favourites bar  <br/>
         ```php artisan db:seed```
 
 You should be set to run the project now

@@ -31,7 +31,7 @@
                 <td> <input type="number" class="posWidth uk-input" v-model="newFavourite.pos"> </td>
                 <td class="posWidth">
                     <button class="uk-button uk-button-primary uk-button-small"
-                           @click="updateFavourite(newFavourite); newFavourite={id: null, title: '', url: '', src: ''}">
+                           @click="addFav(newFavourite)">
                         <span uk-icon="plus"></span>
                     </button>
                 </td>
@@ -46,15 +46,30 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
     data: function() {
         return {
-            newFavourite: {id: null, title: '', url: '', src: ''},
+            newFavourite: {id: null, user_id: null, title: '', url: '', src: ''},
         }
     },
     computed: {
         ...mapGetters('settings', {
             favourites: 'getFavourites',
-        })
+            activeUser: 'getUser',
+    })
     },
     methods: {
+        addFav() {
+            // Only create a favourite if we know the user
+            if (this.activeUser) {
+                // Add the user id
+                this.newFavourite.user_id = this.activeUser.id
+
+                // Add the fav to the db
+                this.updateFavourite(this.newFavourite)
+
+                // Clear the new object so another can be created
+                this.newFavourite = {id: null, user_id: this.activeUser.id, title: '', url: '', src: ''}
+            }
+        },
+
         ...mapActions('settings', {
             updateFavourite: 'updateFavourite',
             deleteFavourite: 'deleteFavourite',

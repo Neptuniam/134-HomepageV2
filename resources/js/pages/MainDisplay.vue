@@ -1,5 +1,5 @@
 <template>
-    <div class="row center-xs middle-xs homepage transparent nomargin uk-animation-fade" id="background" :style="'background: rgba(240,240,240,'+transparency+');'">
+    <div v-if="activeUser" class="row center-xs middle-xs homepage transparent nomargin uk-animation-fade" id="background" :style="'background: rgba(240,240,240,'+transparency+');'">
         <a @click="setShowHome(!showHome)" class="uk-icon pageControl" :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" />
 
         <DateTime />
@@ -34,6 +34,7 @@ export default {
 
         ...mapGetters('settings', {
             showHome: 'getShowHome',
+            activeUser: 'getUser'
         })
     },
     methods: {
@@ -60,13 +61,11 @@ export default {
         })
     },
     created: function() {
-        this.fetchUser().then(() => {
-            console.log(this.$store.getters['getUser']);
-        })
+        this.fetchUser()
         this.fetchUsers()
 
         // Update the users location every 10 minutes
-        // setInterval(this.getLocation, 10000)
+        // setInterval(this.getLocation, 600000)
         this.getLocation()
 
         // Update the background every 1 minute

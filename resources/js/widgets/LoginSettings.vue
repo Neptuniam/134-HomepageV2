@@ -23,8 +23,11 @@
             <br>
 
             <div class="row center-xs">
-                <button type="button" class="uk-button uk-button-primary textTitle" @click="login()">
-                    Switch Accounts
+                <button type="button" class="col-xs-4 uk-button uk-button-primary textBody uk-text-capitalize" @click="login()">
+                    Switch Profiles
+                </button>
+                <button type="button" class="col-xs-4 uk-button uk-button-secondary textBody uk-text-capitalize" @click="create()">
+                    Create Profile
                 </button>
             </div>
         </div>
@@ -53,33 +56,20 @@ export default {
 
             // If a user was found with matching credentials allow the login
             if (newUser) {
-                console.log("Valid Login Provided");
-                console.log(newUser);
-
-                // Logout the previous user
-                // if (this.activeUser) {
-                //     this.activeUser.active = 0
-                //     this.updateUser(this.activeUser)
-                // }
-
-                // newUser.active = 1
-                // this.updateUser(newUser)
+                UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> Valid Login Provided!', status: 'success'})
                 this.setActiveUser(newUser)
             } else {
-                console.log("Invalid Login");
+                UIkit.notification({message: '<span uk-icon=\'icon: close\'></span> Invalid Login Provided!', status: 'danger'})
             }
-
-
         },
+
+        create() {
+            this.createUser({id:null, name: this.name, pass: this.pass, active: 0})
+        },
+
         ...mapActions('settings', {
-            updateUser: 'updateUser',
+            createUser: 'createUser',
             setActiveUser: 'setActiveUser',
-            // fetchUser: 'fetchUser',
-            // fetchUsers: 'fetchUsers',
-            // fetchWidgets: 'fetchWidgets',
-            // fetchLocations: 'fetchLocations',
-            // fetchMapsSettings: 'fetchMapsSettings',
-            // fetchFavourites: 'fetchFavourites',
         })
     },
 }

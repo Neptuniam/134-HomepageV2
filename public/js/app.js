@@ -1770,11 +1770,11 @@ __webpack_require__.r(__webpack_exports__);
         suppressScrollX: true
       },
       activeTab: {
-        title: 'Account',
+        title: 'Profile',
         src: 'LoginSettings'
       },
       tabs: [{
-        title: 'Account',
+        title: 'Profile',
         src: 'LoginSettings'
       }, {
         title: 'Widgets',
@@ -1839,7 +1839,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.showHome ? 0.35 : 0.65;
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
-    showHome: 'getShowHome'
+    showHome: 'getShowHome',
+    activeUser: 'getUser'
   })),
   methods: _objectSpread({
     getLocation: function getLocation() {
@@ -1864,13 +1865,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     fetchUsers: 'fetchUsers'
   })),
   created: function created() {
-    var _this2 = this;
-
-    this.fetchUser().then(function () {
-      console.log(_this2.$store.getters['getUser']);
-    });
+    this.fetchUser();
     this.fetchUsers(); // Update the users location every 10 minutes
-    // setInterval(this.getLocation, 10000)
+    // setInterval(this.getLocation, 600000)
 
     this.getLocation(); // Update the background every 1 minute
     // setInterval(this.getBackground, 60000)
@@ -1983,6 +1980,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2005,29 +2005,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }); // If a user was found with matching credentials allow the login
 
       if (newUser) {
-        console.log("Valid Login Provided");
-        console.log(newUser); // Logout the previous user
-        // if (this.activeUser) {
-        //     this.activeUser.active = 0
-        //     this.updateUser(this.activeUser)
-        // }
-        // newUser.active = 1
-        // this.updateUser(newUser)
-
+        UIkit.notification({
+          message: '<span uk-icon=\'icon: check\'></span> Valid Login Provided!',
+          status: 'success'
+        });
         this.setActiveUser(newUser);
       } else {
-        console.log("Invalid Login");
+        UIkit.notification({
+          message: '<span uk-icon=\'icon: close\'></span> Invalid Login Provided!',
+          status: 'danger'
+        });
       }
+    },
+    create: function create() {
+      this.createUser({
+        id: null,
+        name: this.name,
+        pass: this.pass,
+        active: 0
+      });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
-    updateUser: 'updateUser',
-    setActiveUser: 'setActiveUser' // fetchUser: 'fetchUser',
-    // fetchUsers: 'fetchUsers',
-    // fetchWidgets: 'fetchWidgets',
-    // fetchLocations: 'fetchLocations',
-    // fetchMapsSettings: 'fetchMapsSettings',
-    // fetchFavourites: 'fetchFavourites',
-
+    createUser: 'createUser',
+    setActiveUser: 'setActiveUser'
   }))
 });
 
@@ -2267,6 +2267,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       newFavourite: {
         id: null,
+        user_id: null,
         title: '',
         url: '',
         src: ''
@@ -2274,9 +2275,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
-    favourites: 'getFavourites'
+    favourites: 'getFavourites',
+    activeUser: 'getUser'
   })),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
+  methods: _objectSpread({
+    addFav: function addFav() {
+      // Only create a favourite if we know the user
+      if (this.activeUser) {
+        // Add the user id
+        this.newFavourite.user_id = this.activeUser.id; // Add the fav to the db
+
+        this.updateFavourite(this.newFavourite); // Clear the new object so another can be created
+
+        this.newFavourite = {
+          id: null,
+          user_id: this.activeUser.id,
+          title: '',
+          url: '',
+          src: ''
+        };
+      }
+    }
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
     updateFavourite: 'updateFavourite',
     deleteFavourite: 'deleteFavourite'
   }))
@@ -2333,11 +2353,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     locations: 'getLocations',
     mapsSettings: 'getMapsSettings'
   }), {
-    userSettings: function userSettings() {
-      if (this.mapsSettings) return this.mapsSettings.find(function (user) {
-        return user.name === 'Liam';
-      });
-    },
     loc: function loc() {
       return {
         title: 'loc',
@@ -2348,9 +2363,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     home: function home() {
       var _this2 = this;
 
-      if (this.locations && this.userSettings) {
+      if (this.locations && this.mapsSettings) {
         var loc = this.locations.find(function (location) {
-          return location.id === _this2.userSettings.home_id;
+          return location.id === _this2.mapsSettings.home_id;
         });
         return {
           title: loc.title,
@@ -2362,9 +2377,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     fav: function fav() {
       var _this3 = this;
 
-      if (this.locations && this.userSettings) {
+      if (this.locations && this.mapsSettings) {
         var loc = this.locations.find(function (location) {
-          return location.id === _this3.userSettings.fav_id;
+          return location.id === _this3.mapsSettings.fav_id;
         });
         return {
           title: loc.title,
@@ -2387,7 +2402,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (this.distanceToHome) return this.distanceToHome < 0.05 ? this.fav : this.home;
     },
     travelMethod: function travelMethod() {
-      if (this.userSettings) return this.userSettings.method;
+      if (this.mapsSettings) return this.mapsSettings.method;
     }
   }),
   watch: {
@@ -2553,6 +2568,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       newLocation: {
         id: null,
+        user_id: null,
         title: '',
         address: '',
         lng: '',
@@ -2564,18 +2580,34 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({
     remainingLocations: function remainingLocations() {
       if (this.locations) return this.locations; // return this.locations.filter(location => location.favourite == null)
-    },
-    userSettings: function userSettings() {
-      if (this.mapsSettings) return this.mapsSettings.find(function (user) {
-        return user.name === 'Liam';
-      });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
     locations: 'getLocations',
-    mapsSettings: 'getMapsSettings'
+    mapsSettings: 'getMapsSettings',
+    activeUser: 'getUser'
   })),
   created: function created() {},
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
+  methods: _objectSpread({
+    addLoc: function addLoc() {
+      // Only create a location if we know the user
+      if (this.activeUser) {
+        // Add the user id
+        this.newLocation.user_id = this.activeUser.id; // Add the loc to the db
+
+        this.updateLocation(this.newLocation); // Clear the new object so another can be created
+
+        this.newLocation = {
+          id: null,
+          user_id: null,
+          title: '',
+          address: '',
+          lng: '',
+          lat: '',
+          favourite: null
+        };
+      }
+    }
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
     updateLocation: 'updateLocation',
     deleteLocation: 'deleteLocation',
     updateMapSettings: 'updateMapSettings'
@@ -4872,47 +4904,49 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "row center-xs middle-xs homepage transparent nomargin uk-animation-fade",
-      style: "background: rgba(240,240,240," + _vm.transparency + ");",
-      attrs: { id: "background" }
-    },
-    [
-      _c("a", {
-        staticClass: "uk-icon pageControl",
-        attrs: { "uk-icon": "icon: " + _vm.controlIcon + "; ratio: 2;" },
-        on: {
-          click: function($event) {
-            return _vm.setShowHome(!_vm.showHome)
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c("DateTime"),
-      _vm._v(" "),
-      _c(
+  return _vm.activeUser
+    ? _c(
         "div",
         {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.showHome == true,
-              expression: "showHome == true"
-            }
-          ]
+          staticClass:
+            "row center-xs middle-xs homepage transparent nomargin uk-animation-fade",
+          style: "background: rgba(240,240,240," + _vm.transparency + ");",
+          attrs: { id: "background" }
         },
-        [_c("Home")],
+        [
+          _c("a", {
+            staticClass: "uk-icon pageControl",
+            attrs: { "uk-icon": "icon: " + _vm.controlIcon + "; ratio: 2;" },
+            on: {
+              click: function($event) {
+                return _vm.setShowHome(!_vm.showHome)
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("DateTime"),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.showHome == true,
+                  expression: "showHome == true"
+                }
+              ]
+            },
+            [_c("Home")],
+            1
+          ),
+          _vm._v(" "),
+          _vm.showHome == false ? _c("div", [_c("Settings")], 1) : _vm._e()
+        ],
         1
-      ),
-      _vm._v(" "),
-      _vm.showHome == false ? _c("div", [_c("Settings")], 1) : _vm._e()
-    ],
-    1
-  )
+      )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -5049,7 +5083,8 @@ var render = function() {
           _c(
             "button",
             {
-              staticClass: "uk-button uk-button-primary textTitle",
+              staticClass:
+                "col-xs-4 uk-button uk-button-primary textBody uk-text-capitalize",
               attrs: { type: "button" },
               on: {
                 click: function($event) {
@@ -5057,7 +5092,22 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("\n                Switch Accounts\n            ")]
+            [_vm._v("\n                Switch Profiles\n            ")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass:
+                "col-xs-4 uk-button uk-button-secondary textBody uk-text-capitalize",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.create()
+                }
+              }
+            },
+            [_vm._v("\n                Create Profile\n            ")]
           )
         ])
       ])
@@ -5509,8 +5559,7 @@ var render = function() {
                 staticClass: "uk-button uk-button-primary uk-button-small",
                 on: {
                   click: function($event) {
-                    _vm.updateFavourite(_vm.newFavourite)
-                    _vm.newFavourite = { id: null, title: "", url: "", src: "" }
+                    return _vm.addFav(_vm.newFavourite)
                   }
                 }
               },
@@ -5639,7 +5688,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _vm.userSettings
+    _vm.mapsSettings
       ? _c("div", { staticClass: "row center-xs middle-xs fullWidth" }, [
           _c("div", { staticClass: "col-xs-3" }, [
             _c(
@@ -5656,8 +5705,8 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.userSettings.home_id,
-                      expression: "userSettings.home_id"
+                      value: _vm.mapsSettings.home_id,
+                      expression: "mapsSettings.home_id"
                     }
                   ],
                   staticClass: "uk-select",
@@ -5673,7 +5722,7 @@ var render = function() {
                             return val
                           })
                         _vm.$set(
-                          _vm.userSettings,
+                          _vm.mapsSettings,
                           "home_id",
                           $event.target.multiple
                             ? $$selectedVal
@@ -5681,7 +5730,7 @@ var render = function() {
                         )
                       },
                       function($event) {
-                        return _vm.updateMapSettings(_vm.userSettings)
+                        return _vm.updateMapSettings(_vm.mapsSettings)
                       }
                     ]
                   }
@@ -5719,8 +5768,8 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.userSettings.fav_id,
-                      expression: "userSettings.fav_id"
+                      value: _vm.mapsSettings.fav_id,
+                      expression: "mapsSettings.fav_id"
                     }
                   ],
                   staticClass: "uk-select",
@@ -5736,7 +5785,7 @@ var render = function() {
                             return val
                           })
                         _vm.$set(
-                          _vm.userSettings,
+                          _vm.mapsSettings,
                           "fav_id",
                           $event.target.multiple
                             ? $$selectedVal
@@ -5744,7 +5793,7 @@ var render = function() {
                         )
                       },
                       function($event) {
-                        return _vm.updateMapSettings(_vm.userSettings)
+                        return _vm.updateMapSettings(_vm.mapsSettings)
                       }
                     ]
                   }
@@ -5782,8 +5831,8 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.userSettings.method,
-                      expression: "userSettings.method"
+                      value: _vm.mapsSettings.method,
+                      expression: "mapsSettings.method"
                     }
                   ],
                   staticClass: "uk-select",
@@ -5799,7 +5848,7 @@ var render = function() {
                             return val
                           })
                         _vm.$set(
-                          _vm.userSettings,
+                          _vm.mapsSettings,
                           "method",
                           $event.target.multiple
                             ? $$selectedVal
@@ -5807,7 +5856,7 @@ var render = function() {
                         )
                       },
                       function($event) {
-                        return _vm.updateMapSettings(_vm.userSettings)
+                        return _vm.updateMapSettings(_vm.mapsSettings)
                       }
                     ]
                   }
@@ -6071,15 +6120,7 @@ var render = function() {
                   staticClass: "uk-button uk-button-primary uk-button-small",
                   on: {
                     click: function($event) {
-                      _vm.updateLocation(_vm.newLocation)
-                      _vm.newLocation = {
-                        id: null,
-                        title: "",
-                        address: "",
-                        lng: "",
-                        lat: "",
-                        favourite: null
-                      }
+                      return _vm.addLoc(_vm.newLocation)
                     }
                   }
                 },
@@ -22372,7 +22413,7 @@ var actions = {
     var commit = _ref4.commit,
         dispatch = _ref4.dispatch;
     var user = JSON.parse(window.localStorage.getItem('activeUser'));
-    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users/user', user).then(function () {
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users', user).then(function () {
       dispatch('setActiveUser', user);
     });
   },
@@ -22380,7 +22421,7 @@ var actions = {
     var commit = _ref5.commit,
         dispatch = _ref5.dispatch;
     window.localStorage.setItem('activeUser', JSON.stringify(payload));
-    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users/user', payload).then(function () {
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users', payload).then(function () {
       commit('setUser', payload);
       dispatch('fetchWidgets');
       dispatch('fetchMapsSettings');
@@ -22395,11 +22436,14 @@ var actions = {
       commit('setUsers', response.data);
     });
   },
-  updateUser: function updateUser(_ref7, payload) {
+  createUser: function createUser(_ref7, payload) {
     var commit = _ref7.commit,
         dispatch = _ref7.dispatch;
-    axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users', payload).then(function (response) {
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/settings/users', payload).then(function (response) {
+      console.log(response);
+      payload.id = response.data;
       dispatch('fetchUsers');
+      dispatch('setActiveUser', payload);
     });
   },
   // Settings
@@ -22453,13 +22497,14 @@ var actions = {
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/locations/settings').then(function (response) {
       console.log('%c Maps Settings ', 'background: #222; color: #bada55');
       console.log(response.data);
-      commit('setMapsSettings', response.data);
+      commit('setMapsSettings', response.data[0]);
       dispatch('fetchLocations');
     });
   },
   updateMapSettings: function updateMapSettings(_ref14, payload) {
     var commit = _ref14.commit,
         dispatch = _ref14.dispatch;
+    console.log(payload);
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/locations/settings', payload).then(function (response) {
       dispatch('fetchMapsSettings');
     });
@@ -23333,8 +23378,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /mnt/c/xampp/htdocs/134-HomepageV2/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /mnt/c/xampp/htdocs/134-HomepageV2/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /mnt/c/xampp/htdocs/HomepageV2/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /mnt/c/xampp/htdocs/HomepageV2/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

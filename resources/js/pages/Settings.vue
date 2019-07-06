@@ -33,11 +33,11 @@ export default {
                 suppressScrollX: true
             },
             activeTab: {
-                title: 'Account',
+                title: 'Profile',
                 src: 'LoginSettings'
             },
             tabs: [{
-                    title: 'Account',
+                    title: 'Profile',
                     src: 'LoginSettings'
                 }, {
                     title: 'Widgets',

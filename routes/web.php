@@ -20,6 +20,12 @@ Route::group(['prefix'=>'background'], function(){
 
 
 Route::group(['prefix'=>'settings'], function(){
+    Route::group(['prefix'=>'users'], function(){
+        Route::get('/','Settings@fetchUsers');
+        Route::put('/','Settings@setUser');
+        Route::post('/','Settings@createUser');
+    });
+
     Route::group(['prefix'=>'widgets'], function(){
         Route::get('/','Settings@fetchWidgets');
         Route::put('/','Settings@updateWidget');
@@ -40,12 +46,5 @@ Route::group(['prefix'=>'settings'], function(){
         Route::post('/','Settings@createFavourite');
         Route::put('/', 'Settings@updateFavourite');
         Route::put('/delete', 'Settings@deleteFavourite');
-    });
-
-    Route::group(['prefix'=>'users'], function(){
-        Route::get('/user','Settings@fetchUser');
-        Route::put('/user','Settings@setUser');
-        Route::get('/','Settings@fetchUsers');
-        Route::put('/','Settings@updateUser');
     });
 });

@@ -12,8 +12,8 @@ class seed_users extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'name' => 'User',
-            'pass' => 'user'
+            'name' => 'Liam',
+            'pass' => 'liam'
         ]);
     }
 }

@@ -1,11 +1,11 @@
 <template>
     <div class="row">
-        <div v-if="userSettings" class="row center-xs middle-xs fullWidth">
+        <div v-if="mapsSettings" class="row center-xs middle-xs fullWidth">
             <div class="col-xs-3">
                 <span class="row uk-form-label fullWidth textColor textBody">Home Location</span>
 
                 <div class="uk-form-controls fullWidth">
-                    <select class="uk-select" @change="updateMapSettings(userSettings)" v-model="userSettings.home_id">
+                    <select class="uk-select" @change="updateMapSettings(mapsSettings)" v-model="mapsSettings.home_id">
                         <option value=""></option>
                         <option v-for="location in remainingLocations" :value="location.id">
                             {{location.title}}
@@ -18,7 +18,7 @@
                 <span class="row uk-form-label fullWidth textColor textBody">Favourite Location</span>
 
                 <div class="uk-form-controls fullWidth">
-                    <select class="uk-select" @change="updateMapSettings(userSettings)" v-model="userSettings.fav_id">
+                    <select class="uk-select" @change="updateMapSettings(mapsSettings)" v-model="mapsSettings.fav_id">
                         <option value=""></option>
                         <option v-for="location in remainingLocations" :value="location.id">
                             {{location.title}}
@@ -31,7 +31,7 @@
                 <span class="row uk-form-label fullWidth textColor textBody">Transportation Method</span>
 
                 <div class="uk-form-controls fullWidth">
-                    <select class="uk-select" @change="updateMapSettings(userSettings)" v-model="userSettings.method">
+                    <select class="uk-select" @change="updateMapSettings(mapsSettings)" v-model="mapsSettings.method">
                         <option value=""></option>
                         <option value="DRIVING">Driving</option>
                         <option value="TRANSIT">Bus</option>
@@ -75,7 +75,7 @@
                     <td> <input type="text" class="fullWidth textBody uk-input" v-model="newLocation.lng"> </td>
                     <td>
                         <button class="uk-button uk-button-primary uk-button-small"
-                               @click="updateLocation(newLocation); newLocation={id: null, title: '', address: '', lng: '', lat: '', favourite: null}">
+                               @click="addLoc(newLocation)">
                             <span uk-icon="plus"></span>
                         </button>
                     </td>
@@ -92,7 +92,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
     data: function() {
         return {
-            newLocation: {id: null, title: '', address: '', lng: '', lat: '', favourite: null},
+            newLocation: {id: null, user_id: null,  title: '', address: '', lng: '', lat: '', favourite: null},
         }
     },
     computed: {
@@ -101,19 +101,30 @@ export default {
                 return this.locations
                 // return this.locations.filter(location => location.favourite == null)
         },
-        userSettings: function() {
-            if (this.mapsSettings)
-                return this.mapsSettings.find(user => user.name === 'Liam')
-        },
-
         ...mapGetters('settings', {
             locations: 'getLocations',
             mapsSettings: 'getMapsSettings',
+            activeUser: 'getUser',
         })
     },
     created: function() {
+
     },
     methods: {
+        addLoc() {
+            // Only create a location if we know the user
+            if (this.activeUser) {
+                // Add the user id
+                this.newLocation.user_id = this.activeUser.id
+
+                // Add the loc to the db
+                this.updateLocation(this.newLocation)
+
+                // Clear the new object so another can be created
+                this.newLocation = {id: null, user_id: null, title: '', address: '', lng: '', lat: '', favourite: null}
+            }
+        },
+
         ...mapActions('settings', {
             updateLocation: 'updateLocation',
             deleteLocation: 'deleteLocation',

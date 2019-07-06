@@ -35,23 +35,19 @@ export default {
             locations: 'getLocations',
             mapsSettings: 'getMapsSettings',
         }),
-        userSettings: function() {
-            if (this.mapsSettings)
-                return this.mapsSettings.find(user => user.name === 'Liam')
-        },
 
         loc: function() {
             return { title: 'loc', lat: this.userLat, lng: this.userLng }
         },
         home: function() {
-            if (this.locations && this.userSettings) {
-                let loc = this.locations.find(location => location.id === this.userSettings.home_id)
+            if (this.locations && this.mapsSettings) {
+                let loc = this.locations.find(location => location.id === this.mapsSettings.home_id)
                 return { title: loc.title, lat: parseFloat(loc.lat), lng: parseFloat(loc.lng) }
             }
         },
         fav: function() {
-            if (this.locations && this.userSettings) {
-                let loc = this.locations.find(location => location.id === this.userSettings.fav_id)
+            if (this.locations && this.mapsSettings) {
+                let loc = this.locations.find(location => location.id === this.mapsSettings.fav_id)
                 return { title: loc.title, lat: parseFloat(loc.lat), lng: parseFloat(loc.lng) }
             }
         },
@@ -79,8 +75,8 @@ export default {
                 return this.distanceToHome < 0.05 ? this.fav : this.home
         },
         travelMethod: function() {
-            if (this.userSettings)
-                return this.userSettings.method
+            if (this.mapsSettings)
+                return this.mapsSettings.method
         },
     },
     watch: {

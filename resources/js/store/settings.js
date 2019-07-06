@@ -69,15 +69,14 @@ const actions = {
     fetchUser: ({commit, dispatch}) => {
         let user = JSON.parse(window.localStorage.getItem('activeUser'))
 
-        axios.put('/settings/users/user', user).then(() => {
+        axios.put('/settings/users', user).then(() => {
             dispatch('setActiveUser', user)
         })
     },
 
-
     setActiveUser: ({commit, dispatch}, payload) => {
         window.localStorage.setItem('activeUser', JSON.stringify(payload));
-        axios.put('/settings/users/user', payload).then(() => {
+        axios.put('/settings/users', payload).then(() => {
             commit('setUser', payload)
 
             dispatch('fetchWidgets')
@@ -93,9 +92,12 @@ const actions = {
             commit('setUsers', response.data)
         })
     },
-    updateUser: ({commit, dispatch}, payload) => {
-        axios.put('/settings/users',payload).then(response => {
+    createUser: ({commit, dispatch}, payload) => {
+        axios.post('/settings/users',payload).then(response => {
+            console.log(response);
+            payload.id = response.data
             dispatch('fetchUsers')
+            dispatch('setActiveUser', payload)
         })
     },
 
@@ -146,11 +148,12 @@ const actions = {
         axios.get('/settings/locations/settings').then(response => {
             console.log('%c Maps Settings ', 'background: #222; color: #bada55');
             console.log(response.data);
-            commit('setMapsSettings', response.data)
+            commit('setMapsSettings', response.data[0])
             dispatch('fetchLocations')
         })
     },
     updateMapSettings: ({commit, dispatch}, payload) => {
+        console.log(payload);
         axios.put('/settings/locations/settings',payload).then(response => {
             dispatch('fetchMapsSettings')
         })
