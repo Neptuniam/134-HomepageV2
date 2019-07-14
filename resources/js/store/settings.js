@@ -68,6 +68,9 @@ const actions = {
         commit('setLng', payload.lng);
     },
 
+    changeLocation: ({commit}, payload) => {
+    },
+
 
     fetchUser: ({commit, dispatch}) => {
         let user = JSON.parse(window.localStorage.getItem('activeUser'))

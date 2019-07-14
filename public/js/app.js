@@ -2658,13 +2658,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       days: ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"],
-      weather: null
+      weather: null,
+      curLoc: null
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
@@ -2674,23 +2674,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   mounted: function mounted() {
     // Update the weather every 10 minutes
     // setInterval(this.getWeather, 600000)
-    this.getWeather();
-  },
-  watch: {
-    // Update the weather display whenever the location changes
-    location: function location() {
-      this.getWeather();
-    }
+    this.getWeather(this.location);
   },
   methods: {
-    getWeather: function getWeather() {
+    getWeather: function getWeather(location) {
       var _this = this;
 
-      var query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=" + this.location + "&days=7";
+      var query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=" + location + "&days=7";
       this.axios.get(query).then(function (weather) {
         _this.weather = weather.data;
         console.log('%c Weather ', 'background: #222; color: #bada55');
         console.log(weather.data);
+        _this.curLoc = _this.weather.location.name + ', ' + _this.weather.location.region;
       });
     }
   }
@@ -2957,7 +2952,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.weatherDisplay[data-v-261436a7] {\n    /* height: 100%; */\n    width: 100%;\n}\n.location[data-v-261436a7] {\n    font-size: 10vh;\n    text-align: center;\n    margin-bottom: 0;\n}\n.curDescription[data-v-261436a7] {\n    /* margin: 0 0 10vh 0; */\n    font-size: 6.5vh;\n}\n.curIcon[data-v-261436a7] {\n    width: 17vh;\n    height: 17vh;\n}\n.curText[data-v-261436a7] {\n}\n.forecastIcon[data-v-261436a7] {\n    /* width: 100%;\n    height: 100%; */\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n    text-align: left;\n}\n\n", ""]);
+exports.push([module.i, "\n.weatherDisplay[data-v-261436a7] {\n    width: 100%;\n}\n.location[data-v-261436a7] {\n    font-size: 10vh;\n    text-align: center;\n    margin-bottom: 0;\n}\ninput[data-v-261436a7] {\n    font-size: 10vh;\n    text-align: center;\n    margin-bottom: 0;\n\n    border: none;\n    border-radius: none;\n    background: none;\n    color: black;\n}\n.curDescription[data-v-261436a7] {\n    /* margin: 0 0 10vh 0; */\n    font-size: 6.5vh;\n}\n.curIcon[data-v-261436a7] {\n    width: 17vh;\n    height: 17vh;\n}\n.curText[data-v-261436a7] {\n}\n.forecastIcon[data-v-261436a7] {\n    /* width: 100%;\n    height: 100%; */\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n    text-align: left;\n}\n\n", ""]);
 
 // exports
 
@@ -6175,22 +6170,39 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _vm.weather
     ? _c("div", { staticClass: "weatherDisplay" }, [
-        _c(
-          "div",
-          {
-            staticClass: "row center-xs bottom-xs location textSpecial",
-            attrs: { "uk-tooltip": _vm.address }
-          },
-          [
-            _vm._v(
-              "\n        " +
-                _vm._s(_vm.weather.location.name) +
-                ", " +
-                _vm._s(_vm.weather.location.region) +
-                "\n    "
-            )
-          ]
-        ),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.curLoc,
+              expression: "curLoc"
+            }
+          ],
+          staticClass: "row center-xs bottom-xs fullWidth location textSpecial",
+          attrs: { type: "text", "uk-tooltip": _vm.address },
+          domProps: { value: _vm.curLoc },
+          on: {
+            keyup: function($event) {
+              if (
+                !$event.type.indexOf("key") &&
+                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+              ) {
+                return null
+              }
+              return _vm.getWeather(_vm.curLoc)
+            },
+            click: function($event) {
+              _vm.curLoc = null
+            },
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.curLoc = $event.target.value
+            }
+          }
+        }),
         _vm._v(" "),
         _c(
           "div",
@@ -22409,17 +22421,20 @@ var actions = {
     commit('setLat', payload.lat);
     commit('setLng', payload.lng);
   },
-  fetchUser: function fetchUser(_ref4) {
-    var commit = _ref4.commit,
-        dispatch = _ref4.dispatch;
+  changeLocation: function changeLocation(_ref4, payload) {
+    var commit = _ref4.commit;
+  },
+  fetchUser: function fetchUser(_ref5) {
+    var commit = _ref5.commit,
+        dispatch = _ref5.dispatch;
     var user = JSON.parse(window.localStorage.getItem('activeUser'));
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users', user).then(function () {
       dispatch('setActiveUser', user);
     });
   },
-  setActiveUser: function setActiveUser(_ref5, payload) {
-    var commit = _ref5.commit,
-        dispatch = _ref5.dispatch;
+  setActiveUser: function setActiveUser(_ref6, payload) {
+    var commit = _ref6.commit,
+        dispatch = _ref6.dispatch;
     window.localStorage.setItem('activeUser', JSON.stringify(payload));
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users', payload).then(function () {
       commit('setUser', payload);
@@ -22428,17 +22443,17 @@ var actions = {
       dispatch('fetchFavourites');
     });
   },
-  fetchUsers: function fetchUsers(_ref6) {
-    var commit = _ref6.commit;
+  fetchUsers: function fetchUsers(_ref7) {
+    var commit = _ref7.commit;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/users').then(function (response) {
       console.log('%c Users', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setUsers', response.data);
     });
   },
-  createUser: function createUser(_ref7, payload) {
-    var commit = _ref7.commit,
-        dispatch = _ref7.dispatch;
+  createUser: function createUser(_ref8, payload) {
+    var commit = _ref8.commit,
+        dispatch = _ref8.dispatch;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/settings/users', payload).then(function (response) {
       console.log(response);
       payload.id = response.data;
@@ -22447,30 +22462,30 @@ var actions = {
     });
   },
   // Settings
-  fetchWidgets: function fetchWidgets(_ref8) {
-    var commit = _ref8.commit;
+  fetchWidgets: function fetchWidgets(_ref9) {
+    var commit = _ref9.commit;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/widgets/').then(function (response) {
       console.log('%c Widgets ', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setWidgets', response.data);
     });
   },
-  updateWidget: function updateWidget(_ref9, payload) {
-    var commit = _ref9.commit;
+  updateWidget: function updateWidget(_ref10, payload) {
+    var commit = _ref10.commit;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/widgets/', payload);
   },
   // Location Controllers
-  fetchLocations: function fetchLocations(_ref10) {
-    var commit = _ref10.commit;
+  fetchLocations: function fetchLocations(_ref11) {
+    var commit = _ref11.commit;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/locations/').then(function (response) {
       console.log('%c Locations ', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setLocations', response.data);
     });
   },
-  updateLocation: function updateLocation(_ref11, payload) {
-    var commit = _ref11.commit,
-        dispatch = _ref11.dispatch;
+  updateLocation: function updateLocation(_ref12, payload) {
+    var commit = _ref12.commit,
+        dispatch = _ref12.dispatch;
 
     // If id is 0, we are creating a new location
     if (payload.id == null) {
@@ -22483,17 +22498,17 @@ var actions = {
       });
     }
   },
-  deleteLocation: function deleteLocation(_ref12, payload) {
-    var commit = _ref12.commit,
-        dispatch = _ref12.dispatch;
+  deleteLocation: function deleteLocation(_ref13, payload) {
+    var commit = _ref13.commit,
+        dispatch = _ref13.dispatch;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/locations/delete', payload).then(function (response) {
       dispatch('fetchLocations');
     });
   },
   // Update User's map settings
-  fetchMapsSettings: function fetchMapsSettings(_ref13) {
-    var commit = _ref13.commit,
-        dispatch = _ref13.dispatch;
+  fetchMapsSettings: function fetchMapsSettings(_ref14) {
+    var commit = _ref14.commit,
+        dispatch = _ref14.dispatch;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/locations/settings').then(function (response) {
       console.log('%c Maps Settings ', 'background: #222; color: #bada55');
       console.log(response.data);
@@ -22501,26 +22516,26 @@ var actions = {
       dispatch('fetchLocations');
     });
   },
-  updateMapSettings: function updateMapSettings(_ref14, payload) {
-    var commit = _ref14.commit,
-        dispatch = _ref14.dispatch;
+  updateMapSettings: function updateMapSettings(_ref15, payload) {
+    var commit = _ref15.commit,
+        dispatch = _ref15.dispatch;
     console.log(payload);
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/locations/settings', payload).then(function (response) {
       dispatch('fetchMapsSettings');
     });
   },
   // Favourites Controllers
-  fetchFavourites: function fetchFavourites(_ref15) {
-    var commit = _ref15.commit;
+  fetchFavourites: function fetchFavourites(_ref16) {
+    var commit = _ref16.commit;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/favourites/').then(function (response) {
       console.log('%c Favourites ', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setFavourites', response.data);
     });
   },
-  updateFavourite: function updateFavourite(_ref16, payload) {
-    var commit = _ref16.commit,
-        dispatch = _ref16.dispatch;
+  updateFavourite: function updateFavourite(_ref17, payload) {
+    var commit = _ref17.commit,
+        dispatch = _ref17.dispatch;
 
     // If id is 0, we are creating a new location
     if (payload.id == null) {
@@ -22533,9 +22548,9 @@ var actions = {
       });
     }
   },
-  deleteFavourite: function deleteFavourite(_ref17, payload) {
-    var commit = _ref17.commit,
-        dispatch = _ref17.dispatch;
+  deleteFavourite: function deleteFavourite(_ref18, payload) {
+    var commit = _ref18.commit,
+        dispatch = _ref18.dispatch;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/favourites/delete', payload).then(function (response) {
       dispatch('fetchFavourites');
     });
@@ -23378,8 +23393,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /mnt/c/xampp/htdocs/134-HomepageV2/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /mnt/c/xampp/htdocs/134-HomepageV2/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /mnt/c/xampp/htdocs/HomepageV2/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /mnt/c/xampp/htdocs/HomepageV2/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
