@@ -1847,8 +1847,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       // Retrieve the users location on created
-      this.$getLocation(this.locationOptions).then(function (coordinates) {
-        _this.setLocation(coordinates);
+      this.axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(function (response) {
+        _this.setLocation(response.data.location);
       });
     },
     getBackground: function getBackground() {
@@ -1867,11 +1867,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   created: function created() {
     this.fetchUser();
     this.fetchUsers(); // Update the users location every 10 minutes
-    // setInterval(this.getLocation, 600000)
 
+    setInterval(this.getLocation, 600000);
     this.getLocation(); // Update the background every 1 minute
-    // setInterval(this.getBackground, 60000)
 
+    setInterval(this.getBackground, 60000);
     this.getBackground();
   }
 });
@@ -2572,8 +2572,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         title: '',
         address: '',
         lng: '',
-        lat: '',
-        favourite: null
+        lat: ''
       }
     };
   },
@@ -2602,8 +2601,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           title: '',
           address: '',
           lng: '',
-          lat: '',
-          favourite: null
+          lat: ''
         };
       }
     }
@@ -22406,6 +22404,8 @@ var actions = {
   },
   setLocation: function setLocation(_ref3, payload) {
     var commit = _ref3.commit;
+    console.log('%c Location', 'background: #222; color: #bada55');
+    console.log(payload);
     commit('setLat', payload.lat);
     commit('setLng', payload.lng);
   },
@@ -23378,8 +23378,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /mnt/c/xampp/htdocs/HomepageV2/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /mnt/c/xampp/htdocs/HomepageV2/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /mnt/c/xampp/htdocs/134-HomepageV2/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /mnt/c/xampp/htdocs/134-HomepageV2/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

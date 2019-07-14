@@ -92,7 +92,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
     data: function() {
         return {
-            newLocation: {id: null, user_id: null,  title: '', address: '', lng: '', lat: '', favourite: null},
+            newLocation: {id: null, user_id: null,  title: '', address: '', lng: '', lat: ''},
         }
     },
     computed: {
@@ -121,7 +121,7 @@ export default {
                 this.updateLocation(this.newLocation)
 
                 // Clear the new object so another can be created
-                this.newLocation = {id: null, user_id: null, title: '', address: '', lng: '', lat: '', favourite: null}
+                this.newLocation = {id: null, user_id: null, title: '', address: '', lng: '', lat: ''}
             }
         },
 

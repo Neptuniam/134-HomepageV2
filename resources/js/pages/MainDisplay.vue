@@ -40,9 +40,9 @@ export default {
     methods: {
         getLocation() {
             // Retrieve the users location on created
-            this.$getLocation(this.locationOptions).then(coordinates => {
-                this.setLocation(coordinates)
-            });
+            this.axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(response => {
+                this.setLocation(response.data.location)
+            })
         },
 
         getBackground() {
@@ -65,11 +65,11 @@ export default {
         this.fetchUsers()
 
         // Update the users location every 10 minutes
-        // setInterval(this.getLocation, 600000)
+        setInterval(this.getLocation, 600000)
         this.getLocation()
 
         // Update the background every 1 minute
-        // setInterval(this.getBackground, 60000)
+        setInterval(this.getBackground, 60000)
         this.getBackground()
     },
 }
