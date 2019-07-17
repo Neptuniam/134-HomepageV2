@@ -22,6 +22,7 @@ export default {
         updateTime() {
             var cd = new Date();
             this.time = this.convert24To12(cd.getHours()) + ':' + this.zeroPadding(cd.getMinutes(), 2) + ':' + this.zeroPadding(cd.getSeconds(), 2)
+            this.time += cd.getHours < 12 ? ' am' : ' pm'
             this.date = this.months[cd.getMonth()] + ' ' + this.zeroPadding(cd.getDate(), 2) + ', ' + this.zeroPadding(cd.getFullYear(), 4)
         },
 
@@ -46,17 +47,19 @@ export default {
 <style scoped>
     .clock {
         position: absolute;
-        top: 10px;
-        right: 0px;
-
-        width: 9vw;
+        top: 0px;
+        right: 10px;
     }
 
     .time {
-        font-size: 2rem;
+        font-size: 1.7rem;
     }
 
     .date {
-        font-size: 1rem;
+        font-size: 1.2rem;
+    }
+
+    div {
+        padding: 0;
     }
 </style>

@@ -1,5 +1,5 @@
 <template>
-<div v-if="weather" class="weatherDisplay">
+<div v-if="weather" class="weatherDisplay fullWidth">
     <input v-model="curLoc" v-on:keyup.enter="getWeather(curLoc)" @click='curLoc = null'
            type="text" class="row center-xs bottom-xs fullWidth location textSpecial" :uk-tooltip="address">
 
@@ -93,12 +93,10 @@ export default {
         width: 17vh;
         height: 17vh;
     }
-    .curText {
-    }
 
     .forecastIcon {
-        /* width: 100%;
-        height: 100%; */
+        width: 90%;
+        height: 90%;
     }
     .forecastTemp {
         font-size: 3vh;

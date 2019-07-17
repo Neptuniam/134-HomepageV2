@@ -1,5 +1,5 @@
 <template>
-    <div v-if="activeUser" class="row center-xs middle-xs homepage transparent nomargin uk-animation-fade" id="background" :style="'background: rgba(240,240,240,'+transparency+');'">
+    <div v-if="activeUser" class="row center-xs middle-xs homepage nomargin uk-animation-fade" :style="'background: rgba(240,240,240,'+transparency+');'">
         <a @click="setShowHome(!showHome)" class="uk-icon pageControl" :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" />
 
         <DateTime />
@@ -48,6 +48,9 @@ export default {
         getBackground() {
             // Hit the random background endpoint
             this.axios('/background/').then(background => {
+                console.log('%c Background', 'background: #222; color: #bada55');
+                console.log(background.data);
+
                 document.body.style.background = "url('images/"+background.data+"')"
                 document.body.style.backgroundSize = "cover";
             })
@@ -65,11 +68,11 @@ export default {
         this.fetchUsers()
 
         // Update the users location every 10 minutes
-        setInterval(this.getLocation, 600000)
+        // setInterval(this.getLocation, 600000)
         this.getLocation()
 
         // Update the background every 1 minute
-        setInterval(this.getBackground, 60000)
+        // setInterval(this.getBackground, 60000)
         this.getBackground()
     },
 }
@@ -79,21 +82,17 @@ export default {
     .homepage {
         overflow: hidden;
         color: black;
-    }
-
-    .transparent {
-        /* background: rgba(240,240,240,0.75); */
         height: 100vh;
         width: 100vw;
     }
 
     .pageControl {
         position: absolute;
-        top: 0px;
-        left: 0px;
+        top: 10px;
+        left: 10px;
 
-        width: 9vw;
-        margin: 2vh;
+        /* width: 9vw; */
+        /* margin: 2vh; */
     }
 
     .pageControl:hover {

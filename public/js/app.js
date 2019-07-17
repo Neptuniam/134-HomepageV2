@@ -1854,6 +1854,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     getBackground: function getBackground() {
       // Hit the random background endpoint
       this.axios('/background/').then(function (background) {
+        console.log('%c Background', 'background: #222; color: #bada55');
+        console.log(background.data);
         document.body.style.background = "url('images/" + background.data + "')";
         document.body.style.backgroundSize = "cover";
       });
@@ -1867,11 +1869,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   created: function created() {
     this.fetchUser();
     this.fetchUsers(); // Update the users location every 10 minutes
+    // setInterval(this.getLocation, 600000)
 
-    setInterval(this.getLocation, 600000);
     this.getLocation(); // Update the background every 1 minute
+    // setInterval(this.getBackground, 60000)
 
-    setInterval(this.getBackground, 60000);
     this.getBackground();
   }
 });
@@ -1910,6 +1912,7 @@ __webpack_require__.r(__webpack_exports__);
     updateTime: function updateTime() {
       var cd = new Date();
       this.time = this.convert24To12(cd.getHours()) + ':' + this.zeroPadding(cd.getMinutes(), 2) + ':' + this.zeroPadding(cd.getSeconds(), 2);
+      this.time += cd.getHours < 12 ? ' am' : ' pm';
       this.date = this.months[cd.getMonth()] + ' ' + this.zeroPadding(cd.getDate(), 2) + ', ' + this.zeroPadding(cd.getFullYear(), 4);
     },
     convert24To12: function convert24To12(num) {
@@ -2047,6 +2050,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2781,7 +2790,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.homepage {\n    overflow: hidden;\n    color: black;\n}\n.transparent {\n    /* background: rgba(240,240,240,0.75); */\n    height: 100vh;\n    width: 100vw;\n}\n.pageControl {\n    position: absolute;\n    top: 0px;\n    left: 0px;\n\n    width: 9vw;\n    margin: 2vh;\n}\n.pageControl:hover {\n    color: white;\n}\n.fullWidth {\n    width: 100%;\n}\n.fullHeight {\n    height: 100%;\n}\n.nopadding {\n    padding: 0;\n}\n.nomargin {\n    margin: 0;\n}\n.nospacing {\n    margin: 0;\n    padding: 0;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive;\n}\n.textBody {\n    font-family: 'Roboto';\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
+exports.push([module.i, "\n.homepage {\n    overflow: hidden;\n    color: black;\n    height: 100vh;\n    width: 100vw;\n}\n.pageControl {\n    position: absolute;\n    top: 10px;\n    left: 10px;\n\n    /* width: 9vw; */\n    /* margin: 2vh; */\n}\n.pageControl:hover {\n    color: white;\n}\n.fullWidth {\n    width: 100%;\n}\n.fullHeight {\n    height: 100%;\n}\n.nopadding {\n    padding: 0;\n}\n.nomargin {\n    margin: 0;\n}\n.nospacing {\n    margin: 0;\n    padding: 0;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive;\n}\n.textBody {\n    font-family: 'Roboto';\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
 
 // exports
 
@@ -2800,7 +2809,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.clock[data-v-6994ebce] {\n    position: absolute;\n    top: 10px;\n    right: 0px;\n\n    width: 9vw;\n}\n.time[data-v-6994ebce] {\n    font-size: 2rem;\n}\n.date[data-v-6994ebce] {\n    font-size: 1rem;\n}\n", ""]);
+exports.push([module.i, "\n.clock[data-v-6994ebce] {\n    position: absolute;\n    top: 0px;\n    right: 10px;\n}\n.time[data-v-6994ebce] {\n    font-size: 1.7rem;\n}\n.date[data-v-6994ebce] {\n    font-size: 1.2rem;\n}\ndiv[data-v-6994ebce] {\n    padding: 0;\n}\n", ""]);
 
 // exports
 
@@ -2952,7 +2961,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.weatherDisplay[data-v-261436a7] {\n    width: 100%;\n}\n.location[data-v-261436a7] {\n    font-size: 10vh;\n    text-align: center;\n    margin-bottom: 0;\n}\ninput[data-v-261436a7] {\n    font-size: 10vh;\n    text-align: center;\n    margin-bottom: 0;\n\n    border: none;\n    border-radius: none;\n    background: none;\n    color: black;\n}\n.curDescription[data-v-261436a7] {\n    /* margin: 0 0 10vh 0; */\n    font-size: 6.5vh;\n}\n.curIcon[data-v-261436a7] {\n    width: 17vh;\n    height: 17vh;\n}\n.curText[data-v-261436a7] {\n}\n.forecastIcon[data-v-261436a7] {\n    /* width: 100%;\n    height: 100%; */\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n    text-align: left;\n}\n\n", ""]);
+exports.push([module.i, "\n.weatherDisplay[data-v-261436a7] {\n    width: 100%;\n}\n.location[data-v-261436a7] {\n    font-size: 10vh;\n    text-align: center;\n    margin-bottom: 0;\n}\ninput[data-v-261436a7] {\n    font-size: 10vh;\n    text-align: center;\n    margin-bottom: 0;\n\n    border: none;\n    border-radius: none;\n    background: none;\n    color: black;\n}\n.curDescription[data-v-261436a7] {\n    /* margin: 0 0 10vh 0; */\n    font-size: 6.5vh;\n}\n.curIcon[data-v-261436a7] {\n    width: 17vh;\n    height: 17vh;\n}\n.forecastIcon[data-v-261436a7] {\n    width: 90%;\n    height: 90%;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n    text-align: left;\n}\n\n", ""]);
 
 // exports
 
@@ -4902,9 +4911,8 @@ var render = function() {
         "div",
         {
           staticClass:
-            "row center-xs middle-xs homepage transparent nomargin uk-animation-fade",
-          style: "background: rgba(240,240,240," + _vm.transparency + ");",
-          attrs: { id: "background" }
+            "row center-xs middle-xs homepage nomargin uk-animation-fade",
+          style: "background: rgba(240,240,240," + _vm.transparency + ");"
         },
         [
           _c("a", {
@@ -5139,11 +5147,11 @@ var render = function() {
           "div",
           { staticClass: "row center-xs middle-xs fullWidth rowHeight" },
           [
-            _c("div", { staticClass: "col-xs-3 widgetTitle" }, [
+            _c("div", { staticClass: "col-xs-2 widgetTitle" }, [
               _vm._v("\n            " + _vm._s(widget.title) + "\n        ")
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-xs-3" }, [
+            _c("div", { staticClass: "col-xs-1" }, [
               _c(
                 "button",
                 {
@@ -5163,6 +5171,10 @@ var render = function() {
                   )
                 ]
               )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-xs-1" }, [
+              _vm._v("\n            1 Min\n        ")
             ])
           ]
         )
@@ -5177,11 +5189,13 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "row center-xs fullWidth" }, [
-      _c("div", { staticClass: "col-xs-3" }, [
+      _c("div", { staticClass: "col-xs-2" }, [
         _c("h2", [_vm._v("Widget Title")])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-xs-3" }, [_c("h2", [_vm._v("Status")])])
+      _c("div", { staticClass: "col-xs-1" }, [_c("h2", [_vm._v("Status")])]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-xs-1" }, [_c("h2", [_vm._v("Interval")])])
     ])
   }
 ]
@@ -6169,7 +6183,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.weather
-    ? _c("div", { staticClass: "weatherDisplay" }, [
+    ? _c("div", { staticClass: "weatherDisplay fullWidth" }, [
         _c("input", {
           directives: [
             {
