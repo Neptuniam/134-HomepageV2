@@ -5,7 +5,7 @@
             <div class="row center-xs middle-xs favouritesBar">
                 <div v-for="favourite in favsOrder" class="col-xs">
                     <a :href="favourite.url" :uk-tooltip="favourite.title">
-                        <img :src="'images/favouritesIcons/'+favourite.src" class="favButtons">
+                        <img :src="getImg(favourite)" class="favButtons">
                     </a>
                 </div>
             </div>
@@ -27,6 +27,11 @@ export default {
         })
     },
     methods: {
+        getImg(favourite) {
+            // if the user set an img to use, return that. Otherwise use the sites favicon
+            return favourite.src ?  'images/favouritesIcons/'+favourite.src : favourite.url+'favicon.ico'
+        },
+
         byPos(a,b) {
             if (a.pos < b.pos)
                 return -1

@@ -2,6 +2,7 @@ import axios from "axios";
 
 const state = {
     showHome: true,
+    activePage: 'home',
     address: null,
     lat: null,
     lng: null,
@@ -18,6 +19,7 @@ const state = {
 }
 const getters = {
     getShowHome: (state) => state.showHome,
+    getActivePage: (state) => state.activePage,
     getAddress: (state) => state.address,
 
     getLat:  (state) => state.lat,
@@ -36,6 +38,7 @@ const getters = {
 }
 const mutations = {
     setShowHome: (state, payload) => { state.showHome = payload; },
+    setActivePage: (state, payload) => { state.activePage = payload; },
     setAddress: (state, payload) => { state.address = payload; },
 
     setLat: (state, payload) => { state.lat = payload; },
@@ -54,6 +57,10 @@ const mutations = {
 const actions = {
     setShowHome: ({commit}, payload) => {
         commit('setShowHome', payload);
+    },
+
+    setActivePage: ({commit}, payload) => {
+        commit('setActivePage', payload);
     },
 
     setAddress: ({commit}, payload) => {

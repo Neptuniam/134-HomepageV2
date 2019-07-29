@@ -1,12 +1,12 @@
 <template>
-    <div class="clock textBody">
-        <div class="time">
-            {{time}}
-        </div>
-        <div class="date">
-            {{date}}
-        </div>
+<div class="clock textBody">
+    <div class="time">
+        {{time}}
     </div>
+    <div class="date">
+        {{date}}
+    </div>
+</div>
 </template>
 
 <script>

@@ -1,37 +1,28 @@
 <template>
-    <div class="row center-xs middle-xs fullWidth textColor">
-        <div class="col-xs-4">
-            <div v-if="activeUser" class="row center-xs fullWidth nomargin">
-                <h2 class="textTitle">Welcome, {{activeUser.name}}!</h2>
-            </div>
+<div class="row center-xs middle-xs textBody textColor">
+    <div class="LoginSettings">
+        <div v-if="activeUser" class="row center-xs nomargin">
+            <h1>Welcome, {{activeUser.name}}!</h1>
+        </div>
 
+        <div class="inputRow">
+            <span class="row uk-form-label">Username</span>
+            <input type="name" name="name" v-model="name" class="uk-input">
 
-            <span class="row uk-form-label fullWidth textColor textBody">Username</span>
+            <span class="row uk-form-label">Password</span>
+            <input type="password" name="pass" v-model="pass" class="uk-input">
+        </div>
 
-            <div class="uk-form-controls fullWidth">
-                <input type="name" name="name" v-model="name" class="uk-input textBody fullWidth">
-            </div>
-
-            <br>
-
-            <span class="row uk-form-label fullWidth textColor textBody">Password</span>
-
-            <div class="uk-form-controls fullWidth">
-                <input type="password" name="pass" v-model="pass" class="uk-input textBody fullWidth">
-            </div>
-
-            <br>
-
-            <div class="row center-xs">
-                <button type="button" class="col-xs-4 uk-button uk-button-primary textBody uk-text-capitalize" @click="login()">
-                    Switch Profiles
-                </button>
-                <button type="button" class="col-xs-4 uk-button uk-button-secondary textBody uk-text-capitalize" @click="create()">
-                    Create Profile
-                </button>
-            </div>
+        <div class="row center-xs buttonsRow">
+            <button type="button" class="col-xs-5 uk-button uk-button-primary roundedButton uk-text-capitalize" @click="login()">
+                Switch Profiles
+            </button>
+            <button type="button" class="col-xs-5 uk-button uk-button-secondary roundedButton uk-text-capitalize" @click="create()">
+                Create Profile
+            </button>
         </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -76,7 +67,31 @@ export default {
 </script>
 
 <style scoped>
+    .LoginSettings {
+        width: 500px;
+    }
+
+    h1 {
+        font-weight: 550px;
+    }
+
+    .inputRow {
+        margin: 50px 0;
+    }
+
     .uk-form-label {
-        padding-left: 7%;
+        text-align: left;
+        width: 100%;
+
+        margin-top: 25px;
+        padding-left: 25px;
+    }
+
+    .buttonsRow {
+        /* margin-top: 40px; */
+    }
+
+    .uk-button {
+        font-size: 18px;
     }
 </style>

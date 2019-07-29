@@ -11,26 +11,26 @@
         </thead>
         <tbody>
             <tr v-for="favourite in favourites" class="textBody">
-                <td> <input type="text" class="fullWidth uk-input" v-model="favourite.title"> </td>
-                <td> <input type="text" class="fullWidth uk-input" v-model="favourite.url"> </td>
-                <td> <input type="text" class="fullWidth uk-input" v-model="favourite.src"> </td>
+                <td> <input type="text" class="uk-input" v-model="favourite.title"> </td>
+                <td> <input type="text" class="uk-input" v-model="favourite.url"> </td>
+                <td> <input type="text" class="uk-input" v-model="favourite.src"> </td>
                 <td> <input type="number" class="uk-input" v-model="favourite.pos"> </td>
                 <td class="uk-button-group">
-                    <button class="uk-button uk-button-primary uk-button-small" @click="updateFavourite(favourite)">
+                    <button class="uk-button uk-button-primary uk-button-small roundedButton" @click="updateFavourite(favourite)">
                         <span uk-icon="pencil"></span>
                     </button>
-                    <button class="uk-button uk-button-danger uk-button-small" @click="deleteFavourite(favourite)">
+                    <button class="uk-button uk-button-danger uk-button-small roundedButton" @click="deleteFavourite(favourite)">
                         <span uk-icon="trash"></span>
                     </button>
                 </td>
             </tr>
             <tr>
-                <td> <input type="text" class="fullWidth uk-input" v-model="newFavourite.title"> </td>
-                <td> <input type="text" class="fullWidth uk-input" v-model="newFavourite.url"> </td>
-                <td> <input type="text" class="fullWidth uk-input" v-model="newFavourite.src"> </td>
-                <td> <input type="number" class="posWidth uk-input" v-model="newFavourite.pos"> </td>
+                <td> <input type="text" class="uk-input" v-model="newFavourite.title"> </td>
+                <td> <input type="text" class="uk-input" v-model="newFavourite.url"> </td>
+                <td> <input type="text" class="uk-input" v-model="newFavourite.src"> </td>
+                <td> <input type="number" class="uk-input" v-model="newFavourite.pos"> </td>
                 <td class="posWidth">
-                    <button class="uk-button uk-button-primary uk-button-small"
+                    <button class="uk-button uk-button-primary uk-button-small roundedButton"
                            @click="addFav(newFavourite)">
                         <span uk-icon="plus"></span>
                     </button>
@@ -80,7 +80,10 @@ export default {
 
 <style scoped>
     tr th {
+        font-weight: 500px;
+        font-size: 22px;
         text-align: center;
+
         padding: 0;
     }
 

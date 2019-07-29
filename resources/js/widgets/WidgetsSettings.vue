@@ -4,26 +4,26 @@
             <div class="col-xs-2">
                 <h2>Widget Title</h2>
             </div>
-            <div class="col-xs-1">
+            <div class="col-xs-2">
                 <h2>Status</h2>
             </div>
-            <div class="col-xs-1">
+            <!-- <div class="col-xs-1">
                 <h2>Interval</h2>
-            </div>
+            </div> -->
         </div>
 
         <div v-for="widget in widgets" class="row center-xs middle-xs fullWidth rowHeight">
             <div class="col-xs-2 widgetTitle">
                 {{widget.title}}
             </div>
-            <div class="col-xs-1">
+            <div class="col-xs-2">
                 <button type="button" :class="['uk-button uk-button-small', color(widget)]" @click="toggleStatus(widget)">
                     {{readable[widget.status]}}
                 </button>
             </div>
-            <div class="col-xs-1">
+            <!-- <div class="col-xs-1">
                 1 Min
-            </div>
+            </div> -->
         </div>
     </div>
 </template>

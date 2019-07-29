@@ -1,16 +1,34 @@
 <template>
-    <div v-if="activeUser" class="row center-xs middle-xs homepage nomargin uk-animation-fade" :style="'background: rgba(240,240,240,'+transparency+');'">
-        <a @click="setShowHome(!showHome)" class="uk-icon pageControl" :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" />
-
-        <DateTime />
-
-        <div v-show="showHome == true">
-            <Home />
+<div v-if="activeUser && location" class="row center-xs middle-xs homepage nomargin uk-animation-fade" :style="'background: rgba(200,200,200,'+transparency+');'">
+    <div class="row middle-xs pageControl">
+        <div class="col-xs">
+            <a @click="setActivePage(activePage === 'home' ? 'settings' : 'home')" class="uk-icon "
+              :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" uk-tooltip='Settings'/>
         </div>
-        <div v-if="showHome == false">
-            <Settings />
+
+        <div class="col-xs">
+            <a v-if="newsStatus.status === 1  && activePage === 'home'" @click="setActivePage('news')" class="uk-icon newsIcon"
+               uk-icon="icon: world; ratio: 2" :uk-tooltip="topHeadline ? topHeadline.title : ''"/>
+        </div>
+
+        <div class="col-xs">
+            <a v-if="notesStatus.status === 1 && activePage === 'home'" @click="setActivePage('notes')" class="uk-icon notesIcon"
+               uk-icon="icon: pencil; ratio: 2;" uk-tooltip="Personal Notes" />
         </div>
     </div>
+
+    <DateTime />
+
+    <News ref="News" v-model="topHeadline" />
+
+
+    <div v-show="activePage === 'home'">
+        <Home />
+    </div>
+    <div v-if="activePage === 'settings'">
+        <Settings />
+    </div>
+</div>
 </template>
 
 <script>
@@ -18,6 +36,7 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     data: function() {
         return {
+            topHeadline: null,
             locationOptions: {
                 enableHighAccuracy: true,
                 timeout: 5000,
@@ -26,15 +45,30 @@ export default {
     },
     computed: {
         controlIcon: function() {
-            return this.showHome ? 'cog' : 'home'
+            return this.activePage === 'home' ? 'cog' : 'home'
         },
         transparency: function() {
-            return this.showHome ? 0.35 : 0.65
+            return this.activePage === 'home' ? 0.4 : 0.7
         },
 
+        newsStatus: function() {
+            if (this.widgets)
+                return this.widgets.find(widget => widget.title === 'News')
+            return {}
+        },
+
+        notesStatus: function() {
+            if (this.widgets)
+                return this.widgets.find(widget => widget.title === 'Notes')
+            return {}
+        },
+
+
         ...mapGetters('settings', {
-            showHome: 'getShowHome',
-            activeUser: 'getUser'
+            activePage: 'getActivePage',
+            activeUser: 'getUser',
+            widgets: 'getWidgets',
+            location: 'getLocation'
         })
     },
     methods: {
@@ -57,8 +91,9 @@ export default {
         },
 
         ...mapActions('settings', {
-            setLocation: 'setLocation',
             setShowHome: 'setShowHome',
+            setActivePage: 'setActivePage',
+            setLocation: 'setLocation',
             fetchUser: 'fetchUser',
             fetchUsers: 'fetchUsers',
         })
@@ -90,45 +125,59 @@ export default {
         position: absolute;
         top: 10px;
         left: 10px;
-
-        /* width: 9vw; */
-        /* margin: 2vh; */
+        width: 175px;
     }
 
-    .pageControl:hover {
+    .pageControl .uk-icon:hover {
         color: white;
     }
 
+    .uk-tooltip {
+        font-family: 'Roboto' !important;
+        font-weight: 300px;
+        font-size: 16px;
+
+        max-width: 300px;
+    }
+
     .fullWidth {
-        width: 100%;
+        width: 100% !important;
     }
     .fullHeight {
-        height: 100%;
+        height: 100% !important;
     }
 
     .nopadding {
-        padding: 0;
+        padding: 0 !important;
     }
 
     .nomargin {
-        margin: 0;
+        margin: 0 !important;
     }
 
     .nospacing {
-        margin: 0;
-        padding: 0;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .textSpecial {
-        font-family: 'Arima Madurai', cursive;
+        font-family: 'Arima Madurai', cursive !important;
     }
 
     .textTitle {
-        font-family: 'Poiret One', cursive;
+        font-family: 'Poiret One', cursive !important;
     }
 
     .textBody {
-        font-family: 'Roboto';
+        font-family: 'Roboto' !important;
+    }
+
+    .roundedButton {
+        color: white;
+        border-radius: 10px;
+        padding: auto 10px;
+        margin: 0 5px;
+        outline: none;
     }
 
     .noselect {

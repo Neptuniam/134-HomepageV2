@@ -1,18 +1,12 @@
 <template>
     <div class="row center-xs middle-xs nomargin Settings">
-        <div class="row center-xs fullWidth nospacing">
-            <h1 class="textSpecial">Your {{activeTab.title}}</h1>
-        </div>
-
-        <div class="row center-xs nospacing">
-            <ul uk-tab>
-                <li v-for="tab in tabs">
-                    <a class="uk-text-capitalize textTitle tabsTitle noselect" @click="activeTab = tab">
-                        {{tab.title}}
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <ul uk-tab>
+            <li v-for="tab in tabs">
+                <a class="uk-text-capitalize textTitle tabsTitle noselect" @click="activeTab = tab">
+                    {{tab.title}}
+                </a>
+            </li>
+        </ul>
 
         <vue-custom-scrollbar :settings="scrollSettings" class="scrollSpace nospacing">
             <component :is="activeTab.src" />
@@ -67,7 +61,8 @@ export default {
     }
 
     .scrollSpace {
-        height: 69vh;
+        /* height: 69vh; */
+        height: 80vh;
         width: 100%;
     }
 
@@ -82,8 +77,8 @@ export default {
 
     input, select, .uk-input, .uk-select {
         border-radius: 30px;
-        background: rgba(30,30,30,0.5);
-        color: white;
+        background: rgba(50,50,50,0.7);
+        color: rgb(240, 240, 240);
     }
 
     input:focus, select:focus, .uk-input:focus, .uk-select:focus {
@@ -116,21 +111,4 @@ export default {
     h5 a {
         color: #333;
     }
-
-    /* h1 {
-        margin: 15px;
-    }
-
-    h5 {
-        margin: 10px 0;
-    } */
 </style>
-
-
-<!-- mysql -->
-create table if not exists users (
-    id int auto_increment,
-    name varchar(50) not null,
-    pass varchar(50) not null,
-    primary key (id)
-);

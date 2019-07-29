@@ -29,13 +29,6 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('settings', {
-            userLat: 'getLat',
-            userLng: 'getLng',
-            locations: 'getLocations',
-            mapsSettings: 'getMapsSettings',
-        }),
-
         loc: function() {
             return { title: 'loc', lat: this.userLat, lng: this.userLng }
         },
@@ -78,10 +71,22 @@ export default {
             if (this.mapsSettings)
                 return this.mapsSettings.method
         },
+
+        ...mapGetters('settings', {
+            activePage: 'getActivePage',
+            userLat: 'getLat',
+            userLng: 'getLng',
+            locations: 'getLocations',
+            mapsSettings: 'getMapsSettings',
+        })
     },
     watch: {
         destination: function() {
             this.getDirections()
+        },
+        activePage: function() {
+            if (this.activePage === 'home')
+                this.getDirections()
         }
     },
     methods: {
