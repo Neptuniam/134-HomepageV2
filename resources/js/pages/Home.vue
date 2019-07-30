@@ -1,9 +1,10 @@
 <template>
-<div class="row center-xs middle-xs nomargin">
+<div class="row center-xs middle-xs nomargin fullWidth">
     <div class="col-xs-8">
-        <div v-for="widget in activeWidgets">
+        <div v-for="widget in activeWidgets" v-show="activePage === 'home'">
             <component :is="widget.title" />
         </div>
+        <News v-if="$parent.newsStatus.status" ref="News" />
     </div>
 </div>
 </template>

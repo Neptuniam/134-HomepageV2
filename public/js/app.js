@@ -1712,6 +1712,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: _objectSpread({
@@ -1830,15 +1831,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      topHeadline: null,
       locationOptions: {
         enableHighAccuracy: true,
         timeout: 5000
@@ -2709,6 +2705,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 // Key: 2b056b1596eb4356a56510c4e19da2b7
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2735,8 +2737,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this.news = news.data.articles;
         console.log('%c News ', 'background: #222; color: #bada55');
         console.log(news.data.articles);
-
-        _this.$emit('headline', news.data.articles[0]);
       });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
@@ -2750,10 +2750,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     activeCat: function activeCat() {
       this.getNews();
     },
-    showNews: function showNews() {
-      if (this.showNews) {
+    activePage: function activePage() {
+      if (this.activePage === 'news') {
         // Always send us back to the default on show so tabs are correct
-        this.activeCat = 'general';
+        this.activeCat = this.categorys[0];
         this.index = 0;
       }
     }
@@ -2804,8 +2804,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2828,12 +2826,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     getWeather: function getWeather(location) {
       var _this = this;
 
+      if (location === 'loc') location = this.location;
       var query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=" + location + "&days=7";
       this.axios.get(query).then(function (weather) {
         _this.weather = weather.data;
+        _this.curLoc = _this.weather.location.name + ', ' + _this.weather.location.region;
         console.log('%c Weather ', 'background: #222; color: #bada55');
         console.log(weather.data);
-        _this.curLoc = _this.weather.location.name + ', ' + _this.weather.location.region;
       });
     }
   }
@@ -3043,7 +3042,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.travelText[data-v-3385321e] {\n    text-align: center;\n    font-size: 4vh;\n    margin-top: 15vh;\n}\na[data-v-3385321e] {\n    color: black;\n}\n", ""]);
+exports.push([module.i, "\n.travelText[data-v-3385321e] {\n    font-weight: 600px;\n    font-size: 4.5vh;\n    text-align: center;\n\n    margin-top: 15vh;\n}\na[data-v-3385321e] {\n    color: black;\n}\n", ""]);
 
 // exports
 
@@ -3081,7 +3080,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.NewsDisplay[data-v-b91d5c9e] {\n    width: 1000px;\n    margin-top: 30px;\n}\n.newsIcon[data-v-b91d5c9e] {\n    position: absolute;\n    left: 60px;\n    top: 10px;\n}\n.newsIcon[data-v-b91d5c9e]:hover {\n    color: white;\n}\n.articleNum[data-v-b91d5c9e] {\n    margin: 10px 400px 40px 400px;\n}\n.headlineTitle[data-v-b91d5c9e] {\n    font-weight: 800px;\n    font-size: 35px;\n\n    min-height: 100px;\n}\n.headlineContent[data-v-b91d5c9e] {\n    font-weight: 400px;\n    font-size: 25px;\n\n    min-height: 200px;\n}\n.headlineSrc[data-v-b91d5c9e] {\n    font-weight: 300px;\n    font-size: 20px;\n}\n.headlineUrl[data-v-b91d5c9e] {\n    font-weight: 200px;\n    font-size: 20px;\n\n    color: blue;\n}\n", ""]);
+exports.push([module.i, "\n.NewsDisplay[data-v-b91d5c9e] {\n    /* width: 1000px; */\n    margin-top: 30px;\n}\n.NewsRow[data-v-b91d5c9e] {\n    font-weight: 600px;\n    font-size: 4vh;\n}\n.NewsRow a[data-v-b91d5c9e] {\n    color: black;\n}\n.newsIcon[data-v-b91d5c9e] {\n    position: absolute;\n    left: 60px;\n    top: 10px;\n}\n.newsIcon[data-v-b91d5c9e]:hover {\n    color: white;\n}\n.articleNum[data-v-b91d5c9e] {\n    margin: 10px 400px 40px 400px;\n}\n.headlineTitle[data-v-b91d5c9e] {\n    font-weight: 800px;\n    font-size: 35px;\n\n    min-height: 100px;\n}\n.headlineContent[data-v-b91d5c9e] {\n    font-weight: 400px;\n    font-size: 25px;\n\n    min-height: 200px;\n}\n.headlineSrc[data-v-b91d5c9e] {\n    font-weight: 300px;\n    font-size: 20px;\n}\n.headlineUrl[data-v-b91d5c9e] {\n    font-weight: 200px;\n    font-size: 20px;\n\n    color: blue;\n}\n", ""]);
 
 // exports
 
@@ -3100,7 +3099,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.weatherDisplay[data-v-261436a7] {\n    width: 100%;\n}\n.location[data-v-261436a7] {\n    font-size: 10vh;\n    text-align: center;\n    margin-bottom: 0;\n}\ninput[data-v-261436a7] {\n    font-size: 10vh;\n    text-align: center;\n    margin-bottom: 0;\n\n    border: none;\n    border-radius: none;\n    background: none;\n    color: black;\n}\n.curDescription[data-v-261436a7] {\n    /* margin: 0 0 10vh 0; */\n    font-size: 6.5vh;\n}\n.curIcon[data-v-261436a7] {\n    width: 17vh;\n    height: 17vh;\n}\n.forecastIcon[data-v-261436a7] {\n    width: 90%;\n    height: 90%;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n    text-align: left;\n}\n\n", ""]);
+exports.push([module.i, "\n.location[data-v-261436a7] {\n    font-size: 5vh;\n    text-align: center;\n    margin-bottom: 0;\n}\ninput[data-v-261436a7] {\n    border: none;\n    background: none;\n    color: black;\n}\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n.curIcon[data-v-261436a7] {\n    width: 15vh;\n    height: 15vh;\n    padding-bottom: 1vh;\n    text-align: center;\n}\n.forecastIcon[data-v-261436a7] {\n    width: 90%;\n    height: 90%;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n    text-align: left;\n}\n\n", ""]);
 
 // exports
 
@@ -4920,16 +4919,38 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row center-xs middle-xs nomargin" }, [
-    _c(
-      "div",
-      { staticClass: "col-xs-8" },
-      _vm._l(_vm.activeWidgets, function(widget) {
-        return _c("div", [_c(widget.title, { tag: "component" })], 1)
-      }),
-      0
-    )
-  ])
+  return _c(
+    "div",
+    { staticClass: "row center-xs middle-xs nomargin fullWidth" },
+    [
+      _c(
+        "div",
+        { staticClass: "col-xs-8" },
+        [
+          _vm._l(_vm.activeWidgets, function(widget) {
+            return _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.activePage === "home",
+                    expression: "activePage === 'home'"
+                  }
+                ]
+              },
+              [_c(widget.title, { tag: "component" })],
+              1
+            )
+          }),
+          _vm._v(" "),
+          _vm.$parent.newsStatus.status ? _c("News", { ref: "News" }) : _vm._e()
+        ],
+        2
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -5067,7 +5088,7 @@ var render = function() {
                     staticClass: "uk-icon newsIcon",
                     attrs: {
                       "uk-icon": "icon: world; ratio: 2",
-                      "uk-tooltip": _vm.topHeadline ? _vm.topHeadline.title : ""
+                      "uk-tooltip": "News"
                     },
                     on: {
                       click: function($event) {
@@ -5098,32 +5119,7 @@ var render = function() {
           _vm._v(" "),
           _c("DateTime"),
           _vm._v(" "),
-          _c("News", {
-            ref: "News",
-            model: {
-              value: _vm.topHeadline,
-              callback: function($$v) {
-                _vm.topHeadline = $$v
-              },
-              expression: "topHeadline"
-            }
-          }),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.activePage === "home",
-                  expression: "activePage === 'home'"
-                }
-              ]
-            },
-            [_c("Home")],
-            1
-          ),
+          _c("Home"),
           _vm._v(" "),
           _vm.activePage === "settings"
             ? _c("div", [_c("Settings")], 1)
@@ -6357,127 +6353,152 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.news && _vm.activePage === "news"
-    ? _c("div", { staticClass: "row center-xs NewsDisplay" }, [
-        _c("div", { staticClass: "row middle-xs fullWidth" }, [
-          _c("div", { staticClass: "col-xs" }, [
-            _vm.index > 0
-              ? _c("a", {
-                  staticClass: "uk-icon previousIcon",
-                  attrs: {
-                    "uk-icon": "icon: chevron-left; ratio: 2",
-                    "uk-tooltip": "Previous Article"
+  return _vm.news
+    ? _c("div", [
+        _vm.activePage === "news"
+          ? _c("div", { staticClass: "row center-xs NewsDisplay" }, [
+              _c("div", { staticClass: "row middle-xs fullWidth" }, [
+                _c("div", { staticClass: "col-xs" }, [
+                  _vm.index > 0
+                    ? _c("a", {
+                        staticClass: "uk-icon previousIcon",
+                        attrs: {
+                          "uk-icon": "icon: chevron-left; ratio: 2",
+                          "uk-tooltip": "Previous Article"
+                        },
+                        on: {
+                          click: function($event) {
+                            _vm.index--
+                          }
+                        }
+                      })
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c(
+                  "ul",
+                  {
+                    staticClass: "col-xs-10 nomargin",
+                    attrs: { "uk-tab": "" }
                   },
-                  on: {
-                    click: function($event) {
-                      _vm.index--
-                    }
-                  }
-                })
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c(
-            "ul",
-            { staticClass: "nomargin", attrs: { "uk-tab": "" } },
-            _vm._l(_vm.categorys, function(category) {
-              return _c("li", [
+                  _vm._l(_vm.categorys, function(category) {
+                    return _c("li", [
+                      _c(
+                        "a",
+                        {
+                          staticClass:
+                            "uk-text-capitalize textTitle tabsTitle noselect",
+                          on: {
+                            click: function($event) {
+                              _vm.activeCat = category
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\r\n                        " +
+                              _vm._s(category) +
+                              "\r\n                    "
+                          )
+                        ]
+                      )
+                    ])
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-xs" }, [
+                  _vm.index < _vm.news.length
+                    ? _c("a", {
+                        staticClass: "uk-icon nextIcon",
+                        attrs: {
+                          "uk-icon": "icon: chevron-right; ratio: 2",
+                          "uk-tooltip": "Next Article"
+                        },
+                        on: {
+                          click: function($event) {
+                            _vm.index++
+                          }
+                        }
+                      })
+                    : _vm._e()
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "articleNum textBody" }, [
+                _vm._v(
+                  "\r\n            Article " +
+                    _vm._s(_vm.index + 1) +
+                    " / " +
+                    _vm._s(_vm.news.length) +
+                    "\r\n        "
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "textSpecial headlineTitle" }, [
+                _vm._v(
+                  "\r\n            " +
+                    _vm._s(_vm.news[_vm.index].title.split(" -")[0]) +
+                    "\r\n        "
+                )
+              ]),
+              _vm._v(" "),
+              _c("hr", { staticClass: "fullWidth" }),
+              _vm._v(" "),
+              _vm.news[_vm.index].content
+                ? _c(
+                    "div",
+                    {
+                      staticClass:
+                        "row center-xs fullWidth textBody headlineContent"
+                    },
+                    [
+                      _vm._v(
+                        "\r\n            " +
+                          _vm._s(_vm.news[_vm.index].content.split("[+")[0]) +
+                          "\r\n        "
+                      )
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c("p", { staticClass: "fullWidth textBody nomargin " }, [
                 _c(
                   "a",
                   {
-                    staticClass:
-                      "uk-text-capitalize textTitle tabsTitle noselect",
-                    on: {
-                      click: function($event) {
-                        _vm.activeCat = category
-                      }
-                    }
+                    staticClass: "headlineUrl",
+                    attrs: { href: _vm.news[_vm.index].url, target: "_blank" }
                   },
-                  [
-                    _vm._v(
-                      "\r\n                    " +
-                        _vm._s(category) +
-                        "\r\n                "
-                    )
-                  ]
+                  [_vm._v(_vm._s(_vm.news[_vm.index].url))]
+                )
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "fullWidth textBody headlineSrc" }, [
+                _vm._v(
+                  "\r\n            - " +
+                    _vm._s(_vm.news[_vm.index].source.name) +
+                    "\r\n        "
                 )
               ])
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-xs" }, [
-            _vm.index < _vm.news.length
-              ? _c("a", {
-                  staticClass: "uk-icon nextIcon",
-                  attrs: {
-                    "uk-icon": "icon: chevron-right; ratio: 2",
-                    "uk-tooltip": "Next Article"
-                  },
-                  on: {
-                    click: function($event) {
-                      _vm.index++
-                    }
-                  }
-                })
-              : _vm._e()
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "articleNum textBody" }, [
-          _vm._v(
-            "\r\n        Article " +
-              _vm._s(_vm.index + 1) +
-              " / " +
-              _vm._s(_vm.news.length) +
-              "\r\n    "
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "textSpecial headlineTitle" }, [
-          _vm._v(
-            "\r\n        " +
-              _vm._s(_vm.news[_vm.index].title.split(" -")[0]) +
-              "\r\n    "
-          )
-        ]),
-        _vm._v(" "),
-        _c("hr", { staticClass: "fullWidth" }),
-        _vm._v(" "),
-        _vm.news[_vm.index].content
-          ? _c(
-              "div",
-              {
-                staticClass: "row center-xs fullWidth textBody headlineContent"
-              },
-              [
-                _vm._v(
-                  "\r\n        " +
-                    _vm._s(_vm.news[_vm.index].content.split("[+")[0]) +
-                    "\r\n    "
-                )
-              ]
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _c("p", { staticClass: "fullWidth textBody nomargin " }, [
-          _c(
-            "a",
-            {
-              staticClass: "headlineUrl",
-              attrs: { href: _vm.news[_vm.index].url, target: "_blank" }
-            },
-            [_vm._v(_vm._s(_vm.news[_vm.index].url))]
-          )
-        ]),
-        _vm._v(" "),
-        _c("p", { staticClass: "fullWidth textBody headlineSrc" }, [
-          _vm._v(
-            "\r\n        - " +
-              _vm._s(_vm.news[_vm.index].source.name) +
-              "\r\n    "
-          )
-        ])
+            ])
+          : _vm.activePage === "home"
+          ? _c("div", { staticClass: "row center-xs NewsRow" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "col-xs-9",
+                  attrs: { href: _vm.news[_vm.index].url, target: "_blank" }
+                },
+                [
+                  _vm._v(
+                    "\r\n            " +
+                      _vm._s(_vm.news[_vm.index].title) +
+                      "\r\n        "
+                  )
+                ]
+              )
+            ])
+          : _vm._e()
       ])
     : _vm._e()
 }
@@ -6504,68 +6525,69 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.weather
-    ? _c("div", { staticClass: "weatherDisplay fullWidth" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.curLoc,
-              expression: "curLoc"
-            }
-          ],
-          staticClass: "row center-xs bottom-xs fullWidth location textSpecial",
-          attrs: { type: "text", "uk-tooltip": _vm.address },
-          domProps: { value: _vm.curLoc },
-          on: {
-            keyup: function($event) {
-              if (
-                !$event.type.indexOf("key") &&
-                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-              ) {
-                return null
-              }
-              return _vm.getWeather(_vm.curLoc)
-            },
-            click: function($event) {
-              _vm.curLoc = null
-            },
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.curLoc = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
+    ? _c("div", [
         _c(
           "div",
-          { staticClass: "row center-xs middle-xs curDescription nopadding" },
+          {
+            staticClass:
+              "row center-xs middle-xs curDescription textSpecial fullWidth nopadding"
+          },
           [
             _c("img", {
-              staticClass: "curIcon",
+              staticClass: "curIcon nospacing",
               attrs: {
                 src: _vm.weather.current.condition.icon,
-                alt: "Condition Icon"
+                alt: "Condition Icon",
+                "uk-tooltip": _vm.weather.current.condition.text
               }
             }),
-            _vm._v(" "),
-            _c("div", { staticClass: "uk-text-truncate curText textSpecial" }, [
-              _vm._v(
-                "\n            " +
-                  _vm._s(_vm.weather.current.feelslike_c) +
-                  "°C - " +
-                  _vm._s(_vm.weather.current.condition.text) +
-                  "\n        "
-              )
-            ])
+            _vm._v(
+              "\n        " +
+                _vm._s(Math.round(_vm.weather.current.feelslike_c)) +
+                "°C -\n\n        "
+            ),
+            _vm.curLoc
+              ? _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.curLoc,
+                      expression: "curLoc"
+                    }
+                  ],
+                  staticClass: "textSpecial",
+                  style: "width: " + _vm.curLoc.length * 2 + "vw;",
+                  attrs: { type: "text", "uk-tooltip": _vm.address },
+                  domProps: { value: _vm.curLoc },
+                  on: {
+                    keyup: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      return _vm.getWeather(_vm.curLoc)
+                    },
+                    click: function($event) {
+                      _vm.curLoc = " "
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.curLoc = $event.target.value
+                    }
+                  }
+                })
+              : _vm._e()
           ]
         ),
         _vm._v(" "),
         _c(
           "div",
-          { staticClass: "row center-xs middle-xs textBody" },
+          { staticClass: "row center-xs middle-xs textBody fullWidth" },
           _vm._l(_vm.weather.forecast.forecastday, function(day) {
             return _c(
               "div",
@@ -6575,23 +6597,19 @@ var render = function() {
               },
               [
                 _c("div", { staticClass: "row" }, [
-                  _c(
-                    "div",
-                    { staticClass: "col-xs end-xs nopadding nomargin" },
-                    [
-                      _c("img", {
-                        staticClass: "forecastIcon",
-                        attrs: {
-                          src: day.day.condition.icon,
-                          alt: "Condition Icon"
-                        }
-                      })
-                    ]
-                  ),
+                  _c("div", { staticClass: "col-xs-7 end-xs nospacing" }, [
+                    _c("img", {
+                      staticClass: "forecastIcon",
+                      attrs: {
+                        src: day.day.condition.icon,
+                        alt: "Condition Icon"
+                      }
+                    })
+                  ]),
                   _vm._v(" "),
                   _c(
                     "div",
-                    { staticClass: "col-xs-3 forecastTemp nopadding nomargin" },
+                    { staticClass: "col-xs-3 forecastTemp nospacing" },
                     [
                       _vm._v(
                         "\n                    " +
@@ -6601,9 +6619,7 @@ var render = function() {
                           "°\n                "
                       )
                     ]
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-xs-2" })
+                  )
                 ]),
                 _vm._v(" "),
                 _c("span", { staticClass: "forecastDay" }, [

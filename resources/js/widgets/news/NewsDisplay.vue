@@ -1,45 +1,51 @@
 <template>
-<div v-if="news && activePage === 'news'" class="row center-xs NewsDisplay">
-    <div class="row middle-xs fullWidth">
-        <div class="col-xs">
-            <a v-if="index > 0" @click="index--" class="uk-icon previousIcon" uk-icon="icon: chevron-left; ratio: 2" uk-tooltip="Previous Article" />
+<div v-if="news">
+    <div v-if="activePage === 'news'" class="row center-xs NewsDisplay">
+        <div class="row middle-xs fullWidth">
+            <div class="col-xs">
+                <a v-if="index > 0" @click="index--" class="uk-icon previousIcon" uk-icon="icon: chevron-left; ratio: 2" uk-tooltip="Previous Article" />
+            </div>
+
+            <ul uk-tab class="col-xs-10 nomargin">
+                <li v-for="category in categorys">
+                    <a class="uk-text-capitalize textTitle tabsTitle noselect" @click="activeCat = category">
+                        {{category}}
+                    </a>
+                </li>
+            </ul>
+
+            <div class="col-xs">
+                <a v-if="index < news.length" @click="index++" class="uk-icon nextIcon" uk-icon="icon: chevron-right; ratio: 2" uk-tooltip="Next Article" />
+            </div>
         </div>
 
-        <ul uk-tab class="nomargin">
-            <li v-for="category in categorys">
-                <a class="uk-text-capitalize textTitle tabsTitle noselect" @click="activeCat = category">
-                    {{category}}
-                </a>
-            </li>
-        </ul>
-
-        <div class="col-xs">
-            <a v-if="index < news.length" @click="index++" class="uk-icon nextIcon" uk-icon="icon: chevron-right; ratio: 2" uk-tooltip="Next Article" />
+        <div class="articleNum textBody">
+            Article {{index+1}} / {{news.length}}
         </div>
+
+        <div class="textSpecial headlineTitle">
+            {{news[index].title.split(' -')[0]}}
+        </div>
+
+        <hr class="fullWidth">
+
+        <div v-if="news[index].content" class="row center-xs fullWidth textBody headlineContent">
+            {{news[index].content.split('[+')[0]}}
+        </div>
+
+        <p class="fullWidth textBody nomargin ">
+            <a :href="news[index].url" target="_blank" class="headlineUrl">{{news[index].url}}</a>
+        </p>
+
+        <p class="fullWidth textBody headlineSrc">
+            - {{news[index].source.name}}
+        </p>
     </div>
-
-    <div class="articleNum textBody">
-        Article {{index+1}} / {{news.length}}
+    <div v-else-if="activePage === 'home'" class="row center-xs NewsRow">
+        <a class="col-xs-9" :href="news[index].url" target="_blank">
+            {{news[index].title}}
+        </a>
     </div>
-
-
-    <div class="textSpecial headlineTitle">
-        {{news[index].title.split(' -')[0]}}
-    </div>
-
-    <hr class="fullWidth">
-
-    <div v-if="news[index].content" class="row center-xs fullWidth textBody headlineContent">
-        {{news[index].content.split('[+')[0]}}
-    </div>
-
-    <p class="fullWidth textBody nomargin ">
-        <a :href="news[index].url" target="_blank" class="headlineUrl">{{news[index].url}}</a>
-    </p>
-
-    <p class="fullWidth textBody headlineSrc">
-        - {{news[index].source.name}}
-    </p>
 </div>
 </template>
 
@@ -72,8 +78,6 @@ export default {
 
                 console.log('%c News ', 'background: #222; color: #bada55');
                 console.log(news.data.articles);
-
-                this.$emit('headline', news.data.articles[0])
             })
         },
 
@@ -89,10 +93,10 @@ export default {
         activeCat: function() {
             this.getNews()
         },
-        showNews: function(){
-            if (this.showNews) {
+        activePage: function(){
+            if (this.activePage === 'news') {
                 // Always send us back to the default on show so tabs are correct
-                this.activeCat = 'general'
+                this.activeCat = this.categorys[0]
                 this.index = 0
             }
         }
@@ -102,8 +106,16 @@ export default {
 
 <style scoped>
     .NewsDisplay {
-        width: 1000px;
+        /* width: 1000px; */
         margin-top: 30px;
+    }
+
+    .NewsRow {
+        font-weight: 600px;
+        font-size: 4vh;
+    }
+    .NewsRow a {
+        color: black;
     }
 
     .newsIcon {

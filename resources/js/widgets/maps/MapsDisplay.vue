@@ -1,17 +1,17 @@
 <template>
-    <div>
-        <div v-if="destination" class="row center-xs travelText textBody uk-text-truncate">
-            Leave at {{departureTime}} to arrive at {{destination.title}} by {{arrivalTime}}. Via:&nbsp;
-            <a @click="showMap = !showMap">{{travelMethod}}</a>
-        </div>
-
-        <div v-show="false">
-            <gmap-map ref="map" :center="start" :zoom="15" style="width: 1px; height: 1px">
-                <!-- <gmap-marker :position="this.start" />
-                <gmap-marker :position="this.destination" /> -->
-            </gmap-map>
-        </div>
+<div>
+    <div v-if="destination" class="row center-xs travelText textBody uk-text-truncate">
+        Leave at {{departureTime}} to arrive at {{destination.title}} by {{arrivalTime}}. Via:&nbsp;
+        <a @click="showMap = !showMap">{{travelMethod}}</a>
     </div>
+
+    <div v-show="false">
+        <gmap-map ref="map" :center="start" :zoom="15" style="width: 1px; height: 1px">
+            <!-- <gmap-marker :position="this.start" />
+            <gmap-marker :position="this.destination" /> -->
+        </gmap-map>
+    </div>
+</div>
 </template>
 
 <script>
@@ -145,8 +145,10 @@ export default {
 
 <style scoped>
     .travelText {
+        font-weight: 600px;
+        font-size: 4.5vh;
         text-align: center;
-        font-size: 4vh;
+
         margin-top: 15vh;
     }
     a {

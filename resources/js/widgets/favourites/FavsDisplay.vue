@@ -1,16 +1,16 @@
 <template>
-    <!--Favourite tabs Row-->
-    <div class="row center-xs">
-        <div class="col-xs-9">
-            <div class="row center-xs middle-xs favouritesBar">
-                <div v-for="favourite in favsOrder" class="col-xs">
-                    <a :href="favourite.url" :uk-tooltip="favourite.title">
-                        <img :src="getImg(favourite)" class="favButtons">
-                    </a>
-                </div>
+<!--Favourite tabs Row-->
+<div class="row center-xs">
+    <div class="col-xs-9">
+        <div class="row center-xs middle-xs favouritesBar">
+            <div v-for="favourite in favsOrder" class="col-xs">
+                <a :href="favourite.url" :uk-tooltip="favourite.title">
+                    <img :src="getImg(favourite)" class="favButtons">
+                </a>
             </div>
         </div>
     </div>
+</div>
 </template>
 
 <script>

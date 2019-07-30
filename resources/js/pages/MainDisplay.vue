@@ -8,7 +8,7 @@
 
         <div class="col-xs">
             <a v-if="newsStatus.status === 1  && activePage === 'home'" @click="setActivePage('news')" class="uk-icon newsIcon"
-               uk-icon="icon: world; ratio: 2" :uk-tooltip="topHeadline ? topHeadline.title : ''"/>
+               uk-icon="icon: world; ratio: 2" uk-tooltip="News"/>
         </div>
 
         <div class="col-xs">
@@ -19,12 +19,8 @@
 
     <DateTime />
 
-    <News ref="News" v-model="topHeadline" />
+    <Home />
 
-
-    <div v-show="activePage === 'home'">
-        <Home />
-    </div>
     <div v-if="activePage === 'settings'">
         <Settings />
     </div>
@@ -36,7 +32,6 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     data: function() {
         return {
-            topHeadline: null,
             locationOptions: {
                 enableHighAccuracy: true,
                 timeout: 5000,
@@ -56,13 +51,11 @@ export default {
                 return this.widgets.find(widget => widget.title === 'News')
             return {}
         },
-
         notesStatus: function() {
             if (this.widgets)
                 return this.widgets.find(widget => widget.title === 'Notes')
             return {}
         },
-
 
         ...mapGetters('settings', {
             activePage: 'getActivePage',
