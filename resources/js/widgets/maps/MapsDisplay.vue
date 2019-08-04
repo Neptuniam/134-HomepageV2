@@ -72,7 +72,13 @@ export default {
                 return this.mapsSettings.method
         },
 
+        widget: function() {
+            if (this.widgets)
+                return this.widgets.find(widget => widget.title === 'Maps')
+        },
+
         ...mapGetters('settings', {
+            widgets: 'getWidgets',
             activePage: 'getActivePage',
             userLat: 'getLat',
             userLng: 'getLng',
@@ -139,7 +145,14 @@ export default {
         ...mapActions('settings', {
             setAddress: 'setAddress',
         })
-    }
+    },
+    mounted: function() {
+        if (this.widget && this.widget.interval) {
+            setInterval(() => {
+                this.getDirections()
+            }, this.widget.interval * 60000)
+        }
+    },
 }
 </script>
 

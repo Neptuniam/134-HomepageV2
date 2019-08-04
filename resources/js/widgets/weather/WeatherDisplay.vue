@@ -1,12 +1,12 @@
 <template>
 <div v-if="weather">
-    <div class="row center-xs middle-xs curDescription textSpecial fullWidth nopadding">
+    <div class="row center-xs middle-xs curDescription textSpecial fullWidth nopadding" :uk-tooltip="address">
         <img :src="weather.current.condition.icon" alt="Condition Icon" class="curIcon nospacing"
              :uk-tooltip="weather.current.condition.text">
         {{Math.round(weather.current.feelslike_c)}}&deg;C -
 
         <input v-model="curLoc" v-on:keyup.enter="getWeather(curLoc)" @click='curLoc = " "' v-if="curLoc"
-               type="text" class="textSpecial" :style="'width: '+curLoc.length*2+'vw;'" :uk-tooltip="address">
+               type="text" class="textSpecial" :style="'width: '+curLoc.length*2+'vw;'">
     </div>
 
     <div class="row center-xs middle-xs textBody fullWidth">
@@ -37,15 +37,24 @@ export default {
         }
     },
     computed: {
+        widget: function() {
+            if (this.widgets)
+                return this.widgets.find(widget => widget.title === 'Weather')
+        },
+
         ...mapGetters('settings', {
             location:  'getLocation',
             address:   'getAddress',
         }),
     },
     mounted: function() {
-        // Update the weather every 10 minutes
-        // setInterval(this.getWeather, 600000)
         this.getWeather(this.location)
+
+        if (this.widget && this.widget.interval) {
+            setInterval(() => {
+                this.getWeather(this.location)
+            }, this.widget.interval * 60000)
+        }
     },
     methods: {
         getWeather(location) {

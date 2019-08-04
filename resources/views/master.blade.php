@@ -19,6 +19,10 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Poiret+One|Roboto|Arima+Madurai" rel="stylesheet">
+
+        <!-- Markdown -->
+        <script src="https://unpkg.com/marked@0.3.6"></script>
+        <script src="https://unpkg.com/lodash@4.16.0"></script>
     </head>
     <body>
         <div id='app'>

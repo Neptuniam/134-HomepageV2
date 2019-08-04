@@ -48,3 +48,10 @@ Route::group(['prefix'=>'settings'], function(){
         Route::put('/delete', 'Settings@deleteFavourite');
     });
 });
+
+Route::group(['prefix'=>'notes'], function(){
+    Route::get('/', 'NotesController@fetchNotes');
+    Route::post('/','NotesController@createNote');
+    Route::put('/', 'NotesController@updateNote');
+    Route::put('/delete', 'NotesController@deleteNote');
+});

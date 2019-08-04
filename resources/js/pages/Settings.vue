@@ -27,8 +27,8 @@ export default {
                 suppressScrollX: true
             },
             activeTab: {
-                title: 'Profile',
-                src: 'LoginSettings'
+                title: 'Widgets',
+                src: 'WidgetsSettings'
             },
             tabs: [{
                     title: 'Profile',
@@ -75,16 +75,18 @@ export default {
         color: black;
     }
 
-    input, select, .uk-input, .uk-select {
+    input, select, .uk-input, .uk-select, textarea {
         border-radius: 30px;
         background: rgba(50,50,50,0.7);
         color: rgb(240, 240, 240);
+        outline: none;
     }
 
-    input:focus, select:focus, .uk-input:focus, .uk-select:focus {
+    input:focus, select:focus, .uk-input:focus, .uk-select:focus, textarea:focus {
         border-radius: 30px;
         background: rgba(50,50,50,0.7);
         color: white;
+        outline: none;
     }
 
     input:-webkit-autofill,

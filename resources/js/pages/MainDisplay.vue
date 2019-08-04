@@ -133,6 +133,10 @@ export default {
         max-width: 300px;
     }
 
+    div {
+        cursor: default;
+    }
+
     .fullWidth {
         width: 100% !important;
     }
@@ -153,6 +157,10 @@ export default {
         padding: 0 !important;
     }
 
+    .clickable {
+        cursor: pointer;
+    }
+
     .textSpecial {
         font-family: 'Arima Madurai', cursive !important;
     }
@@ -171,6 +179,11 @@ export default {
         padding: auto 10px;
         margin: 0 5px;
         outline: none;
+    }
+
+    .uk-button-success {
+        background-color: #228B22;
+        color: white;
     }
 
     .noselect {

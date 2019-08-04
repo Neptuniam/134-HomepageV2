@@ -9,6 +9,10 @@ Vue.component('Weather',            require('./widgets/weather/weatherdisplay.vu
 
 Vue.component('News',               require('./widgets/news/newsdisplay.vue').default);
 
+Vue.component('Notes',               require('./widgets/notes/NotesDisplay.vue').default);
+Vue.component('editable',               require('./widgets/notes/editable.vue').default);
+
+
 Vue.component('Maps',               require('./widgets/maps/MapsDisplay.vue').default);
 Vue.component('MapsSettings',       require('./widgets/maps/MapsSettings.vue').default);
 

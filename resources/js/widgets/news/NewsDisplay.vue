@@ -64,6 +64,11 @@ export default {
         }
     },
     computed: {
+        widget: function() {
+            if (this.widgets)
+                return this.widgets.find(widget => widget.title === 'News')
+        },
+
         ...mapGetters('settings', {
             activePage: 'getActivePage',
         })
@@ -88,6 +93,12 @@ export default {
     },
     mounted: function() {
         this.getNews()
+
+        if (this.widget && this.widget.interval) {
+            setInterval(() => {
+                this.getNews()
+            }, this.widget.interval * 60000)
+        }
     },
     watch: {
         activeCat: function() {

@@ -13,13 +13,13 @@ class CreateMapsSettings extends Migration
      */
     public function up()
     {
-        Schema::create('maps_user_settings', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('user_id')->nullable(false);
-            $table->integer('home_id');
-            $table->integer('fav_id');
-            $table->string('method', 10)->default('DRIVING');
-        });
+        // Schema::create('maps_user_settings', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->integer('user_id')->nullable(false);
+        //     $table->integer('home_id');
+        //     $table->integer('fav_id');
+        //     $table->string('method', 10)->default('DRIVING');
+        // });
     }
 
     /**

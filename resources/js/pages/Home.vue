@@ -1,11 +1,13 @@
 <template>
-<div class="row center-xs middle-xs nomargin fullWidth">
+<div v-if="activeWidgets" class="row center-xs middle-xs nomargin fullWidth">
     <div class="col-xs-8">
         <div v-for="widget in activeWidgets" v-show="activePage === 'home'">
             <component :is="widget.title" />
         </div>
-        <News v-if="$parent.newsStatus.status" ref="News" />
+
+        <News  v-if="$parent.newsStatus.status"  ref="News"  />
     </div>
+    <Notes v-if="$parent.notesStatus.status" ref="Notes" />
 </div>
 </template>
 
