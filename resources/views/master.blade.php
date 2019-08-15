@@ -9,9 +9,6 @@
         </title>
 
         <!-- Fonts -->
-        <!-- <link rel="stylesheet" href="/fonts/Arima_Madurai/ArimaMadurai-Thin.ttf">
-        <link rel="stylesheet" href="/fonts/Poiret_One/PoiretOne-Reguler.ttf">
-        <link rel="stylesheet" href="/fonts/Roboto_Mono/RobotoMono-Thin.ttf"> -->
         <link href="https://fonts.googleapis.com/css?family=Poiret+One|Roboto|Arima+Madurai" rel="stylesheet">
     </head>
     <body>
