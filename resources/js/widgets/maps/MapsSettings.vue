@@ -58,12 +58,8 @@
                 <td> <input type="text" class="uk-input" v-model="location.lat"> </td>
                 <td> <input type="text" class="uk-input" v-model="location.lng"> </td>
                 <td class="uk-button-group">
-                    <button class="uk-button uk-button-primary uk-button-small roundedButton" @click="updateLocation(location)">
-                        <span uk-icon="pencil"></span>
-                    </button>
-                    <button class="uk-button uk-button-danger uk-button-small roundedButton" @click="deleteLocation(location)">
-                        <span uk-icon="trash"></span>
-                    </button>
+                    <a class="uk-icon-button uk-button-primary roundedButton" @click="updateLocation(location)" uk-icon="pencil" />
+                    <a class="uk-icon-button uk-button-danger roundedButton" @click="deleteLocation(location)" uk-icon="trash" />
                 </td>
             </tr>
 
@@ -73,10 +69,7 @@
                 <td> <input type="text" class="uk-input" v-model="newLocation.lat"> </td>
                 <td> <input type="text" class="uk-input" v-model="newLocation.lng"> </td>
                 <td class="posWidth">
-                    <button class="uk-button uk-button-primary uk-button-small roundedButton"
-                           @click="addLoc(newLocation)">
-                       <span uk-icon="plus"></span>
-                   </button>
+                    <a class="uk-icon-button uk-button-success roundedButton" @click="addLoc(newLocation)" uk-icon="plus" />
                </td>
             </tr>
 
@@ -146,8 +139,8 @@ export default {
         padding-left: 7%;
     }
 
-    .uk-button {
+    .uk-icon-button {
         height: 40px;
-        width: 50px;
+        width:  40px;
     }
 </style>

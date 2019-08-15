@@ -3,7 +3,7 @@
     <div class="row middle-xs pageControl">
         <div class="col-xs">
             <a @click="setActivePage(activePage === 'home' ? 'settings' : 'home')" class="uk-icon "
-              :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" uk-tooltip='Settings'/>
+              :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" :uk-tooltip="activePage == 'home' ? 'Settings' : 'Home'" />
         </div>
 
         <div class="col-xs">
@@ -74,7 +74,7 @@ export default {
 
         getBackground() {
             // Hit the random background endpoint
-            this.axios('/background/').then(background => {
+            this.axios.get('/background/').then(background => {
                 console.log('%c Background', 'background: #222; color: #bada55');
                 console.log(background.data);
 

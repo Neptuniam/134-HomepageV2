@@ -1,5 +1,5 @@
 // Pages
-Vue.component('maindisplay',        require('./pages/maindisplay.vue').default);
+Vue.component('maindisplay',        require('./pages/MainDisplay.vue').default);
 Vue.component('Home',               require('./pages/Home.vue').default);
 Vue.component('Settings',           require('./pages/Settings.vue').default);
 
@@ -12,7 +12,6 @@ Vue.component('News',               require('./widgets/news/newsdisplay.vue').de
 Vue.component('Notes',               require('./widgets/notes/NotesDisplay.vue').default);
 Vue.component('editable',               require('./widgets/notes/editable.vue').default);
 
-
 Vue.component('Maps',               require('./widgets/maps/MapsDisplay.vue').default);
 Vue.component('MapsSettings',       require('./widgets/maps/MapsSettings.vue').default);
 
@@ -23,6 +22,7 @@ Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.
 
 Vue.component('WidgetsSettings',    require('./widgets/WidgetsSettings.vue').default);
 Vue.component('LoginSettings',      require('./widgets/LoginSettings.vue').default);
+
 
 Vue.component('DateTime',           require('./widgets/DateTime.vue').default);
 

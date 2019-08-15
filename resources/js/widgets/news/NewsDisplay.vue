@@ -3,7 +3,8 @@
     <div v-if="activePage === 'news'" class="row center-xs NewsDisplay">
         <div class="row middle-xs fullWidth">
             <div class="col-xs">
-                <a v-if="index > 0" @click="index--" class="uk-icon previousIcon" uk-icon="icon: chevron-left; ratio: 2" uk-tooltip="Previous Article" />
+                <a v-if="index > 0" @click="index--" class="uk-icon previousIcon"
+                   uk-icon="icon: chevron-left; ratio: 2" uk-tooltip="Previous Article" />
             </div>
 
             <ul uk-tab class="col-xs-10 nomargin">
@@ -15,7 +16,8 @@
             </ul>
 
             <div class="col-xs">
-                <a v-if="index < news.length" @click="index++" class="uk-icon nextIcon" uk-icon="icon: chevron-right; ratio: 2" uk-tooltip="Next Article" />
+                <a v-if="index < news.length-1" @click="index++" class="uk-icon nextIcon"
+                   uk-icon="icon: chevron-right; ratio: 2" uk-tooltip="Next Article" />
             </div>
         </div>
 
@@ -23,7 +25,7 @@
             Article {{index+1}} / {{news.length}}
         </div>
 
-        <div class="textSpecial headlineTitle">
+        <div v-if="news[index].title" class="textSpecial headlineTitle">
             {{news[index].title.split(' -')[0]}}
         </div>
 
@@ -33,13 +35,16 @@
             {{news[index].content.split('[+')[0]}}
         </div>
 
-        <p class="fullWidth textBody nomargin ">
-            <a :href="news[index].url" target="_blank" class="headlineUrl">{{news[index].url}}</a>
-        </p>
 
-        <p class="fullWidth textBody headlineSrc">
-            - {{news[index].source.name}}
-        </p>
+        <div class="fullWidth textBody headlineSrc">
+            <p>
+                <a :href="news[index].url" target="_blank" class="headlineUrl">{{news[index].url}}</a>
+            </p>
+
+            <p>
+                - {{news[index].source.name}}
+            </p>
+        </div>
     </div>
     <div v-else-if="activePage === 'home'" class="row center-xs NewsRow">
         <a class="col-xs-9" :href="news[index].url" target="_blank">
@@ -50,7 +55,6 @@
 </template>
 
 <script>
-// Key: 2b056b1596eb4356a56510c4e19da2b7
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -86,14 +90,23 @@ export default {
             })
         },
 
+        onKeyPress () {
+            if (event.keyCode == 37 && this.index > 0) {
+                this.index--
+            } else if (event.keyCode == 39 && this.index < 19) {
+                this.index++
+            }
+        },
+
         ...mapActions('settings', {
             setShowHome: 'setShowHome',
             setActivePage: 'setActivePage',
         })
     },
     mounted: function() {
-        this.getNews()
+        document.addEventListener("keyup", this.onKeyPress);
 
+        this.getNews()
         if (this.widget && this.widget.interval) {
             setInterval(() => {
                 this.getNews()
@@ -117,8 +130,8 @@ export default {
 
 <style scoped>
     .NewsDisplay {
-        /* width: 1000px; */
         margin-top: 30px;
+        height: 650px;
     }
 
     .NewsRow {
@@ -146,9 +159,9 @@ export default {
 
     .headlineTitle {
         font-weight: 800px;
-        font-size: 35px;
+        font-size: 30px;
 
-        min-height: 100px;
+        min-height: 110px;
     }
 
     .headlineContent {
@@ -161,6 +174,8 @@ export default {
     .headlineSrc {
         font-weight: 300px;
         font-size: 20px;
+
+        min-height: 150px;
     }
 
     .headlineUrl {

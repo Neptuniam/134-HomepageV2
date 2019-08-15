@@ -159,7 +159,7 @@ export default {
 <style scoped>
     .travelText {
         font-weight: 600px;
-        font-size: 4.5vh;
+        font-size: 4vh;
         text-align: center;
 
         margin-top: 15vh;

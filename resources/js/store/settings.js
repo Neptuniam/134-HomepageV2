@@ -218,15 +218,15 @@ const actions = {
     },
     updateNote: ({commit, dispatch}, payload) => {
         // If id is 0, we are creating a new location
-        if (payload.id == null) {
-            return axios.post('/notes/',payload).then(response => {
-                dispatch('fetchNotes')
-            })
-        } else {
+        // if (payload.id == null) {
+        //     return axios.post('/notes/',payload).then(response => {
+        //         dispatch('fetchNotes')
+        //     })
+        // } else {
             return axios.put('/notes/',payload).then(response => {
                 dispatch('fetchNotes')
             })
-        }
+        // }
     },
     deleteNote: ({commit, dispatch}, payload) => {
         return axios.put('/notes/delete',payload).then(response => {

@@ -16,12 +16,15 @@
                 <td> <input type="text" class="uk-input" v-model="favourite.src"> </td>
                 <td> <input type="number" class="uk-input" v-model="favourite.pos"> </td>
                 <td class="uk-button-group">
-                    <button class="uk-button uk-button-primary uk-button-small roundedButton" @click="updateFavourite(favourite)">
+                    <a class="uk-icon-button uk-button-primary roundedButton" @click="updateFavourite(favourite)" uk-icon="pencil" />
+                    <a class="uk-icon-button uk-button-danger roundedButton" @click="deleteFavourite(favourite)" uk-icon="trash" />
+
+                    <!-- <button class="uk-button uk-button-primary uk-button-small roundedButton" @click="updateFavourite(favourite)">
                         <span uk-icon="pencil"></span>
                     </button>
                     <button class="uk-button uk-button-danger uk-button-small roundedButton" @click="deleteFavourite(favourite)">
                         <span uk-icon="trash"></span>
-                    </button>
+                    </button> -->
                 </td>
             </tr>
             <tr>
@@ -30,10 +33,12 @@
                 <td> <input type="text" class="uk-input" v-model="newFavourite.src"> </td>
                 <td> <input type="number" class="uk-input" v-model="newFavourite.pos"> </td>
                 <td class="posWidth">
+                    <a class="uk-icon-button uk-button-success roundedButton" @click="addFav(newFavourite)" uk-icon="plus" />
+<!--
                     <button class="uk-button uk-button-primary uk-button-small roundedButton"
                            @click="addFav(newFavourite)">
                         <span uk-icon="plus"></span>
-                    </button>
+                    </button> -->
                 </td>
             </tr>
         </tbody>
@@ -91,8 +96,8 @@ export default {
         width: 60px;
     }
 
-    .uk-button {
+    .uk-icon-button {
         height: 40px;
-        width: 50px;
+        width:  40px;
     }
 </style>
