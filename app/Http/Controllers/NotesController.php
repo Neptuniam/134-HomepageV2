@@ -36,4 +36,6 @@ class NotesController extends Controller {
         $note = $request->all();
         DB::table('notes')->where('id', '=', $note['id'])->delete();
     }
+
+
 }
