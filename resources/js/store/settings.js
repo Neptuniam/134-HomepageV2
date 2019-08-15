@@ -148,10 +148,14 @@ const actions = {
         // If id is 0, we are creating a new location
         if (payload.id == null) {
             return axios.post('/settings/locations/',payload).then(response => {
+                console.log('response');
+                console.log(response);
                 dispatch('fetchLocations')
             })
         } else {
             return axios.put('/settings/locations/',payload).then(response => {
+                console.log('response');
+                console.log(response);
                 dispatch('fetchLocations')
             })
         }
@@ -224,6 +228,8 @@ const actions = {
         //     })
         // } else {
             return axios.put('/notes/',payload).then(response => {
+                console.log('response');
+                console.log(response);
                 dispatch('fetchNotes')
             })
         // }
