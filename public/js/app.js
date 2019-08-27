@@ -1815,6 +1815,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       // Retrieve the users location on created
       this.axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(function (response) {
+        // console.log(response.data);
+        // this.axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+response.data.location.lat+','+response.data.location.lng+'&key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(geolocation => {
+        //     console.log(geolocation.data);
+        //     response.data.location['geocode'] = geolocation.data.results
+        //     this.setLocation(response.data.location)
+        // })
         _this.setLocation(response.data.location);
       });
     },
@@ -2863,8 +2869,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2916,21 +2920,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     changeNotes: function changeNotes(note) {
       // Save changes before switching notes
-      if (this.body_timeout && this.mode === 'edit') this.saveNote();
-      this.currentNote = _objectSpread({}, note); // If it's a new note it should be defaulted to edit mode
+      if (this.body_timeout && this.mode === 'edit') this.saveNote(); // If you have hit the current note, toggle modes instead of changing notes
 
-      this.mode = note.id === null ? 'edit' : 'view';
-      this.showMark = true;
+      if (note.id == this.currentNote.id) {
+        this.toggleMode();
+      } else {
+        this.currentNote = _objectSpread({}, note); // If it's a new note it should be defaulted to edit mode
+
+        this.mode = note.id === null ? 'edit' : 'view';
+        this.showMark = true;
+      }
     },
     saveNote: function saveNote() {
       var _this3 = this;
 
-      console.log('saving');
-      console.log(this.currentNote);
       this.backupNote(this.currentNote).then(function (response) {
         UIkit.notification("Changes Saved", {
           status: 'success'
         });
+
+        _this3.fetchNotes().then(function (notes) {
+          // Take the new id on new notes to avoid continuesly creating notes
+          if (!_this3.currentNote.id) _this3.currentNote.id = _this3.notes[_this3.notes.length - 1].id;
+        });
+
         clearTimeout(_this3.body_timeout);
         _this3.body_timeout = null;
       });
@@ -2960,70 +2973,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.fetchNotes().then(function () {
       if (_this4.notes.length) _this4.currentNote = _this4.notes[0];
     });
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/notes/editable.vue?vue&type=script&lang=js&":
-/*!**********************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/notes/editable.vue?vue&type=script&lang=js& ***!
-  \**********************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _NotesDisplay__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NotesDisplay */ "./resources/js/widgets/notes/NotesDisplay.vue");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  "extends": _NotesDisplay__WEBPACK_IMPORTED_MODULE_0__["default"],
-  props: ['content'],
-  data: function data() {
-    return {
-      input: '# hello'
-    };
-  },
-  computed: {
-    compiledMarkdown: function compiledMarkdown() {
-      return marked(this.$parent.currentNote.body, {
-        sanitize: true
-      });
-    }
-  },
-  // methods: {
-  //     update: _.debounce(function (e) {
-  //         this.input = e.target.value
-  //     }, 300)
-  // }
-  methods: {
-    updateNote: function updateNote(e) {
-      if (!(e && e.target.value)) return;
-      console.log(e);
-      this.$parent.currentNote.body = event.target.value; // this.$emit('update',event.target.value);
-
-      this.debounce(e);
-    },
-    update: function update(e) {
-      // this.input = e.target.value
-      this.$emit('update', e.target.innerText);
-    }
   }
 });
 
@@ -3073,6 +3022,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['widget'],
   data: function data() {
     return {
       days: ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"],
@@ -3080,13 +3030,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       curLoc: null
     };
   },
-  computed: _objectSpread({
-    widget: function widget() {
-      if (this.widgets) return this.widgets.find(function (widget) {
-        return widget.title === 'Weather';
-      });
-    }
-  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
     location: 'getLocation',
     address: 'getAddress'
   })),
@@ -3102,16 +3046,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   methods: {
+    getDay: function getDay(day) {
+      return this.days[new Date(day).getDay()];
+    },
     getWeather: function getWeather(location) {
       var _this2 = this;
 
       if (location === 'loc') location = this.location;
-      var query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=" + location + "&days=7";
-      this.axios.get(query).then(function (weather) {
-        _this2.weather = weather.data;
-        _this2.curLoc = _this2.weather.location.name + ', ' + _this2.weather.location.region;
+      console.log('loc');
+      console.log(location);
+      var query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=" + location + "&days=7"; // let query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=calgary&days=7"
+
+      console.log('query');
+      console.log(query);
+      this.axios.get(query).then(function (response) {
+        _this2.weather = response.data;
+        _this2.curLoc = response.data.location.name + ', ' + response.data.location.region;
+        console.log(response.data.location);
+        console.log(_this2.curLoc);
         console.log('%c Weather ', 'background: #222; color: #bada55');
-        console.log(weather.data);
+        console.log(response.data);
       });
     }
   }
@@ -3207,7 +3161,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.homepage {\n    overflow: hidden;\n    color: black;\n    height: 100vh;\n    width: 100vw;\n}\n.pageControl {\n    position: absolute;\n    top: 10px;\n    left: 10px;\n    width: 175px;\n}\n.pageControl .uk-icon:hover {\n    color: white;\n}\n.uk-tooltip {\n    font-family: 'Roboto' !important;\n    font-weight: 300px;\n    font-size: 16px;\n\n    max-width: 300px;\n}\ndiv {\n    cursor: default;\n}\n.fullWidth {\n    width: 100% !important;\n}\n.fullHeight {\n    height: 100% !important;\n}\n.nopadding {\n    padding: 0 !important;\n}\n.nomargin {\n    margin: 0 !important;\n}\n.nospacing {\n    margin: 0 !important;\n    padding: 0 !important;\n}\n.clickable {\n    cursor: pointer;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive !important;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive !important;\n}\n.textBody {\n    font-family: 'Roboto' !important;\n}\n.roundedButton {\n    color: white;\n    border-radius: 10px;\n    padding: auto 10px;\n    margin: 0 5px;\n    outline: none;\n}\n.uk-button-success {\n    background-color: #228B22;\n    color: white;\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
+exports.push([module.i, "\n.homepage {\n    overflow-y:hidden;\n    overflow-x:hidden;\n    overflow: hidden !important;\n    color: black;\n    height: 100vh;\n    max-height: 100vh !important;\n    width: 100vw;\n}\n.pageControl {\n    position: absolute;\n    top: 10px;\n    left: 10px;\n    width: 175px;\n}\n.pageControl .uk-icon:hover {\n    color: white;\n}\n.uk-tooltip {\n    font-family: 'Roboto' !important;\n    font-weight: 300px;\n    font-size: 16px;\n\n    max-width: 300px;\n}\ndiv {\n    cursor: default;\n}\n.fullWidth {\n    width: 100% !important;\n}\n.fullHeight {\n    height: 100% !important;\n}\n.nopadding {\n    padding: 0 !important;\n}\n.nomargin {\n    margin: 0 !important;\n}\n.nospacing {\n    margin: 0 !important;\n    padding: 0 !important;\n}\n.clickable {\n    cursor: pointer;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive !important;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive !important;\n}\n.textBody {\n    font-family: 'Roboto' !important;\n}\n.roundedButton {\n    color: white;\n    border-radius: 10px;\n    padding: auto 10px;\n    margin: 0 5px;\n    outline: none;\n}\n.uk-button-success {\n    background-color: #228B22;\n    color: white;\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
 
 // exports
 
@@ -3416,7 +3370,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.NotesDisplay {\r\n    height: 80vh;\r\n    color: rgb(245, 245, 245) !important;\n}\n.savedNotes {\r\n    text-align: left;\r\n    font-weight: 600px;\r\n    font-size: 20px;\r\n\r\n    background-color: rgba(75, 75, 75, 0.75);\r\n    border-radius: 10px;\r\n    height: 80vh;\n}\n.savedNote {\r\n    padding: 20px 0;\r\n    margin: 0;\n}\n.savedNote:hover {\r\n    background-color: rgba(150, 150, 150, 0.5);\n}\n.savedNotes hr {\r\n    margin: 0;\n}\n.savedNotes button {\r\n    color: rgb(245, 245, 245);\r\n    margin: 20px 0;\n}\n.controlButtons button {\r\n    margin: 5px;\n}\n.controlButtons .updatedAt {\r\n    font-weight: 300px;\r\n    font-size: 15px;\r\n    margin: 5px 0;\n}\n.noteBody {\r\n    font-weight: 350px;\r\n    font-size: 20px;\r\n    text-align: left;\r\n\r\n    height: 80vh;\r\n\r\n    background-color: rgba(75, 75, 75, 0.75);\r\n    border-radius: 10px;\r\n    color: rgb(225, 225, 225) !important;\r\n    padding: 5px;\r\n    margin: 0 10px;\n}\n.noteBody h1, .noteBody h2, .noteBody h3, .noteBody h4, .noteBody h5, .noteBody h6, .noteBody ul {\r\n    color: rgb(225, 225, 225) !important;\n}\r\n", ""]);
+exports.push([module.i, "\n.NotesDisplay {\r\n    /* height: 80vh; */\r\n    width: 90vw;\r\n\r\n    color: rgb(245, 245, 245) !important;\r\n    background-color: rgba(75, 75, 75, 0.75);\r\n\r\n    border-radius: 10px;\n}\n.scrollSpace {\r\n    height: 80vh;\r\n    overflow: auto;\n}\n.NotesDisplay .uk-divider-vertical {\r\n    height: 80vh;\r\n    margin: 0 !important;\r\n    position: absolute;\n}\n.NotesDisplay .secondHR {\r\n    right: 43vw;\n}\n.NotesDisplay .col-xs-2 {\r\n    padding: 0px;\r\n    min-width: 230px;\r\n    max-width: 230px;\n}\n.savedNotes {\r\n    text-align: left;\r\n    font-weight: 600px;\r\n    font-size: 20px;\r\n\r\n    overflow-x: hidden;\n}\n.savedNote {\r\n    padding: 10px 0;\r\n    margin: 0;\n}\n.savedNote:hover {\r\n    background-color: rgba(150, 150, 150, 0.5);\n}\n.savedNotes button {\r\n    color: rgb(245, 245, 245) !important;\r\n    margin: 20px 0;\n}\n.savedNotes hr {\r\n    margin: 0;\n}\n.controlButtons {\r\n    padding: 0 10px;\n}\n.controlButtons button {\r\n    margin: 5px;\r\n    max-width: 50%;\n}\n.controlButtons .updatedAt {\r\n    font-weight: 300px;\r\n    font-size: 15px;\r\n    margin: 5px 0;\n}\n.noteBody {\r\n    font-weight: 350px;\r\n    font-size: 20px;\r\n    text-align: left;\r\n    color: rgb(225, 225, 225) !important;\r\n\r\n    background-color: rgba(0, 0, 0, 0);\r\n    border-width: 0px;\r\n\r\n    padding: 5px;\r\n    margin: 0 10px;\n}\ntextarea:focus {\r\n    background-color: rgba(0,0,0,0);\n}\n.noteBody h1, .noteBody h2, .noteBody h3, .noteBody h4, .noteBody h5, .noteBody h6, .noteBody ul {\r\n    color: rgb(225, 225, 225) !important;\n}\r\n", ""]);
 
 // exports
 
@@ -24211,7 +24165,12 @@ var render = function() {
                       }
                     ]
                   },
-                  [_c(widget.title, { tag: "component" })],
+                  [
+                    _c(widget.title, {
+                      tag: "component",
+                      attrs: { widget: widget }
+                    })
+                  ],
                   1
                 )
               }),
@@ -25818,10 +25777,10 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.activePage === "notes"
-    ? _c("div", { staticClass: "row center-xs NotesDisplay fullWidth" }, [
+    ? _c("div", { staticClass: "row center-xs NotesDisplay" }, [
         _c(
           "div",
-          { staticClass: "col-xs-2 savedNotes" },
+          { staticClass: "col-xs-2 scrollSpace savedNotes" },
           [
             _vm._l(_vm.notes, function(note, index) {
               return _c("div", [
@@ -25839,85 +25798,60 @@ var render = function() {
                   [
                     _vm._v(
                       "\r\n                " +
-                        _vm._s(note.body) +
+                        _vm._s(note.body.replace(/#/g, "").split("  ")[0]) +
                         "\r\n            "
                     )
                   ]
                 ),
                 _vm._v(" "),
                 note.id === _vm.currentNote.id
-                  ? _c("div", { staticClass: "row center-xs controlButtons" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass:
-                            "col-xs uk-button-default fullWidth uk-icon-button clickable",
-                          attrs: { type: "button" },
-                          on: {
-                            click: function($event) {
-                              return _vm.toggleMode()
+                  ? _c("div", { staticClass: "controlButtons" }, [
+                      _c("div", { staticClass: "row center-xs" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "col-xs uk-button uk-button-text uk-text-capitalize",
+                            attrs: { type: "button" },
+                            on: { click: _vm.toggleMark }
+                          },
+                          [
+                            _vm._v(
+                              "\r\n                        " +
+                                _vm._s(_vm.showMark ? "Hide " : "Show ") +
+                                " Mark\r\n                    "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "col-xs uk-button uk-button-text uk-text-capitalize",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.startDelete(note)
+                              }
                             }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\r\n                    " +
-                              _vm._s(_vm.mode === "view" ? "Edit" : "View") +
-                              "\r\n                "
-                          )
-                        ]
-                      ),
+                          },
+                          [
+                            _vm._v(
+                              "\r\n                        Delete Note\r\n                    "
+                            )
+                          ]
+                        )
+                      ]),
                       _vm._v(" "),
-                      _vm.mode === "edit"
-                        ? _c(
-                            "button",
-                            {
-                              staticClass:
-                                "col-xs uk-button-default fullWidth uk-icon-button clickable",
-                              attrs: { type: "button" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.toggleMark()
-                                }
-                              }
-                            },
-                            [
-                              _vm._v(
-                                "\r\n                    " +
-                                  _vm._s(_vm.showMark ? "Hide " : "Show ") +
-                                  " Mark\r\n                "
-                              )
-                            ]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.mode === "edit"
-                        ? _c(
-                            "button",
-                            {
-                              staticClass:
-                                "col-xs uk-button-default fullWidth uk-icon-button clickable",
-                              attrs: { type: "button" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.startDelete(note)
-                                }
-                              }
-                            },
-                            [
-                              _vm._v(
-                                "\r\n                    Delete Note\r\n                "
-                              )
-                            ]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "fullWidth updatedAt" }, [
+                      _c("div", { staticClass: "center-xs updatedAt" }, [
                         _vm._v(
                           "\r\n                    " +
                             _vm._s(_vm.findAuthor(note).name) +
                             " - " +
-                            _vm._s(note.updated_at.split(" ")[0]) +
+                            _vm._s(
+                              note.updated_at.split(" ")[0].replace(/-/g, "/")
+                            ) +
                             "\r\n                "
                         )
                       ])
@@ -25928,74 +25862,46 @@ var render = function() {
               ])
             }),
             _vm._v(" "),
-            _c("button", {
-              staticClass: "uk-button-default fullWidth uk-icon-button",
-              attrs: { type: "button", "uk-icon": "plus" },
-              on: {
-                click: function($event) {
-                  return _vm.changeNotes({ id: null, body: "" })
+            _c("div", { staticClass: "row center-xs" }, [
+              _c("button", {
+                staticClass:
+                  "col-xs-8 uk-button-default uk-icon-button newButton",
+                attrs: { type: "button", "uk-icon": "plus" },
+                on: {
+                  click: function($event) {
+                    return _vm.changeNotes({ id: null, body: "" })
+                  }
                 }
-              }
-            })
+              })
+            ])
           ],
           2
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "col-xs-9" }, [
-          _c("div", { staticClass: "row fullWidth" }, [
-            _vm.mode === "edit"
-              ? _c("textarea", {
-                  staticClass: "col-xs noteBody textBody fullWidth",
-                  domProps: { value: _vm.currentNote.body },
-                  on: { input: _vm.updateNote }
-                })
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.showMark || _vm.mode === "view"
-              ? _c("div", {
-                  staticClass: "col-xs noteBody textBody fullWidth",
-                  domProps: { innerHTML: _vm._s(_vm.compiledMarkdown) }
-                })
-              : _vm._e()
-          ])
+        _c("div", { staticClass: "col-xs row fullWidth scrollSpace" }, [
+          _c("hr", { staticClass: "uk-divider-vertical" }),
+          _vm._v(" "),
+          _vm.mode === "edit"
+            ? _c("textarea", {
+                staticClass: "col-xs noteBody textBody fullWidth",
+                domProps: { value: _vm.currentNote.body },
+                on: { input: _vm.updateNote }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.mode === "edit" && _vm.showMark
+            ? _c("hr", { staticClass: "uk-divider-vertical secondHR" })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.showMark || _vm.mode === "view"
+            ? _c("div", {
+                staticClass: "col-xs noteBody textBody fullWidth",
+                domProps: { innerHTML: _vm._s(_vm.compiledMarkdown) }
+              })
+            : _vm._e()
         ])
       ])
     : _vm._e()
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/notes/editable.vue?vue&type=template&id=62e08050&scoped=true&":
-/*!**************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/notes/editable.vue?vue&type=template&id=62e08050&scoped=true& ***!
-  \**************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row fullWidth" }, [
-    _c("textarea", {
-      staticClass: "col-xs noteBody textbody fullWidth",
-      domProps: { value: _vm.$parent.currentNote.body },
-      on: { input: _vm.updateNote }
-    }),
-    _vm._v(" "),
-    _c("div", {
-      staticClass: "col-xs noteBody textBody fullWidth",
-      domProps: { innerHTML: _vm._s(_vm.compiledMarkdown) }
-    })
-  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -26119,7 +26025,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("span", { staticClass: "forecastDay" }, [
-                  _vm._v(_vm._s(_vm.days[new Date(day.date).getDay()]))
+                  _vm._v(_vm._s(_vm.getDay(day.date)))
                 ])
               ]
             )
@@ -41923,7 +41829,6 @@ Vue.component('Settings', __webpack_require__(/*! ./pages/Settings.vue */ "./res
 Vue.component('Weather', __webpack_require__(/*! ./widgets/weather/weatherdisplay.vue */ "./resources/js/widgets/weather/weatherdisplay.vue")["default"]);
 Vue.component('News', __webpack_require__(/*! ./widgets/news/newsdisplay.vue */ "./resources/js/widgets/news/newsdisplay.vue")["default"]);
 Vue.component('Notes', __webpack_require__(/*! ./widgets/notes/NotesDisplay.vue */ "./resources/js/widgets/notes/NotesDisplay.vue")["default"]);
-Vue.component('editable', __webpack_require__(/*! ./widgets/notes/editable.vue */ "./resources/js/widgets/notes/editable.vue")["default"]);
 Vue.component('Maps', __webpack_require__(/*! ./widgets/maps/MapsDisplay.vue */ "./resources/js/widgets/maps/MapsDisplay.vue")["default"]);
 Vue.component('MapsSettings', __webpack_require__(/*! ./widgets/maps/MapsSettings.vue */ "./resources/js/widgets/maps/MapsSettings.vue")["default"]);
 Vue.component('Favourites', __webpack_require__(/*! ./widgets/favourites/FavsDisplay.vue */ "./resources/js/widgets/favourites/FavsDisplay.vue")["default"]);
@@ -43376,75 +43281,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NotesDisplay_vue_vue_type_template_id_42e60c4d___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NotesDisplay_vue_vue_type_template_id_42e60c4d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/js/widgets/notes/editable.vue":
-/*!*************************************************!*\
-  !*** ./resources/js/widgets/notes/editable.vue ***!
-  \*************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _editable_vue_vue_type_template_id_62e08050_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./editable.vue?vue&type=template&id=62e08050&scoped=true& */ "./resources/js/widgets/notes/editable.vue?vue&type=template&id=62e08050&scoped=true&");
-/* harmony import */ var _editable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./editable.vue?vue&type=script&lang=js& */ "./resources/js/widgets/notes/editable.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _editable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _editable_vue_vue_type_template_id_62e08050_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _editable_vue_vue_type_template_id_62e08050_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  "62e08050",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/widgets/notes/editable.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/widgets/notes/editable.vue?vue&type=script&lang=js&":
-/*!**************************************************************************!*\
-  !*** ./resources/js/widgets/notes/editable.vue?vue&type=script&lang=js& ***!
-  \**************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_editable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./editable.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/notes/editable.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_editable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/widgets/notes/editable.vue?vue&type=template&id=62e08050&scoped=true&":
-/*!********************************************************************************************!*\
-  !*** ./resources/js/widgets/notes/editable.vue?vue&type=template&id=62e08050&scoped=true& ***!
-  \********************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_editable_vue_vue_type_template_id_62e08050_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./editable.vue?vue&type=template&id=62e08050&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/notes/editable.vue?vue&type=template&id=62e08050&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_editable_vue_vue_type_template_id_62e08050_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_editable_vue_vue_type_template_id_62e08050_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

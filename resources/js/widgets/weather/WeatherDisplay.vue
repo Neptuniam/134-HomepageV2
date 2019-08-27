@@ -20,7 +20,7 @@
                     {{Math.round(day.day.mintemp_c)}}&deg;
                 </div>
             </div>
-            <span class="forecastDay">{{days[new Date(day.date).getDay()]}}</span>
+            <span class="forecastDay">{{getDay(day.date)}}</span>
         </div>
     </div>
 </div>
@@ -29,6 +29,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 export default {
+    props: ['widget'],
     data: function() {
         return {
             days: ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"],
@@ -37,11 +38,6 @@ export default {
         }
     },
     computed: {
-        widget: function() {
-            if (this.widgets)
-                return this.widgets.find(widget => widget.title === 'Weather')
-        },
-
         ...mapGetters('settings', {
             location:  'getLocation',
             address:   'getAddress',
@@ -57,17 +53,29 @@ export default {
         }
     },
     methods: {
+        getDay(day) {
+            return this.days[new Date(day).getDay()]
+        },
+
         getWeather(location) {
             if (location === 'loc')
                 location = this.location
 
+            console.log('loc');
+            console.log(location);
             let query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q="+location+"&days=7"
-            this.axios.get(query).then(weather => {
-                this.weather = weather.data
-                this.curLoc = (this.weather.location.name +', ' +this.weather.location.region)
+            // let query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=calgary&days=7"
+
+            console.log('query');
+            console.log(query);
+            this.axios.get(query).then(response => {
+                this.weather = response.data
+                this.curLoc  = response.data.location.name+', '+response.data.location.region
+                console.log(response.data.location);
+                console.log(this.curLoc);
 
                 console.log('%c Weather ', 'background: #222; color: #bada55');
-                console.log(weather.data);
+                console.log(response.data);
             })
         },
     },

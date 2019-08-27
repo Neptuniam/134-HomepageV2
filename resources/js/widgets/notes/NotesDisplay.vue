@@ -1,44 +1,42 @@
 <template>
-<div v-if="activePage === 'notes'" class="row center-xs NotesDisplay fullWidth">
-    <div class="col-xs-2 savedNotes">
+<div v-if="activePage === 'notes'" class="row center-xs NotesDisplay">
+    <div class="col-xs-2 scrollSpace savedNotes">
         <div v-for="(note, index) in notes">
             <p @click="changeNotes(note)" class="textBody uk-text-truncate savedNote nomargin clickable">
-                {{note.body}}
+                {{note.body.replace(/#/g, "").split('  ')[0]}}
             </p>
 
-            <div v-if="note.id === currentNote.id" class="row center-xs controlButtons">
-                <button @click="toggleMode()" type="button" class="col-xs uk-button-default fullWidth uk-icon-button clickable">
-                    {{mode === 'view' ? 'Edit' : 'View'}}
-                </button>
+            <div v-if="note.id === currentNote.id" class="controlButtons">
+                <div class="row center-xs">
+                    <button @click="toggleMark" type="button" class="col-xs uk-button uk-button-text uk-text-capitalize">
+                        {{showMark ? 'Hide ' : 'Show '}} Mark
+                    </button>
 
-                <button v-if="mode === 'edit'" @click="toggleMark()" type="button" class="col-xs uk-button-default fullWidth uk-icon-button clickable">
-                    {{showMark ? 'Hide ' : 'Show '}} Mark
-                </button>
+                    <button @click="startDelete(note)" type="button" class="col-xs uk-button uk-button-text uk-text-capitalize">
+                        Delete Note
+                    </button>
+                </div>
 
-                <button v-if="mode === 'edit'" @click="startDelete(note)" type="button" class="col-xs uk-button-default fullWidth uk-icon-button clickable">
-                    Delete Note
-                </button>
-
-                <div class="fullWidth updatedAt">
-                    {{findAuthor(note).name}} - {{note.updated_at.split(' ')[0]}}
+                <div class="center-xs updatedAt">
+                    {{findAuthor(note).name}} - {{note.updated_at.split(' ')[0].replace(/-/g, '/')}}
                 </div>
             </div>
 
             <hr v-if="index < notes.length-1">
         </div>
 
-        <button @click="changeNotes({id: null, body: ''})" type="button" class="uk-button-default fullWidth uk-icon-button" uk-icon="plus" />
+        <div class="row center-xs">
+            <button @click="changeNotes({id: null, body: ''})" type="button" class="col-xs-8 uk-button-default uk-icon-button newButton" uk-icon="plus" />
+        </div>
     </div>
 
-    <div class="col-xs-9">
-        <div class="row fullWidth">
-            <textarea v-if="mode === 'edit'" :value="currentNote.body" @input="updateNote"
-                      class="col-xs noteBody textBody fullWidth">
-            </textarea>
+    <div class="col-xs row fullWidth scrollSpace">
+        <hr class="uk-divider-vertical">
 
-            <div v-if="showMark || mode === 'view'" class="col-xs noteBody textBody fullWidth" v-html="compiledMarkdown">
-            </div>
-        </div>
+        <textarea v-if="mode === 'edit'" :value="currentNote.body" @input="updateNote" class="col-xs noteBody textBody fullWidth"></textarea>
+        <hr v-if="mode === 'edit' && showMark" class="uk-divider-vertical secondHR">
+
+        <div v-if="showMark || mode === 'view'" class="col-xs noteBody textBody fullWidth" v-html="compiledMarkdown"></div>
     </div>
 </div>
 </template>
@@ -99,19 +97,29 @@ export default {
             if (this.body_timeout && this.mode === 'edit')
                 this.saveNote()
 
-            this.currentNote = {...note}
+            // If you have hit the current note, toggle modes instead of changing notes
+            if (note.id == this.currentNote.id) {
+                this.toggleMode()
+            } else {
+                this.currentNote = {...note}
 
-            // If it's a new note it should be defaulted to edit mode
-            this.mode = note.id === null ? 'edit' : 'view'
-            this.showMark = true
+                // If it's a new note it should be defaulted to edit mode
+                this.mode = note.id === null ? 'edit' : 'view'
+                this.showMark = true
+            }
+
         },
 
         saveNote() {
-            console.log('saving');
-            console.log(this.currentNote)
-
             this.backupNote(this.currentNote).then(response => {
                 UIkit.notification("Changes Saved", {status:'success'})
+
+                this.fetchNotes().then(notes => {
+                    // Take the new id on new notes to avoid continuesly creating notes
+                    if (!this.currentNote.id)
+                        this.currentNote.id = this.notes[this.notes.length-1].id
+                })
+
 
                 clearTimeout(this.body_timeout)
                 this.body_timeout = null
@@ -154,8 +162,34 @@ export default {
 
 <style>
 .NotesDisplay {
-    height: 80vh;
+    /* height: 80vh; */
+    width: 90vw;
+
     color: rgb(245, 245, 245) !important;
+    background-color: rgba(75, 75, 75, 0.75);
+
+    border-radius: 10px;
+}
+
+.scrollSpace {
+    height: 80vh;
+    overflow: auto;
+}
+
+.NotesDisplay .uk-divider-vertical {
+    height: 80vh;
+    margin: 0 !important;
+    position: absolute;
+}
+
+.NotesDisplay .secondHR {
+    right: 43vw;
+}
+
+.NotesDisplay .col-xs-2 {
+    padding: 0px;
+    min-width: 230px;
+    max-width: 230px;
 }
 
 .savedNotes {
@@ -163,13 +197,11 @@ export default {
     font-weight: 600px;
     font-size: 20px;
 
-    background-color: rgba(75, 75, 75, 0.75);
-    border-radius: 10px;
-    height: 80vh;
+    overflow-x: hidden;
 }
 
 .savedNote {
-    padding: 20px 0;
+    padding: 10px 0;
     margin: 0;
 }
 
@@ -177,17 +209,22 @@ export default {
     background-color: rgba(150, 150, 150, 0.5);
 }
 
+.savedNotes button {
+    color: rgb(245, 245, 245) !important;
+    margin: 20px 0;
+}
+
 .savedNotes hr {
     margin: 0;
 }
 
-.savedNotes button {
-    color: rgb(245, 245, 245);
-    margin: 20px 0;
+.controlButtons {
+    padding: 0 10px;
 }
 
 .controlButtons button {
     margin: 5px;
+    max-width: 50%;
 }
 
 .controlButtons .updatedAt {
@@ -201,14 +238,17 @@ export default {
     font-weight: 350px;
     font-size: 20px;
     text-align: left;
-
-    height: 80vh;
-
-    background-color: rgba(75, 75, 75, 0.75);
-    border-radius: 10px;
     color: rgb(225, 225, 225) !important;
+
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0px;
+
     padding: 5px;
     margin: 0 10px;
+}
+
+textarea:focus {
+    background-color: rgba(0,0,0,0);
 }
 
 .noteBody h1, .noteBody h2, .noteBody h3, .noteBody h4, .noteBody h5, .noteBody h6, .noteBody ul {
