@@ -7,15 +7,15 @@
 
         <div class="inputRow">
             <span class="row uk-form-label">Username</span>
-            <input type="name" name="name" v-model="name" class="uk-input">
+            <input type="name"      v-model="name" class="uk-input">
 
             <span class="row uk-form-label">Password</span>
-            <input type="password" name="pass" v-model="pass" class="uk-input">
+            <input type="password"  v-model="pass" class="uk-input">
         </div>
 
         <div class="row center-xs buttonsRow">
             <button type="button" class="col-xs-5 uk-button uk-button-primary roundedButton uk-text-capitalize" @click="login()">
-                Switch Profiles
+                {{ activeUser ? "Switch Profiles" : "Log in" }}
             </button>
             <button type="button" class="col-xs-5 uk-button uk-button-secondary roundedButton uk-text-capitalize" @click="create()">
                 Create Profile

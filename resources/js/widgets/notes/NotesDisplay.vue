@@ -8,7 +8,7 @@
 
             <div v-if="note.id === currentNote.id" class="controlButtons">
                 <div class="row center-xs">
-                    <button @click="toggleMark" type="button" class="col-xs uk-button uk-button-text uk-text-capitalize">
+                    <button v-if="mode == 'edit'" @click="toggleMark" type="button" class="col-xs uk-button uk-button-text uk-text-capitalize">
                         {{showMark ? 'Hide ' : 'Show '}} Mark
                     </button>
 
@@ -33,7 +33,7 @@
     <div class="col-xs row fullWidth scrollSpace">
         <hr class="uk-divider-vertical">
 
-        <textarea v-if="mode === 'edit'" :value="currentNote.body" @input="updateNote" class="col-xs noteBody textBody fullWidth"></textarea>
+        <textarea v-if="mode === 'edit'" @input="debounce" v-model="currentNote.body" class="col-xs noteBody textBody fullWidth"></textarea>
         <hr v-if="mode === 'edit' && showMark" class="uk-divider-vertical secondHR">
 
         <div v-if="showMark || mode === 'view'" class="col-xs noteBody textBody fullWidth" v-html="compiledMarkdown"></div>
@@ -48,7 +48,7 @@ export default {
     data: function() {
         return {
             mode: 'view',
-            showMark: true,
+            showMark: false,
             currentNote: {id: null, body: ''},
             body_timeout: null,
         }
@@ -59,9 +59,9 @@ export default {
         },
 
         ...mapGetters('settings', {
-            users: 'getUsers',
             activePage: 'getActivePage',
-            notes: 'getNotes',
+            users:      'getUsers',
+            notes:      'getNotes',
         })
     },
     methods: {
@@ -104,10 +104,10 @@ export default {
                 this.currentNote = {...note}
 
                 // If it's a new note it should be defaulted to edit mode
-                this.mode = note.id === null ? 'edit' : 'view'
-                this.showMark = true
+                // this.mode = !note.id ? 'edit' : 'view'
+                this.mode = !note.id ? 'edit' : 'view'
+                this.showMark = false
             }
-
         },
 
         saveNote() {
@@ -131,18 +131,9 @@ export default {
                 clearTimeout(this.body_timeout)
 
             var _this = this;
-
             this.body_timeout = setTimeout(function() {
                 _this.saveNote()
             }, 2500);
-        },
-
-        updateNote(e) {
-            if (!(e && e.target.value))
-                return
-
-            this.currentNote.body = e.target.value
-            this.debounce()
         },
 
         ...mapActions('settings', {
@@ -162,7 +153,6 @@ export default {
 
 <style>
 .NotesDisplay {
-    /* height: 80vh; */
     width: 90vw;
 
     color: rgb(245, 245, 245) !important;
@@ -180,6 +170,9 @@ export default {
     height: 80vh;
     margin: 0 !important;
     position: absolute;
+}
+.NotesDisplay hr {
+    border-top: 1px solid #959595;
 }
 
 .NotesDisplay .secondHR {

@@ -1774,6 +1774,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -1846,8 +1848,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     // setInterval(this.getLocation, 600000)
 
     this.getLocation(); // Update the background every 1 minute
-    // setInterval(this.getBackground, 60000)
 
+    setInterval(this.getBackground, 60000);
     this.getBackground();
   }
 });
@@ -2874,7 +2876,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       mode: 'view',
-      showMark: true,
+      showMark: false,
       currentNote: {
         id: null,
         body: ''
@@ -2889,8 +2891,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
-    users: 'getUsers',
     activePage: 'getActivePage',
+    users: 'getUsers',
     notes: 'getNotes'
   })),
   methods: _objectSpread({
@@ -2926,9 +2928,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.toggleMode();
       } else {
         this.currentNote = _objectSpread({}, note); // If it's a new note it should be defaulted to edit mode
+        // this.mode = !note.id ? 'edit' : 'view'
 
-        this.mode = note.id === null ? 'edit' : 'view';
-        this.showMark = true;
+        this.mode = !note.id ? 'edit' : 'view';
+        this.showMark = false;
       }
     },
     saveNote: function saveNote() {
@@ -2956,11 +2959,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.body_timeout = setTimeout(function () {
         _this.saveNote();
       }, 2500);
-    },
-    updateNote: function updateNote(e) {
-      if (!(e && e.target.value)) return;
-      this.currentNote.body = e.target.value;
-      this.debounce();
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
     fetchNotes: 'fetchNotes',
@@ -3180,7 +3178,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Settings {\n    height: 100vh;\n    width: 100vw;\n}\n.footer {\n    position: absolute;\n    bottom: 0;\n}\n.scrollSpace {\n    /* height: 69vh; */\n    height: 80vh;\n    width: 100%;\n}\n.uk-tab>*>a {\n    font-size: 4vh;\n    color: grey;\n}\n.textColor, .Settings h1, h2, h4, h5, .uk-tab > .uk-active > a {\n    color: black;\n}\ninput, select, .uk-input, .uk-select, textarea {\n    border-radius: 30px;\n    background: rgba(50,50,50,0.7);\n    color: rgb(240, 240, 240);\n    outline: none;\n}\ninput:focus, select:focus, .uk-input:focus, .uk-select:focus, textarea:focus {\n    border-radius: 30px;\n    background: rgba(50,50,50,0.7);\n    color: white;\n    outline: none;\n}\ninput:-webkit-autofill,\ninput:-webkit-autofill:hover,\ninput:-webkit-autofill:focus,\ninput:-webkit-autofill:active  {\n    -webkit-box-shadow: 0 0 0 30px rgba(50,50,50,0.7) inset !important;\n    -webkit-text-fill-color: white !important;\n}\n.uk-table th {\n    color: black;\n}\n.uk-table td {\n    padding: 10px 5px;\n}\nh1 {\n    font-size: 6.5vh;\n    margin: 0.5% 0 0 0;\n}\nh5 a {\n    color: #333;\n}\n", ""]);
+exports.push([module.i, "\n.Settings {\n    height: 100vh;\n    width: 100vw;\n}\n.footer {\n    position: absolute;\n    bottom: 0;\n}\n.scrollSpace {\n    height: 80vh;\n    width: 100%;\n}\n.uk-tab>*>a {\n    font-weight: 600;\n    font-size: 4vh;\n    color: rgb(100, 100, 100);\n}\n.textColor, .Settings h1, h2, h4, h5, .uk-tab > .uk-active > a {\n    color: black;\n}\ninput, select, .uk-input, .uk-select, textarea {\n    border-radius: 10px;\n    background: rgba(60,60,60,0.7);\n    color: rgb(240, 240, 240);\n    outline: none;\n}\ninput:focus, select:focus, .uk-input:focus, .uk-select:focus, textarea:focus {\n    border-radius: 30px;\n    background: rgba(50,50,50,0.7);\n    color: white;\n    outline: none;\n}\ninput:-webkit-autofill,\ninput:-webkit-autofill:hover,\ninput:-webkit-autofill:focus,\ninput:-webkit-autofill:active  {\n    -webkit-box-shadow: 0 0 0 30px rgba(50,50,50,0.7) inset !important;\n    -webkit-text-fill-color: white !important;\n}\n.uk-table th {\n    color: black;\n}\n.uk-table td {\n    padding: 10px 5px;\n}\nh1 {\n    font-size: 6.5vh;\n    margin: 0.5% 0 0 0;\n}\nh5 a {\n    color: #333;\n}\n", ""]);
 
 // exports
 
@@ -3370,7 +3368,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.NotesDisplay {\r\n    /* height: 80vh; */\r\n    width: 90vw;\r\n\r\n    color: rgb(245, 245, 245) !important;\r\n    background-color: rgba(75, 75, 75, 0.75);\r\n\r\n    border-radius: 10px;\n}\n.scrollSpace {\r\n    height: 80vh;\r\n    overflow: auto;\n}\n.NotesDisplay .uk-divider-vertical {\r\n    height: 80vh;\r\n    margin: 0 !important;\r\n    position: absolute;\n}\n.NotesDisplay .secondHR {\r\n    right: 43vw;\n}\n.NotesDisplay .col-xs-2 {\r\n    padding: 0px;\r\n    min-width: 230px;\r\n    max-width: 230px;\n}\n.savedNotes {\r\n    text-align: left;\r\n    font-weight: 600px;\r\n    font-size: 20px;\r\n\r\n    overflow-x: hidden;\n}\n.savedNote {\r\n    padding: 10px 0;\r\n    margin: 0;\n}\n.savedNote:hover {\r\n    background-color: rgba(150, 150, 150, 0.5);\n}\n.savedNotes button {\r\n    color: rgb(245, 245, 245) !important;\r\n    margin: 20px 0;\n}\n.savedNotes hr {\r\n    margin: 0;\n}\n.controlButtons {\r\n    padding: 0 10px;\n}\n.controlButtons button {\r\n    margin: 5px;\r\n    max-width: 50%;\n}\n.controlButtons .updatedAt {\r\n    font-weight: 300px;\r\n    font-size: 15px;\r\n    margin: 5px 0;\n}\n.noteBody {\r\n    font-weight: 350px;\r\n    font-size: 20px;\r\n    text-align: left;\r\n    color: rgb(225, 225, 225) !important;\r\n\r\n    background-color: rgba(0, 0, 0, 0);\r\n    border-width: 0px;\r\n\r\n    padding: 5px;\r\n    margin: 0 10px;\n}\ntextarea:focus {\r\n    background-color: rgba(0,0,0,0);\n}\n.noteBody h1, .noteBody h2, .noteBody h3, .noteBody h4, .noteBody h5, .noteBody h6, .noteBody ul {\r\n    color: rgb(225, 225, 225) !important;\n}\r\n", ""]);
+exports.push([module.i, "\n.NotesDisplay {\r\n    width: 90vw;\r\n\r\n    color: rgb(245, 245, 245) !important;\r\n    background-color: rgba(75, 75, 75, 0.75);\r\n\r\n    border-radius: 10px;\n}\n.scrollSpace {\r\n    height: 80vh;\r\n    overflow: auto;\n}\n.NotesDisplay .uk-divider-vertical {\r\n    height: 80vh;\r\n    margin: 0 !important;\r\n    position: absolute;\n}\n.NotesDisplay hr {\r\n    border-top: 1px solid #959595;\n}\n.NotesDisplay .secondHR {\r\n    right: 43vw;\n}\n.NotesDisplay .col-xs-2 {\r\n    padding: 0px;\r\n    min-width: 230px;\r\n    max-width: 230px;\n}\n.savedNotes {\r\n    text-align: left;\r\n    font-weight: 600px;\r\n    font-size: 20px;\r\n\r\n    overflow-x: hidden;\n}\n.savedNote {\r\n    padding: 10px 0;\r\n    margin: 0;\n}\n.savedNote:hover {\r\n    background-color: rgba(150, 150, 150, 0.5);\n}\n.savedNotes button {\r\n    color: rgb(245, 245, 245) !important;\r\n    margin: 20px 0;\n}\n.savedNotes hr {\r\n    margin: 0;\n}\n.controlButtons {\r\n    padding: 0 10px;\n}\n.controlButtons button {\r\n    margin: 5px;\r\n    max-width: 50%;\n}\n.controlButtons .updatedAt {\r\n    font-weight: 300px;\r\n    font-size: 15px;\r\n    margin: 5px 0;\n}\n.noteBody {\r\n    font-weight: 350px;\r\n    font-size: 20px;\r\n    text-align: left;\r\n    color: rgb(225, 225, 225) !important;\r\n\r\n    background-color: rgba(0, 0, 0, 0);\r\n    border-width: 0px;\r\n\r\n    padding: 5px;\r\n    margin: 0 10px;\n}\ntextarea:focus {\r\n    background-color: rgba(0,0,0,0);\n}\n.noteBody h1, .noteBody h2, .noteBody h3, .noteBody h4, .noteBody h5, .noteBody h6, .noteBody ul {\r\n    color: rgb(225, 225, 225) !important;\n}\r\n", ""]);
 
 // exports
 
@@ -24212,79 +24210,79 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.activeUser && _vm.location
-    ? _c(
-        "div",
-        {
-          staticClass:
-            "row center-xs middle-xs homepage nomargin uk-animation-fade",
-          style: "background: rgba(200,200,200," + _vm.transparency + ");"
-        },
-        [
-          _c("div", { staticClass: "row middle-xs pageControl" }, [
-            _c("div", { staticClass: "col-xs" }, [
-              _c("a", {
-                staticClass: "uk-icon ",
+  return _c(
+    "div",
+    {
+      staticClass:
+        "row center-xs middle-xs homepage nomargin uk-animation-fade",
+      style: "background: rgba(200,200,200," + _vm.transparency + ");"
+    },
+    [
+      _c("div", { staticClass: "row middle-xs pageControl" }, [
+        _c("div", { staticClass: "col-xs" }, [
+          _c("a", {
+            staticClass: "uk-icon ",
+            attrs: {
+              "uk-icon": "icon: " + _vm.controlIcon + "; ratio: 2;",
+              "uk-tooltip": _vm.activePage == "home" ? "Settings" : "Home"
+            },
+            on: {
+              click: function($event) {
+                return _vm.setActivePage(
+                  _vm.activePage === "home" ? "settings" : "home"
+                )
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-xs" }, [
+          _vm.newsStatus &&
+          _vm.newsStatus.status === 1 &&
+          _vm.activePage === "home"
+            ? _c("a", {
+                staticClass: "uk-icon newsIcon",
                 attrs: {
-                  "uk-icon": "icon: " + _vm.controlIcon + "; ratio: 2;",
-                  "uk-tooltip": _vm.activePage == "home" ? "Settings" : "Home"
+                  "uk-icon": "icon: world; ratio: 2",
+                  "uk-tooltip": "News"
                 },
                 on: {
                   click: function($event) {
-                    return _vm.setActivePage(
-                      _vm.activePage === "home" ? "settings" : "home"
-                    )
+                    return _vm.setActivePage("news")
                   }
                 }
               })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-xs" }, [
-              _vm.newsStatus.status === 1 && _vm.activePage === "home"
-                ? _c("a", {
-                    staticClass: "uk-icon newsIcon",
-                    attrs: {
-                      "uk-icon": "icon: world; ratio: 2",
-                      "uk-tooltip": "News"
-                    },
-                    on: {
-                      click: function($event) {
-                        return _vm.setActivePage("news")
-                      }
-                    }
-                  })
-                : _vm._e()
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-xs" }, [
-              _vm.notesStatus.status === 1 && _vm.activePage === "home"
-                ? _c("a", {
-                    staticClass: "uk-icon notesIcon",
-                    attrs: {
-                      "uk-icon": "icon: pencil; ratio: 2;",
-                      "uk-tooltip": "Personal Notes"
-                    },
-                    on: {
-                      click: function($event) {
-                        return _vm.setActivePage("notes")
-                      }
-                    }
-                  })
-                : _vm._e()
-            ])
-          ]),
-          _vm._v(" "),
-          _c("DateTime"),
-          _vm._v(" "),
-          _c("Home"),
-          _vm._v(" "),
-          _vm.activePage === "settings"
-            ? _c("div", [_c("Settings")], 1)
             : _vm._e()
-        ],
-        1
-      )
-    : _vm._e()
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-xs" }, [
+          _vm.notesStatus &&
+          _vm.notesStatus.status === 1 &&
+          _vm.activePage === "home"
+            ? _c("a", {
+                staticClass: "uk-icon notesIcon",
+                attrs: {
+                  "uk-icon": "icon: pencil; ratio: 2;",
+                  "uk-tooltip": "Personal Notes"
+                },
+                on: {
+                  click: function($event) {
+                    return _vm.setActivePage("notes")
+                  }
+                }
+              })
+            : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _c("DateTime"),
+      _vm._v(" "),
+      _vm.activeUser && _vm.location ? _c("div", [_c("Home")], 1) : _vm._e(),
+      _vm._v(" "),
+      _vm.activePage === "settings" ? _c("div", [_c("Settings")], 1) : _vm._e()
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -24320,7 +24318,7 @@ var render = function() {
             _c(
               "a",
               {
-                staticClass: "uk-text-capitalize textTitle tabsTitle noselect",
+                staticClass: "uk-text-capitalize textTitle noselect",
                 on: {
                   click: function($event) {
                     _vm.activeTab = tab
@@ -24449,7 +24447,7 @@ var render = function() {
               }
             ],
             staticClass: "uk-input",
-            attrs: { type: "name", name: "name" },
+            attrs: { type: "name" },
             domProps: { value: _vm.name },
             on: {
               input: function($event) {
@@ -24475,7 +24473,7 @@ var render = function() {
               }
             ],
             staticClass: "uk-input",
-            attrs: { type: "password", name: "pass" },
+            attrs: { type: "password" },
             domProps: { value: _vm.pass },
             on: {
               input: function($event) {
@@ -24501,7 +24499,13 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("\n                Switch Profiles\n            ")]
+            [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.activeUser ? "Switch Profiles" : "Log in") +
+                  "\n            "
+              )
+            ]
           ),
           _vm._v(" "),
           _c(
@@ -25807,22 +25811,24 @@ var render = function() {
                 note.id === _vm.currentNote.id
                   ? _c("div", { staticClass: "controlButtons" }, [
                       _c("div", { staticClass: "row center-xs" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass:
-                              "col-xs uk-button uk-button-text uk-text-capitalize",
-                            attrs: { type: "button" },
-                            on: { click: _vm.toggleMark }
-                          },
-                          [
-                            _vm._v(
-                              "\r\n                        " +
-                                _vm._s(_vm.showMark ? "Hide " : "Show ") +
-                                " Mark\r\n                    "
+                        _vm.mode == "edit"
+                          ? _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "col-xs uk-button uk-button-text uk-text-capitalize",
+                                attrs: { type: "button" },
+                                on: { click: _vm.toggleMark }
+                              },
+                              [
+                                _vm._v(
+                                  "\r\n                        " +
+                                    _vm._s(_vm.showMark ? "Hide " : "Show ") +
+                                    " Mark\r\n                    "
+                                )
+                              ]
                             )
-                          ]
-                        ),
+                          : _vm._e(),
                         _vm._v(" "),
                         _c(
                           "button",
@@ -25883,9 +25889,27 @@ var render = function() {
           _vm._v(" "),
           _vm.mode === "edit"
             ? _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.currentNote.body,
+                    expression: "currentNote.body"
+                  }
+                ],
                 staticClass: "col-xs noteBody textBody fullWidth",
                 domProps: { value: _vm.currentNote.body },
-                on: { input: _vm.updateNote }
+                on: {
+                  input: [
+                    function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.currentNote, "body", $event.target.value)
+                    },
+                    _vm.debounce
+                  ]
+                }
               })
             : _vm._e(),
           _vm._v(" "),
@@ -42098,8 +42122,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
 var state = {
-  showHome: true,
-  activePage: 'home',
+  activePage: 'settings',
   address: null,
   lat: null,
   lng: null,
@@ -42114,9 +42137,6 @@ var state = {
   user: null
 };
 var getters = {
-  getShowHome: function getShowHome(state) {
-    return state.showHome;
-  },
   getActivePage: function getActivePage(state) {
     return state.activePage;
   },
@@ -42157,9 +42177,6 @@ var getters = {
   }
 };
 var mutations = {
-  setShowHome: function setShowHome(state, payload) {
-    state.showHome = payload;
-  },
   setActivePage: function setActivePage(state, payload) {
     state.activePage = payload;
   },
@@ -42197,39 +42214,40 @@ var mutations = {
   }
 };
 var actions = {
-  setShowHome: function setShowHome(_ref, payload) {
+  setActivePage: function setActivePage(_ref, payload) {
     var commit = _ref.commit;
-    commit('setShowHome', payload);
-  },
-  setActivePage: function setActivePage(_ref2, payload) {
-    var commit = _ref2.commit;
     commit('setActivePage', payload);
   },
-  setAddress: function setAddress(_ref3, payload) {
-    var commit = _ref3.commit;
+  setAddress: function setAddress(_ref2, payload) {
+    var commit = _ref2.commit;
     commit('setAddress', payload);
   },
-  setLocation: function setLocation(_ref4, payload) {
-    var commit = _ref4.commit;
+  setLocation: function setLocation(_ref3, payload) {
+    var commit = _ref3.commit;
     console.log('%c Location', 'background: #222; color: #bada55');
     console.log(payload);
     commit('setLat', payload.lat);
     commit('setLng', payload.lng);
   },
-  changeLocation: function changeLocation(_ref5, payload) {
-    var commit = _ref5.commit;
-  },
-  fetchUser: function fetchUser(_ref6) {
-    var commit = _ref6.commit,
-        dispatch = _ref6.dispatch;
-    var user = JSON.parse(window.localStorage.getItem('activeUser'));
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users', user).then(function () {
+  fetchUser: function fetchUser(_ref4) {
+    var commit = _ref4.commit,
+        dispatch = _ref4.dispatch;
+    var user = window.localStorage.getItem('activeUser');
+    console.log(user);
+
+    if (!user || !(user = JSON.parse(user))) {
+      UIkit.notification("Failed to find active user from local storage", {
+        status: 'danger'
+      });
+      commit('setActivePage', 'settings');
+    } else {
       dispatch('setActiveUser', user);
-    });
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users', user).then(function () {});
+    }
   },
-  setActiveUser: function setActiveUser(_ref7, payload) {
-    var commit = _ref7.commit,
-        dispatch = _ref7.dispatch;
+  setActiveUser: function setActiveUser(_ref5, payload) {
+    var commit = _ref5.commit,
+        dispatch = _ref5.dispatch;
     window.localStorage.setItem('activeUser', JSON.stringify(payload));
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users', payload).then(function () {
       commit('setUser', payload);
@@ -42238,17 +42256,17 @@ var actions = {
       dispatch('fetchFavourites');
     });
   },
-  fetchUsers: function fetchUsers(_ref8) {
-    var commit = _ref8.commit;
+  fetchUsers: function fetchUsers(_ref6) {
+    var commit = _ref6.commit;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/users').then(function (response) {
       console.log('%c Users', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setUsers', response.data);
     });
   },
-  createUser: function createUser(_ref9, payload) {
-    var commit = _ref9.commit,
-        dispatch = _ref9.dispatch;
+  createUser: function createUser(_ref7, payload) {
+    var commit = _ref7.commit,
+        dispatch = _ref7.dispatch;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/settings/users', payload).then(function (response) {
       console.log(response);
       payload.id = response.data;
@@ -42257,30 +42275,30 @@ var actions = {
     });
   },
   // Settings
-  fetchWidgets: function fetchWidgets(_ref10) {
-    var commit = _ref10.commit;
+  fetchWidgets: function fetchWidgets(_ref8) {
+    var commit = _ref8.commit;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/widgets/').then(function (response) {
       console.log('%c Widgets ', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setWidgets', response.data);
     });
   },
-  updateWidget: function updateWidget(_ref11, payload) {
-    var commit = _ref11.commit;
+  updateWidget: function updateWidget(_ref9, payload) {
+    var commit = _ref9.commit;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/widgets/', payload);
   },
   // Location Controllers
-  fetchLocations: function fetchLocations(_ref12) {
-    var commit = _ref12.commit;
+  fetchLocations: function fetchLocations(_ref10) {
+    var commit = _ref10.commit;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/locations/').then(function (response) {
       console.log('%c Locations ', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setLocations', response.data);
     });
   },
-  updateLocation: function updateLocation(_ref13, payload) {
-    var commit = _ref13.commit,
-        dispatch = _ref13.dispatch;
+  updateLocation: function updateLocation(_ref11, payload) {
+    var commit = _ref11.commit,
+        dispatch = _ref11.dispatch;
 
     // If id is 0, we are creating a new location
     if (payload.id == null) {
@@ -42293,17 +42311,17 @@ var actions = {
       });
     }
   },
-  deleteLocation: function deleteLocation(_ref14, payload) {
-    var commit = _ref14.commit,
-        dispatch = _ref14.dispatch;
+  deleteLocation: function deleteLocation(_ref12, payload) {
+    var commit = _ref12.commit,
+        dispatch = _ref12.dispatch;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/locations/delete', payload).then(function (response) {
       dispatch('fetchLocations');
     });
   },
   // Update User's map settings
-  fetchMapsSettings: function fetchMapsSettings(_ref15) {
-    var commit = _ref15.commit,
-        dispatch = _ref15.dispatch;
+  fetchMapsSettings: function fetchMapsSettings(_ref13) {
+    var commit = _ref13.commit,
+        dispatch = _ref13.dispatch;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/locations/settings').then(function (response) {
       console.log('%c Maps Settings ', 'background: #222; color: #bada55');
       console.log(response.data);
@@ -42311,26 +42329,26 @@ var actions = {
       dispatch('fetchLocations');
     });
   },
-  updateMapSettings: function updateMapSettings(_ref16, payload) {
-    var commit = _ref16.commit,
-        dispatch = _ref16.dispatch;
+  updateMapSettings: function updateMapSettings(_ref14, payload) {
+    var commit = _ref14.commit,
+        dispatch = _ref14.dispatch;
     console.log(payload);
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/locations/settings', payload).then(function (response) {
       dispatch('fetchMapsSettings');
     });
   },
   // Favourites Controllers
-  fetchFavourites: function fetchFavourites(_ref17) {
-    var commit = _ref17.commit;
+  fetchFavourites: function fetchFavourites(_ref15) {
+    var commit = _ref15.commit;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/favourites/').then(function (response) {
       console.log('%c Favourites ', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setFavourites', response.data);
     });
   },
-  updateFavourite: function updateFavourite(_ref18, payload) {
-    var commit = _ref18.commit,
-        dispatch = _ref18.dispatch;
+  updateFavourite: function updateFavourite(_ref16, payload) {
+    var commit = _ref16.commit,
+        dispatch = _ref16.dispatch;
 
     // If id is 0, we are creating a new location
     if (payload.id == null) {
@@ -42343,25 +42361,25 @@ var actions = {
       });
     }
   },
-  deleteFavourite: function deleteFavourite(_ref19, payload) {
-    var commit = _ref19.commit,
-        dispatch = _ref19.dispatch;
+  deleteFavourite: function deleteFavourite(_ref17, payload) {
+    var commit = _ref17.commit,
+        dispatch = _ref17.dispatch;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/favourites/delete', payload).then(function (response) {
       dispatch('fetchFavourites');
     });
   },
   // Notes Controllers
-  fetchNotes: function fetchNotes(_ref20) {
-    var commit = _ref20.commit;
+  fetchNotes: function fetchNotes(_ref18) {
+    var commit = _ref18.commit;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/notes/').then(function (response) {
       console.log('%c Notes ', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setNotes', response.data);
     });
   },
-  updateNote: function updateNote(_ref21, payload) {
-    var commit = _ref21.commit,
-        dispatch = _ref21.dispatch;
+  updateNote: function updateNote(_ref19, payload) {
+    var commit = _ref19.commit,
+        dispatch = _ref19.dispatch;
     // If id is 0, we are creating a new location
     // if (payload.id == null) {
     //     return axios.post('/notes/',payload).then(response => {
@@ -42372,9 +42390,9 @@ var actions = {
       dispatch('fetchNotes');
     }); // }
   },
-  deleteNote: function deleteNote(_ref22, payload) {
-    var commit = _ref22.commit,
-        dispatch = _ref22.dispatch;
+  deleteNote: function deleteNote(_ref20, payload) {
+    var commit = _ref20.commit,
+        dispatch = _ref20.dispatch;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/notes/delete', payload).then(function (response) {
       dispatch('fetchNotes');
     });

@@ -1,5 +1,5 @@
 <template>
-<div v-if="activeUser && location" class="row center-xs middle-xs homepage nomargin uk-animation-fade" :style="'background: rgba(200,200,200,'+transparency+');'">
+<div class="row center-xs middle-xs homepage nomargin uk-animation-fade" :style="'background: rgba(200,200,200,'+transparency+');'">
     <div class="row middle-xs pageControl">
         <div class="col-xs">
             <a @click="setActivePage(activePage === 'home' ? 'settings' : 'home')" class="uk-icon "
@@ -7,19 +7,21 @@
         </div>
 
         <div class="col-xs">
-            <a v-if="newsStatus.status === 1  && activePage === 'home'" @click="setActivePage('news')" class="uk-icon newsIcon"
+            <a v-if="newsStatus && newsStatus.status === 1  && activePage === 'home'" @click="setActivePage('news')" class="uk-icon newsIcon"
                uk-icon="icon: world; ratio: 2" uk-tooltip="News"/>
         </div>
 
         <div class="col-xs">
-            <a v-if="notesStatus.status === 1 && activePage === 'home'" @click="setActivePage('notes')" class="uk-icon notesIcon"
+            <a v-if="notesStatus && notesStatus.status === 1 && activePage === 'home'" @click="setActivePage('notes')" class="uk-icon notesIcon"
                uk-icon="icon: pencil; ratio: 2;" uk-tooltip="Personal Notes" />
         </div>
     </div>
 
     <DateTime />
 
-    <Home />
+    <div v-if="activeUser && location">
+        <Home />
+    </div>
 
     <div v-if="activePage === 'settings'">
         <Settings />
@@ -107,7 +109,7 @@ export default {
         this.getLocation()
 
         // Update the background every 1 minute
-        // setInterval(this.getBackground, 60000)
+        setInterval(this.getBackground, 60000)
         this.getBackground()
     },
 }

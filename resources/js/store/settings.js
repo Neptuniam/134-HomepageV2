@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const state = {
-    showHome: true,
-    activePage: 'home',
+    activePage: 'settings',
     address: null,
     lat: null,
     lng: null,
@@ -20,7 +19,6 @@ const state = {
     user: null,
 }
 const getters = {
-    getShowHome: (state) => state.showHome,
     getActivePage: (state) => state.activePage,
     getAddress: (state) => state.address,
 
@@ -41,7 +39,6 @@ const getters = {
     getUser: (state) => state.user,
 }
 const mutations = {
-    setShowHome: (state, payload) => { state.showHome = payload; },
     setActivePage: (state, payload) => { state.activePage = payload; },
     setAddress: (state, payload) => { state.address = payload; },
 
@@ -57,14 +54,10 @@ const mutations = {
     setNotes: (state, payload) => { state.notes = payload },
 
     //Users
-    setUsers: (state, payload) => {state.users = payload; },
-    setUser: (state, payload) => { state.user = payload; }
+    setUsers: (state, payload) => { state.users = payload; },
+    setUser: (state, payload) =>  { state.user = payload; }
 }
 const actions = {
-    setShowHome: ({commit}, payload) => {
-        commit('setShowHome', payload);
-    },
-
     setActivePage: ({commit}, payload) => {
         commit('setActivePage', payload);
     },
@@ -81,16 +74,18 @@ const actions = {
         commit('setLng', payload.lng);
     },
 
-    changeLocation: ({commit}, payload) => {
-    },
-
-
     fetchUser: ({commit, dispatch}) => {
-        let user = JSON.parse(window.localStorage.getItem('activeUser'))
+        let user = window.localStorage.getItem('activeUser')
+        console.log(user);
 
-        return axios.put('/settings/users', user).then(() => {
+        if (!user || !(user = JSON.parse(user))) {
+            UIkit.notification("Failed to find active user from local storage", {status:'danger'})
+            commit('setActivePage', 'settings')
+        } else {
             dispatch('setActiveUser', user)
-        })
+            return axios.put('/settings/users', user).then(() => {
+            })
+        }
     },
 
     setActiveUser: ({commit, dispatch}, payload) => {
