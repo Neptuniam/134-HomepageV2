@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 <div v-if="weather">
     <div class="row center-xs middle-xs curDescription textSpecial fullWidth nopadding" :uk-tooltip="address">
         <img :src="weather.current.condition.icon" alt="Condition Icon" class="curIcon nospacing"
@@ -21,6 +21,30 @@
                 </div>
             </div>
             <span class="forecastDay">{{getDay(day.date)}}</span>
+        </div>
+    </div>
+</div>
+</template> -->
+<template>
+<div v-if="weather" class="row fullWidth">
+    <div class="row center-xs middle-xs curDescription textSpecial fullWidth nopadding" :uk-tooltip="address">
+        <div v-if="weather.length && weather[0] != undefined && weather[0].Temperature != undefined && weather[0].Temperature.current != undefined">
+            {{weather[0].Temperature.current}}&deg;C
+        </div>
+    </div>
+
+    <div class="row center-xs middle-xs textBody fullWidth">
+        <div v-for="day in weather" class="col-xs" :uk-tooltip="day.Day.IconPhrase">
+            <div class="row middle-xs">
+                <div class="col-xs-7">
+                    {{day.Day.IconPhrase}}
+                </div>
+                <div class="col-xs-3 forecastTemp nospacing">
+                    {{day.Temperature.Maximum.Value}}
+                    {{day.Temperature.Minimum.Value}}
+                </div>
+            </div>
+            <span class="forecastDay">{{days[new Date(day.EpochDate*1000).getDay()-1]}}</span>
         </div>
     </div>
 </div>
@@ -61,21 +85,16 @@ export default {
             if (location === 'loc')
                 location = this.location
 
-            console.log('loc');
-            console.log(location);
-            let query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q="+location+"&days=7"
-            // let query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=calgary&days=7"
-
-            console.log('query');
-            console.log(query);
+            let query = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/49546?apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx&metric=true"
             this.axios.get(query).then(response => {
-                this.weather = response.data
-                this.curLoc  = response.data.location.name+', '+response.data.location.region
-                console.log(response.data.location);
-                console.log(this.curLoc);
+                query = "http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/49546?apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx&metric=true"
+                this.axios.get(query).then(response2 => {
+                    this.weather = response.data.DailyForecasts
+                    this.weather[0].Temperature.current = response2.data[0].Temperature.Value
 
-                console.log('%c Weather ', 'background: #222; color: #bada55');
-                console.log(response.data);
+                    console.log('%c Weather ', 'background: #222; color: #bada55');
+                    console.log(this.weather);
+                })
             })
         },
     },
@@ -118,4 +137,8 @@ export default {
         text-align: left;
     }
 
+    .col-xs {
+        /* min-width: 15vw !important; */
+        /* max-width: 15vw !important; */
+    }
 </style>

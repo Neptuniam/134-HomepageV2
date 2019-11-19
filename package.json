@@ -24,7 +24,6 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "apixu": "github:apixu/apixu-nodejs",
         "flexboxgrid": "^6.3.1",
         "marked": "^0.7.0",
         "uikit": "^3.1.7",

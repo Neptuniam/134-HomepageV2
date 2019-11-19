@@ -1817,13 +1817,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       // Retrieve the users location on created
       this.axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(function (response) {
-        // console.log(response.data);
-        // this.axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+response.data.location.lat+','+response.data.location.lng+'&key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(geolocation => {
-        //     console.log(geolocation.data);
-        //     response.data.location['geocode'] = geolocation.data.results
-        //     this.setLocation(response.data.location)
-        // })
-        _this.setLocation(response.data.location);
+        _this.axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.location.lat + ',' + response.data.location.lng + '&key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(function (geolocation) {
+          console.log('geoLocation: ', geolocation.data);
+          response.data.location['geocode'] = geolocation.data.results;
+
+          _this.setLocation(response.data.location);
+        }); // this.setLocation(response.data.location)
+
       });
     },
     getBackground: function getBackground() {
@@ -3018,6 +3018,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['widget'],
@@ -3051,19 +3075,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this2 = this;
 
       if (location === 'loc') location = this.location;
-      console.log('loc');
-      console.log(location);
-      var query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=" + location + "&days=7"; // let query = "http://api.apixu.com/v1/forecast.json?key=2a5f91f5f5b34808bea182102193001&q=calgary&days=7"
-
-      console.log('query');
-      console.log(query);
+      var query = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/49546?apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx&metric=true";
       this.axios.get(query).then(function (response) {
-        _this2.weather = response.data;
-        _this2.curLoc = response.data.location.name + ', ' + response.data.location.region;
-        console.log(response.data.location);
-        console.log(_this2.curLoc);
-        console.log('%c Weather ', 'background: #222; color: #bada55');
-        console.log(response.data);
+        query = "http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/49546?apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx&metric=true";
+
+        _this2.axios.get(query).then(function (response2) {
+          _this2.weather = response.data.DailyForecasts;
+          _this2.weather[0].Temperature.current = response2.data[0].Temperature.Value;
+          console.log('%c Weather ', 'background: #222; color: #bada55');
+          console.log(_this2.weather);
+        });
       });
     }
   }
@@ -3387,7 +3408,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.location[data-v-261436a7] {\n    font-size: 5vh;\n    text-align: center;\n    margin-bottom: 0;\n}\ninput[data-v-261436a7] {\n    border: none;\n    background: none;\n    color: black;\n}\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n.curIcon[data-v-261436a7] {\n    width: 15vh;\n    height: 15vh;\n    padding-bottom: 1vh;\n    text-align: center;\n}\n.forecastIcon[data-v-261436a7] {\n    width: 90%;\n    height: 90%;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n    text-align: left;\n}\n\n", ""]);
+exports.push([module.i, "\n.location[data-v-261436a7] {\n    font-size: 5vh;\n    text-align: center;\n    margin-bottom: 0;\n}\ninput[data-v-261436a7] {\n    border: none;\n    background: none;\n    color: black;\n}\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n.curIcon[data-v-261436a7] {\n    width: 15vh;\n    height: 15vh;\n    padding-bottom: 1vh;\n    text-align: center;\n}\n.forecastIcon[data-v-261436a7] {\n    width: 90%;\n    height: 90%;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n    text-align: left;\n}\n.col-xs[data-v-261436a7] {\n    /* min-width: 15vw !important; */\n    /* max-width: 15vw !important; */\n}\n", ""]);
 
 // exports
 
@@ -25950,7 +25971,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.weather
-    ? _c("div", [
+    ? _c("div", { staticClass: "row fullWidth" }, [
         _c(
           "div",
           {
@@ -25959,54 +25980,17 @@ var render = function() {
             attrs: { "uk-tooltip": _vm.address }
           },
           [
-            _c("img", {
-              staticClass: "curIcon nospacing",
-              attrs: {
-                src: _vm.weather.current.condition.icon,
-                alt: "Condition Icon",
-                "uk-tooltip": _vm.weather.current.condition.text
-              }
-            }),
-            _vm._v(
-              "\n        " +
-                _vm._s(Math.round(_vm.weather.current.feelslike_c)) +
-                "°C -\n\n        "
-            ),
-            _vm.curLoc
-              ? _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.curLoc,
-                      expression: "curLoc"
-                    }
-                  ],
-                  staticClass: "textSpecial",
-                  style: "width: " + _vm.curLoc.length * 2 + "vw;",
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.curLoc },
-                  on: {
-                    keyup: function($event) {
-                      if (
-                        !$event.type.indexOf("key") &&
-                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                      ) {
-                        return null
-                      }
-                      return _vm.getWeather(_vm.curLoc)
-                    },
-                    click: function($event) {
-                      _vm.curLoc = " "
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.curLoc = $event.target.value
-                    }
-                  }
-                })
+            _vm.weather.length &&
+            _vm.weather[0] != undefined &&
+            _vm.weather[0].Temperature != undefined &&
+            _vm.weather[0].Temperature.current != undefined
+              ? _c("div", [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(_vm.weather[0].Temperature.current) +
+                      "°C\n        "
+                  )
+                ])
               : _vm._e()
           ]
         ),
@@ -26014,23 +25998,21 @@ var render = function() {
         _c(
           "div",
           { staticClass: "row center-xs middle-xs textBody fullWidth" },
-          _vm._l(_vm.weather.forecast.forecastday, function(day) {
+          _vm._l(_vm.weather, function(day) {
             return _c(
               "div",
               {
                 staticClass: "col-xs",
-                attrs: { "uk-tooltip": day.day.condition.text }
+                attrs: { "uk-tooltip": day.Day.IconPhrase }
               },
               [
-                _c("div", { staticClass: "row" }, [
-                  _c("div", { staticClass: "col-xs-7 end-xs nospacing" }, [
-                    _c("img", {
-                      staticClass: "forecastIcon",
-                      attrs: {
-                        src: day.day.condition.icon,
-                        alt: "Condition Icon"
-                      }
-                    })
+                _c("div", { staticClass: "row middle-xs" }, [
+                  _c("div", { staticClass: "col-xs-7" }, [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(day.Day.IconPhrase) +
+                        "\n                "
+                    )
                   ]),
                   _vm._v(" "),
                   _c(
@@ -26039,17 +26021,21 @@ var render = function() {
                     [
                       _vm._v(
                         "\n                    " +
-                          _vm._s(Math.round(day.day.maxtemp_c)) +
-                          "°\n                    " +
-                          _vm._s(Math.round(day.day.mintemp_c)) +
-                          "°\n                "
+                          _vm._s(day.Temperature.Maximum.Value) +
+                          "\n                    " +
+                          _vm._s(day.Temperature.Minimum.Value) +
+                          "\n                "
                       )
                     ]
                   )
                 ]),
                 _vm._v(" "),
                 _c("span", { staticClass: "forecastDay" }, [
-                  _vm._v(_vm._s(_vm.getDay(day.date)))
+                  _vm._v(
+                    _vm._s(
+                      _vm.days[new Date(day.EpochDate * 1000).getDay() - 1]
+                    )
+                  )
                 ])
               ]
             )
@@ -42122,7 +42108,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
 var state = {
-  activePage: 'settings',
+  activePage: 'home',
   address: null,
   lat: null,
   lng: null,
@@ -42150,7 +42136,7 @@ var getters = {
     return state.lng;
   },
   getLocation: function getLocation(state) {
-    return state.lat + ',' + state.lng;
+    return state.lat && state.lng ? state.lat + ',' + state.lng : null;
   },
   // Settings
   getWidgets: function getWidgets(state) {

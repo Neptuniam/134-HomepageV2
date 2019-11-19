@@ -70,14 +70,13 @@ export default {
         getLocation() {
             // Retrieve the users location on created
             this.axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(response => {
-                // console.log(response.data);
-                // this.axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+response.data.location.lat+','+response.data.location.lng+'&key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(geolocation => {
-                //     console.log(geolocation.data);
-                //     response.data.location['geocode'] = geolocation.data.results
-                //     this.setLocation(response.data.location)
-                // })
+                this.axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+response.data.location.lat+','+response.data.location.lng+'&key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(geolocation => {
+                    console.log('geoLocation: ', geolocation.data);
+                    response.data.location['geocode'] = geolocation.data.results
+                    this.setLocation(response.data.location)
+                })
 
-                this.setLocation(response.data.location)
+                // this.setLocation(response.data.location)
             })
         },
 

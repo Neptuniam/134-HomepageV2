@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const state = {
-    activePage: 'settings',
+    activePage: 'home',
     address: null,
     lat: null,
     lng: null,
@@ -24,7 +24,7 @@ const getters = {
 
     getLat:  (state) => state.lat,
     getLng:  (state) => state.lng,
-    getLocation: (state) => state.lat+','+state.lng,
+    getLocation: (state) => {return state.lat && state.lng ? state.lat+','+state.lng : null},
 
     // Settings
     getWidgets: (state) => state.widgets,
