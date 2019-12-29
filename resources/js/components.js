@@ -8,6 +8,7 @@ Vue.component('Settings',           require('./pages/Settings.vue').default);
 Vue.component('Weather',            require('./widgets/weather/weatherdisplay.vue').default);
 
 Vue.component('News',               require('./widgets/news/newsdisplay.vue').default);
+Vue.component('NewsPage',               require('./widgets/news/newspage.vue').default);
 
 Vue.component('Notes',              require('./widgets/notes/NotesDisplay.vue').default);
 

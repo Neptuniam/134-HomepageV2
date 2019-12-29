@@ -161,8 +161,6 @@ export default {
         font-weight: 600px;
         font-size: 4vh;
         text-align: center;
-
-        margin-top: 15vh;
     }
     a {
         color: black;

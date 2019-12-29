@@ -26,25 +26,30 @@
 </div>
 </template> -->
 <template>
-<div v-if="weather" class="row fullWidth">
-    <div class="row center-xs middle-xs curDescription textSpecial fullWidth nopadding" :uk-tooltip="address">
-        <div v-if="weather.length && weather[0] != undefined && weather[0].Temperature != undefined && weather[0].Temperature.current != undefined">
-            {{weather[0].Temperature.current}}&deg;C
+<div v-if="weather" class="row fullWidth Weather">
+    <div class="row start-xs middle-xs curDescription textSpecial fullWidth nopadding" :uk-tooltip="address.formatted_address">
+        <div v-if="weather.length && weather[0].Temperature && weather[0].Temperature.current != undefined">
+            {{weather[0].Temperature.current}}&deg;C - {{parseAddress()}}
         </div>
     </div>
 
     <div class="row center-xs middle-xs textBody fullWidth">
-        <div v-for="day in weather" class="col-xs" :uk-tooltip="day.Day.IconPhrase">
+        <div v-for="day in weather" class="col-xs day" :uk-tooltip="day.Day.IconPhrase">
             <div class="row middle-xs">
                 <div class="col-xs-7">
-                    {{day.Day.IconPhrase}}
+                    <!-- {{day.Day.IconPhrase}} -->
+                    <i :class="getIcon(1, day.Day.IconPhrase)"></i>
                 </div>
                 <div class="col-xs-3 forecastTemp nospacing">
-                    {{day.Temperature.Maximum.Value}}
-                    {{day.Temperature.Minimum.Value}}
+                    {{Math.round(day.Temperature.Maximum.Value)}}
+                    <br>
+                    {{Math.round(day.Temperature.Minimum.Value)}}
                 </div>
             </div>
-            <span class="forecastDay">{{days[new Date(day.EpochDate*1000).getDay()-1]}}</span>
+
+            <hr>
+
+            <span class="forecastDay">{{getDay(day)}}</span>
         </div>
     </div>
 </div>
@@ -56,9 +61,31 @@ export default {
     props: ['widget'],
     data: function() {
         return {
-            days: ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"],
+            days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
             weather: null,
             curLoc: null,
+            weatherIconMap: {
+                sunny: "sunny",
+                clear: "stars",
+                rain: "rain",
+                cloudy: "cloudy",
+                overcast: "sunny-overcast",
+                mixed: "rain-mix",
+                showers: "showers",
+                drizzle: "showers",
+                thunder: "storm-showers",
+                thundery: "storm-showers",
+                snow: "snow",
+                blizzard: "snow",
+                fog: "fog",
+                mist: "fog",
+                dust: "fog",
+                smokey: "fog",
+                wind: "windy",
+                breezy: "windy",
+                sleet: "sleet",
+                pellets: "sleet"
+            }
         }
     },
     computed: {
@@ -66,6 +93,60 @@ export default {
             location:  'getLocation',
             address:   'getAddress',
         }),
+    },
+    methods: {
+        parseAddress() {
+            if (this.address && this.address.formatted_address) {
+                let split = this.address.formatted_address.split(',')
+
+                if (split.length >= 2)
+                    return split[1]
+            }
+
+            return ""
+        },
+
+        getDay(day) {
+            // return this.days[new Date(day).getDay()]
+            return this.days[new Date(day.EpochDate*1000).getDay()]
+        },
+
+        getIcon(isDay, curWeather) {
+            var splitWeatherDesc = curWeather.toLowerCase().split(" "), tempIconText = null, i = 0;
+            var iconText = "wi wi-";
+
+            iconText += (isDay == 1 || curWeather.includes("overcast") ) ? 'day-' : 'night-alt-'
+
+            while (tempIconText == null && i < splitWeatherDesc.length)
+                if ((tempIconText = this.weatherIconMap[splitWeatherDesc[i++]]) != null)
+                    iconText += tempIconText;
+
+            console.log(curWeather + " -> " + iconText);
+            return (iconText)
+        },
+
+        getWeather(location) {
+            if (location === 'loc')
+                location = this.location
+
+            let accu = "http://dataservice.accuweather.com/forecasts/v1/"
+            let query = accu+"daily/5day/49546?apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx&metric=true"
+
+            this.axios.get(query).then(response => {
+                query = accu+"hourly/1hour/49546?apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx&metric=true"
+
+                this.axios.get(query).then(response2 => {
+                    this.weather = response.data.DailyForecasts
+                    this.weather[0].Temperature.current = response2.data[0].Temperature.Value
+
+                    console.log('%c Weather ', 'background: #222; color: #bada55');
+                    console.log(this.weather);
+
+                    this.curLoc = this.parseAddress()
+                    console.log(this.curLoc);
+                })
+            })
+        },
     },
     mounted: function() {
         this.getWeather(this.location)
@@ -76,32 +157,34 @@ export default {
             }, this.widget.interval * 60000)
         }
     },
-    methods: {
-        getDay(day) {
-            return this.days[new Date(day).getDay()]
-        },
-
-        getWeather(location) {
-            if (location === 'loc')
-                location = this.location
-
-            let query = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/49546?apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx&metric=true"
-            this.axios.get(query).then(response => {
-                query = "http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/49546?apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx&metric=true"
-                this.axios.get(query).then(response2 => {
-                    this.weather = response.data.DailyForecasts
-                    this.weather[0].Temperature.current = response2.data[0].Temperature.Value
-
-                    console.log('%c Weather ', 'background: #222; color: #bada55');
-                    console.log(this.weather);
-                })
-            })
-        },
-    },
 }
 </script>
 
 <style scoped>
+    .Weather {
+        height: 100% !important;
+        width: 100% !important;
+
+        margin-bottom: 15vh;
+    }
+
+    .day {
+        border: 1px solid grey;
+        border-radius: 5px;
+
+        margin: 0px 7.5px;
+        background: rgba(200,200,200,0.75);
+    }
+
+    .day i {
+        margin-top: 2vh !important;
+        font-size: 5vh;
+    }
+
+    .day hr {
+        margin: 10px 0px 0px 0px;
+    }
+
     .location {
         font-size: 5vh;
         text-align: center;

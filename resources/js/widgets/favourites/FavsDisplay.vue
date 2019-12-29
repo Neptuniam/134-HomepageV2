@@ -1,7 +1,7 @@
 <template>
 <!--Favourite tabs Row-->
-<div class="row center-xs">
-    <div class="col-xs-9">
+<div class="row center-xs fullWidth">
+    <div class="col-xs-10">
         <div class="row center-xs middle-xs favouritesBar">
             <div v-for="favourite in favsOrder" class="col-xs">
                 <a :href="favourite.url" :uk-tooltip="favourite.title">
@@ -17,7 +17,7 @@
 import { mapGetters } from 'vuex'
 export default {
     computed: {
-        favsOrder: function() {
+        favsOrder() {
             if (this.favourites)
                 return this.favourites.sort(this.byPos)
         },
@@ -32,7 +32,7 @@ export default {
             return favourite.src ?  'images/favouritesIcons/'+favourite.src : favourite.url+'favicon.ico'
         },
 
-        byPos(a,b) {
+        byPos(a, b) {
             if (a.pos < b.pos)
                 return -1
             else if (a.pos > b.pos)

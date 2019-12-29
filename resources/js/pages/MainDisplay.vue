@@ -41,22 +41,29 @@ export default {
         }
     },
     computed: {
-        controlIcon: function() {
+        controlIcon() {
             return this.activePage === 'home' ? 'cog' : 'home'
         },
-        transparency: function() {
-            return this.activePage === 'home' ? 0.4 : 0.7
+        transparency() {
+            return this.activePage === 'home' ? 0.5 : 0.75
         },
 
-        newsStatus: function() {
+        newsStatus() {
             if (this.widgets)
                 return this.widgets.find(widget => widget.title === 'News')
             return {}
         },
-        notesStatus: function() {
+        notesStatus() {
             if (this.widgets)
                 return this.widgets.find(widget => widget.title === 'Notes')
             return {}
+        },
+
+        activeComponent() {
+            if (this.activeUser && this.location)
+                return "Home"
+            else if (this.activePage === 'settings')
+                return "Settings"
         },
 
         ...mapGetters('settings', {
@@ -71,12 +78,10 @@ export default {
             // Retrieve the users location on created
             this.axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(response => {
                 this.axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+response.data.location.lat+','+response.data.location.lng+'&key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(geolocation => {
-                    console.log('geoLocation: ', geolocation.data);
                     response.data.location['geocode'] = geolocation.data.results
+                    console.log('geoLocation: ', geolocation.data);
                     this.setLocation(response.data.location)
                 })
-
-                // this.setLocation(response.data.location)
             })
         },
 
@@ -119,9 +124,10 @@ export default {
         overflow-y:hidden;
         overflow-x:hidden;
         overflow: hidden !important;
+
         color: black;
-        height: 100vh;
-        max-height: 100vh !important;
+
+        height: 100vh !important;
         width: 100vw;
     }
 

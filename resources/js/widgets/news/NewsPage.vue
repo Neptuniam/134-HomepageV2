@@ -1,8 +1,49 @@
 <template>
-<div v-if="news" class="row center-xs NewsRow Widget">
-    <a class="col-xs-9" :href="news[index].url" target="_blank">
-        {{news[index].title}}
-    </a>
+<div v-if="news" class="center-xs NewsDisplay">
+    <div class="row middle-xs fullWidth">
+        <div class="col-xs">
+            <a v-if="index > 0" @click="index--" class="uk-icon previousIcon"
+               uk-icon="icon: chevron-left; ratio: 2" uk-tooltip="Previous Article" />
+        </div>
+
+        <ul uk-tab class="col-xs-10 nomargin">
+            <li v-for="category in categorys">
+                <a class="uk-text-capitalize textTitle tabsTitle noselect" @click="activeCat = category">
+                    {{category}}
+                </a>
+            </li>
+        </ul>
+
+        <div class="col-xs">
+            <a v-if="index < news.length-1" @click="index++" class="uk-icon nextIcon"
+               uk-icon="icon: chevron-right; ratio: 2" uk-tooltip="Next Article" />
+        </div>
+    </div>
+
+    <div class="articleNum textBody">
+        Article {{index+1}} / {{news.length}}
+    </div>
+
+    <div v-if="news[index].title" class="textSpecial headlineTitle">
+        {{news[index].title.split(' -')[0]}}
+    </div>
+
+    <hr class="fullWidth">
+
+    <div v-if="news[index].content" class="row center-xs fullWidth textBody headlineContent">
+        {{news[index].content.split('[+')[0]}}
+    </div>
+
+
+    <div class="fullWidth textBody headlineSrc">
+        <p>
+            <a :href="news[index].url" target="_blank" class="headlineUrl">{{news[index].url}}</a>
+        </p>
+
+        <p>
+            - {{news[index].source.name}}
+        </p>
+    </div>
 </div>
 </template>
 

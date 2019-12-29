@@ -72,6 +72,9 @@ const actions = {
 
         commit('setLat', payload.lat);
         commit('setLng', payload.lng);
+
+        if (payload.geocode && payload.geocode.length)
+            commit('setAddress', payload.geocode[0])
     },
 
     fetchUser: ({commit, dispatch}) => {
