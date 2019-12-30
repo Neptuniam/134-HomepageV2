@@ -1,6 +1,6 @@
 <template>
 <div v-if="news" class="row center-xs News">
-    <a class="col-xs-10 Widget" :href="news[index].url" target="_blank">
+    <a class="Widget" :href="news[index].url" target="_blank">
         {{news[index].title}}
     </a>
 </div>

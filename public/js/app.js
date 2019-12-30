@@ -3052,6 +3052,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['widget'],
@@ -3119,24 +3120,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var accu = "http://dataservice.accuweather.com/";
       var key = "apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx";
       this.axios.get(accu + "locations/v1/cities/geoposition/search.json?q=" + location + "&" + key).then(function (locResponse) {
-        console.log('loc', locResponse.data);
-        var query = accu + "forecasts/v1/daily/5day/" + locResponse.data.Key + "?" + key + "&metric=true";
-
-        _this.axios.get(query).then(function (response) {
-          query = accu + "forecasts/v1/hourly/1hour/" + locResponse.data.Key + "?" + key + "&metric=true";
-
-          _this.axios.get(query).then(function (response2) {
+        _this.axios.get(accu + "forecasts/v1/daily/5day/" + locResponse.data.Key + "?" + key + "&metric=true").then(function (forecastResponse) {
+          _this.axios.get(accu + "forecasts/v1/hourly/1hour/" + locResponse.data.Key + "?" + key + "&metric=true").then(function (currrentResponse) {
             var current = {
-              value: response2.data[0].Temperature.Value,
-              IconPhrase: response2.data[0].IconPhrase
+              value: currrentResponse.data[0].Temperature.Value,
+              IconPhrase: currrentResponse.data[0].IconPhrase
             };
             _this.weather = {};
 
-            _this.$set(_this.weather, 'location', locResponse);
+            _this.$set(_this.weather, 'location', locResponse.data);
 
             _this.$set(_this.weather, 'current', current);
 
-            _this.$set(_this.weather, 'forecast', response.data.DailyForecasts);
+            _this.$set(_this.weather, 'forecast', forecastResponse.data.DailyForecasts);
 
             console.log('%c Weather ', 'background: #222; color: #bada55');
             console.log(_this.weather);
@@ -3242,7 +3238,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Home {\n    width: 100vw !important;\n}\n.Widget {\n    padding: 5px 20px;\n}\n.Widget:hover {\n    /* border: 1px solid grey; */\n    border-radius: 5px;\n    background: rgba(200,200,200,0.85);\n}\n", ""]);
+exports.push([module.i, "\n.Home {\n    width: 100vw !important;\n}\n.Widget {\n    padding: 5px 20px;\n}\n.Widget:hover {\n    /* border: 1.5px solid grey; */\n    border-radius: 5px;\n    background: rgba(200,200,200,0.85);\n}\n", ""]);
 
 // exports
 
@@ -25782,7 +25778,7 @@ var render = function() {
         _c(
           "a",
           {
-            staticClass: "col-xs-10 Widget",
+            staticClass: "Widget",
             attrs: { href: _vm.news[_vm.index].url, target: "_blank" }
           },
           [
@@ -26152,16 +26148,18 @@ var render = function() {
                   })
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-xs center-xs" }, [
+                _c("div", { staticClass: "col-xs-7 center-xs" }, [
                   _vm._v(
-                    "\n            " + _vm._s(_vm.parseAddress()) + "\n        "
+                    "\n            " +
+                      _vm._s(_vm.weather.location.LocalizedName) +
+                      "\n        "
                   )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "col-xs end-xs" }, [
                   _vm._v(
                     "\n            " +
-                      _vm._s(_vm.weather.current.value) +
+                      _vm._s(Math.round(_vm.weather.current.value)) +
                       "° C\n        "
                   )
                 ])

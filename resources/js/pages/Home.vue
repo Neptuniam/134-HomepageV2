@@ -34,7 +34,7 @@ export default {
         padding: 5px 20px;
     }
     .Widget:hover {
-        /* border: 1px solid grey; */
+        /* border: 1.5px solid grey; */
         border-radius: 5px;
         background: rgba(200,200,200,0.85);
     }

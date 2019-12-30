@@ -5,11 +5,12 @@
         <div class="col-xs start-xs">
             <i :class="getIcon(weather.current.IconPhrase)" />
         </div>
-        <div class="col-xs center-xs">
-            {{parseAddress()}}
+        <div class="col-xs-7 center-xs">
+            <!-- {{parseAddress()}} -->
+            {{weather.location.LocalizedName}}
         </div>
         <div class="col-xs end-xs">
-            {{weather.current.value}}&deg; C
+            {{Math.round(weather.current.value)}}&deg; C
         </div>
     </div>
     <!-- <input v-model="curLoc" v-on:keyup.enter="getWeather(curLoc)" @click='curLoc = " "' v-if="curLoc"
@@ -111,22 +112,19 @@ export default {
             let key = "apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx"
 
             this.axios.get(accu+"locations/v1/cities/geoposition/search.json?q="+location+"&"+key).then(locResponse => {
-                console.log('loc',locResponse.data);
-                let query = accu+"forecasts/v1/daily/5day/"+locResponse.data.Key+"?"+key+"&metric=true"
 
-                this.axios.get(query).then(response => {
-                    query = accu+"forecasts/v1/hourly/1hour/"+locResponse.data.Key+"?"+key+"&metric=true"
+                this.axios.get(accu+"forecasts/v1/daily/5day/"+locResponse.data.Key+"?"+key+"&metric=true").then(forecastResponse => {
 
-                    this.axios.get(query).then(response2 => {
+                    this.axios.get(accu+"forecasts/v1/hourly/1hour/"+locResponse.data.Key+"?"+key+"&metric=true").then(currrentResponse => {
                         let current = {
-                            value: response2.data[0].Temperature.Value,
-                            IconPhrase: response2.data[0].IconPhrase
+                            value: currrentResponse.data[0].Temperature.Value,
+                            IconPhrase: currrentResponse.data[0].IconPhrase
                         }
 
                         this.weather = {}
-                        this.$set(this.weather, 'location', locResponse)
+                        this.$set(this.weather, 'location', locResponse.data)
                         this.$set(this.weather, 'current', current)
-                        this.$set(this.weather, 'forecast', response.data.DailyForecasts)
+                        this.$set(this.weather, 'forecast', forecastResponse.data.DailyForecasts)
 
                         console.log('%c Weather ', 'background: #222; color: #bada55');
                         console.log(this.weather);
