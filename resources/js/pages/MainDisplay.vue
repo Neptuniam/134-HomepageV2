@@ -1,51 +1,43 @@
 <template>
-<div class="row center-xs middle-xs homepage nomargin uk-animation-fade" :style="'background: rgba(200,200,200,'+transparency+');'">
+<div class="row center-xs middle-xs Homepage nomargin uk-animation-fade" :style="'background: rgba(200,200,200,'+transparency+');'">
     <div class="row middle-xs pageControl">
         <div class="col-xs">
-            <a @click="setActivePage(activePage === 'home' ? 'settings' : 'home')" class="uk-icon "
-              :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" :uk-tooltip="activePage == 'home' ? 'Settings' : 'Home'" />
+            <a @click="setActivePage(activePage === 'Home' ? 'Settings' : 'Home')" class="uk-icon "
+              :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" :uk-tooltip="activePage == 'Home' ? 'Settings' : 'Home'" />
         </div>
 
         <div class="col-xs">
-            <a v-if="newsStatus && newsStatus.status === 1  && activePage === 'home'" @click="setActivePage('news')" class="uk-icon newsIcon"
+            <a v-if="newsStatus && newsStatus.status === 1  && activePage === 'Home'"
+               @click="setActivePage('NewsPage')" class="uk-icon newsIcon"
                uk-icon="icon: world; ratio: 2" uk-tooltip="News"/>
         </div>
 
         <div class="col-xs">
-            <a v-if="notesStatus && notesStatus.status === 1 && activePage === 'home'" @click="setActivePage('notes')" class="uk-icon notesIcon"
+            <a v-if="notesStatus && notesStatus.status === 1 && activePage === 'Home'"
+               @click="setActivePage('Notes')" class="uk-icon notesIcon"
                uk-icon="icon: pencil; ratio: 2;" uk-tooltip="Personal Notes" />
         </div>
     </div>
 
     <DateTime />
 
-    <div v-if="activeUser && location">
+    <div v-if="activeUser && location" v-show="activePage === 'Home'">
         <Home />
     </div>
 
-    <div v-if="activePage === 'settings'">
-        <Settings />
-    </div>
+    <component v-if="activePage && activePage != 'Home'" :is="activePage" />
 </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
 export default {
-    data: function() {
-        return {
-            locationOptions: {
-                enableHighAccuracy: true,
-                timeout: 5000,
-            },
-        }
-    },
     computed: {
         controlIcon() {
-            return this.activePage === 'home' ? 'cog' : 'home'
+            return this.activePage === 'Home' ? 'cog' : 'home'
         },
         transparency() {
-            return this.activePage === 'home' ? 0.5 : 0.75
+            return this.activePage === 'Home' ? 0.5 : 0.85
         },
 
         newsStatus() {
@@ -57,13 +49,6 @@ export default {
             if (this.widgets)
                 return this.widgets.find(widget => widget.title === 'Notes')
             return {}
-        },
-
-        activeComponent() {
-            if (this.activeUser && this.location)
-                return "Home"
-            else if (this.activePage === 'settings')
-                return "Settings"
         },
 
         ...mapGetters('settings', {
@@ -113,26 +98,26 @@ export default {
         this.getLocation()
 
         // Update the background every 1 minute
-        setInterval(this.getBackground, 60000)
+        setInterval(this.getBackground, 120000)
         this.getBackground()
     },
 }
 </script>
 
 <style>
-    .homepage {
+    .Homepage {
         overflow-y:hidden;
         overflow-x:hidden;
         overflow: hidden !important;
 
         color: black;
 
-        height: 100vh !important;
+        height: 100vh;
         width: 100vw;
     }
 
     .pageControl {
-        position: absolute;
+        position: fixed;
         top: 10px;
         left: 10px;
         width: 175px;
@@ -147,7 +132,7 @@ export default {
         font-weight: 300px;
         font-size: 16px;
 
-        max-width: 300px;
+        max-width: 400px;
     }
 
     div {

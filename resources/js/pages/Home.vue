@@ -1,13 +1,10 @@
 <template>
 <div v-if="activeWidgets" class="row center-xs middle-xs nomargin Home">
     <div class="col-xs-8">
-        <div v-for="widget in activeWidgets" v-show="activePage === 'home'" class="Widget">
+        <div v-for="widget in activeWidgets">
             <component :is="widget.title" :widget="widget" />
         </div>
-
-        <!-- <News v-if="$parent.newsStatus.status" ref="News"  /> -->
     </div>
-    <Notes v-if="$parent.notesStatus.status" ref="Notes" />
 </div>
 </template>
 
@@ -33,9 +30,12 @@ export default {
         width: 100vw !important;
     }
 
+    .Widget {
+        padding: 5px 20px;
+    }
     .Widget:hover {
         /* border: 1px solid grey; */
         border-radius: 5px;
-        background: rgba(200,200,200,0.75);
+        background: rgba(200,200,200,0.85);
     }
 </style>

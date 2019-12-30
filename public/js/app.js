@@ -1712,9 +1712,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: _objectSpread({
@@ -1778,20 +1775,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  data: function data() {
-    return {
-      locationOptions: {
-        enableHighAccuracy: true,
-        timeout: 5000
-      }
-    };
-  },
   computed: _objectSpread({
     controlIcon: function controlIcon() {
-      return this.activePage === 'home' ? 'cog' : 'home';
+      return this.activePage === 'Home' ? 'cog' : 'home';
     },
     transparency: function transparency() {
-      return this.activePage === 'home' ? 0.5 : 0.75;
+      return this.activePage === 'Home' ? 0.5 : 0.85;
     },
     newsStatus: function newsStatus() {
       if (this.widgets) return this.widgets.find(function (widget) {
@@ -1804,9 +1793,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         return widget.title === 'Notes';
       });
       return {};
-    },
-    activeComponent: function activeComponent() {
-      if (this.activeUser && this.location) return "Home";else if (this.activePage === 'settings') return "Settings";
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
     activePage: 'getActivePage',
@@ -1851,7 +1837,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     this.getLocation(); // Update the background every 1 minute
 
-    setInterval(this.getBackground, 60000);
+    setInterval(this.getBackground, 120000);
     this.getBackground();
   }
 });
@@ -2384,6 +2370,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2496,9 +2484,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             if (status === 'OK') {
               _this.directions = response.routes[0].legs;
               console.log('%c Directions ', 'background: #222; color: #bada55');
-              console.log(_this.directions);
-
-              _this.setAddress(_this.directions[0].start_address);
+              console.log(_this.directions); // _this.setAddress(_this.directions[0].start_address)
 
               _this.parseTravelData(_this.directions[0].duration.value);
 
@@ -2516,13 +2502,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     setAddress: 'setAddress'
   })),
   mounted: function mounted() {
-    var _this5 = this;
-
-    if (this.widget && this.widget.interval) {
-      setInterval(function () {
-        _this5.getDirections();
-      }, this.widget.interval * 60000);
-    }
+    if (this.widget && this.widget.interval) setInterval(this.getDirections(), this.widget.interval * 60000);
   }
 });
 
@@ -2683,11 +2663,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 //
 //
 //
@@ -2696,27 +2671,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['widget'],
   data: function data() {
     return {
       news: null,
-      showNews: false,
       index: 0,
       categorys: ['general', 'technology', 'sports', 'science', 'entertainment'],
       activeCat: 'general'
     };
   },
-  computed: _objectSpread({
-    widget: function widget() {
-      if (this.widgets) return this.widgets.find(function (widget) {
-        return widget.title === 'News';
-      });
-    }
-  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
-    activePage: 'getActivePage'
-  })),
-  methods: _objectSpread({
+  methods: {
     getNews: function getNews() {
       var _this = this;
 
@@ -2736,33 +2701,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.index++;
       }
     }
-  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
-    setShowHome: 'setShowHome',
-    setActivePage: 'setActivePage'
-  })),
+  },
   mounted: function mounted() {
-    var _this2 = this;
-
     document.addEventListener("keyup", this.onKeyPress);
     this.getNews();
-
-    if (this.widget && this.widget.interval) {
-      setInterval(function () {
-        _this2.getNews();
-      }, this.widget.interval * 60000);
-    }
-  },
-  watch: {
-    activeCat: function activeCat() {
-      this.getNews();
-    },
-    activePage: function activePage() {
-      if (this.activePage === 'news') {
-        // Always send us back to the default on show so tabs are correct
-        this.activeCat = this.categorys[0];
-        this.index = 0;
-      }
-    }
+    if (this.widget && this.widget.interval) setInterval(this.getNews(), this.widget.interval * 60000);
   }
 });
 
@@ -2836,7 +2779,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       news: null,
-      showNews: false,
       index: 0,
       categorys: ['general', 'technology', 'sports', 'science', 'entertainment'],
       activeCat: 'general'
@@ -2852,6 +2794,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     activePage: 'getActivePage'
   })),
   methods: _objectSpread({
+    changeCat: function changeCat(category) {
+      this.activeCat = category;
+      this.getNews();
+    },
     getNews: function getNews() {
       var _this = this;
 
@@ -2885,18 +2831,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       setInterval(function () {
         _this2.getNews();
       }, this.widget.interval * 60000);
-    }
-  },
-  watch: {
-    activeCat: function activeCat() {
-      this.getNews();
-    },
-    activePage: function activePage() {
-      if (this.activePage === 'news') {
-        // Always send us back to the default on show so tabs are correct
-        this.activeCat = this.categorys[0];
-        this.index = 0;
-      }
     }
   }
 });
@@ -3118,24 +3052,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['widget'],
@@ -3182,53 +3098,57 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return "";
     },
     getDay: function getDay(day) {
-      // return this.days[new Date(day).getDay()]
       return this.days[new Date(day.EpochDate * 1000).getDay()];
     },
-    getIcon: function getIcon(isDay, curWeather) {
+    getIcon: function getIcon(curWeather) {
       var splitWeatherDesc = curWeather.toLowerCase().split(" "),
           tempIconText = null,
           i = 0;
-      var iconText = "wi wi-";
-      iconText += isDay == 1 || curWeather.includes("overcast") ? 'day-' : 'night-alt-';
+      var iconText = "wi wi-day-";
 
       while (tempIconText == null && i < splitWeatherDesc.length) {
         if ((tempIconText = this.weatherIconMap[splitWeatherDesc[i++]]) != null) iconText += tempIconText;
       }
 
-      console.log(curWeather + " -> " + iconText);
       return iconText;
     },
     getWeather: function getWeather(location) {
       var _this = this;
 
       if (location === 'loc') location = this.location;
-      var accu = "http://dataservice.accuweather.com/forecasts/v1/";
-      var query = accu + "daily/5day/49546?apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx&metric=true";
-      this.axios.get(query).then(function (response) {
-        query = accu + "hourly/1hour/49546?apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx&metric=true";
+      var accu = "http://dataservice.accuweather.com/";
+      var key = "apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx";
+      this.axios.get(accu + "locations/v1/cities/geoposition/search.json?q=" + location + "&" + key).then(function (locResponse) {
+        console.log('loc', locResponse.data);
+        var query = accu + "forecasts/v1/daily/5day/" + locResponse.data.Key + "?" + key + "&metric=true";
 
-        _this.axios.get(query).then(function (response2) {
-          _this.weather = response.data.DailyForecasts;
-          _this.weather[0].Temperature.current = response2.data[0].Temperature.Value;
-          console.log('%c Weather ', 'background: #222; color: #bada55');
-          console.log(_this.weather);
-          _this.curLoc = _this.parseAddress();
-          console.log(_this.curLoc);
+        _this.axios.get(query).then(function (response) {
+          query = accu + "forecasts/v1/hourly/1hour/" + locResponse.data.Key + "?" + key + "&metric=true";
+
+          _this.axios.get(query).then(function (response2) {
+            var current = {
+              value: response2.data[0].Temperature.Value,
+              IconPhrase: response2.data[0].IconPhrase
+            };
+            _this.weather = {};
+
+            _this.$set(_this.weather, 'location', locResponse);
+
+            _this.$set(_this.weather, 'current', current);
+
+            _this.$set(_this.weather, 'forecast', response.data.DailyForecasts);
+
+            console.log('%c Weather ', 'background: #222; color: #bada55');
+            console.log(_this.weather);
+            _this.curLoc = _this.parseAddress();
+          });
         });
       });
     }
   },
   mounted: function mounted() {
-    var _this2 = this;
-
     this.getWeather(this.location);
-
-    if (this.widget && this.widget.interval) {
-      setInterval(function () {
-        _this2.getWeather(_this2.location);
-      }, this.widget.interval * 60000);
-    }
+    if (this.widget && this.widget.interval) setInterval(this.getWeather(this.location), this.widget.interval * 60000);
   }
 });
 
@@ -3322,7 +3242,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Home {\n    width: 100vw !important;\n}\n.Widget:hover {\n    /* border: 1px solid grey; */\n    border-radius: 5px;\n    background: rgba(200,200,200,0.75);\n}\n", ""]);
+exports.push([module.i, "\n.Home {\n    width: 100vw !important;\n}\n.Widget {\n    padding: 5px 20px;\n}\n.Widget:hover {\n    /* border: 1px solid grey; */\n    border-radius: 5px;\n    background: rgba(200,200,200,0.85);\n}\n", ""]);
 
 // exports
 
@@ -3341,7 +3261,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.homepage {\n    overflow-y:hidden;\n    overflow-x:hidden;\n    overflow: hidden !important;\n\n    color: black;\n\n    height: 100vh !important;\n    width: 100vw;\n}\n.pageControl {\n    position: absolute;\n    top: 10px;\n    left: 10px;\n    width: 175px;\n}\n.pageControl .uk-icon:hover {\n    color: white;\n}\n.uk-tooltip {\n    font-family: 'Roboto' !important;\n    font-weight: 300px;\n    font-size: 16px;\n\n    max-width: 300px;\n}\ndiv {\n    cursor: default;\n}\n.fullWidth {\n    width: 100% !important;\n}\n.fullHeight {\n    height: 100% !important;\n}\n.nopadding {\n    padding: 0 !important;\n}\n.nomargin {\n    margin: 0 !important;\n}\n.nospacing {\n    margin: 0 !important;\n    padding: 0 !important;\n}\n.clickable {\n    cursor: pointer;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive !important;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive !important;\n}\n.textBody {\n    font-family: 'Roboto' !important;\n}\n.roundedButton {\n    color: white;\n    border-radius: 10px;\n    padding: auto 10px;\n    margin: 0 5px;\n    outline: none;\n}\n.uk-button-success {\n    background-color: #228B22;\n    color: white;\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
+exports.push([module.i, "\n.Homepage {\n    overflow-y:hidden;\n    overflow-x:hidden;\n    overflow: hidden !important;\n\n    color: black;\n\n    height: 100vh;\n    width: 100vw;\n}\n.pageControl {\n    position: fixed;\n    top: 10px;\n    left: 10px;\n    width: 175px;\n}\n.pageControl .uk-icon:hover {\n    color: white;\n}\n.uk-tooltip {\n    font-family: 'Roboto' !important;\n    font-weight: 300px;\n    font-size: 16px;\n\n    max-width: 400px;\n}\ndiv {\n    cursor: default;\n}\n.fullWidth {\n    width: 100% !important;\n}\n.fullHeight {\n    height: 100% !important;\n}\n.nopadding {\n    padding: 0 !important;\n}\n.nomargin {\n    margin: 0 !important;\n}\n.nospacing {\n    margin: 0 !important;\n    padding: 0 !important;\n}\n.clickable {\n    cursor: pointer;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive !important;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive !important;\n}\n.textBody {\n    font-family: 'Roboto' !important;\n}\n.roundedButton {\n    color: white;\n    border-radius: 10px;\n    padding: auto 10px;\n    margin: 0 5px;\n    outline: none;\n}\n.uk-button-success {\n    background-color: #228B22;\n    color: white;\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
 
 // exports
 
@@ -3455,7 +3375,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.favouritesBar[data-v-69b40203] {\n    /* height: 100vh; */\n    /* text-align: right; */\n\n    /* margin: 75px 0; */\n    /* margin-top: 15vh; */\n\n    /* margin-top: 100px; */\n    /* width: 500px; */\n}\n.favButtons[data-v-69b40203] {\n    width: 80%;\n    height: 80%;\n    margin: 3vh 0;\n}\n", ""]);
+exports.push([module.i, "\n.favouritesBar[data-v-69b40203] {\n    height: 15vh !important;\n}\n.favButtons[data-v-69b40203] {\n    height: 75%;\n    width: 75%;\n}\n.favButtons[data-v-69b40203]:hover {\n    height: 100%;\n    width: 100%;\n}\n", ""]);
 
 // exports
 
@@ -3531,7 +3451,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.NewsDisplay[data-v-b91d5c9e] {\n    margin-top: 30px;\n    height: 650px;\n}\n.NewsRow[data-v-b91d5c9e] {\n    font-weight: 600px;\n    font-size: 4vh;\n}\n.NewsRow a[data-v-b91d5c9e] {\n    color: black;\n}\n.newsIcon[data-v-b91d5c9e] {\n    position: absolute;\n    left: 60px;\n    top: 10px;\n}\n.newsIcon[data-v-b91d5c9e]:hover {\n    color: white;\n}\n.articleNum[data-v-b91d5c9e] {\n    margin: 10px 400px 40px 400px;\n}\n.headlineTitle[data-v-b91d5c9e] {\n    font-weight: 800px;\n    font-size: 30px;\n\n    min-height: 110px;\n}\n.headlineContent[data-v-b91d5c9e] {\n    font-weight: 400px;\n    font-size: 25px;\n\n    min-height: 200px;\n}\n.headlineSrc[data-v-b91d5c9e] {\n    font-weight: 300px;\n    font-size: 20px;\n\n    min-height: 150px;\n}\n.headlineUrl[data-v-b91d5c9e] {\n    font-weight: 200px;\n    font-size: 20px;\n\n    color: blue;\n}\n", ""]);
+exports.push([module.i, "\n.NewsDisplay[data-v-b91d5c9e] {\n    margin-top: 30px;\n    height: 650px;\n}\n.News[data-v-b91d5c9e] {\n    font-weight: 600px;\n    font-size: 4vh;\n\n    padding: 5px 20px;\n}\n.News a[data-v-b91d5c9e] {\n    color: black;\n}\n.newsIcon[data-v-b91d5c9e] {\n    position: absolute;\n    left: 60px;\n    top: 10px;\n}\n.newsIcon[data-v-b91d5c9e]:hover {\n    color: white;\n}\n.articleNum[data-v-b91d5c9e] {\n    margin: 10px 400px 40px 400px;\n}\n.headlineTitle[data-v-b91d5c9e] {\n    font-weight: 800px;\n    font-size: 30px;\n\n    min-height: 110px;\n}\n.headlineContent[data-v-b91d5c9e] {\n    font-weight: 400px;\n    font-size: 25px;\n\n    min-height: 200px;\n}\n.headlineSrc[data-v-b91d5c9e] {\n    font-weight: 300px;\n    font-size: 20px;\n\n    min-height: 150px;\n}\n.headlineUrl[data-v-b91d5c9e] {\n    font-weight: 200px;\n    font-size: 20px;\n\n    color: blue;\n}\n", ""]);
 
 // exports
 
@@ -3550,7 +3470,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.NewsDisplay[data-v-60fd95b0] {\n    margin-top: 30px;\n    height: 650px;\n}\n.NewsRow[data-v-60fd95b0] {\n    font-weight: 600px;\n    font-size: 4vh;\n}\n.NewsRow a[data-v-60fd95b0] {\n    color: black;\n}\n.newsIcon[data-v-60fd95b0] {\n    position: absolute;\n    left: 60px;\n    top: 10px;\n}\n.newsIcon[data-v-60fd95b0]:hover {\n    color: white;\n}\n.articleNum[data-v-60fd95b0] {\n    margin: 10px 400px 40px 400px;\n}\n.headlineTitle[data-v-60fd95b0] {\n    font-weight: 800px;\n    font-size: 30px;\n\n    min-height: 110px;\n}\n.headlineContent[data-v-60fd95b0] {\n    font-weight: 400px;\n    font-size: 25px;\n\n    min-height: 200px;\n}\n.headlineSrc[data-v-60fd95b0] {\n    font-weight: 300px;\n    font-size: 20px;\n\n    min-height: 150px;\n}\n.headlineUrl[data-v-60fd95b0] {\n    font-weight: 200px;\n    font-size: 20px;\n\n    color: blue;\n}\n", ""]);
+exports.push([module.i, "\n.NewsDisplay[data-v-60fd95b0] {\n    margin-top: 30px;\n    height: 650px;\n    width: 80vw;\n}\n.NewsRow[data-v-60fd95b0] {\n    font-weight: 600px;\n    font-size: 4vh;\n}\n.NewsRow a[data-v-60fd95b0] {\n    color: black;\n}\n.newsIcon[data-v-60fd95b0] {\n    position: absolute;\n    left: 60px;\n    top: 10px;\n}\n.newsIcon[data-v-60fd95b0]:hover {\n    color: white;\n}\n.articleNum[data-v-60fd95b0] {\n    margin: 10px 400px 40px 400px;\n}\n.headlineTitle[data-v-60fd95b0] {\n    font-weight: 800px;\n    font-size: 30px;\n\n    min-height: 110px;\n}\n.headlineContent[data-v-60fd95b0] {\n    font-weight: 400px;\n    font-size: 25px;\n\n    min-height: 200px;\n}\n.headlineSrc[data-v-60fd95b0] {\n    font-weight: 300px;\n    font-size: 20px;\n\n    min-height: 150px;\n}\n.headlineUrl[data-v-60fd95b0] {\n    font-weight: 200px;\n    font-size: 20px;\n\n    color: blue;\n}\n", ""]);
 
 // exports
 
@@ -3588,7 +3508,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.Weather[data-v-261436a7] {\n    height: 100% !important;\n    width: 100% !important;\n\n    margin-bottom: 15vh;\n}\n.day[data-v-261436a7] {\n    border: 1px solid grey;\n    border-radius: 5px;\n\n    margin: 0px 7.5px;\n    background: rgba(200,200,200,0.75);\n}\n.day i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 5vh;\n}\n.day hr[data-v-261436a7] {\n    margin: 10px 0px 0px 0px;\n}\n.location[data-v-261436a7] {\n    font-size: 5vh;\n    text-align: center;\n    margin-bottom: 0;\n}\ninput[data-v-261436a7] {\n    border: none;\n    background: none;\n    color: black;\n}\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n.curIcon[data-v-261436a7] {\n    width: 15vh;\n    height: 15vh;\n    padding-bottom: 1vh;\n    text-align: center;\n}\n.forecastIcon[data-v-261436a7] {\n    width: 90%;\n    height: 90%;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n    text-align: left;\n}\n.col-xs[data-v-261436a7] {\n    /* min-width: 15vw !important; */\n    /* max-width: 15vw !important; */\n}\n", ""]);
+exports.push([module.i, "\n.Weather[data-v-261436a7] {\n    height: 100% !important;\n    width: 100% !important;\n\n    margin-bottom: 15vh;\n}\n.forecast[data-v-261436a7] {\n    height: 18.5vh;\n}\n.day[data-v-261436a7] {\n    border: 1.5px solid grey;\n    border-radius: 5px;\n\n    margin: 0px 7.5px;\n    background: rgba(200,200,200,0.75);\n\n    height: 80% !important;\n}\n.day[data-v-261436a7]:hover {\n    background: rgba(220,220,220,0.95);\n    height: 100% !important;\n}\n.day i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 5vh;\n}\n.day:hover i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 6.5vh;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.day:hover .forecastTemp[data-v-261436a7] {\n    font-size: 4vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n}\n.day:hover .forecastDay[data-v-261436a7] {\n    font-size: 3vh;\n}\n.day hr[data-v-261436a7] {\n    margin: 10px 0px 5px 0px;\n    border-color: grey;\n}\n\n/* input {\n    border: none;\n    background: none;\n    color: black;\n} */\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n\n\n", ""]);
 
 // exports
 
@@ -24403,45 +24323,25 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.activeWidgets
-    ? _c(
-        "div",
-        { staticClass: "row center-xs middle-xs nomargin Home" },
-        [
-          _c(
-            "div",
-            { staticClass: "col-xs-8" },
-            _vm._l(_vm.activeWidgets, function(widget) {
-              return _c(
-                "div",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.activePage === "home",
-                      expression: "activePage === 'home'"
-                    }
-                  ],
-                  staticClass: "Widget"
-                },
-                [
-                  _c(widget.title, {
-                    tag: "component",
-                    attrs: { widget: widget }
-                  })
-                ],
-                1
-              )
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _vm.$parent.notesStatus.status
-            ? _c("Notes", { ref: "Notes" })
-            : _vm._e()
-        ],
-        1
-      )
+    ? _c("div", { staticClass: "row center-xs middle-xs nomargin Home" }, [
+        _c(
+          "div",
+          { staticClass: "col-xs-8" },
+          _vm._l(_vm.activeWidgets, function(widget) {
+            return _c(
+              "div",
+              [
+                _c(widget.title, {
+                  tag: "component",
+                  attrs: { widget: widget }
+                })
+              ],
+              1
+            )
+          }),
+          0
+        )
+      ])
     : _vm._e()
 }
 var staticRenderFns = []
@@ -24470,7 +24370,7 @@ var render = function() {
     "div",
     {
       staticClass:
-        "row center-xs middle-xs homepage nomargin uk-animation-fade",
+        "row center-xs middle-xs Homepage nomargin uk-animation-fade",
       style: "background: rgba(200,200,200," + _vm.transparency + ");"
     },
     [
@@ -24480,12 +24380,12 @@ var render = function() {
             staticClass: "uk-icon ",
             attrs: {
               "uk-icon": "icon: " + _vm.controlIcon + "; ratio: 2;",
-              "uk-tooltip": _vm.activePage == "home" ? "Settings" : "Home"
+              "uk-tooltip": _vm.activePage == "Home" ? "Settings" : "Home"
             },
             on: {
               click: function($event) {
                 return _vm.setActivePage(
-                  _vm.activePage === "home" ? "settings" : "home"
+                  _vm.activePage === "Home" ? "Settings" : "Home"
                 )
               }
             }
@@ -24495,7 +24395,7 @@ var render = function() {
         _c("div", { staticClass: "col-xs" }, [
           _vm.newsStatus &&
           _vm.newsStatus.status === 1 &&
-          _vm.activePage === "home"
+          _vm.activePage === "Home"
             ? _c("a", {
                 staticClass: "uk-icon newsIcon",
                 attrs: {
@@ -24504,7 +24404,7 @@ var render = function() {
                 },
                 on: {
                   click: function($event) {
-                    return _vm.setActivePage("news")
+                    return _vm.setActivePage("NewsPage")
                   }
                 }
               })
@@ -24514,7 +24414,7 @@ var render = function() {
         _c("div", { staticClass: "col-xs" }, [
           _vm.notesStatus &&
           _vm.notesStatus.status === 1 &&
-          _vm.activePage === "home"
+          _vm.activePage === "Home"
             ? _c("a", {
                 staticClass: "uk-icon notesIcon",
                 attrs: {
@@ -24523,7 +24423,7 @@ var render = function() {
                 },
                 on: {
                   click: function($event) {
-                    return _vm.setActivePage("notes")
+                    return _vm.setActivePage("Notes")
                   }
                 }
               })
@@ -24533,9 +24433,27 @@ var render = function() {
       _vm._v(" "),
       _c("DateTime"),
       _vm._v(" "),
-      _vm.activeUser && _vm.location ? _c("div", [_c("Home")], 1) : _vm._e(),
+      _vm.activeUser && _vm.location
+        ? _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.activePage === "Home",
+                  expression: "activePage === 'Home'"
+                }
+              ]
+            },
+            [_c("Home")],
+            1
+          )
+        : _vm._e(),
       _vm._v(" "),
-      _vm.activePage === "settings" ? _c("div", [_c("Settings")], 1) : _vm._e()
+      _vm.activePage && _vm.activePage != "Home"
+        ? _c(_vm.activePage, { tag: "component" })
+        : _vm._e()
     ],
     1
   )
@@ -25313,18 +25231,16 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _vm.destination
-      ? _c(
-          "div",
-          { staticClass: "row center-xs travelText textBody uk-text-truncate" },
-          [
+      ? _c("div", { staticClass: "row center-xs textBody uk-text-truncate " }, [
+          _c("div", { staticClass: "travelText Widget" }, [
             _vm._v(
-              "\n        Leave at " +
+              "\n            Leave at " +
                 _vm._s(_vm.departureTime) +
                 " to arrive at " +
                 _vm._s(_vm.destination.title) +
                 " by " +
                 _vm._s(_vm.arrivalTime) +
-                ". Via: \n        "
+                ". Via: \n            "
             ),
             _c(
               "a",
@@ -25337,8 +25253,8 @@ var render = function() {
               },
               [_vm._v(_vm._s(_vm.travelMethod))]
             )
-          ]
-        )
+          ])
+        ])
       : _vm._e(),
     _vm._v(" "),
     _c(
@@ -25862,11 +25778,11 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.news
-    ? _c("div", { staticClass: "row center-xs NewsRow Widget" }, [
+    ? _c("div", { staticClass: "row center-xs News" }, [
         _c(
           "a",
           {
-            staticClass: "col-xs-9",
+            staticClass: "col-xs-10 Widget",
             attrs: { href: _vm.news[_vm.index].url, target: "_blank" }
           },
           [
@@ -25901,7 +25817,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.news
-    ? _c("div", { staticClass: "center-xs NewsDisplay" }, [
+    ? _c("div", { staticClass: "row center-xs NewsDisplay" }, [
         _c("div", { staticClass: "row middle-xs fullWidth" }, [
           _c("div", { staticClass: "col-xs" }, [
             _vm.index > 0
@@ -25922,7 +25838,10 @@ var render = function() {
           _vm._v(" "),
           _c(
             "ul",
-            { staticClass: "col-xs-10 nomargin", attrs: { "uk-tab": "" } },
+            {
+              staticClass: "col-xs-10 center-xs nomargin",
+              attrs: { "uk-tab": "" }
+            },
             _vm._l(_vm.categorys, function(category) {
               return _c("li", [
                 _c(
@@ -25932,7 +25851,7 @@ var render = function() {
                       "uk-text-capitalize textTitle tabsTitle noselect",
                     on: {
                       click: function($event) {
-                        _vm.activeCat = category
+                        return _vm.changeCat(category)
                       }
                     }
                   },
@@ -26050,152 +25969,149 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.activePage === "notes"
-    ? _c("div", { staticClass: "row center-xs NotesDisplay" }, [
-        _c(
-          "div",
-          { staticClass: "col-xs-2 scrollSpace savedNotes" },
-          [
-            _vm._l(_vm.notes, function(note, index) {
-              return _c("div", [
-                _c(
-                  "p",
-                  {
-                    staticClass:
-                      "textBody uk-text-truncate savedNote nomargin clickable",
-                    on: {
-                      click: function($event) {
-                        return _vm.changeNotes(note)
-                      }
-                    }
-                  },
-                  [
-                    _vm._v(
-                      "\r\n                " +
-                        _vm._s(note.body.replace(/#/g, "").split("  ")[0]) +
-                        "\r\n            "
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                note.id === _vm.currentNote.id
-                  ? _c("div", { staticClass: "controlButtons" }, [
-                      _c("div", { staticClass: "row center-xs" }, [
-                        _vm.mode == "edit"
-                          ? _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "col-xs uk-button uk-button-text uk-text-capitalize",
-                                attrs: { type: "button" },
-                                on: { click: _vm.toggleMark }
-                              },
-                              [
-                                _vm._v(
-                                  "\r\n                        " +
-                                    _vm._s(_vm.showMark ? "Hide " : "Show ") +
-                                    " Mark\r\n                    "
-                                )
-                              ]
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _c(
+  return _c("div", { staticClass: "row center-xs NotesDisplay" }, [
+    _c(
+      "div",
+      { staticClass: "col-xs-2 scrollSpace savedNotes" },
+      [
+        _vm._l(_vm.notes, function(note, index) {
+          return _c("div", [
+            _c(
+              "p",
+              {
+                staticClass:
+                  "textBody uk-text-truncate savedNote nomargin clickable",
+                on: {
+                  click: function($event) {
+                    return _vm.changeNotes(note)
+                  }
+                }
+              },
+              [
+                _vm._v(
+                  "\r\n                " +
+                    _vm._s(note.body.replace(/#/g, "").split("  ")[0]) +
+                    "\r\n            "
+                )
+              ]
+            ),
+            _vm._v(" "),
+            note.id === _vm.currentNote.id
+              ? _c("div", { staticClass: "controlButtons" }, [
+                  _c("div", { staticClass: "row center-xs" }, [
+                    _vm.mode == "edit"
+                      ? _c(
                           "button",
                           {
                             staticClass:
                               "col-xs uk-button uk-button-text uk-text-capitalize",
                             attrs: { type: "button" },
-                            on: {
-                              click: function($event) {
-                                return _vm.startDelete(note)
-                              }
-                            }
+                            on: { click: _vm.toggleMark }
                           },
                           [
                             _vm._v(
-                              "\r\n                        Delete Note\r\n                    "
+                              "\r\n                        " +
+                                _vm._s(_vm.showMark ? "Hide " : "Show ") +
+                                " Mark\r\n                    "
                             )
                           ]
                         )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "center-xs updatedAt" }, [
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "col-xs uk-button uk-button-text uk-text-capitalize",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.startDelete(note)
+                          }
+                        }
+                      },
+                      [
                         _vm._v(
-                          "\r\n                    " +
-                            _vm._s(_vm.findAuthor(note).name) +
-                            " - " +
-                            _vm._s(
-                              note.updated_at.split(" ")[0].replace(/-/g, "/")
-                            ) +
-                            "\r\n                "
+                          "\r\n                        Delete Note\r\n                    "
                         )
-                      ])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                index < _vm.notes.length - 1 ? _c("hr") : _vm._e()
-              ])
-            }),
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "center-xs updatedAt" }, [
+                    _vm._v(
+                      "\r\n                    " +
+                        _vm._s(_vm.findAuthor(note).name) +
+                        " - " +
+                        _vm._s(
+                          note.updated_at.split(" ")[0].replace(/-/g, "/")
+                        ) +
+                        "\r\n                "
+                    )
+                  ])
+                ])
+              : _vm._e(),
             _vm._v(" "),
-            _c("div", { staticClass: "row center-xs" }, [
-              _c("button", {
-                staticClass:
-                  "col-xs-8 uk-button-default uk-icon-button newButton",
-                attrs: { type: "button", "uk-icon": "plus" },
-                on: {
-                  click: function($event) {
-                    return _vm.changeNotes({ id: null, body: "" })
-                  }
-                }
-              })
-            ])
-          ],
-          2
-        ),
+            index < _vm.notes.length - 1 ? _c("hr") : _vm._e()
+          ])
+        }),
         _vm._v(" "),
-        _c("div", { staticClass: "col-xs row fullWidth scrollSpace" }, [
-          _c("hr", { staticClass: "uk-divider-vertical" }),
-          _vm._v(" "),
-          _vm.mode === "edit"
-            ? _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.currentNote.body,
-                    expression: "currentNote.body"
-                  }
-                ],
-                staticClass: "col-xs noteBody textBody fullWidth",
-                domProps: { value: _vm.currentNote.body },
-                on: {
-                  input: [
-                    function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.currentNote, "body", $event.target.value)
-                    },
-                    _vm.debounce
-                  ]
-                }
-              })
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.mode === "edit" && _vm.showMark
-            ? _c("hr", { staticClass: "uk-divider-vertical secondHR" })
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.showMark || _vm.mode === "view"
-            ? _c("div", {
-                staticClass: "col-xs noteBody textBody fullWidth",
-                domProps: { innerHTML: _vm._s(_vm.compiledMarkdown) }
-              })
-            : _vm._e()
+        _c("div", { staticClass: "row center-xs" }, [
+          _c("button", {
+            staticClass: "col-xs-8 uk-button-default uk-icon-button newButton",
+            attrs: { type: "button", "uk-icon": "plus" },
+            on: {
+              click: function($event) {
+                return _vm.changeNotes({ id: null, body: "" })
+              }
+            }
+          })
         ])
-      ])
-    : _vm._e()
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-xs row fullWidth scrollSpace" }, [
+      _c("hr", { staticClass: "uk-divider-vertical" }),
+      _vm._v(" "),
+      _vm.mode === "edit"
+        ? _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.currentNote.body,
+                expression: "currentNote.body"
+              }
+            ],
+            staticClass: "col-xs noteBody textBody fullWidth",
+            domProps: { value: _vm.currentNote.body },
+            on: {
+              input: [
+                function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.currentNote, "body", $event.target.value)
+                },
+                _vm.debounce
+              ]
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.mode === "edit" && _vm.showMark
+        ? _c("hr", { staticClass: "uk-divider-vertical secondHR" })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.showMark || _vm.mode === "view"
+        ? _c("div", {
+            staticClass: "col-xs noteBody textBody fullWidth",
+            domProps: { innerHTML: _vm._s(_vm.compiledMarkdown) }
+          })
+        : _vm._e()
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -26221,44 +26137,54 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _vm.weather
     ? _c("div", { staticClass: "row fullWidth Weather" }, [
-        _c(
-          "div",
-          {
-            staticClass:
-              "row start-xs middle-xs curDescription textSpecial fullWidth nopadding",
-            attrs: { "uk-tooltip": _vm.address.formatted_address }
-          },
-          [
-            _vm.weather.length &&
-            _vm.weather[0].Temperature &&
-            _vm.weather[0].Temperature.current != undefined
-              ? _c("div", [
+        _vm.weather && _vm.weather.current
+          ? _c(
+              "div",
+              {
+                staticClass:
+                  "row curDescription textSpecial fullWidth nopadding",
+                attrs: { "uk-tooltip": _vm.address.formatted_address }
+              },
+              [
+                _c("div", { staticClass: "col-xs start-xs" }, [
+                  _c("i", {
+                    class: _vm.getIcon(_vm.weather.current.IconPhrase)
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-xs center-xs" }, [
+                  _vm._v(
+                    "\n            " + _vm._s(_vm.parseAddress()) + "\n        "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-xs end-xs" }, [
                   _vm._v(
                     "\n            " +
-                      _vm._s(_vm.weather[0].Temperature.current) +
-                      "°C - " +
-                      _vm._s(_vm.parseAddress()) +
-                      "\n        "
+                      _vm._s(_vm.weather.current.value) +
+                      "° C\n        "
                   )
                 ])
-              : _vm._e()
-          ]
-        ),
+              ]
+            )
+          : _vm._e(),
         _vm._v(" "),
         _c(
           "div",
-          { staticClass: "row center-xs middle-xs textBody fullWidth" },
-          _vm._l(_vm.weather, function(day) {
+          {
+            staticClass: "row center-xs middle-xs textBody fullWidth forecast"
+          },
+          _vm._l(_vm.weather.forecast, function(day) {
             return _c(
               "div",
               {
-                staticClass: "col-xs day",
+                staticClass: "col-xs day uk-box-shadow-hover-large",
                 attrs: { "uk-tooltip": day.Day.IconPhrase }
               },
               [
                 _c("div", { staticClass: "row middle-xs" }, [
                   _c("div", { staticClass: "col-xs-7" }, [
-                    _c("i", { class: _vm.getIcon(1, day.Day.IconPhrase) })
+                    _c("i", { class: _vm.getIcon(day.Day.IconPhrase) })
                   ]),
                   _vm._v(" "),
                   _c(
@@ -26268,13 +26194,13 @@ var render = function() {
                       _vm._v(
                         "\n                    " +
                           _vm._s(Math.round(day.Temperature.Maximum.Value)) +
-                          "\n                    "
+                          "°\n                    "
                       ),
                       _c("br"),
                       _vm._v(
                         "\n                    " +
                           _vm._s(Math.round(day.Temperature.Minimum.Value)) +
-                          "\n                "
+                          "°\n                "
                       )
                     ]
                   )
@@ -26282,8 +26208,12 @@ var render = function() {
                 _vm._v(" "),
                 _c("hr"),
                 _vm._v(" "),
-                _c("span", { staticClass: "forecastDay" }, [
-                  _vm._v(_vm._s(_vm.getDay(day)))
+                _c("div", { staticClass: "forecastDay bottom-xs" }, [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.getDay(day)) +
+                      "\n            "
+                  )
                 ])
               ]
             )
@@ -42375,7 +42305,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
 var state = {
-  activePage: 'home',
+  activePage: 'Home',
   address: null,
   lat: null,
   lng: null,

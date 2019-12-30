@@ -1,33 +1,21 @@
 <template>
-<div v-if="news" class="row center-xs NewsRow Widget">
-    <a class="col-xs-9" :href="news[index].url" target="_blank">
+<div v-if="news" class="row center-xs News">
+    <a class="col-xs-10 Widget" :href="news[index].url" target="_blank">
         {{news[index].title}}
     </a>
 </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-
 export default {
+    props: ['widget'],
     data: function() {
         return {
             news: null,
-            showNews: false,
             index: 0,
             categorys: ['general', 'technology', 'sports', 'science', 'entertainment'],
             activeCat: 'general'
         }
-    },
-    computed: {
-        widget: function() {
-            if (this.widgets)
-                return this.widgets.find(widget => widget.title === 'News')
-        },
-
-        ...mapGetters('settings', {
-            activePage: 'getActivePage',
-        })
     },
     methods: {
         getNews() {
@@ -49,33 +37,13 @@ export default {
                 this.index++
             }
         },
-
-        ...mapActions('settings', {
-            setShowHome: 'setShowHome',
-            setActivePage: 'setActivePage',
-        })
     },
     mounted: function() {
         document.addEventListener("keyup", this.onKeyPress);
 
         this.getNews()
-        if (this.widget && this.widget.interval) {
-            setInterval(() => {
-                this.getNews()
-            }, this.widget.interval * 60000)
-        }
-    },
-    watch: {
-        activeCat: function() {
-            this.getNews()
-        },
-        activePage: function(){
-            if (this.activePage === 'news') {
-                // Always send us back to the default on show so tabs are correct
-                this.activeCat = this.categorys[0]
-                this.index = 0
-            }
-        }
+        if (this.widget && this.widget.interval)
+            setInterval(this.getNews(), this.widget.interval * 60000)
     },
 }
 </script>
@@ -86,11 +54,13 @@ export default {
         height: 650px;
     }
 
-    .NewsRow {
+    .News {
         font-weight: 600px;
         font-size: 4vh;
+
+        padding: 5px 20px;
     }
-    .NewsRow a {
+    .News a {
         color: black;
     }
 

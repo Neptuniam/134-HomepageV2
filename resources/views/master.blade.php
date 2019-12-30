@@ -5,7 +5,7 @@
         <!-- <meta name="csrf-token" content="{{csrf_token()}}"> -->
 
         <title>
-            The 134 HomepageV2
+            HomepageV2
         </title>
 
         <!-- Fonts -->

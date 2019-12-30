@@ -1,5 +1,5 @@
 <template>
-<div v-if="activePage === 'notes'" class="row center-xs NotesDisplay">
+<div class="row center-xs NotesDisplay">
     <div class="col-xs-2 scrollSpace savedNotes">
         <div v-for="(note, index) in notes">
             <p @click="changeNotes(note)" class="textBody uk-text-truncate savedNote nomargin clickable">

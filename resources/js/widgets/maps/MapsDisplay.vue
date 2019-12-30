@@ -1,8 +1,10 @@
 <template>
 <div>
-    <div v-if="destination" class="row center-xs travelText textBody uk-text-truncate">
-        Leave at {{departureTime}} to arrive at {{destination.title}} by {{arrivalTime}}. Via:&nbsp;
-        <a @click="showMap = !showMap">{{travelMethod}}</a>
+    <div v-if="destination" class="row center-xs textBody uk-text-truncate ">
+        <div class="travelText Widget">
+            Leave at {{departureTime}} to arrive at {{destination.title}} by {{arrivalTime}}. Via:&nbsp;
+            <a @click="showMap = !showMap">{{travelMethod}}</a>
+        </div>
     </div>
 
     <div v-show="false">
@@ -129,7 +131,7 @@ export default {
                             console.log('%c Directions ', 'background: #222; color: #bada55');
                             console.log(_this.directions);
 
-                            _this.setAddress(_this.directions[0].start_address)
+                            // _this.setAddress(_this.directions[0].start_address)
                             _this.parseTravelData(_this.directions[0].duration.value)
                             directionsDisplay.setDirections(response);
                         } else {
@@ -147,11 +149,8 @@ export default {
         })
     },
     mounted: function() {
-        if (this.widget && this.widget.interval) {
-            setInterval(() => {
-                this.getDirections()
-            }, this.widget.interval * 60000)
-        }
+        if (this.widget && this.widget.interval)
+            setInterval(this.getDirections(), this.widget.interval * 60000)
     },
 }
 </script>
@@ -161,6 +160,7 @@ export default {
         font-weight: 600px;
         font-size: 4vh;
         text-align: center;
+
     }
     a {
         color: black;

@@ -45,19 +45,15 @@ export default {
 
 <style scoped>
     .favouritesBar {
-        /* height: 100vh; */
-        /* text-align: right; */
-
-        /* margin: 75px 0; */
-        /* margin-top: 15vh; */
-
-        /* margin-top: 100px; */
-        /* width: 500px; */
+        height: 15vh !important;
     }
 
     .favButtons {
-        width: 80%;
-        height: 80%;
-        margin: 3vh 0;
+        height: 75%;
+        width: 75%;
+    }
+    .favButtons:hover {
+        height: 100%;
+        width: 100%;
     }
 </style>

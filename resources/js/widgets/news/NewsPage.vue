@@ -1,14 +1,14 @@
 <template>
-<div v-if="news" class="center-xs NewsDisplay">
+<div v-if="news" class="row center-xs NewsDisplay">
     <div class="row middle-xs fullWidth">
         <div class="col-xs">
             <a v-if="index > 0" @click="index--" class="uk-icon previousIcon"
                uk-icon="icon: chevron-left; ratio: 2" uk-tooltip="Previous Article" />
         </div>
 
-        <ul uk-tab class="col-xs-10 nomargin">
+        <ul uk-tab class="col-xs-10 center-xs nomargin">
             <li v-for="category in categorys">
-                <a class="uk-text-capitalize textTitle tabsTitle noselect" @click="activeCat = category">
+                <a class="uk-text-capitalize textTitle tabsTitle noselect" @click="changeCat(category)">
                     {{category}}
                 </a>
             </li>
@@ -54,7 +54,6 @@ export default {
     data: function() {
         return {
             news: null,
-            showNews: false,
             index: 0,
             categorys: ['general', 'technology', 'sports', 'science', 'entertainment'],
             activeCat: 'general'
@@ -71,6 +70,11 @@ export default {
         })
     },
     methods: {
+        changeCat(category) {
+            this.activeCat = category
+            this.getNews()
+        },
+
         getNews() {
             let query = "https://newsapi.org/v2/top-headlines?country=ca&category="+this.activeCat+"&apiKey=2b056b1596eb4356a56510c4e19da2b7"
             this.axios.get(query).then(news => {
@@ -106,18 +110,6 @@ export default {
             }, this.widget.interval * 60000)
         }
     },
-    watch: {
-        activeCat: function() {
-            this.getNews()
-        },
-        activePage: function(){
-            if (this.activePage === 'news') {
-                // Always send us back to the default on show so tabs are correct
-                this.activeCat = this.categorys[0]
-                this.index = 0
-            }
-        }
-    },
 }
 </script>
 
@@ -125,6 +117,7 @@ export default {
     .NewsDisplay {
         margin-top: 30px;
         height: 650px;
+        width: 80vw;
     }
 
     .NewsRow {

@@ -1,55 +1,37 @@
-<!-- <template>
-<div v-if="weather">
-    <div class="row center-xs middle-xs curDescription textSpecial fullWidth nopadding" :uk-tooltip="address">
-        <img :src="weather.current.condition.icon" alt="Condition Icon" class="curIcon nospacing"
-             :uk-tooltip="weather.current.condition.text">
-        {{Math.round(weather.current.feelslike_c)}}&deg;C -
-
-        <input v-model="curLoc" v-on:keyup.enter="getWeather(curLoc)" @click='curLoc = " "' v-if="curLoc"
-               type="text" class="textSpecial" :style="'width: '+curLoc.length*2+'vw;'">
-    </div>
-
-    <div class="row center-xs middle-xs textBody fullWidth">
-        <div v-for="day in weather.forecast.forecastday" class="col-xs" :uk-tooltip="day.day.condition.text">
-            <div class="row">
-                <div class="col-xs-7 end-xs nospacing">
-                    <img :src="day.day.condition.icon" alt="Condition Icon" class="forecastIcon">
-                </div>
-                <div class="col-xs-3 forecastTemp nospacing">
-                    {{Math.round(day.day.maxtemp_c)}}&deg;
-                    {{Math.round(day.day.mintemp_c)}}&deg;
-                </div>
-            </div>
-            <span class="forecastDay">{{getDay(day.date)}}</span>
-        </div>
-    </div>
-</div>
-</template> -->
 <template>
 <div v-if="weather" class="row fullWidth Weather">
-    <div class="row start-xs middle-xs curDescription textSpecial fullWidth nopadding" :uk-tooltip="address.formatted_address">
-        <div v-if="weather.length && weather[0].Temperature && weather[0].Temperature.current != undefined">
-            {{weather[0].Temperature.current}}&deg;C - {{parseAddress()}}
+    <div v-if="weather && weather.current" class="row curDescription textSpecial fullWidth nopadding"
+        :uk-tooltip="address.formatted_address">
+        <div class="col-xs start-xs">
+            <i :class="getIcon(weather.current.IconPhrase)" />
+        </div>
+        <div class="col-xs center-xs">
+            {{parseAddress()}}
+        </div>
+        <div class="col-xs end-xs">
+            {{weather.current.value}}&deg; C
         </div>
     </div>
+    <!-- <input v-model="curLoc" v-on:keyup.enter="getWeather(curLoc)" @click='curLoc = " "' v-if="curLoc"
+           type="text" class="textSpecial" :style="'width: '+curLoc.length*2+'vw;'"> -->
 
-    <div class="row center-xs middle-xs textBody fullWidth">
-        <div v-for="day in weather" class="col-xs day" :uk-tooltip="day.Day.IconPhrase">
+    <div class="row center-xs middle-xs textBody fullWidth forecast">
+        <div v-for="day in weather.forecast" class="col-xs day uk-box-shadow-hover-large" :uk-tooltip="day.Day.IconPhrase">
             <div class="row middle-xs">
                 <div class="col-xs-7">
-                    <!-- {{day.Day.IconPhrase}} -->
-                    <i :class="getIcon(1, day.Day.IconPhrase)"></i>
+                    <i :class="getIcon(day.Day.IconPhrase)" />
                 </div>
                 <div class="col-xs-3 forecastTemp nospacing">
-                    {{Math.round(day.Temperature.Maximum.Value)}}
+                    {{Math.round(day.Temperature.Maximum.Value)}}&deg;
                     <br>
-                    {{Math.round(day.Temperature.Minimum.Value)}}
+                    {{Math.round(day.Temperature.Minimum.Value)}}&deg;
                 </div>
             </div>
 
             <hr>
-
-            <span class="forecastDay">{{getDay(day)}}</span>
+            <div class="forecastDay bottom-xs">
+                {{getDay(day)}}
+            </div>
         </div>
     </div>
 </div>
@@ -107,21 +89,17 @@ export default {
         },
 
         getDay(day) {
-            // return this.days[new Date(day).getDay()]
             return this.days[new Date(day.EpochDate*1000).getDay()]
         },
 
-        getIcon(isDay, curWeather) {
+        getIcon(curWeather) {
             var splitWeatherDesc = curWeather.toLowerCase().split(" "), tempIconText = null, i = 0;
-            var iconText = "wi wi-";
-
-            iconText += (isDay == 1 || curWeather.includes("overcast") ) ? 'day-' : 'night-alt-'
+            var iconText = "wi wi-day-";
 
             while (tempIconText == null && i < splitWeatherDesc.length)
                 if ((tempIconText = this.weatherIconMap[splitWeatherDesc[i++]]) != null)
                     iconText += tempIconText;
 
-            console.log(curWeather + " -> " + iconText);
             return (iconText)
         },
 
@@ -129,21 +107,32 @@ export default {
             if (location === 'loc')
                 location = this.location
 
-            let accu = "http://dataservice.accuweather.com/forecasts/v1/"
-            let query = accu+"daily/5day/49546?apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx&metric=true"
+            let accu = "http://dataservice.accuweather.com/"
+            let key = "apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx"
 
-            this.axios.get(query).then(response => {
-                query = accu+"hourly/1hour/49546?apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx&metric=true"
+            this.axios.get(accu+"locations/v1/cities/geoposition/search.json?q="+location+"&"+key).then(locResponse => {
+                console.log('loc',locResponse.data);
+                let query = accu+"forecasts/v1/daily/5day/"+locResponse.data.Key+"?"+key+"&metric=true"
 
-                this.axios.get(query).then(response2 => {
-                    this.weather = response.data.DailyForecasts
-                    this.weather[0].Temperature.current = response2.data[0].Temperature.Value
+                this.axios.get(query).then(response => {
+                    query = accu+"forecasts/v1/hourly/1hour/"+locResponse.data.Key+"?"+key+"&metric=true"
 
-                    console.log('%c Weather ', 'background: #222; color: #bada55');
-                    console.log(this.weather);
+                    this.axios.get(query).then(response2 => {
+                        let current = {
+                            value: response2.data[0].Temperature.Value,
+                            IconPhrase: response2.data[0].IconPhrase
+                        }
 
-                    this.curLoc = this.parseAddress()
-                    console.log(this.curLoc);
+                        this.weather = {}
+                        this.$set(this.weather, 'location', locResponse)
+                        this.$set(this.weather, 'current', current)
+                        this.$set(this.weather, 'forecast', response.data.DailyForecasts)
+
+                        console.log('%c Weather ', 'background: #222; color: #bada55');
+                        console.log(this.weather);
+
+                        this.curLoc = this.parseAddress()
+                    })
                 })
             })
         },
@@ -151,11 +140,8 @@ export default {
     mounted: function() {
         this.getWeather(this.location)
 
-        if (this.widget && this.widget.interval) {
-            setInterval(() => {
-                this.getWeather(this.location)
-            }, this.widget.interval * 60000)
-        }
+        if (this.widget && this.widget.interval)
+            setInterval(this.getWeather(this.location), this.widget.interval * 60000)
     },
 }
 </script>
@@ -168,60 +154,64 @@ export default {
         margin-bottom: 15vh;
     }
 
+    .forecast {
+        height: 18.5vh;
+    }
+
     .day {
-        border: 1px solid grey;
+        border: 1.5px solid grey;
         border-radius: 5px;
 
         margin: 0px 7.5px;
         background: rgba(200,200,200,0.75);
+
+        height: 80% !important;
+    }
+    .day:hover {
+        background: rgba(220,220,220,0.95);
+        height: 100% !important;
     }
 
     .day i {
         margin-top: 2vh !important;
         font-size: 5vh;
     }
-
-    .day hr {
-        margin: 10px 0px 0px 0px;
+    .day:hover i {
+        margin-top: 2vh !important;
+        font-size: 6.5vh;
     }
 
-    .location {
-        font-size: 5vh;
-        text-align: center;
-        margin-bottom: 0;
-    }
-
-    input {
-        border: none;
-        background: none;
-        color: black;
-    }
-
-    .curDescription, .curDescription input {
-        font-size: 4vw;
-    }
-    .curIcon {
-        width: 15vh;
-        height: 15vh;
-        padding-bottom: 1vh;
-        text-align: center;
-    }
-
-    .forecastIcon {
-        width: 90%;
-        height: 90%;
-    }
     .forecastTemp {
         font-size: 3vh;
         text-align: right;
     }
-    .forecastDay {
-        font-size: 2vh;
-        text-align: left;
+    .day:hover .forecastTemp {
+        font-size: 4vh;
+        text-align: right;
     }
 
-    .col-xs {
-        /* min-width: 15vw !important; */
-        /* max-width: 15vw !important; */
+    .forecastDay {
+        font-size: 2vh;
     }
+    .day:hover .forecastDay {
+        font-size: 3vh;
+    }
+
+
+    .day hr {
+        margin: 10px 0px 5px 0px;
+        border-color: grey;
+    }
+
+    /* input {
+        border: none;
+        background: none;
+        color: black;
+    } */
+
+    .curDescription, .curDescription input {
+        font-size: 4vw;
+    }
+
+
 </style>
