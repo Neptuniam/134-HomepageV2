@@ -40,10 +40,9 @@ UIkit.use(Icons);
 window.UIkit = UIkit;
 
 Vue.use(VueAxios, axios)
-
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM',
+    key: process.env.MIX_MAPS_KEY,
     // libraries: 'places', // This is required if you use the Autocomplete plugin
   },
 })

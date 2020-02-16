@@ -84,7 +84,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
     data: function() {
         return {
-            newLocation: {id: null, user_id: null,  title: '', address: '', lng: '', lat: ''},
+            newLocation: { id: null, user_id: null,  title: '', address: '', lng: '', lat: '' },
         }
     },
     computed: {
@@ -98,9 +98,6 @@ export default {
             mapsSettings: 'getMapsSettings',
             activeUser: 'getUser',
         })
-    },
-    created: function() {
-
     },
     methods: {
         addLoc() {

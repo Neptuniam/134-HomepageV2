@@ -86,8 +86,7 @@ const actions = {
             commit('setActivePage', 'settings')
         } else {
             dispatch('setActiveUser', user)
-            return axios.put('/settings/users', user).then(() => {
-            })
+            return axios.put('/settings/users', user)
         }
     },
 
@@ -97,7 +96,7 @@ const actions = {
             commit('setUser', payload)
 
             dispatch('fetchWidgets')
-            dispatch('fetchMapsSettings')
+            // dispatch('fetchMapsSettings')
             dispatch('fetchFavourites')
         })
     },
@@ -166,7 +165,7 @@ const actions = {
             console.log('%c Maps Settings ', 'background: #222; color: #bada55');
             console.log(response.data);
             commit('setMapsSettings', response.data[0])
-            dispatch('fetchLocations')
+            // dispatch('fetchLocations')
         })
     },
     updateMapSettings: ({commit, dispatch}, payload) => {
