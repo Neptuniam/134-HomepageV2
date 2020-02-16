@@ -37,7 +37,7 @@ export default {
             return this.activePage === 'Home' ? 'cog' : 'home'
         },
         transparency() {
-            return this.activePage === 'Home' ? 0.5 : 0.85
+            return this.activePage === 'Home' ? 0.65 : 0.85
         },
 
         newsStatus() {
@@ -59,15 +59,14 @@ export default {
         })
     },
     methods: {
-        getLocation() {
+        async getLocation() {
             // Retrieve the users location on created
-            this.axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(response => {
-                this.axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+response.data.location.lat+','+response.data.location.lng+'&key=AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM').then(geolocation => {
-                    response.data.location['geocode'] = geolocation.data.results
-                    console.log('geoLocation: ', geolocation.data);
-                    this.setLocation(response.data.location)
-                })
-            })
+            let response = await this.axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.MIX_GEOLOC_KEY}`)
+            let geolocation = await this.axios.post(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${response.data.location.lat},${response.data.location.lng}&key=${process.env.MIX_GEOLOC_KEY}`)
+
+            response.data.location['geocode'] = geolocation.data.results
+            console.log('geoLocation: ', geolocation.data);
+            this.setLocation(response.data.location)
         },
 
         getBackground() {
@@ -89,7 +88,7 @@ export default {
             fetchUsers: 'fetchUsers',
         })
     },
-    created: function() {
+    created() {
         this.fetchUser()
         this.fetchUsers()
 
