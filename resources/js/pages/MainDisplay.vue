@@ -94,7 +94,7 @@ export default {
 
         // Update the users location every 10 minutes
         // setInterval(this.getLocation, 600000)
-        // this.getLocation()
+        this.getLocation()
 
         // Update the background every 1 minute
         setInterval(this.getBackground, 120000)
