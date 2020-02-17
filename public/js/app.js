@@ -1878,8 +1878,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.fetchUser();
     this.fetchUsers(); // Update the users location every 10 minutes
     // setInterval(this.getLocation, 600000)
-
-    this.getLocation(); // Update the background every 1 minute
+    // this.getLocation()
+    // Update the background every 1 minute
 
     setInterval(this.getBackground, 120000);
     this.getBackground();
@@ -3111,7 +3111,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -3188,7 +3196,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])('settings', {
     location: 'getLocation',
     address: 'getAddress'
   })),
@@ -3216,34 +3224,59 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       return iconText;
     },
-    getWeather: function getWeather(location) {
-      var _this = this;
+    getWeather: function () {
+      var _getWeather = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(location) {
+        var accu, key, locResponse, forecastResponse, currrentResponse, current;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (location === 'loc') location = this.location;
+                accu = "http://dataservice.accuweather.com/";
+                key = "W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx";
+                _context.next = 5;
+                return this.axios.get(accu + "locations/v1/cities/geoposition/search.json?q=" + location + "&apikey=" + key);
 
-      if (location === 'loc') location = this.location;
-      var accu = "http://dataservice.accuweather.com/";
-      var key = "apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx";
-      this.axios.get(accu + "locations/v1/cities/geoposition/search.json?q=" + location + "&" + key).then(function (locResponse) {
-        _this.axios.get(accu + "forecasts/v1/daily/5day/" + locResponse.data.Key + "?" + key + "&metric=true").then(function (forecastResponse) {
-          _this.axios.get(accu + "forecasts/v1/hourly/1hour/" + locResponse.data.Key + "?" + key + "&metric=true").then(function (currrentResponse) {
-            var current = {
-              value: currrentResponse.data[0].Temperature.Value,
-              IconPhrase: currrentResponse.data[0].IconPhrase
-            };
-            _this.weather = {};
+              case 5:
+                locResponse = _context.sent;
+                _context.next = 8;
+                return this.axios.get(accu + "forecasts/v1/daily/5day/" + locResponse.data.Key + "?apikey=" + key + "&metric=true");
 
-            _this.$set(_this.weather, 'location', locResponse.data);
+              case 8:
+                forecastResponse = _context.sent;
+                _context.next = 11;
+                return this.axios.get(accu + "forecasts/v1/hourly/1hour/" + locResponse.data.Key + "?apikey=" + key + "&metric=true");
 
-            _this.$set(_this.weather, 'current', current);
+              case 11:
+                currrentResponse = _context.sent;
+                current = {
+                  value: currrentResponse.data[0].Temperature.Value,
+                  IconPhrase: currrentResponse.data[0].IconPhrase
+                };
+                this.weather = {};
+                this.$set(this.weather, 'location', locResponse.data);
+                this.$set(this.weather, 'current', current);
+                this.$set(this.weather, 'forecast', forecastResponse.data.DailyForecasts);
+                console.log('%c Weather ', 'background: #222; color: #bada55');
+                console.log(this.weather);
+                this.curLoc = this.parseAddress();
 
-            _this.$set(_this.weather, 'forecast', forecastResponse.data.DailyForecasts);
+              case 20:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
 
-            console.log('%c Weather ', 'background: #222; color: #bada55');
-            console.log(_this.weather);
-            _this.curLoc = _this.parseAddress();
-          });
-        });
-      });
-    }
+      function getWeather(_x) {
+        return _getWeather.apply(this, arguments);
+      }
+
+      return getWeather;
+    }()
   },
   mounted: function mounted() {
     this.getWeather(this.location);
@@ -26954,7 +26987,12 @@ var render = function() {
               {
                 staticClass:
                   "row curDescription textSpecial fullWidth nopadding",
-                attrs: { "uk-tooltip": _vm.address.formatted_address }
+                attrs: {
+                  "uk-tooltip":
+                    _vm.address && _vm.address.formatted_address
+                      ? _vm.address.formatted_address
+                      : "Could not find Address"
+                }
               },
               [
                 _c("div", { staticClass: "col-xs start-xs" }, [

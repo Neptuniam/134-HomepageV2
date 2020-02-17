@@ -1,7 +1,7 @@
 <template>
 <div v-if="weather" class="row fullWidth Weather">
     <div v-if="weather && weather.current" class="row curDescription textSpecial fullWidth nopadding"
-        :uk-tooltip="address.formatted_address">
+        :uk-tooltip="address && address.formatted_address ? address.formatted_address : 'Could not find Address'">
         <div class="col-xs start-xs">
             <i :class="getIcon(weather.current.IconPhrase)" />
         </div>
@@ -42,7 +42,7 @@
 import { mapActions, mapGetters } from 'vuex';
 export default {
     props: ['widget'],
-    data: function() {
+    data() {
         return {
             days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
             weather: null,
@@ -104,38 +104,33 @@ export default {
             return (iconText)
         },
 
-        getWeather(location) {
+        async getWeather(location) {
             if (location === 'loc')
                 location = this.location
 
             let accu = "http://dataservice.accuweather.com/"
-            let key = "apikey=W3pCKGGHlxaRrT4VyJvgAqACYu08JSyx"
+            let key = process.env.MIX_ACCU_KEY
 
-            this.axios.get(accu+"locations/v1/cities/geoposition/search.json?q="+location+"&"+key).then(locResponse => {
+            let locResponse = await this.axios.get(accu+"locations/v1/cities/geoposition/search.json?q="+location+"&apikey="+key)
+            let forecastResponse = await this.axios.get(accu+"forecasts/v1/daily/5day/"+locResponse.data.Key+"?apikey="+key+"&metric=true")
+            let currrentResponse = await this.axios.get(accu+"forecasts/v1/hourly/1hour/"+locResponse.data.Key+"?apikey="+key+"&metric=true")
+            let current = {
+                value: currrentResponse.data[0].Temperature.Value,
+                IconPhrase: currrentResponse.data[0].IconPhrase
+            }
 
-                this.axios.get(accu+"forecasts/v1/daily/5day/"+locResponse.data.Key+"?"+key+"&metric=true").then(forecastResponse => {
+            this.weather = {}
+            this.$set(this.weather, 'location', locResponse.data)
+            this.$set(this.weather, 'current', current)
+            this.$set(this.weather, 'forecast', forecastResponse.data.DailyForecasts)
 
-                    this.axios.get(accu+"forecasts/v1/hourly/1hour/"+locResponse.data.Key+"?"+key+"&metric=true").then(currrentResponse => {
-                        let current = {
-                            value: currrentResponse.data[0].Temperature.Value,
-                            IconPhrase: currrentResponse.data[0].IconPhrase
-                        }
+            console.log('%c Weather ', 'background: #222; color: #bada55');
+            console.log(this.weather);
 
-                        this.weather = {}
-                        this.$set(this.weather, 'location', locResponse.data)
-                        this.$set(this.weather, 'current', current)
-                        this.$set(this.weather, 'forecast', forecastResponse.data.DailyForecasts)
-
-                        console.log('%c Weather ', 'background: #222; color: #bada55');
-                        console.log(this.weather);
-
-                        this.curLoc = this.parseAddress()
-                    })
-                })
-            })
+            this.curLoc = this.parseAddress()
         },
     },
-    mounted: function() {
+    mounted() {
         this.getWeather(this.location)
 
         if (this.widget && this.widget.interval)
