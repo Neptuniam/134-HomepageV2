@@ -1800,7 +1800,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.activePage === 'Home' ? 'cog' : 'home';
     },
     transparency: function transparency() {
-      return this.activePage === 'Home' ? 0.65 : 0.85;
+      return this.activePage === 'Home' ? 0.75 : 0.85;
     },
     newsStatus: function newsStatus() {
       if (this.widgets) return this.widgets.find(function (widget) {
@@ -1830,21 +1830,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
-                return this.axios.post("https://www.googleapis.com/geolocation/v1/geolocate?key=".concat("AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM"));
+                this.setLocation({
+                  lat: 51.036159999999995,
+                  lng: -114.1669888
+                });
+                return _context.abrupt("return");
 
-              case 2:
+              case 4:
                 response = _context.sent;
-                _context.next = 5;
-                return this.axios.post("https://maps.googleapis.com/maps/api/geocode/json?latlng=".concat(response.data.location.lat, ",").concat(response.data.location.lng, "&key=").concat("AIzaSyAnTaE5aRbrHcbnzpKErFm7l2lrlUAzRHM"));
+                _context.next = 7;
+                return this.axios.post("https://maps.googleapis.com/maps/api/geocode/json?latlng=".concat(response.data.location.lat, ",").concat(response.data.location.lng, "&key=").concat("AIzaSyBo2SRZ5iiOBFCsx9pTy0eG_dV9Bcl-hkE"));
 
-              case 5:
+              case 7:
                 geolocation = _context.sent;
                 response.data.location['geocode'] = geolocation.data.results;
                 console.log('geoLocation: ', geolocation.data);
                 this.setLocation(response.data.location);
 
-              case 9:
+              case 11:
               case "end":
                 return _context.stop();
             }
@@ -1878,8 +1881,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.fetchUser();
     this.fetchUsers(); // Update the users location every 10 minutes
     // setInterval(this.getLocation, 600000)
-    // this.getLocation()
-    // Update the background every 1 minute
+
+    this.getLocation(); // Update the background every 1 minute
 
     setInterval(this.getBackground, 120000);
     this.getBackground();
@@ -2426,6 +2429,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2440,11 +2447,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         lng: 0
       },
       destination: null,
-      travelMethod: null,
-      showMap: true,
+      travelMode: null,
+      showingMap: false,
       directions: null,
-      departureTime: null,
-      arrivalTime: null,
+      response: null,
       travelText: null
     };
   },
@@ -2494,35 +2500,107 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     determineDest: function determineDest(home, fav) {
       return this.origin == home ? fav : home;
     },
+    matchLocations: function matchLocations(curPayload, cachedPayload) {
+      // Compare the core details of all the payload attributes
+      return curPayload.origin.title == cachedPayload.origin.title && curPayload.destination.title == cachedPayload.destination.title && curPayload.travelMode == cachedPayload.travelMode;
+    },
+    checkTimeSince: function checkTimeSince(cachedTime) {
+      // Check that the cached data isn't "too old"
+      return (new Date().getTime() - new Date(cachedTime).getTime()) / 1800000 < 1;
+    },
     initLocations: function initLocations() {
+      var CachedMaps = JSON.parse(localStorage.getItem('LastMapsDetails'));
       var home = this.findLoc(this.mapsSettings.home_id);
       var fav = this.findLoc(this.mapsSettings.fav_id); // Determine three key attributes for maps request
 
       this.origin = this.determineOrigin(home, fav);
       this.destination = this.determineDest(home, fav);
       this.travelMode = this.mapsSettings.method;
-      this.getDirections();
+      var payload = {
+        origin: this.origin,
+        destination: this.destination,
+        travelMode: this.travelMode // If there is data in the cache, the user hasn't moved locations and the data is still recent, avoid making too many api usages
+
+      };
+
+      if (CachedMaps && this.matchLocations(payload, CachedMaps.payload) && this.checkTimeSince(CachedMaps.RetrievedDate)) {
+        this.directions = CachedMaps;
+        console.log('%c Cached Directions ', 'background: #222; color: #bada55');
+        console.log(this.directions);
+        this.createDisplay(this.directions.routes[0].legs[0].duration);
+      } else {
+        console.log('falling back on api');
+        this.getDirections(payload);
+      }
+    },
+    forceUpdate: function forceUpdate() {
+      var payload = {
+        origin: this.origin,
+        destination: this.destination,
+        travelMode: this.travelMode
+      };
+      this.getDirections(payload);
+    },
+    parseDirections: function parseDirections() {
+      var content = "<h1> Directions </h1> <ol>";
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.directions.routes[0].legs[0].steps[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var step = _step.value;
+          content += "<li style=\"margin: 10px 0px\"> ".concat(step.instructions, " </li>");
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      content += "</ol>";
+      return content;
+    },
+    hideMap: function hideMap($event) {
+      if ($event.target.id == 'container') this.showingMap = false;
+    },
+    showMap: function showMap() {
+      var directionsDisplay = new google.maps.DirectionsRenderer();
+      directionsDisplay.setMap(this.$refs.map.$mapObject);
+      directionsDisplay.setDirections(this.directions);
+      this.showingMap = true;
     },
     parseTravelData: function parseTravelData(duration) {
       var date = new Date();
       var departureDate = date;
       var arrivalDate = new Date(date.getTime() + duration * 1000); // Prettify the times for display
 
-      this.departureTime = this.convert24To12(departureDate.getHours()) + ':' + this.zeroPadding(departureDate.getMinutes(), 2);
-      this.arrivalTime = this.convert24To12(arrivalDate.getHours()) + ':' + this.zeroPadding(arrivalDate.getMinutes(), 2);
+      return {
+        departureTime: this.convert24To12(departureDate.getHours()) + ':' + this.zeroPadding(departureDate.getMinutes(), 2),
+        arrivalTime: this.convert24To12(arrivalDate.getHours()) + ':' + this.zeroPadding(arrivalDate.getMinutes(), 2)
+      };
     },
     createDisplay: function createDisplay(duration) {
       if (this.travelMode == "DRIVING") {
         this.travelText = "Arrive at ".concat(this.destination.title, " in ").concat(duration.text, ".");
       } else {
-        this.parseTravelData(duration.value);
-        this.travelText = "Leave at ".concat(this.departureTime, " to arrive at ").concat(this.destination.title, " by ").concat(this.arrivalTime, ". Via: ").concat(this.travelMode);
+        var travelData = this.parseTravelData(duration.value);
+        this.travelText = "Leave at ".concat(travelData.departureTime, " to arrive at ").concat(this.destination.title, " by ").concat(travelData.arrivalTime, ". Via: ").concat(this.travelMode);
       }
     },
     getDirections: function () {
       var _getDirections = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(payload) {
         var _this, directionsService, directionsDisplay, calculateAndDisplayRoute;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
@@ -2530,29 +2608,31 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             switch (_context.prev = _context.next) {
               case 0:
                 calculateAndDisplayRoute = function _ref(directionsService, directionsDisplay) {
-                  directionsService.route({
-                    origin: _this.origin,
-                    destination: _this.destination,
-                    travelMode: _this.travelMode
-                  }, function (response, status) {
+                  directionsService.route(payload, function (response, status) {
                     if (status === 'OK') {
-                      _this.directions = response.routes[0].legs;
-                      console.log('%c Directions ', 'background: #222; color: #bada55');
+                      _this.directions = response; //.routes[0].legs[0]
+
+                      _this.$set(_this.directions, 'RetrievedDate', new Date());
+
+                      _this.$set(_this.directions, 'payload', payload);
+
+                      console.log('%c Retrieved Directions ', 'background: #222; color: #bada55');
                       console.log(_this.directions);
+                      localStorage.setItem('LastMapsDetails', JSON.stringify(_this.directions));
 
-                      _this.createDisplay(_this.directions[0].duration);
+                      _this.createDisplay(_this.directions.routes[0].legs[0].duration); // directionsDisplay.setDirections(_this.directions);
 
-                      directionsDisplay.setDirections(response);
                     } else {
                       window.alert('Directions request failed due to ' + status);
                     }
                   });
                 };
 
-                _context.next = 3;
+                console.log('requesting direction');
+                _context.next = 4;
                 return this.$refs.map.$mapPromise;
 
-              case 3:
+              case 4:
                 _this = this;
                 directionsService = new google.maps.DirectionsService();
                 directionsDisplay = new google.maps.DirectionsRenderer();
@@ -2560,7 +2640,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                 calculateAndDisplayRoute(directionsService, directionsDisplay, this.start, this.destination);
 
-              case 8:
+              case 9:
               case "end":
                 return _context.stop();
             }
@@ -2568,7 +2648,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }, _callee, this);
       }));
 
-      function getDirections() {
+      function getDirections(_x) {
         return _getDirections.apply(this, arguments);
       }
 
@@ -3173,26 +3253,35 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       weather: null,
       curLoc: null,
       weatherIconMap: {
-        sunny: "sunny",
-        clear: "stars",
-        rain: "rain",
-        cloudy: "cloudy",
-        overcast: "sunny-overcast",
-        mixed: "rain-mix",
-        showers: "showers",
-        drizzle: "showers",
-        thunder: "storm-showers",
-        thundery: "storm-showers",
-        snow: "snow",
-        blizzard: "snow",
-        fog: "fog",
-        mist: "fog",
-        dust: "fog",
-        smokey: "fog",
-        wind: "windy",
-        breezy: "windy",
-        sleet: "sleet",
-        pellets: "sleet"
+        'sunny': "sunny",
+        'hot': "hot",
+        'cold': "snowflake-cold",
+        'clear': "stars",
+        'rain': "rain",
+        'cloudy': "cloudy",
+        'clouds': "wi-cloudy",
+        'dreary': "sunny-overcast",
+        'overcast': "sunny-overcast",
+        'mixed': "rain-mix",
+        't-storms': "lightning",
+        'showers': "showers",
+        'flurries': "showers",
+        'drizzle': "showers",
+        'thunder': "storm-showers",
+        'thundery': "storm-showers",
+        'snow': "snow",
+        'ice': 'sleet-storm',
+        'blizzard': "snow",
+        'fog': "fog",
+        'mist': "fog",
+        'dust': "fog",
+        'smokey': "fog",
+        'wind': "windy",
+        'breezy': "windy",
+        'windy': "windy",
+        'sleet': "sleet",
+        'pellets': "sleet",
+        'hazy': 'haze'
       }
     };
   },
@@ -3201,31 +3290,49 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     address: 'getAddress'
   })),
   methods: {
-    parseAddress: function parseAddress() {
-      if (this.address && this.address.formatted_address) {
-        var split = this.address.formatted_address.split(',');
-        if (split.length >= 2) return split[1];
-      }
-
-      return "";
-    },
+    // parseAddress() {
+    //     if (this.address && this.address.formatted_address) {
+    //         let split = this.address.formatted_address.split(',')
+    //
+    //         if (split.length >= 2)
+    //             return split[1]
+    //     }
+    //
+    //     return ""
+    // },
     getDay: function getDay(day) {
       return this.days[new Date(day.EpochDate * 1000).getDay()];
     },
     getIcon: function getIcon(curWeather) {
-      var splitWeatherDesc = curWeather.toLowerCase().split(" "),
-          tempIconText = null,
-          i = 0;
-      var iconText = "wi wi-day-";
+      var splitWeatherDesc = curWeather.toLowerCase().split(" ");
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-      while (tempIconText == null && i < splitWeatherDesc.length) {
-        if ((tempIconText = this.weatherIconMap[splitWeatherDesc[i++]]) != null) iconText += tempIconText;
+      try {
+        for (var _iterator = splitWeatherDesc[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var keyword = _step.value;
+          if (this.weatherIconMap[keyword]) return "wi wi-day-".concat(this.weatherIconMap[keyword]);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
 
-      return iconText;
+      return '';
     },
-    getWeather: function () {
-      var _getWeather = _asyncToGenerator(
+    requestWeather: function () {
+      var _requestWeather = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(location) {
         var accu, key, locResponse, forecastResponse, currrentResponse, current;
@@ -3259,11 +3366,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 this.$set(this.weather, 'location', locResponse.data);
                 this.$set(this.weather, 'current', current);
                 this.$set(this.weather, 'forecast', forecastResponse.data.DailyForecasts);
-                console.log('%c Weather ', 'background: #222; color: #bada55');
+                this.$set(this.weather, 'requestLoc', location);
+                this.$set(this.weather, 'expires', locResponse.headers.expires);
+                console.log('%c Retrieved Weather ', 'background: #222; color: #bada55');
                 console.log(this.weather);
-                this.curLoc = this.parseAddress();
+                localStorage.setItem('LastWeatherDetails', JSON.stringify(this.weather)); // this.curLoc = this.parseAddress()
 
-              case 20:
+              case 22:
               case "end":
                 return _context.stop();
             }
@@ -3271,15 +3380,93 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }, _callee, this);
       }));
 
-      function getWeather(_x) {
-        return _getWeather.apply(this, arguments);
+      function requestWeather(_x) {
+        return _requestWeather.apply(this, arguments);
       }
 
-      return getWeather;
-    }()
+      return requestWeather;
+    }(),
+    distanceBetween: function distanceBetween(cachedLoc, curLoc) {
+      // Locations are stored as a single string ("lat,lng")
+      var splitCache = cachedLoc.split(",");
+      var splitCur = curLoc.split(",");
+
+      if (splitCache && splitCur) {
+        var _cachedLoc = {
+          lat: Number(splitCache[0]),
+          lng: Number(splitCache[1])
+        };
+        var _curLoc = {
+          lat: Number(splitCur[0]),
+          lng: Number(splitCur[1])
+        };
+        return Math.sqrt((_cachedLoc.lat - _curLoc.lat) * (_cachedLoc.lat - _curLoc.lat) + (_cachedLoc.lng - _curLoc.lng) * (_cachedLoc.lng - _curLoc.lng));
+      }
+
+      return 1;
+    },
+    checkExpirey: function checkExpirey(weather) {
+      return new Date(weather.expires) > new Date();
+    },
+    getWeather: function getWeather(location) {
+      // Check the localstorage for previous data first
+      var weather = JSON.parse(localStorage.getItem('LastWeatherDetails')); // If there is previous data, check that the users location hasn't changed or the data hasn't expired
+
+      if (weather) {
+        if (this.distanceBetween(weather.requestLoc, location) < 1 && this.checkExpirey(weather)) {
+          this.weather = weather;
+          console.log('%c Cached Weather ', 'background: #222; color: #bada55');
+          console.log(this.weather);
+          return;
+        }
+      } // Otherwise, fallback on hitting api
+
+
+      this.requestWeather(location);
+    }
   },
   mounted: function mounted() {
-    this.getWeather(this.location);
+    this.getWeather(this.location); // console.log('Sunny', '=>', this.getIcon('Sunny'));
+    // console.log('Mostly Sunny', '=>', this.getIcon('Mostly Sunny'))
+    // console.log('Partly Sunny', '=>', this.getIcon('Partly Sunny'))
+    // console.log('Intermittent Clouds', '=>', this.getIcon('Intermittent Clouds'))
+    // console.log('Hazy Sunshine', '=>', this.getIcon('Hazy Sunshine'))
+    // console.log('Mostly Cloudy', '=>', this.getIcon('Mostly Cloudy'))
+    // console.log('Cloudy', '=>', this.getIcon('Cloudy'))
+    // console.log('Dreary (Overcast)', '=>', this.getIcon('Dreary (Overcast)'))
+    // console.log('Fog', '=>', this.getIcon('Fog'))
+    // console.log('Showers', '=>', this.getIcon('Showers'))
+    // console.log('Mostly Cloudy w/ Showers', '=>', this.getIcon('Mostly Cloudy w/ Showers'))
+    // console.log('Partly Sunny w/ Showers', '=>', this.getIcon('Partly Sunny w/ Showers'))
+    // console.log('T-Storms', '=>', this.getIcon('T-Storms'))
+    // console.log('Mostly Cloudy w/ T-Storms', '=>', this.getIcon('Mostly Cloudy w/ T-Storms'))
+    // console.log('Partly Sunny w/ T-Storms', '=>', this.getIcon('Partly Sunny w/ T-Storms'))
+    // console.log('Rain', '=>', this.getIcon('Rain'))
+    // console.log('Flurries', '=>', this.getIcon('Flurries'))
+    // console.log('Mostly Cloudy w/ Flurries', '=>', this.getIcon('Mostly Cloudy w/ Flurries'))
+    // console.log('Partly Sunny w/ Flurries', '=>', this.getIcon('Partly Sunny w/ Flurries'))
+    // console.log('Snow', '=>', this.getIcon('Snow'))
+    // console.log('Mostly Cloudy w/ Snow', '=>', this.getIcon('Mostly Cloudy w/ Snow'))
+    // console.log('Ice', '=>', this.getIcon('Ice'))
+    // console.log('Sleet', '=>', this.getIcon('Sleet'))
+    // console.log('Freezing Rain', '=>', this.getIcon('Freezing Rain'))
+    // console.log('Rain and Snow', '=>', this.getIcon('Rain and Snow'))
+    // console.log('Hot', '=>', this.getIcon('Hot'))
+    // console.log('Cold', '=>', this.getIcon('Cold'))
+    // console.log('Windy', '=>', this.getIcon('Windy'))
+    // console.log('Clear', '=>', this.getIcon('Clear'))
+    // console.log('Mostly Clear', '=>', this.getIcon('Mostly Clear'))
+    // console.log('Partly Cloudy', '=>', this.getIcon('Partly Cloudy'))
+    // console.log('Intermittent Clouds', '=>', this.getIcon('Intermittent Clouds'))
+    // console.log('Hazy Moonlight', '=>', this.getIcon('Hazy Moonlight'))
+    // console.log('Mostly Cloudy', '=>', this.getIcon('Mostly Cloudy'))
+    // console.log('Partly Cloudy w/ Showers', '=>', this.getIcon('Partly Cloudy w/ Showers'))
+    // console.log('Mostly Cloudy w/ Showers', '=>', this.getIcon('Mostly Cloudy w/ Showers'))
+    // console.log('Partly Cloudy w/ T-Storms', '=>', this.getIcon('Partly Cloudy w/ T-Storms'))
+    // console.log('Mostly Cloudy w/ T-Storms', '=>', this.getIcon('Mostly Cloudy w/ T-Storms'))
+    // console.log('Mostly Cloudy w/ Flurries', '=>', this.getIcon('Mostly Cloudy w/ Flurries'))
+    // console.log('Mostly Cloudy w/ Snow', '=>', this.getIcon('Mostly Cloudy w/ Snow'))
+
     if (this.widget && this.widget.interval) setInterval(this.getWeather(this.location), this.widget.interval * 60000);
   }
 });
@@ -3374,7 +3561,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Home {\n    width: 100vw !important;\n}\n.Widget {\n    padding: 5px 20px;\n}\n.Widget:hover {\n    /* border: 1.5px solid grey; */\n    border-radius: 5px;\n    background: rgba(200,200,200,0.85);\n}\n", ""]);
+exports.push([module.i, "\n.Home {\n    width: 100vw !important;\n}\n.Widget {\n    padding: 5px 20px;\n}\n.Widget:hover {\n    /* border: 1.5px solid grey; */\n    border-radius: 5px;\n    background: rgba(230, 230, 250, 0.85);\n}\n", ""]);
 
 // exports
 
@@ -3545,7 +3732,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.travelText[data-v-3385321e] {\n    font-weight: 600px;\n    font-size: 4vh;\n    text-align: center;\n}\na[data-v-3385321e] {\n    color: black;\n}\n", ""]);
+exports.push([module.i, "\n.travelText[data-v-3385321e] {\n    font-weight: 600px;\n    font-size: 4vh;\n    text-align: center;\n}\na[data-v-3385321e] {\n    color: black;\n}\n.mapsPosition[data-v-3385321e] {\n    position: fixed;\n    top: 0px;\n    left: 0px;\n\n    padding: 10vh 5vw;\n\n    height: 100vh;\n    width: 100vw;\n\n    z-index: 5;\n}\n.mapsPosition .vue-map-container[data-v-3385321e] {\n    /* width: 80vw;\n    height: 80vh; */\n\n    /* border: 1px black solid; */\n    z-index: 1;\n}\n.mapsPosition .instructionsContainer[data-v-3385321e] {\n    min-width: 500px;\n    max-width: 500px;\n    height: 80vh;\n\n    background-color: white;\n\n    overflow-y: auto;\n}\n", ""]);
 
 // exports
 
@@ -3640,7 +3827,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.Weather[data-v-261436a7] {\n    height: 100% !important;\n    width: 100% !important;\n\n    margin-bottom: 15vh;\n}\n.forecast[data-v-261436a7] {\n    height: 18.5vh;\n}\n.day[data-v-261436a7] {\n    border: 1.5px solid grey;\n    border-radius: 5px;\n\n    margin: 0px 7.5px;\n    background: rgba(200,200,200,0.75);\n\n    height: 80% !important;\n}\n.day[data-v-261436a7]:hover {\n    background: rgba(220,220,220,0.95);\n    height: 100% !important;\n}\n.day i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 5vh;\n}\n.day:hover i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 6.5vh;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.day:hover .forecastTemp[data-v-261436a7] {\n    font-size: 4vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n}\n.day:hover .forecastDay[data-v-261436a7] {\n    font-size: 3vh;\n}\n.day hr[data-v-261436a7] {\n    margin: 10px 0px 5px 0px;\n    border-color: grey;\n}\n\n/* input {\n    border: none;\n    background: none;\n    color: black;\n} */\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.Weather[data-v-261436a7] {\n    height: 100% !important;\n    width: 100% !important;\n\n    margin-bottom: 15vh;\n}\n.forecast[data-v-261436a7] {\n    height: 18.5vh;\n}\n.day[data-v-261436a7] {\n    border: 1.5px solid grey;\n    border-radius: 5px;\n\n    margin: 0px 7.5px;\n    background: rgba(230, 230, 250, 0.5);\n\n    height: 80% !important;\n}\n.day[data-v-261436a7]:hover {\n    background: rgba(230, 230, 250, 0.95);\n    height: 100% !important;\n}\n.day i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 5vh;\n}\n.day:hover i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 6.5vh;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.day:hover .forecastTemp[data-v-261436a7] {\n    font-size: 4vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n}\n.day:hover .forecastDay[data-v-261436a7] {\n    font-size: 3vh;\n}\n.day hr[data-v-261436a7] {\n    margin: 10px 0px 5px 0px;\n    border-color: grey;\n}\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n", ""]);
 
 // exports
 
@@ -26101,26 +26288,69 @@ var render = function() {
   return _c("div", [
     _c("div", { staticClass: "row center-xs textBody uk-text-truncate " }, [
       _c("div", { staticClass: "travelText Widget" }, [
-        _vm._v("\n            " + _vm._s(_vm.travelText) + "\n            ")
+        _c("span", { on: { click: _vm.forceUpdate } }, [
+          _vm._v(" " + _vm._s(_vm.travelText) + " ")
+        ]),
+        _vm._v(" "),
+        _c(
+          "a",
+          { staticClass: "uk-text-capitalize", on: { click: _vm.showMap } },
+          [_vm._v(" Via: " + _vm._s(_vm.travelMode) + " ")]
+        )
       ])
     ]),
     _vm._v(" "),
-    _c(
-      "div",
-      {
-        directives: [
-          { name: "show", rawName: "v-show", value: false, expression: "false" }
-        ]
-      },
-      [
-        _c("gmap-map", {
-          ref: "map",
-          staticStyle: { width: "1px", height: "1px" },
-          attrs: { center: _vm.origin, zoom: 15 }
-        })
-      ],
-      1
-    )
+    _vm.origin
+      ? _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.showingMap,
+                expression: "showingMap"
+              }
+            ],
+            staticClass: "mapsPosition",
+            attrs: { id: "container" },
+            on: { click: _vm.hideMap }
+          },
+          [
+            _c(
+              "div",
+              {
+                staticClass: "row",
+                staticStyle: { border: "1px black solid", width: "90vw" }
+              },
+              [
+                _c(
+                  "gmap-map",
+                  {
+                    ref: "map",
+                    staticClass: "col-xs",
+                    attrs: { center: _vm.origin, zoom: 15, id: "map" }
+                  },
+                  [
+                    _c("gmap-marker", { attrs: { position: _vm.origin } }),
+                    _vm._v(" "),
+                    _c("gmap-marker", { attrs: { position: _vm.destination } })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _vm.showingMap && _vm.directions
+                  ? _c("div", {
+                      staticClass: "col-xs-4 instructionsContainer start-xs",
+                      domProps: { innerHTML: _vm._s(_vm.parseDirections()) }
+                    })
+                  : _vm._e()
+              ],
+              1
+            )
+          ]
+        )
+      : _vm._e()
   ])
 }
 var staticRenderFns = []

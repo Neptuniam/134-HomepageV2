@@ -36,6 +36,6 @@ export default {
     .Widget:hover {
         /* border: 1.5px solid grey; */
         border-radius: 5px;
-        background: rgba(200,200,200,0.85);
+        background: rgba(230, 230, 250, 0.85);
     }
 </style>

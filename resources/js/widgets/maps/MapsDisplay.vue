@@ -2,18 +2,22 @@
 <div>
     <div class="row center-xs textBody uk-text-truncate ">
         <div class="travelText Widget">
-            {{travelText}}
-            <!-- Leave at {{departureTime}} to arrive at {{destination.title}} by {{arrivalTime}}. Via:&nbsp; -->
-            <!-- <a @click="showMap = !showMap">{{travelMethod}}</a> -->
+            <span @click="forceUpdate"> {{travelText}} </span>
+            <a @click="showMap" class="uk-text-capitalize"> Via: {{travelMode}} </a>
         </div>
     </div>
 
 
-    <div v-show="false">
-        <gmap-map ref="map" :center="origin" :zoom="15" style="width: 1px; height: 1px">
-            <!-- <gmap-marker :position="this.start" />
-            <gmap-marker :position="this.destination" /> -->
-        </gmap-map>
+    <div v-if="origin" v-show="showingMap" class="mapsPosition" @click="hideMap" id="container">
+        <div class="row" style="border: 1px black solid; width: 90vw">
+            <!-- TODO: Fix lat,lng? -->
+            <gmap-map ref="map" :center="origin" :zoom="15" class="col-xs" id="map">
+                <gmap-marker :position="origin" />
+                <gmap-marker :position="destination" />
+            </gmap-map>
+
+            <div v-if="showingMap && directions" class="col-xs-4 instructionsContainer start-xs" v-html="parseDirections()" />
+        </div>
     </div>
 </div>
 </template>
@@ -31,12 +35,11 @@ export default {
 
             origin: { title: 'loc', lat: 0, lng: 0 },
             destination: null,
-            travelMethod: null,
+            travelMode: null,
 
-            showMap: true,
+            showingMap: false,
             directions: null,
-            departureTime: null,
-            arrivalTime: null,
+            response: null,
             travelText: null,
         }
     },
@@ -86,7 +89,19 @@ export default {
         },
 
 
+        matchLocations(curPayload, cachedPayload) {
+            // Compare the core details of all the payload attributes
+            return  curPayload.origin.title == cachedPayload.origin.title &&
+                    curPayload.destination.title == cachedPayload.destination.title &&
+                    curPayload.travelMode == cachedPayload.travelMode
+        },
+        checkTimeSince(cachedTime) {
+            // Check that the cached data isn't "too old"
+            return ((new Date().getTime() - new Date(cachedTime).getTime()) / 1800000) < 1
+        },
         initLocations() {
+            let CachedMaps = JSON.parse(localStorage.getItem('LastMapsDetails'))
+
             let home = this.findLoc(this.mapsSettings.home_id)
             let fav = this.findLoc(this.mapsSettings.fav_id)
 
@@ -95,7 +110,56 @@ export default {
             this.destination = this.determineDest(home, fav)
             this.travelMode = this.mapsSettings.method
 
-            this.getDirections()
+            let payload = {
+                origin: this.origin,
+                destination: this.destination,
+                travelMode: this.travelMode
+            }
+
+            // If there is data in the cache, the user hasn't moved locations and the data is still recent, avoid making too many api usages
+            if (CachedMaps && this.matchLocations(payload, CachedMaps.payload) && this.checkTimeSince(CachedMaps.RetrievedDate)) {
+                this.directions = CachedMaps
+                console.log('%c Cached Directions ', 'background: #222; color: #bada55');
+                console.log(this.directions);
+
+                this.createDisplay(this.directions.routes[0].legs[0].duration)
+            } else {
+                console.log('falling back on api');
+                this.getDirections(payload)
+            }
+        },
+
+        forceUpdate() {
+            let payload = {
+                origin: this.origin,
+                destination: this.destination,
+                travelMode: this.travelMode
+            }
+
+            this.getDirections(payload)
+        },
+
+        parseDirections() {
+            let content = "<h1> Directions </h1> <ol>"
+
+            for (let step of this.directions.routes[0].legs[0].steps)
+                content += `<li style="margin: 10px 0px"> ${step.instructions} </li>`
+
+            content += "</ol>"
+
+            return content
+        },
+
+        hideMap($event) {
+            if ($event.target.id == 'container')
+                this.showingMap = false
+        },
+        showMap() {
+            let directionsDisplay = new google.maps.DirectionsRenderer;
+            directionsDisplay.setMap(this.$refs.map.$mapObject);
+            directionsDisplay.setDirections(this.directions);
+
+            this.showingMap = true
         },
 
         parseTravelData(duration) {
@@ -105,23 +169,26 @@ export default {
             let arrivalDate = new Date(date.getTime() + duration*1000)
 
             // Prettify the times for display
-            this.departureTime = this.convert24To12(departureDate.getHours()) + ':' +
-                                 this.zeroPadding(departureDate.getMinutes(), 2)
+            return {
+                departureTime:  this.convert24To12(departureDate.getHours()) + ':' +
+                                this.zeroPadding(departureDate.getMinutes(), 2),
 
-            this.arrivalTime = this.convert24To12(arrivalDate.getHours()) + ':' +
-                               this.zeroPadding(arrivalDate.getMinutes(), 2)
+                arrivalTime:    this.convert24To12(arrivalDate.getHours()) + ':' +
+                                this.zeroPadding(arrivalDate.getMinutes(), 2)
+            }
         },
 
         createDisplay(duration) {
             if (this.travelMode == "DRIVING") {
                 this.travelText = `Arrive at ${this.destination.title} in ${duration.text}.`
             } else {
-                this.parseTravelData(duration.value)
-                this.travelText = `Leave at ${this.departureTime} to arrive at ${this.destination.title} by ${this.arrivalTime}. Via: ${this.travelMode}`
+                let travelData = this.parseTravelData(duration.value)
+                this.travelText = `Leave at ${travelData.departureTime} to arrive at ${this.destination.title} by ${travelData.arrivalTime}. Via: ${this.travelMode}`
             }
         },
 
-        async getDirections() {
+        async getDirections(payload) {
+            console.log('requesting direction');
             await this.$refs.map.$mapPromise
 
             let _this = this
@@ -131,18 +198,18 @@ export default {
 
             //google maps API's direction service
             function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-                directionsService.route({
-                    origin: _this.origin,
-                    destination: _this.destination,
-                    travelMode: _this.travelMode
-                }, function(response, status) {
+                directionsService.route(payload, function(response, status) {
                     if (status === 'OK') {
-                        _this.directions = response.routes[0].legs
-                        console.log('%c Directions ', 'background: #222; color: #bada55');
-                        console.log(_this.directions);
+                        _this.directions = response //.routes[0].legs[0]
+                        _this.$set(_this.directions, 'RetrievedDate', new Date())
+                        _this.$set(_this.directions, 'payload', payload)
 
-                        _this.createDisplay(_this.directions[0].duration)
-                        directionsDisplay.setDirections(response);
+                        console.log('%c Retrieved Directions ', 'background: #222; color: #bada55');
+                        console.log(_this.directions);
+                        localStorage.setItem('LastMapsDetails', JSON.stringify(_this.directions))
+
+                        _this.createDisplay(_this.directions.routes[0].legs[0].duration)
+                        // directionsDisplay.setDirections(_this.directions);
                     } else {
                         window.alert('Directions request failed due to ' + status);
                     }
@@ -173,9 +240,37 @@ export default {
         font-weight: 600px;
         font-size: 4vh;
         text-align: center;
-
     }
     a {
         color: black;
+    }
+
+    .mapsPosition {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+
+        padding: 10vh 5vw;
+
+        height: 100vh;
+        width: 100vw;
+
+        z-index: 5;
+    }
+    .mapsPosition .vue-map-container {
+        /* width: 80vw;
+        height: 80vh; */
+
+        /* border: 1px black solid; */
+        z-index: 1;
+    }
+    .mapsPosition .instructionsContainer {
+        min-width: 500px;
+        max-width: 500px;
+        height: 80vh;
+
+        background-color: white;
+
+        overflow-y: auto;
     }
 </style>

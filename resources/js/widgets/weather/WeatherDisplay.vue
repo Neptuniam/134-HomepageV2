@@ -48,26 +48,35 @@ export default {
             weather: null,
             curLoc: null,
             weatherIconMap: {
-                sunny: "sunny",
-                clear: "stars",
-                rain: "rain",
-                cloudy: "cloudy",
-                overcast: "sunny-overcast",
-                mixed: "rain-mix",
-                showers: "showers",
-                drizzle: "showers",
-                thunder: "storm-showers",
-                thundery: "storm-showers",
-                snow: "snow",
-                blizzard: "snow",
-                fog: "fog",
-                mist: "fog",
-                dust: "fog",
-                smokey: "fog",
-                wind: "windy",
-                breezy: "windy",
-                sleet: "sleet",
-                pellets: "sleet"
+                'sunny': "sunny",
+                'hot': "hot",
+                'cold': "snowflake-cold",
+                'clear': "stars",
+                'rain': "rain",
+                'cloudy': "cloudy",
+                'clouds': "wi-cloudy",
+                'dreary': "sunny-overcast",
+                'overcast': "sunny-overcast",
+                'mixed': "rain-mix",
+                't-storms': "lightning",
+                'showers': "showers",
+                'flurries': "showers",
+                'drizzle': "showers",
+                'thunder': "storm-showers",
+                'thundery': "storm-showers",
+                'snow': "snow",
+                'ice': 'sleet-storm',
+                'blizzard': "snow",
+                'fog': "fog",
+                'mist': "fog",
+                'dust': "fog",
+                'smokey': "fog",
+                'wind': "windy",
+                'breezy': "windy",
+                'windy': "windy",
+                'sleet': "sleet",
+                'pellets': "sleet",
+                'hazy': 'haze'
             }
         }
     },
@@ -78,33 +87,31 @@ export default {
         }),
     },
     methods: {
-        parseAddress() {
-            if (this.address && this.address.formatted_address) {
-                let split = this.address.formatted_address.split(',')
-
-                if (split.length >= 2)
-                    return split[1]
-            }
-
-            return ""
-        },
+        // parseAddress() {
+        //     if (this.address && this.address.formatted_address) {
+        //         let split = this.address.formatted_address.split(',')
+        //
+        //         if (split.length >= 2)
+        //             return split[1]
+        //     }
+        //
+        //     return ""
+        // },
 
         getDay(day) {
             return this.days[new Date(day.EpochDate*1000).getDay()]
         },
 
         getIcon(curWeather) {
-            var splitWeatherDesc = curWeather.toLowerCase().split(" "), tempIconText = null, i = 0;
-            var iconText = "wi wi-day-";
+            var splitWeatherDesc = curWeather.toLowerCase().split(" ")
 
-            while (tempIconText == null && i < splitWeatherDesc.length)
-                if ((tempIconText = this.weatherIconMap[splitWeatherDesc[i++]]) != null)
-                    iconText += tempIconText;
-
-            return (iconText)
+            for (let keyword of splitWeatherDesc)
+                if (this.weatherIconMap[keyword])
+                    return `wi wi-day-${this.weatherIconMap[keyword]}`
+            return ''
         },
 
-        async getWeather(location) {
+        async requestWeather(location) {
             if (location === 'loc')
                 location = this.location
 
@@ -123,15 +130,107 @@ export default {
             this.$set(this.weather, 'location', locResponse.data)
             this.$set(this.weather, 'current', current)
             this.$set(this.weather, 'forecast', forecastResponse.data.DailyForecasts)
+            this.$set(this.weather, 'requestLoc', location)
+            this.$set(this.weather, 'expires', locResponse.headers.expires)
 
-            console.log('%c Weather ', 'background: #222; color: #bada55');
+
+            console.log('%c Retrieved Weather ', 'background: #222; color: #bada55');
             console.log(this.weather);
+            localStorage.setItem('LastWeatherDetails', JSON.stringify(this.weather))
 
-            this.curLoc = this.parseAddress()
+            // this.curLoc = this.parseAddress()
         },
+
+        distanceBetween(cachedLoc, curLoc) {
+            // Locations are stored as a single string ("lat,lng")
+            let splitCache = cachedLoc.split(",")
+            let splitCur = curLoc.split(",")
+
+            if (splitCache && splitCur) {
+                let cachedLoc = {
+                    lat: Number(splitCache[0]),
+                    lng: Number(splitCache[1])
+                }
+                let curLoc = {
+                    lat: Number(splitCur[0]),
+                    lng: Number(splitCur[1])
+                }
+
+                return Math.sqrt((cachedLoc.lat - curLoc.lat)*(cachedLoc.lat - curLoc.lat) +
+                                 (cachedLoc.lng - curLoc.lng)*(cachedLoc.lng - curLoc.lng))
+            }
+
+            return 1
+        },
+
+        checkExpirey(weather) {
+            return new Date(weather.expires) > new Date()
+        },
+
+        getWeather(location) {
+            // Check the localstorage for previous data first
+            let weather = JSON.parse(localStorage.getItem('LastWeatherDetails'))
+
+            // If there is previous data, check that the users location hasn't changed or the data hasn't expired
+            if (weather) {
+                if (this.distanceBetween(weather.requestLoc, location) < 1 && this.checkExpirey(weather)) {
+                    this.weather = weather
+
+                    console.log('%c Cached Weather ', 'background: #222; color: #bada55');
+                    console.log(this.weather);
+                    return
+                }
+            }
+
+            // Otherwise, fallback on hitting api
+            this.requestWeather(location)
+        }
     },
     mounted() {
         this.getWeather(this.location)
+
+
+        // console.log('Sunny', '=>', this.getIcon('Sunny'));
+        // console.log('Mostly Sunny', '=>', this.getIcon('Mostly Sunny'))
+        // console.log('Partly Sunny', '=>', this.getIcon('Partly Sunny'))
+        // console.log('Intermittent Clouds', '=>', this.getIcon('Intermittent Clouds'))
+        // console.log('Hazy Sunshine', '=>', this.getIcon('Hazy Sunshine'))
+        // console.log('Mostly Cloudy', '=>', this.getIcon('Mostly Cloudy'))
+        // console.log('Cloudy', '=>', this.getIcon('Cloudy'))
+        // console.log('Dreary (Overcast)', '=>', this.getIcon('Dreary (Overcast)'))
+        // console.log('Fog', '=>', this.getIcon('Fog'))
+        // console.log('Showers', '=>', this.getIcon('Showers'))
+        // console.log('Mostly Cloudy w/ Showers', '=>', this.getIcon('Mostly Cloudy w/ Showers'))
+        // console.log('Partly Sunny w/ Showers', '=>', this.getIcon('Partly Sunny w/ Showers'))
+        // console.log('T-Storms', '=>', this.getIcon('T-Storms'))
+        // console.log('Mostly Cloudy w/ T-Storms', '=>', this.getIcon('Mostly Cloudy w/ T-Storms'))
+        // console.log('Partly Sunny w/ T-Storms', '=>', this.getIcon('Partly Sunny w/ T-Storms'))
+        // console.log('Rain', '=>', this.getIcon('Rain'))
+        // console.log('Flurries', '=>', this.getIcon('Flurries'))
+        // console.log('Mostly Cloudy w/ Flurries', '=>', this.getIcon('Mostly Cloudy w/ Flurries'))
+        // console.log('Partly Sunny w/ Flurries', '=>', this.getIcon('Partly Sunny w/ Flurries'))
+        // console.log('Snow', '=>', this.getIcon('Snow'))
+        // console.log('Mostly Cloudy w/ Snow', '=>', this.getIcon('Mostly Cloudy w/ Snow'))
+        // console.log('Ice', '=>', this.getIcon('Ice'))
+        // console.log('Sleet', '=>', this.getIcon('Sleet'))
+        // console.log('Freezing Rain', '=>', this.getIcon('Freezing Rain'))
+        // console.log('Rain and Snow', '=>', this.getIcon('Rain and Snow'))
+        // console.log('Hot', '=>', this.getIcon('Hot'))
+        // console.log('Cold', '=>', this.getIcon('Cold'))
+        // console.log('Windy', '=>', this.getIcon('Windy'))
+        // console.log('Clear', '=>', this.getIcon('Clear'))
+        // console.log('Mostly Clear', '=>', this.getIcon('Mostly Clear'))
+        // console.log('Partly Cloudy', '=>', this.getIcon('Partly Cloudy'))
+        // console.log('Intermittent Clouds', '=>', this.getIcon('Intermittent Clouds'))
+        // console.log('Hazy Moonlight', '=>', this.getIcon('Hazy Moonlight'))
+        // console.log('Mostly Cloudy', '=>', this.getIcon('Mostly Cloudy'))
+        // console.log('Partly Cloudy w/ Showers', '=>', this.getIcon('Partly Cloudy w/ Showers'))
+        // console.log('Mostly Cloudy w/ Showers', '=>', this.getIcon('Mostly Cloudy w/ Showers'))
+        // console.log('Partly Cloudy w/ T-Storms', '=>', this.getIcon('Partly Cloudy w/ T-Storms'))
+        // console.log('Mostly Cloudy w/ T-Storms', '=>', this.getIcon('Mostly Cloudy w/ T-Storms'))
+        // console.log('Mostly Cloudy w/ Flurries', '=>', this.getIcon('Mostly Cloudy w/ Flurries'))
+        // console.log('Mostly Cloudy w/ Snow', '=>', this.getIcon('Mostly Cloudy w/ Snow'))
+
 
         if (this.widget && this.widget.interval)
             setInterval(this.getWeather(this.location), this.widget.interval * 60000)
@@ -156,12 +255,12 @@ export default {
         border-radius: 5px;
 
         margin: 0px 7.5px;
-        background: rgba(200,200,200,0.75);
+        background: rgba(230, 230, 250, 0.5);
 
         height: 80% !important;
     }
     .day:hover {
-        background: rgba(220,220,220,0.95);
+        background: rgba(230, 230, 250, 0.95);
         height: 100% !important;
     }
 
@@ -196,15 +295,7 @@ export default {
         border-color: grey;
     }
 
-    /* input {
-        border: none;
-        background: none;
-        color: black;
-    } */
-
     .curDescription, .curDescription input {
         font-size: 4vw;
     }
-
-
 </style>

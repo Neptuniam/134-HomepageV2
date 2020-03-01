@@ -1,5 +1,5 @@
 <template>
-<div class="row center-xs middle-xs Homepage nomargin uk-animation-fade" :style="'background: rgba(200,200,200,'+transparency+');'">
+<div class="row center-xs middle-xs Homepage nomargin uk-animation-fade" :style="`background: rgba(200,200,200,${transparency});`">
     <div class="row middle-xs pageControl">
         <div class="col-xs">
             <a @click="setActivePage(activePage === 'Home' ? 'Settings' : 'Home')" class="uk-icon "
@@ -37,7 +37,7 @@ export default {
             return this.activePage === 'Home' ? 'cog' : 'home'
         },
         transparency() {
-            return this.activePage === 'Home' ? 0.65 : 0.85
+            return this.activePage === 'Home' ? 0.75 : 0.85
         },
 
         newsStatus() {
@@ -60,9 +60,12 @@ export default {
     },
     methods: {
         async getLocation() {
+            this.setLocation({lat: 51.036159999999995, lng: -114.1669888})
+            return
+
             // Retrieve the users location on created
-            let response = await this.axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.MIX_GEOLOC_KEY}`)
-            let geolocation = await this.axios.post(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${response.data.location.lat},${response.data.location.lng}&key=${process.env.MIX_GEOLOC_KEY}`)
+            let response = await this.axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.MIX_MAPS_KEY}`)
+            let geolocation = await this.axios.post(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${response.data.location.lat},${response.data.location.lng}&key=${process.env.MIX_MAPS_KEY}`)
 
             response.data.location['geocode'] = geolocation.data.results
             console.log('geoLocation: ', geolocation.data);
@@ -94,7 +97,7 @@ export default {
 
         // Update the users location every 10 minutes
         // setInterval(this.getLocation, 600000)
-        // this.getLocation()
+        this.getLocation()
 
         // Update the background every 1 minute
         setInterval(this.getBackground, 120000)
