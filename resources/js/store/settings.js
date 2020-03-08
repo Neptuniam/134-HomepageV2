@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const state = {
-    activePage: 'Home',
+    activePage: 'Settings',
     address: null,
     lat: null,
     lng: null,
@@ -67,9 +67,6 @@ const actions = {
     },
 
     setLocation: ({commit}, payload) => {
-        console.log('%c Location', 'background: #222; color: #bada55');
-        console.log(payload);
-
         commit('setLat', payload.lat);
         commit('setLng', payload.lng);
 

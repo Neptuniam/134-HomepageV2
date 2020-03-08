@@ -59,17 +59,35 @@ export default {
         })
     },
     methods: {
-        async getLocation() {
-            this.setLocation({lat: 51.036159999999995, lng: -114.1669888})
-            return
-
+        async fetchLocation() {
             // Retrieve the users location on created
-            let response = await this.axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.MIX_MAPS_KEY}`)
-            let geolocation = await this.axios.post(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${response.data.location.lat},${response.data.location.lng}&key=${process.env.MIX_MAPS_KEY}`)
+            let response = await this.axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.MIX_GEOLOC_KEY}`)
+            let geolocation = await this.axios.post(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${response.data.location.lat},${response.data.location.lng}&key=${process.env.MIX_GEOLOC_KEY}`)
 
-            response.data.location['geocode'] = geolocation.data.results
-            console.log('geoLocation: ', geolocation.data);
+            this.$set(response.data.location, 'geocode', geolocation.data.results)
+            this.$set(response.data, 'fetched', new Date())
+
+            console.log('%c Fetched geoLocation', 'background: #222; color: #bada55');
+            console.log(geolocation.data);
+
             this.setLocation(response.data.location)
+            localStorage.setItem('LastLocation', JSON.stringify(response.data))
+        },
+        checkTimeSince(cachedTime) {
+            // Check that the cached data isn't "too old"
+            return ((new Date().getTime() - new Date(cachedTime).getTime()) / 300000) < 1
+        },
+        getLocation() {
+            let CachedLoc = JSON.parse(localStorage.getItem('LastLocation'))
+
+            if (CachedLoc && 'fetched' in CachedLoc && this.checkTimeSince(CachedLoc.fetched)) {
+                console.log('%c Cached geoLocation', 'background: #222; color: #bada55');
+                console.log(CachedLoc);
+
+                this.setLocation(CachedLoc.location)
+            } else {
+                this.fetchLocation()
+            }
         },
 
         getBackground() {
@@ -97,7 +115,7 @@ export default {
 
         // Update the users location every 10 minutes
         // setInterval(this.getLocation, 600000)
-        this.getLocation()
+        // this.getLocation()
 
         // Update the background every 1 minute
         setInterval(this.getBackground, 120000)

@@ -12,7 +12,7 @@
 import { mapGetters } from 'vuex'
 export default {
     computed: {
-        activeWidgets: function() {
+        activeWidgets() {
             if (this.widgets)
                 return this.widgets.filter(widget => widget.status == 1 && !(widget.title === 'Notes'))
         },

@@ -85,26 +85,24 @@ class Settings extends Controller {
         return DB::table('maps_user_settings')->insertGetId($mapSettings);
     }
 
-
-    // Favourites
     public function fetchFavourites() {
         if ($user = session('user'))
-            return DB::table('favourites')->where('user_id', $user['id'])->get();
+            return Favourite::where('user_id', $user['id'])->orderBy('pos')->get();
     }
 
     public function createFavourite(Request $request) {
         $favourite = $request->all();
-        return DB::table('favourites')->insertGetId($favourite);
+        return Favourite::insertGetId($favourite);
     }
 
     public function updateFavourite(Request $request) {
         $favourite = $request->all();
-        return DB::table('favourites')->where('id', $favourite['id'])->update($favourite);
+        return Favourite::where('id', $favourite['id'])->update($favourite);
     }
 
     public function deleteFavourite(Request $request) {
         $favourites = $request->all();
-        DB::table('favourites')->where('id', '=', $favourites['id'])->delete();
+        Favourite::where('id', '=', $favourites['id'])->delete();
     }
 }
 ?>

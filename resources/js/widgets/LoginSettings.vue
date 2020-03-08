@@ -7,10 +7,10 @@
 
         <div class="inputRow">
             <span class="row uk-form-label">Username</span>
-            <input type="name"      v-model="name" class="uk-input">
+            <input type="name"      v-model="name" onClick="this.select();" class="uk-input">
 
             <span class="row uk-form-label">Password</span>
-            <input type="password"  v-model="pass" class="uk-input">
+            <input type="password"  v-model="pass" onClick="this.select();" class="uk-input">
         </div>
 
         <div class="row center-xs buttonsRow">
@@ -28,7 +28,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 export default {
-    data: function() {
+    data() {
         return {
             name: null,
             pass: null,

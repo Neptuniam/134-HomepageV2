@@ -28,7 +28,7 @@ export default {
             },
             activeTab: {
                 title: 'Profile',
-                src: 'LoginSettings'
+                src: 'FavSettings'
             },
             tabs: [{
                     title: 'Profile',

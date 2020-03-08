@@ -1821,8 +1821,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     location: 'getLocation'
   })),
   methods: _objectSpread({
-    getLocation: function () {
-      var _getLocation = _asyncToGenerator(
+    fetchLocation: function () {
+      var _fetchLocation = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         var response, geolocation;
@@ -1830,24 +1830,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                this.setLocation({
-                  lat: 51.036159999999995,
-                  lng: -114.1669888
-                });
-                return _context.abrupt("return");
+                _context.next = 2;
+                return this.axios.post("https://www.googleapis.com/geolocation/v1/geolocate?key=".concat("AIzaSyBJpygRQCiPNVHpLc5jQxBFPxyMw7avbh8"));
 
-              case 4:
+              case 2:
                 response = _context.sent;
-                _context.next = 7;
-                return this.axios.post("https://maps.googleapis.com/maps/api/geocode/json?latlng=".concat(response.data.location.lat, ",").concat(response.data.location.lng, "&key=").concat("AIzaSyBo2SRZ5iiOBFCsx9pTy0eG_dV9Bcl-hkE"));
+                _context.next = 5;
+                return this.axios.post("https://maps.googleapis.com/maps/api/geocode/json?latlng=".concat(response.data.location.lat, ",").concat(response.data.location.lng, "&key=").concat("AIzaSyBJpygRQCiPNVHpLc5jQxBFPxyMw7avbh8"));
 
-              case 7:
+              case 5:
                 geolocation = _context.sent;
-                response.data.location['geocode'] = geolocation.data.results;
-                console.log('geoLocation: ', geolocation.data);
+                this.$set(response.data.location, 'geocode', geolocation.data.results);
+                this.$set(response.data, 'fetched', new Date());
+                console.log('%c Fetched geoLocation', 'background: #222; color: #bada55');
+                console.log(geolocation.data);
                 this.setLocation(response.data.location);
+                localStorage.setItem('LastLocation', JSON.stringify(response.data));
 
-              case 11:
+              case 12:
               case "end":
                 return _context.stop();
             }
@@ -1855,12 +1855,27 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }, _callee, this);
       }));
 
-      function getLocation() {
-        return _getLocation.apply(this, arguments);
+      function fetchLocation() {
+        return _fetchLocation.apply(this, arguments);
       }
 
-      return getLocation;
+      return fetchLocation;
     }(),
+    checkTimeSince: function checkTimeSince(cachedTime) {
+      // Check that the cached data isn't "too old"
+      return (new Date().getTime() - new Date(cachedTime).getTime()) / 300000 < 1;
+    },
+    getLocation: function getLocation() {
+      var CachedLoc = JSON.parse(localStorage.getItem('LastLocation'));
+
+      if (CachedLoc && 'fetched' in CachedLoc && this.checkTimeSince(CachedLoc.fetched)) {
+        console.log('%c Cached geoLocation', 'background: #222; color: #bada55');
+        console.log(CachedLoc);
+        this.setLocation(CachedLoc.location);
+      } else {
+        this.fetchLocation();
+      }
+    },
     getBackground: function getBackground() {
       // Hit the random background endpoint
       this.axios.get('/background/').then(function (background) {
@@ -1881,8 +1896,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.fetchUser();
     this.fetchUsers(); // Update the users location every 10 minutes
     // setInterval(this.getLocation, 600000)
-
-    this.getLocation(); // Update the background every 1 minute
+    // this.getLocation()
+    // Update the background every 1 minute
 
     setInterval(this.getBackground, 120000);
     this.getBackground();
@@ -1929,7 +1944,7 @@ __webpack_require__.r(__webpack_exports__);
       },
       activeTab: {
         title: 'Profile',
-        src: 'LoginSettings'
+        src: 'FavSettings'
       },
       tabs: [{
         title: 'Profile',
@@ -2111,6 +2126,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
 //
 //
 //
@@ -2343,6 +2360,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2381,7 +2411,31 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
     updateFavourite: 'updateFavourite',
     deleteFavourite: 'deleteFavourite'
-  }))
+  })),
+  mounted: function mounted() {
+    var _this = this; // Listen for an update on the uk-sortable
+
+
+    document.addEventListener('moved', function (e) {
+      var _loop = function _loop(i) {
+        var child = e.target.children[i];
+
+        var fav = _this.favourites.find(function (fav) {
+          return fav.id == child.id;
+        });
+
+        if (fav) {
+          console.log(i, _objectSpread({}, fav));
+          fav.pos = i;
+          console.log(_objectSpread({}, fav)); // _this.updateFavourite(fav)
+        }
+      };
+
+      for (var i = 0; i < e.target.children.length; i++) {
+        _loop(i);
+      }
+    });
+  }
 });
 
 /***/ }),
@@ -2831,8 +2885,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
     updateLocation: 'updateLocation',
     deleteLocation: 'deleteLocation',
-    updateMapSettings: 'updateMapSettings'
-  }))
+    updateMapSettings: 'updateMapSettings',
+    fetchMapsSettings: 'fetchMapsSettings',
+    fetchLocations: 'fetchLocations'
+  })),
+  mounted: function mounted() {
+    this.fetchMapsSettings();
+    this.fetchLocations();
+  }
 });
 
 /***/ }),
@@ -3656,7 +3716,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.rowHeight[data-v-10acad64] {\n    height: 2.5rem;\n}\n.widgetTitle[data-v-10acad64] {\n    font-size: 1.3rem;\n}\n.rowHeight input[data-v-10acad64] {\n    font-size: 1.3rem;\n    color: black;\n    background: none;\n    border: none;\n}\n", ""]);
+exports.push([module.i, "\n.WidgetSettings[data-v-10acad64] {\n    max-width: 550px;\n}\n.rowHeight[data-v-10acad64] {\n    height: 2.5rem;\n}\n.widgetTitle[data-v-10acad64] {\n    font-size: 1.3rem;\n}\n.rowHeight input[data-v-10acad64] {\n    font-size: 1.3rem;\n    color: black;\n    background: none;\n    border: none;\n}\n.rowHeight[data-v-10acad64]:hover {\n    background-color: rgba(100, 100, 100,  0.15);\n    border-radius: 5px;\n}\n", ""]);
 
 // exports
 
@@ -3713,7 +3773,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\ntr th[data-v-e2019a9c] {\n    font-weight: 500px;\n    font-size: 22px;\n    text-align: center;\n\n    padding: 0;\n}\n.posWidth[data-v-e2019a9c] {\n    width: 60px;\n}\n.uk-icon-button[data-v-e2019a9c] {\n    height: 40px;\n    width:  40px;\n}\n", ""]);
+exports.push([module.i, "\ntr th[data-v-e2019a9c] {\n    font-weight: 500px;\n    font-size: 22px;\n    text-align: center;\n\n    padding: 0;\n}\n.MapsSettings[data-v-e2019a9c] {\n    padding: 0px 20px;\n}\n.SettingsRow[data-v-e2019a9c] {\n    /* margin: 10px 0px; */\n}\n.SettingsRow input[data-v-e2019a9c], .SettingsRow div[data-v-e2019a9c] {\n    margin: 10px 5px;\n}\n.col-xs-1[data-v-e2019a9c] {\n    max-width: 40px;\n}\n.col-xs-2[data-v-e2019a9c] {\n    max-width: 120px;\n}\n.uk-icon-button[data-v-e2019a9c] {\n    height: 40px;\n    width:  40px;\n}\n", ""]);
 
 // exports
 
@@ -25677,7 +25737,7 @@ var render = function() {
               }
             ],
             staticClass: "uk-input",
-            attrs: { type: "name" },
+            attrs: { type: "name", onClick: "this.select();" },
             domProps: { value: _vm.name },
             on: {
               input: function($event) {
@@ -25703,7 +25763,7 @@ var render = function() {
               }
             ],
             staticClass: "uk-input",
-            attrs: { type: "password" },
+            attrs: { type: "password", onClick: "this.select();" },
             domProps: { value: _vm.pass },
             on: {
               input: function($event) {
@@ -25779,93 +25839,102 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _vm._m(0),
-      _vm._v(" "),
-      _vm._l(_vm.widgets, function(widget) {
-        return _c(
-          "div",
-          { staticClass: "row center-xs middle-xs fullWidth rowHeight" },
-          [
-            _c("div", { staticClass: "col-xs-2 widgetTitle" }, [
-              _vm._v("\n            " + _vm._s(widget.title) + "\n        ")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-xs-1" }, [
-              _c(
-                "button",
-                {
-                  class: ["uk-button uk-button-small", _vm.color(widget)],
-                  attrs: { type: "button" },
-                  on: {
-                    click: function($event) {
-                      return _vm.toggleStatus(widget)
-                    }
-                  }
-                },
-                [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(_vm.readable[widget.status]) +
-                      "\n            "
-                  )
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-xs-1" }, [
-              _c("div", { staticClass: "row center-xs middle-xs" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: widget.interval,
-                      expression: "widget.interval"
-                    }
-                  ],
-                  staticClass: "col-xs-6",
-                  attrs: { type: "number", min: "0" },
-                  domProps: { value: widget.interval },
-                  on: {
-                    input: [
-                      function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(widget, "interval", $event.target.value)
-                      },
-                      function($event) {
-                        return _vm.updateWidget(widget)
+  return _c("div", { staticClass: "row center-xs" }, [
+    _c(
+      "div",
+      { staticClass: "col-xs-12 WidgetSettings" },
+      [
+        _vm._m(0),
+        _vm._v(" "),
+        _vm._l(_vm.widgets, function(widget) {
+          return _c(
+            "div",
+            { staticClass: "row start-xs middle-xs rowHeight" },
+            [
+              _c("div", { staticClass: "col-xs widgetTitle" }, [
+                _vm._v(
+                  "\n                " + _vm._s(widget.title) + "\n            "
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-xs-3" }, [
+                _c(
+                  "button",
+                  {
+                    class: ["uk-button uk-button-small", _vm.color(widget)],
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.toggleStatus(widget)
                       }
-                    ]
-                  }
-                }),
-                _vm._v("\n                Min\n            ")
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.readable[widget.status]) +
+                        "\n                "
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-xs-3" }, [
+                _c("div", { staticClass: "row center-xs middle-xs" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: widget.interval,
+                        expression: "widget.interval"
+                      }
+                    ],
+                    staticClass: "col-xs-6",
+                    attrs: {
+                      onClick: "this.select();",
+                      type: "number",
+                      min: "0"
+                    },
+                    domProps: { value: widget.interval },
+                    on: {
+                      input: [
+                        function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(widget, "interval", $event.target.value)
+                        },
+                        function($event) {
+                          return _vm.updateWidget(widget)
+                        }
+                      ]
+                    }
+                  }),
+                  _vm._v("\n                    Min\n                ")
+                ])
               ])
-            ])
-          ]
-        )
-      })
-    ],
-    2
-  )
+            ]
+          )
+        })
+      ],
+      2
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row center-xs fullWidth" }, [
-      _c("div", { staticClass: "col-xs-2" }, [
+    return _c("div", { staticClass: "row start-xs" }, [
+      _c("div", { staticClass: "col-xs" }, [
         _c("h2", [_vm._v("Widget Title")])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-xs-1" }, [_c("h2", [_vm._v("Status")])]),
+      _c("div", { staticClass: "col-xs-3" }, [_c("h2", [_vm._v("Status")])]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-xs-1" }, [_c("h2", [_vm._v("Interval")])])
+      _c("div", { staticClass: "col-xs-3" }, [_c("h2", [_vm._v("Interval")])])
     ])
   }
 ]
@@ -25998,111 +26067,91 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("table", { staticClass: "uk-table" }, [
-    _vm._m(0),
-    _vm._v(" "),
+  return _c("div", { staticClass: "MapsSettings" }, [
     _c(
-      "tbody",
-      [
-        _vm._l(_vm.favourites, function(favourite) {
-          return _c("tr", { staticClass: "textBody" }, [
-            _c("td", [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: favourite.title,
-                    expression: "favourite.title"
-                  }
-                ],
-                staticClass: "uk-input",
-                attrs: { type: "text" },
-                domProps: { value: favourite.title },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(favourite, "title", $event.target.value)
-                  }
+      "div",
+      { attrs: { "uk-sortable": "handle: .uk-sortable-handle" } },
+      _vm._l(_vm.favourites, function(favourite, index) {
+        return _c(
+          "div",
+          {
+            staticClass: "row middle-xs textBody SettingsRow",
+            attrs: { id: favourite.id }
+          },
+          [
+            _c("div", {
+              staticClass: "uk-sortable-handle col-xs-1 end-xs",
+              attrs: { "uk-icon": "icon: grid; ratio: 1.5" }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: favourite.title,
+                  expression: "favourite.title"
                 }
-              })
+              ],
+              staticClass: "col-xs uk-input",
+              domProps: { value: favourite.title },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(favourite, "title", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: favourite.url,
+                  expression: "favourite.url"
+                }
+              ],
+              staticClass: "col-xs uk-input",
+              domProps: { value: favourite.url },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(favourite, "url", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: favourite.src,
+                  expression: "favourite.src"
+                }
+              ],
+              staticClass: "col-xs uk-input",
+              domProps: { value: favourite.src },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(favourite, "src", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-xs-1 end-xs" }, [
+              _vm._v(_vm._s(index))
             ]),
             _vm._v(" "),
-            _c("td", [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: favourite.url,
-                    expression: "favourite.url"
-                  }
-                ],
-                staticClass: "uk-input",
-                attrs: { type: "text" },
-                domProps: { value: favourite.url },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(favourite, "url", $event.target.value)
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("td", [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: favourite.src,
-                    expression: "favourite.src"
-                  }
-                ],
-                staticClass: "uk-input",
-                attrs: { type: "text" },
-                domProps: { value: favourite.src },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(favourite, "src", $event.target.value)
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("td", [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: favourite.pos,
-                    expression: "favourite.pos"
-                  }
-                ],
-                staticClass: "uk-input",
-                attrs: { type: "number" },
-                domProps: { value: favourite.pos },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(favourite, "pos", $event.target.value)
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("td", { staticClass: "uk-button-group" }, [
+            _c("div", { staticClass: "col-xs-2 end-xs uk-button-group" }, [
               _c("a", {
                 staticClass: "uk-icon-button uk-button-primary roundedButton",
                 attrs: { "uk-icon": "pencil" },
@@ -26123,147 +26172,14 @@ var render = function() {
                 }
               })
             ])
-          ])
-        }),
-        _vm._v(" "),
-        _c("tr", [
-          _c("td", [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.newFavourite.title,
-                  expression: "newFavourite.title"
-                }
-              ],
-              staticClass: "uk-input",
-              attrs: { type: "text" },
-              domProps: { value: _vm.newFavourite.title },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.newFavourite, "title", $event.target.value)
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("td", [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.newFavourite.url,
-                  expression: "newFavourite.url"
-                }
-              ],
-              staticClass: "uk-input",
-              attrs: { type: "text" },
-              domProps: { value: _vm.newFavourite.url },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.newFavourite, "url", $event.target.value)
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("td", [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.newFavourite.src,
-                  expression: "newFavourite.src"
-                }
-              ],
-              staticClass: "uk-input",
-              attrs: { type: "text" },
-              domProps: { value: _vm.newFavourite.src },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.newFavourite, "src", $event.target.value)
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("td", [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.newFavourite.pos,
-                  expression: "newFavourite.pos"
-                }
-              ],
-              staticClass: "uk-input",
-              attrs: { type: "number" },
-              domProps: { value: _vm.newFavourite.pos },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.newFavourite, "pos", $event.target.value)
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("td", { staticClass: "posWidth" }, [
-            _c("a", {
-              staticClass: "uk-icon-button uk-button-success roundedButton",
-              attrs: { "uk-icon": "plus" },
-              on: {
-                click: function($event) {
-                  return _vm.addFav(_vm.newFavourite)
-                }
-              }
-            })
-          ])
-        ])
-      ],
-      2
+          ]
+        )
+      }),
+      0
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Title")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Link")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "uk-text-capitalize" }, [
-          _vm._v("Image Source")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticClass: "uk-text-capitalize posWidth" }, [
-          _vm._v("Position")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Edit")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -43386,7 +43302,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
 var state = {
-  activePage: 'Home',
+  activePage: 'Settings',
   address: null,
   lat: null,
   lng: null,
@@ -43488,8 +43404,6 @@ var actions = {
   },
   setLocation: function setLocation(_ref3, payload) {
     var commit = _ref3.commit;
-    console.log('%c Location', 'background: #222; color: #bada55');
-    console.log(payload);
     commit('setLat', payload.lat);
     commit('setLng', payload.lng);
     if (payload.geocode && payload.geocode.length) commit('setAddress', payload.geocode[0]);

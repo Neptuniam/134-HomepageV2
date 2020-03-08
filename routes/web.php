@@ -42,10 +42,10 @@ Route::group(['prefix'=>'settings'], function(){
     });
 
     Route::group(['prefix'=>'favourites'], function(){
-        Route::get('/', 'Settings@fetchFavourites');
-        Route::post('/','Settings@createFavourite');
-        Route::put('/', 'Settings@updateFavourite');
-        Route::put('/delete', 'Settings@deleteFavourite');
+        Route::get('/', 'FavouriteController@fetchFavourites');
+        Route::post('/','FavouriteController@createFavourite');
+        Route::put('/', 'FavouriteController@updateFavourite');
+        Route::put('/delete', 'FavouriteController@deleteFavourite');
     });
 });
 

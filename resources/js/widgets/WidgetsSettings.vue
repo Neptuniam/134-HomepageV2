@@ -1,41 +1,43 @@
 <template>
-    <div>
-        <div class="row center-xs fullWidth">
-            <div class="col-xs-2">
+<div class="row center-xs">
+    <div class="col-xs-12 WidgetSettings">
+        <div class="row start-xs">
+            <div class="col-xs">
                 <h2>Widget Title</h2>
             </div>
-            <div class="col-xs-1">
+            <div class="col-xs-3">
                 <h2>Status</h2>
             </div>
-            <div class="col-xs-1">
+            <div class="col-xs-3">
                 <h2>Interval</h2>
             </div>
         </div>
 
-        <div v-for="widget in widgets" class="row center-xs middle-xs fullWidth rowHeight">
-            <div class="col-xs-2 widgetTitle">
+        <div v-for="widget in widgets" class="row start-xs middle-xs rowHeight">
+            <div class="col-xs widgetTitle">
                 {{widget.title}}
             </div>
-            <div class="col-xs-1">
+            <div class="col-xs-3">
                 <button type="button" :class="['uk-button uk-button-small', color(widget)]" @click="toggleStatus(widget)">
                     {{readable[widget.status]}}
                 </button>
             </div>
-            <div class="col-xs-1">
+            <div class="col-xs-3">
                 <div class="row center-xs middle-xs">
-                    <input v-model="widget.interval" @input="updateWidget(widget)" type="number" min="0" class="col-xs-6">
+                    <input v-model="widget.interval" @input="updateWidget(widget)" onClick="this.select();" type="number" min="0" class="col-xs-6">
                     Min
                 </div>
             </div>
         </div>
     </div>
+</div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-    data: function() {
+    data() {
         return {
             readable: ['Off', 'On'],
         }
@@ -64,6 +66,10 @@ export default {
 </script>
 
 <style scoped>
+    .WidgetSettings {
+        max-width: 550px;
+    }
+
     .rowHeight {
         height: 2.5rem;
     }
@@ -77,5 +83,9 @@ export default {
         color: black;
         background: none;
         border: none;
+    }
+    .rowHeight:hover {
+        background-color: rgba(100, 100, 100,  0.15);
+        border-radius: 5px;
     }
 </style>
