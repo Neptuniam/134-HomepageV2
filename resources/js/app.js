@@ -42,7 +42,7 @@ window.UIkit = UIkit;
 Vue.use(VueAxios, axios)
 Vue.use(VueGoogleMaps, {
   load: {
-    key: process.env.MIX_MAPS_KEY,
+    key: process.env.MIX_GOOGLE_KEY,
     // libraries: 'places', // This is required if you use the Autocomplete plugin
   },
 })

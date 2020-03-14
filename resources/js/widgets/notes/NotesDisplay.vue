@@ -3,7 +3,7 @@
     <div class="col-xs-2 scrollSpace savedNotes">
         <div v-for="(note, index) in notes">
             <p @click="changeNotes(note)" class="textBody uk-text-truncate savedNote nomargin clickable">
-                {{note.body.replace(/#/g, "").split('  ')[0]}}
+                {{note && note.body ? note.body.replace(/#/g, "").split('  ')[0] : ''}}
             </p>
 
             <div v-if="note.id === currentNote.id" class="controlButtons">
@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="center-xs updatedAt">
-                    {{findAuthor(note).name}} - {{note.updated_at.split(' ')[0].replace(/-/g, '/')}}
+                    {{findAuthorName(note)}} - {{note.updated_at.split(' ')[0].replace(/-/g, '/')}}
                 </div>
             </div>
 
@@ -45,7 +45,7 @@
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-    data: function() {
+    data() {
         return {
             mode: 'view',
             showMark: false,
@@ -54,7 +54,7 @@ export default {
         }
     },
     computed: {
-        compiledMarkdown: function () {
+        compiledMarkdown () {
             return marked(this.currentNote.body, { sanitize: true })
         },
 
@@ -67,6 +67,11 @@ export default {
     methods: {
         findAuthor(note) {
             return this.users.find(user => user.id === note.author_id)
+        },
+        findAuthorName(note) {
+            let author = this.findAuthor(note)
+            if (author)
+                return author.name
         },
 
         startDelete(note) {
@@ -104,7 +109,6 @@ export default {
                 this.currentNote = {...note}
 
                 // If it's a new note it should be defaulted to edit mode
-                // this.mode = !note.id ? 'edit' : 'view'
                 this.mode = !note.id ? 'edit' : 'view'
                 this.showMark = false
             }
@@ -142,11 +146,11 @@ export default {
             deleteNote: 'deleteNote',
         })
     },
-    mounted: function() {
-        this.fetchNotes().then(() => {
-            if (this.notes.length)
-                this.currentNote = this.notes[0]
-        })
+    async mounted() {
+        await this.fetchNotes()
+
+        if (this.notes.length)
+            this.currentNote = this.notes[0]
     },
 }
 </script>

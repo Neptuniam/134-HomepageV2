@@ -48,7 +48,7 @@
                 <th class="uk-text-capitalize">Address</th>
                 <th class="uk-text-capitalize">Lat</th>
                 <th class="uk-text-capitalize">Long</th>
-                <th class="uk-text-capitalize">Edit</th>
+                <th class="uk-text-capitalize center-xs">Actions</th>
             </tr>
         </thead>
         <tbody class="textBody">
@@ -82,13 +82,13 @@
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-    data: function() {
+    data() {
         return {
             newLocation: { id: null, user_id: null,  title: '', address: '', lng: '', lat: '' },
         }
     },
     computed: {
-        remainingLocations: function() {
+        remainingLocations() {
             if (this.locations)
                 return this.locations
                 // return this.locations.filter(location => location.favourite == null)
@@ -118,7 +118,14 @@ export default {
             updateLocation: 'updateLocation',
             deleteLocation: 'deleteLocation',
             updateMapSettings: 'updateMapSettings',
+            fetchMapsSettings: 'fetchMapsSettings',
+            fetchLocations: 'fetchLocations',
         })
+    },
+
+    mounted() {
+        this.fetchMapsSettings()
+        this.fetchLocations()
     },
 }
 </script>
@@ -127,7 +134,6 @@ export default {
     tr th {
         font-weight: 500px;
         font-size: 22px;
-        text-align: center;
 
         padding: 30px 0 0 0;
     }

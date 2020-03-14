@@ -17,18 +17,24 @@
            type="text" class="textSpecial" :style="'width: '+curLoc.length*2+'vw;'"> -->
 
     <div class="row center-xs middle-xs textBody fullWidth forecast">
-        <div v-for="day in weather.forecast" class="col-xs day uk-box-shadow-hover-large" :uk-tooltip="day.Day.IconPhrase">
+        <div v-for="day in weather.forecast" class="col-xs day uk-box-shadow-hover-large">
             <div class="row middle-xs">
                 <div class="col-xs-7">
                     <i :class="getIcon(day.Day.IconPhrase)" />
+
+                    <!-- <br>
+                    {{day.Day.IconPhrase}} -->
                 </div>
                 <div class="col-xs-3 forecastTemp nospacing">
-                    {{Math.round(day.Temperature.Maximum.Value)}}&deg;
+                    {{day.Temperature.Maximum.Value >= 0 ? '&nbsp;' : ''}}{{Math.round(day.Temperature.Maximum.Value)}}&deg;
                     <br>
-                    {{Math.round(day.Temperature.Minimum.Value)}}&deg;
+                    {{day.Temperature.Minimum.Value >= 0 ? '&nbsp;' : ''}}{{Math.round(day.Temperature.Minimum.Value)}}&deg;
                 </div>
             </div>
 
+            <div class="forecastDesc bottom-xs uk-text-truncate">
+                {{day.Day.IconPhrase}}
+            </div>
             <hr>
             <div class="forecastDay bottom-xs">
                 {{getDay(day)}}
@@ -44,7 +50,8 @@ export default {
     props: ['widget'],
     data() {
         return {
-            days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"],
+            days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             weather: null,
             curLoc: null,
             weatherIconMap: {
@@ -54,7 +61,7 @@ export default {
                 'clear': "stars",
                 'rain': "rain",
                 'cloudy': "cloudy",
-                'clouds': "wi-cloudy",
+                'clouds': "cloudy",
                 'dreary': "sunny-overcast",
                 'overcast': "sunny-overcast",
                 'mixed': "rain-mix",
@@ -99,11 +106,16 @@ export default {
         // },
 
         getDay(day) {
-            return this.days[new Date(day.EpochDate*1000).getDay()]
+            let date = new Date(day.EpochDate*1000)
+            return `${this.days[date.getDay()]}, ${this.months[date.getMonth()]} ${date.getDate()}`
         },
 
         getIcon(curWeather) {
             var splitWeatherDesc = curWeather.toLowerCase().split(" ")
+
+            // We currently use only daytime icons, cold only has a neutral icon
+            if (curWeather == "Cold")
+                return 'wi wi-snowflake-cold'
 
             for (let keyword of splitWeatherDesc)
                 if (this.weatherIconMap[keyword])
@@ -243,11 +255,11 @@ export default {
         height: 100% !important;
         width: 100% !important;
 
-        margin-bottom: 15vh;
+        margin-bottom: 5vh;
     }
 
     .forecast {
-        height: 18.5vh;
+        height: 28vh;
     }
 
     .day {
@@ -257,7 +269,7 @@ export default {
         margin: 0px 7.5px;
         background: rgba(230, 230, 250, 0.5);
 
-        height: 80% !important;
+        height: 60% !important;
     }
     .day:hover {
         background: rgba(230, 230, 250, 0.95);
@@ -269,29 +281,33 @@ export default {
         font-size: 5vh;
     }
     .day:hover i {
-        margin-top: 2vh !important;
-        font-size: 6.5vh;
+        margin-top: 0vh !important;
+        font-size: 7vh;
     }
 
     .forecastTemp {
         font-size: 3vh;
-        text-align: right;
+        text-align: left;
     }
     .day:hover .forecastTemp {
-        font-size: 4vh;
+        font-size: 5vh;
         text-align: right;
     }
 
-    .forecastDay {
+    .forecastDesc {
+        margin-top: 1vh;
+    }
+    .forecastDay, .forecastDesc {
         font-size: 2vh;
     }
-    .day:hover .forecastDay {
-        font-size: 3vh;
+    .day:hover .forecastDay, .day:hover .forecastDesc {
+        font-size: 4vh;
     }
 
 
     .day hr {
-        margin: 10px 0px 5px 0px;
+        /* margin: 10px 0px 5px 0px; */
+        margin: 0px;
         border-color: grey;
     }
 
