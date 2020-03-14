@@ -18,7 +18,7 @@
                 {{widget.title}}
             </div>
             <div class="col-xs-3">
-                <button type="button" :class="['uk-button uk-button-small', color(widget)]" @click="toggleStatus(widget)">
+                <button type="button" :class="['uk-button-default uk-button-small', color(widget)]" @click="toggleStatus(widget)">
                     {{readable[widget.status]}}
                 </button>
             </div>
@@ -87,5 +87,10 @@ export default {
     .rowHeight:hover {
         background-color: rgba(100, 100, 100,  0.15);
         border-radius: 5px;
+    }
+
+    .uk-button-default:hover {
+        /* background-color: #e5e5e5 !important; */
+        border-color: rgb(150, 150, 150) !important;
     }
 </style>

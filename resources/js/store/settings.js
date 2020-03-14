@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const state = {
-    activePage: 'Settings',
+    activePage: 'Home',
     address: null,
     lat: null,
     lng: null,

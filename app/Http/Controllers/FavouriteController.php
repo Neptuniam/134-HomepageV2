@@ -14,16 +14,26 @@ class FavouriteController extends Controller {
 
     public function createFavourite(Request $request) {
         $favourite = $request->all();
-        return Favourite::insertGetId($favourite);
+        return Favourite::create($favourite);
     }
 
     public function updateFavourite(Request $request) {
         $favourite = $request->all();
-        return Favourite::where('id', $favourite['id'])->update($favourite);
+        return Favourite::find($favourite['id'])->update($favourite);
     }
 
     public function deleteFavourite(Request $request) {
         $favourites = $request->all();
-        Favourite::where('id', '=', $favourites['id'])->delete();
+        Favourite::find($favourites['id'])->delete();
+    }
+
+    public function updatePositions(Request $request) {
+        $favourites = $request->all();
+        $pos = 0;
+
+        foreach ($favourites as $favourite) {
+            $favourite['pos'] = $pos++;
+            Favourite::find($favourite['id'])->update($favourite);
+        }
     }
 }

@@ -61,8 +61,8 @@ export default {
     methods: {
         async fetchLocation() {
             // Retrieve the users location on created
-            let response = await this.axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.MIX_GEOLOC_KEY}`)
-            let geolocation = await this.axios.post(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${response.data.location.lat},${response.data.location.lng}&key=${process.env.MIX_GEOLOC_KEY}`)
+            let response = await this.axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.MIX_GOOGLE_KEY}`)
+            let geolocation = await this.axios.post(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${response.data.location.lat},${response.data.location.lng}&key=${process.env.MIX_GOOGLE_KEY}`)
 
             this.$set(response.data.location, 'geocode', geolocation.data.results)
             this.$set(response.data, 'fetched', new Date())
@@ -115,7 +115,7 @@ export default {
 
         // Update the users location every 10 minutes
         // setInterval(this.getLocation, 600000)
-        // this.getLocation()
+        this.getLocation()
 
         // Update the background every 1 minute
         setInterval(this.getBackground, 120000)

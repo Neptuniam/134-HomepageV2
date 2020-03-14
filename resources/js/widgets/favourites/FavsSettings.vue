@@ -39,18 +39,37 @@
         </tbody>
     </table> -->
 
+    <div class="row start-xs middle-xs textBody HeaderRow">
+        <div class="col-xs-1">
+            Sort
+        </div>
+
+        <div class="col-xs uk-text-capitalize">
+            title
+        </div>
+        <div class="col-xs uk-text-capitalize">
+            url
+        </div>
+        <div class="col-xs uk-text-capitalize">
+            src
+        </div>
+        
+        <div class="col-xs-2 center-xs">
+            Actions
+        </div>
+    </div>
+
     <div uk-sortable="handle: .uk-sortable-handle">
         <div v-for="(favourite, index) in favourites" class="row middle-xs textBody SettingsRow" :id="favourite.id">
-            <div class="uk-sortable-handle col-xs-1 end-xs" uk-icon="icon: grid; ratio: 1.5"></div>
+            <div class="uk-sortable-handle col-xs-1 start-xs" uk-icon="icon: grid; ratio: 1.5"></div>
 
             <input class="col-xs uk-input" v-model="favourite.title">
             <input class="col-xs uk-input" v-model="favourite.url">
             <input class="col-xs uk-input" v-model="favourite.src">
 
-            <div class="col-xs-1 end-xs">{{index}}</div>
             <div class="col-xs-2 end-xs uk-button-group">
-                <a class="uk-icon-button uk-button-primary roundedButton" @click="updateFavourite(favourite)" uk-icon="pencil" />
-                <a class="uk-icon-button uk-button-danger roundedButton" @click="deleteFavourite(favourite)" uk-icon="trash" />
+                <a class="uk-icon-button uk-button-primary roundedButton uk-box-shadow-hover-xlarge" @click="updateFavourite(favourite)" uk-icon="pencil" />
+                <a class="uk-icon-button uk-button-danger roundedButton uk-box-shadow-hover-xlarge" @click="deleteFavourite(favourite)" uk-icon="trash" />
             </div>
         </div>
     </div>
@@ -65,6 +84,7 @@ export default {
     data() {
         return {
             newFavourite: {id: null, user_id: null, title: '', url: '', src: ''},
+            updatedOrder: null
         }
     },
     computed: {
@@ -91,6 +111,7 @@ export default {
         ...mapActions('settings', {
             updateFavourite: 'updateFavourite',
             deleteFavourite: 'deleteFavourite',
+            fetchFavourites: 'fetchFavourites'
         })
     },
 
@@ -98,34 +119,40 @@ export default {
         let _this = this
         // Listen for an update on the uk-sortable
         document.addEventListener('moved', function(e) {
+            // Mixing uikit sortable with updating indices was awful so we update them on the backend
+            _this.updatedOrder = []
+
             for (let i = 0; i < e.target.children.length; i++) {
                 let child = e.target.children[i]
                 let fav = _this.favourites.find(fav => fav.id == child.id)
 
                 if (fav) {
-                    console.log(i, {...fav});
-                    fav.pos = i
-                    console.log({...fav});
-                    // _this.updateFavourite(fav)
+                    _this.updatedOrder.push(fav)
                 }
             }
 
         });
     },
+
+    async destroyed() {
+        if (this.updatedOrder) {
+            await this.axios.put('/settings/favourites/updatePositions', this.updatedOrder)
+            this.fetchFavourites()
+        }
+    },
 }
 </script>
 
 <style scoped>
-    tr th {
-        font-weight: 500px;
-        font-size: 22px;
-        text-align: center;
-
-        padding: 0;
-    }
-
     .MapsSettings {
         padding: 0px 20px;
+    }
+
+    .HeaderRow {
+        font-weight: 500px;
+        font-size: 22px;
+
+        padding: 0;
     }
 
 
@@ -137,7 +164,7 @@ export default {
     }
 
     .col-xs-1 {
-        max-width: 40px;
+        max-width: 60px;
     }
     .col-xs-2 {
         max-width: 120px;

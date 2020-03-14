@@ -48,7 +48,7 @@
                 <th class="uk-text-capitalize">Address</th>
                 <th class="uk-text-capitalize">Lat</th>
                 <th class="uk-text-capitalize">Long</th>
-                <th class="uk-text-capitalize">Edit</th>
+                <th class="uk-text-capitalize center-xs">Actions</th>
             </tr>
         </thead>
         <tbody class="textBody">
@@ -134,7 +134,6 @@ export default {
     tr th {
         font-weight: 500px;
         font-size: 22px;
-        text-align: center;
 
         padding: 30px 0 0 0;
     }

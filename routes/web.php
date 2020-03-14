@@ -21,24 +21,24 @@ Route::group(['prefix'=>'background'], function(){
 
 Route::group(['prefix'=>'settings'], function(){
     Route::group(['prefix'=>'users'], function(){
-        Route::get('/','Settings@fetchUsers');
-        Route::put('/','Settings@setUser');
-        Route::post('/','Settings@createUser');
+        Route::get('/','UserController@fetchUsers');
+        Route::put('/','UserController@setUser');
+        Route::post('/','UserController@createUser');
     });
 
     Route::group(['prefix'=>'widgets'], function(){
-        Route::get('/','Settings@fetchWidgets');
-        Route::put('/','Settings@updateWidget');
+        Route::get('/','WidgetController@fetchWidgets');
+        Route::put('/','WidgetController@updateWidget');
     });
 
     Route::group(['prefix'=>'locations'], function(){
-        Route::get('/', 'Settings@fetchLocations');
-        Route::post('/','Settings@createLocation');
-        Route::put('/', 'Settings@updateLocation');
-        Route::put('/delete', 'Settings@deleteLocation');
+        Route::get('/', 'LocationController@fetchLocations');
+        Route::post('/','LocationController@createLocation');
+        Route::put('/', 'LocationController@updateLocation');
+        Route::put('/delete', 'LocationController@deleteLocation');
 
-        Route::get('/settings', 'Settings@fetchMapSettings');
-        Route::put('/settings', 'Settings@updateMapSettings');
+        Route::get('/settings', 'LocationController@fetchMapSettings');
+        Route::put('/settings', 'LocationController@updateMapSettings');
     });
 
     Route::group(['prefix'=>'favourites'], function(){
@@ -46,6 +46,8 @@ Route::group(['prefix'=>'settings'], function(){
         Route::post('/','FavouriteController@createFavourite');
         Route::put('/', 'FavouriteController@updateFavourite');
         Route::put('/delete', 'FavouriteController@deleteFavourite');
+
+        Route::put('/updatePositions', 'FavouriteController@updatePositions');
     });
 });
 

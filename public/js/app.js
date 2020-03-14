@@ -1896,8 +1896,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.fetchUser();
     this.fetchUsers(); // Update the users location every 10 minutes
     // setInterval(this.getLocation, 600000)
-    // this.getLocation()
-    // Update the background every 1 minute
+
+    this.getLocation(); // Update the background every 1 minute
 
     setInterval(this.getBackground, 120000);
     this.getBackground();
@@ -1944,7 +1944,7 @@ __webpack_require__.r(__webpack_exports__);
       },
       activeTab: {
         title: 'Profile',
-        src: 'FavSettings'
+        src: 'LoginSettings'
       },
       tabs: [{
         title: 'Profile',
@@ -2308,11 +2308,38 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2383,10 +2410,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         title: '',
         url: '',
         src: ''
-      }
+      },
+      updatedOrder: null
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])('settings', {
     favourites: 'getFavourites',
     activeUser: 'getUser'
   })),
@@ -2408,15 +2436,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         };
       }
     }
-  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('settings', {
     updateFavourite: 'updateFavourite',
-    deleteFavourite: 'deleteFavourite'
+    deleteFavourite: 'deleteFavourite',
+    fetchFavourites: 'fetchFavourites'
   })),
   mounted: function mounted() {
     var _this = this; // Listen for an update on the uk-sortable
 
 
     document.addEventListener('moved', function (e) {
+      // Mixing uikit sortable with updating indices was awful so we update them on the backend
+      _this.updatedOrder = [];
+
       var _loop = function _loop(i) {
         var child = e.target.children[i];
 
@@ -2425,9 +2457,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         });
 
         if (fav) {
-          console.log(i, _objectSpread({}, fav));
-          fav.pos = i;
-          console.log(_objectSpread({}, fav)); // _this.updateFavourite(fav)
+          _this.updatedOrder.push(fav);
         }
       };
 
@@ -2435,7 +2465,40 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _loop(i);
       }
     });
-  }
+  },
+  destroyed: function () {
+    var _destroyed = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (!this.updatedOrder) {
+                _context.next = 4;
+                break;
+              }
+
+              _context.next = 3;
+              return this.axios.put('/settings/favourites/updatePositions', this.updatedOrder);
+
+            case 3:
+              this.fetchFavourites();
+
+            case 4:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    }));
+
+    function destroyed() {
+      return _destroyed.apply(this, arguments);
+    }
+
+    return destroyed;
+  }()
 });
 
 /***/ }),
@@ -3089,7 +3152,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -3156,7 +3227,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         sanitize: true
       });
     }
-  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])('settings', {
     activePage: 'getActivePage',
     users: 'getUsers',
     notes: 'getNotes'
@@ -3166,6 +3237,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.users.find(function (user) {
         return user.id === note.author_id;
       });
+    },
+    findAuthorName: function findAuthorName(note) {
+      var author = this.findAuthor(note);
+      if (author) return author.name;
     },
     startDelete: function startDelete(note) {
       var _this2 = this;
@@ -3194,7 +3269,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.toggleMode();
       } else {
         this.currentNote = _objectSpread({}, note); // If it's a new note it should be defaulted to edit mode
-        // this.mode = !note.id ? 'edit' : 'view'
 
         this.mode = !note.id ? 'edit' : 'view';
         this.showMark = false;
@@ -3226,18 +3300,39 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this.saveNote();
       }, 2500);
     }
-  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('settings', {
     fetchNotes: 'fetchNotes',
     backupNote: 'updateNote',
     deleteNote: 'deleteNote'
   })),
-  mounted: function mounted() {
-    var _this4 = this;
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return this.fetchNotes();
 
-    this.fetchNotes().then(function () {
-      if (_this4.notes.length) _this4.currentNote = _this4.notes[0];
-    });
-  }
+            case 2:
+              if (this.notes.length) this.currentNote = this.notes[0];
+
+            case 3:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }()
 });
 
 /***/ }),
@@ -3304,12 +3399,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['widget'],
   data: function data() {
     return {
-      days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"],
+      days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
       weather: null,
       curLoc: null,
       weatherIconMap: {
@@ -3319,7 +3421,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'clear': "stars",
         'rain': "rain",
         'cloudy': "cloudy",
-        'clouds': "wi-cloudy",
+        'clouds': "cloudy",
         'dreary': "sunny-overcast",
         'overcast': "sunny-overcast",
         'mixed': "rain-mix",
@@ -3361,10 +3463,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     //     return ""
     // },
     getDay: function getDay(day) {
-      return this.days[new Date(day.EpochDate * 1000).getDay()];
+      var date = new Date(day.EpochDate * 1000);
+      return "".concat(this.days[date.getDay()], ", ").concat(this.months[date.getMonth()], " ").concat(date.getDate());
     },
     getIcon: function getIcon(curWeather) {
-      var splitWeatherDesc = curWeather.toLowerCase().split(" ");
+      var splitWeatherDesc = curWeather.toLowerCase().split(" "); // We currently use only daytime icons, cold only has a neutral icon
+
+      if (curWeather == "Cold") return 'wi wi-snowflake-cold';
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -3716,7 +3821,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.WidgetSettings[data-v-10acad64] {\n    max-width: 550px;\n}\n.rowHeight[data-v-10acad64] {\n    height: 2.5rem;\n}\n.widgetTitle[data-v-10acad64] {\n    font-size: 1.3rem;\n}\n.rowHeight input[data-v-10acad64] {\n    font-size: 1.3rem;\n    color: black;\n    background: none;\n    border: none;\n}\n.rowHeight[data-v-10acad64]:hover {\n    background-color: rgba(100, 100, 100,  0.15);\n    border-radius: 5px;\n}\n", ""]);
+exports.push([module.i, "\n.WidgetSettings[data-v-10acad64] {\n    max-width: 550px;\n}\n.rowHeight[data-v-10acad64] {\n    height: 2.5rem;\n}\n.widgetTitle[data-v-10acad64] {\n    font-size: 1.3rem;\n}\n.rowHeight input[data-v-10acad64] {\n    font-size: 1.3rem;\n    color: black;\n    background: none;\n    border: none;\n}\n.rowHeight[data-v-10acad64]:hover {\n    background-color: rgba(100, 100, 100,  0.15);\n    border-radius: 5px;\n}\n.uk-button-default[data-v-10acad64]:hover {\n    /* background-color: #e5e5e5 !important; */\n    border-color: rgb(150, 150, 150) !important;\n}\n", ""]);
 
 // exports
 
@@ -3773,7 +3878,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\ntr th[data-v-e2019a9c] {\n    font-weight: 500px;\n    font-size: 22px;\n    text-align: center;\n\n    padding: 0;\n}\n.MapsSettings[data-v-e2019a9c] {\n    padding: 0px 20px;\n}\n.SettingsRow[data-v-e2019a9c] {\n    /* margin: 10px 0px; */\n}\n.SettingsRow input[data-v-e2019a9c], .SettingsRow div[data-v-e2019a9c] {\n    margin: 10px 5px;\n}\n.col-xs-1[data-v-e2019a9c] {\n    max-width: 40px;\n}\n.col-xs-2[data-v-e2019a9c] {\n    max-width: 120px;\n}\n.uk-icon-button[data-v-e2019a9c] {\n    height: 40px;\n    width:  40px;\n}\n", ""]);
+exports.push([module.i, "\n.MapsSettings[data-v-e2019a9c] {\n    padding: 0px 20px;\n}\n.HeaderRow[data-v-e2019a9c] {\n    font-weight: 500px;\n    font-size: 22px;\n\n    padding: 0;\n}\n.SettingsRow[data-v-e2019a9c] {\n    /* margin: 10px 0px; */\n}\n.SettingsRow input[data-v-e2019a9c], .SettingsRow div[data-v-e2019a9c] {\n    margin: 10px 5px;\n}\n.col-xs-1[data-v-e2019a9c] {\n    max-width: 60px;\n}\n.col-xs-2[data-v-e2019a9c] {\n    max-width: 120px;\n}\n.uk-icon-button[data-v-e2019a9c] {\n    height: 40px;\n    width:  40px;\n}\n", ""]);
 
 // exports
 
@@ -3811,7 +3916,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\ntr th[data-v-b8bb28f8] {\n    font-weight: 500px;\n    font-size: 22px;\n    text-align: center;\n\n    padding: 30px 0 0 0;\n}\n.uk-form-label[data-v-b8bb28f8] {\n    padding-left: 7%;\n}\n.uk-icon-button[data-v-b8bb28f8] {\n    height: 40px;\n    width:  40px;\n}\n", ""]);
+exports.push([module.i, "\ntr th[data-v-b8bb28f8] {\n    font-weight: 500px;\n    font-size: 22px;\n\n    padding: 30px 0 0 0;\n}\n.uk-form-label[data-v-b8bb28f8] {\n    padding-left: 7%;\n}\n.uk-icon-button[data-v-b8bb28f8] {\n    height: 40px;\n    width:  40px;\n}\n", ""]);
 
 // exports
 
@@ -3887,7 +3992,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.Weather[data-v-261436a7] {\n    height: 100% !important;\n    width: 100% !important;\n\n    margin-bottom: 15vh;\n}\n.forecast[data-v-261436a7] {\n    height: 18.5vh;\n}\n.day[data-v-261436a7] {\n    border: 1.5px solid grey;\n    border-radius: 5px;\n\n    margin: 0px 7.5px;\n    background: rgba(230, 230, 250, 0.5);\n\n    height: 80% !important;\n}\n.day[data-v-261436a7]:hover {\n    background: rgba(230, 230, 250, 0.95);\n    height: 100% !important;\n}\n.day i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 5vh;\n}\n.day:hover i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 6.5vh;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: right;\n}\n.day:hover .forecastTemp[data-v-261436a7] {\n    font-size: 4vh;\n    text-align: right;\n}\n.forecastDay[data-v-261436a7] {\n    font-size: 2vh;\n}\n.day:hover .forecastDay[data-v-261436a7] {\n    font-size: 3vh;\n}\n.day hr[data-v-261436a7] {\n    margin: 10px 0px 5px 0px;\n    border-color: grey;\n}\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n", ""]);
+exports.push([module.i, "\n.Weather[data-v-261436a7] {\n    height: 100% !important;\n    width: 100% !important;\n\n    margin-bottom: 5vh;\n}\n.forecast[data-v-261436a7] {\n    height: 28vh;\n}\n.day[data-v-261436a7] {\n    border: 1.5px solid grey;\n    border-radius: 5px;\n\n    margin: 0px 7.5px;\n    background: rgba(230, 230, 250, 0.5);\n\n    height: 60% !important;\n}\n.day[data-v-261436a7]:hover {\n    background: rgba(230, 230, 250, 0.95);\n    height: 100% !important;\n}\n.day i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 5vh;\n}\n.day:hover i[data-v-261436a7] {\n    margin-top: 0vh !important;\n    font-size: 7vh;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: left;\n}\n.day:hover .forecastTemp[data-v-261436a7] {\n    font-size: 5vh;\n    text-align: right;\n}\n.forecastDesc[data-v-261436a7] {\n    margin-top: 1vh;\n}\n.forecastDay[data-v-261436a7], .forecastDesc[data-v-261436a7] {\n    font-size: 2vh;\n}\n.day:hover .forecastDay[data-v-261436a7], .day:hover .forecastDesc[data-v-261436a7] {\n    font-size: 4vh;\n}\n.day hr[data-v-261436a7] {\n    /* margin: 10px 0px 5px 0px; */\n    margin: 0px;\n    border-color: grey;\n}\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n", ""]);
 
 // exports
 
@@ -25861,7 +25966,10 @@ var render = function() {
                 _c(
                   "button",
                   {
-                    class: ["uk-button uk-button-small", _vm.color(widget)],
+                    class: [
+                      "uk-button-default uk-button-small",
+                      _vm.color(widget)
+                    ],
                     attrs: { type: "button" },
                     on: {
                       click: function($event) {
@@ -26068,6 +26176,8 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "MapsSettings" }, [
+    _vm._m(0),
+    _vm._v(" "),
     _c(
       "div",
       { attrs: { "uk-sortable": "handle: .uk-sortable-handle" } },
@@ -26080,7 +26190,7 @@ var render = function() {
           },
           [
             _c("div", {
-              staticClass: "uk-sortable-handle col-xs-1 end-xs",
+              staticClass: "uk-sortable-handle col-xs-1 start-xs",
               attrs: { "uk-icon": "icon: grid; ratio: 1.5" }
             }),
             _vm._v(" "),
@@ -26147,13 +26257,10 @@ var render = function() {
               }
             }),
             _vm._v(" "),
-            _c("div", { staticClass: "col-xs-1 end-xs" }, [
-              _vm._v(_vm._s(index))
-            ]),
-            _vm._v(" "),
             _c("div", { staticClass: "col-xs-2 end-xs uk-button-group" }, [
               _c("a", {
-                staticClass: "uk-icon-button uk-button-primary roundedButton",
+                staticClass:
+                  "uk-icon-button uk-button-primary roundedButton uk-box-shadow-hover-xlarge",
                 attrs: { "uk-icon": "pencil" },
                 on: {
                   click: function($event) {
@@ -26163,7 +26270,8 @@ var render = function() {
               }),
               _vm._v(" "),
               _c("a", {
-                staticClass: "uk-icon-button uk-button-danger roundedButton",
+                staticClass:
+                  "uk-icon-button uk-button-danger roundedButton uk-box-shadow-hover-xlarge",
                 attrs: { "uk-icon": "trash" },
                 on: {
                   click: function($event) {
@@ -26179,7 +26287,38 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "row start-xs middle-xs textBody HeaderRow" },
+      [
+        _c("div", { staticClass: "col-xs-1" }, [
+          _vm._v("\n            Sort\n        ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-xs uk-text-capitalize" }, [
+          _vm._v("\n            title\n        ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-xs uk-text-capitalize" }, [
+          _vm._v("\n            url\n        ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-xs uk-text-capitalize" }, [
+          _vm._v("\n            src\n        ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-xs-2 center-xs" }, [
+          _vm._v("\n            Actions\n        ")
+        ])
+      ]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -26745,7 +26884,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Long")]),
         _vm._v(" "),
-        _c("th", { staticClass: "uk-text-capitalize" }, [_vm._v("Edit")])
+        _c("th", { staticClass: "uk-text-capitalize center-xs" }, [
+          _vm._v("Actions")
+        ])
       ])
     ])
   }
@@ -26980,7 +27121,11 @@ var render = function() {
               [
                 _vm._v(
                   "\n                " +
-                    _vm._s(note.body.replace(/#/g, "").split("  ")[0]) +
+                    _vm._s(
+                      note && note.body
+                        ? note.body.replace(/#/g, "").split("  ")[0]
+                        : ""
+                    ) +
                     "\n            "
                 )
               ]
@@ -27031,7 +27176,7 @@ var render = function() {
                   _c("div", { staticClass: "center-xs updatedAt" }, [
                     _vm._v(
                       "\n                    " +
-                        _vm._s(_vm.findAuthor(note).name) +
+                        _vm._s(_vm.findAuthorName(note)) +
                         " - " +
                         _vm._s(
                           note.updated_at.split(" ")[0].replace(/-/g, "/")
@@ -27174,10 +27319,7 @@ var render = function() {
           _vm._l(_vm.weather.forecast, function(day) {
             return _c(
               "div",
-              {
-                staticClass: "col-xs day uk-box-shadow-hover-large",
-                attrs: { "uk-tooltip": day.Day.IconPhrase }
-              },
+              { staticClass: "col-xs day uk-box-shadow-hover-large" },
               [
                 _c("div", { staticClass: "row middle-xs" }, [
                   _c("div", { staticClass: "col-xs-7" }, [
@@ -27190,18 +27332,36 @@ var render = function() {
                     [
                       _vm._v(
                         "\n                    " +
+                          _vm._s(
+                            day.Temperature.Maximum.Value >= 0 ? " " : ""
+                          ) +
                           _vm._s(Math.round(day.Temperature.Maximum.Value)) +
                           "°\n                    "
                       ),
                       _c("br"),
                       _vm._v(
                         "\n                    " +
+                          _vm._s(
+                            day.Temperature.Minimum.Value >= 0 ? " " : ""
+                          ) +
                           _vm._s(Math.round(day.Temperature.Minimum.Value)) +
                           "°\n                "
                       )
                     ]
                   )
                 ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "forecastDesc bottom-xs uk-text-truncate" },
+                  [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(day.Day.IconPhrase) +
+                        "\n            "
+                    )
+                  ]
+                ),
                 _vm._v(" "),
                 _c("hr"),
                 _vm._v(" "),
@@ -42988,7 +43148,7 @@ window.UIkit = uikit_dist_js_uikit_min_js__WEBPACK_IMPORTED_MODULE_6___default.a
 Vue.use(vue_axios__WEBPACK_IMPORTED_MODULE_2___default.a, axios__WEBPACK_IMPORTED_MODULE_1___default.a);
 Vue.use(vue2_google_maps__WEBPACK_IMPORTED_MODULE_3__, {
   load: {
-    key: "AIzaSyBo2SRZ5iiOBFCsx9pTy0eG_dV9Bcl-hkE" // libraries: 'places', // This is required if you use the Autocomplete plugin
+    key: "AIzaSyBJpygRQCiPNVHpLc5jQxBFPxyMw7avbh8" // libraries: 'places', // This is required if you use the Autocomplete plugin
 
   }
 });
@@ -43302,7 +43462,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
 var state = {
-  activePage: 'Settings',
+  activePage: 'Home',
   address: null,
   lat: null,
   lng: null,
