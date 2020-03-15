@@ -50,12 +50,17 @@ export default {
                 return this.widgets.find(widget => widget.title === 'Notes')
             return {}
         },
+        backgroundStatus() {
+            if (this.widgets)
+                return this.widgets.find(widget => widget.title === 'Background')
+            return {}
+        },
 
         ...mapGetters('settings', {
             activePage: 'getActivePage',
             activeUser: 'getUser',
-            widgets: 'getWidgets',
-            location: 'getLocation'
+            widgets:    'getWidgets',
+            location:   'getLocation'
         })
     },
     methods: {
@@ -107,18 +112,19 @@ export default {
             setLocation: 'setLocation',
             fetchUser: 'fetchUser',
             fetchUsers: 'fetchUsers',
+            fetchWidgets: 'fetchWidgets',
         })
     },
     created() {
-        this.fetchUser()
+        this.fetchUser().then(() => {
+            this.fetchWidgets().then(() => {
+                if (this.backgroundStatus && this.backgroundStatus.interval)
+                    setInterval(this.getBackground, this.backgroundStatus.interval * 60000)
+            })
+        })
+
         this.fetchUsers()
-
-        // Update the users location every 10 minutes
-        // setInterval(this.getLocation, 600000)
         this.getLocation()
-
-        // Update the background every 1 minute
-        setInterval(this.getBackground, 120000)
         this.getBackground()
     },
 }
@@ -180,7 +186,7 @@ export default {
     }
 
     .clickable {
-        cursor: pointer;
+        cursor: pointer !important;
     }
 
     .textSpecial {

@@ -92,9 +92,9 @@ const actions = {
         return axios.put('/settings/users', payload).then(() => {
             commit('setUser', payload)
 
-            dispatch('fetchWidgets')
+            // dispatch('fetchWidgets')
             // dispatch('fetchMapsSettings')
-            dispatch('fetchFavourites')
+            // dispatch('fetchFavourites')
         })
     },
 

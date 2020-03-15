@@ -6,25 +6,20 @@
             <i :class="getIcon(weather.current.IconPhrase)" />
         </div>
         <div class="col-xs-7 center-xs">
-            <!-- {{parseAddress()}} -->
             {{weather.location.LocalizedName}}
         </div>
         <div class="col-xs end-xs">
             {{Math.round(weather.current.value)}}&deg; C
         </div>
     </div>
-    <!-- <input v-model="curLoc" v-on:keyup.enter="getWeather(curLoc)" @click='curLoc = " "' v-if="curLoc"
-           type="text" class="textSpecial" :style="'width: '+curLoc.length*2+'vw;'"> -->
 
     <div class="row center-xs middle-xs textBody fullWidth forecast">
         <div v-for="day in weather.forecast" class="col-xs day uk-box-shadow-hover-large">
             <div class="row middle-xs">
                 <div class="col-xs-7">
                     <i :class="getIcon(day.Day.IconPhrase)" />
-
-                    <!-- <br>
-                    {{day.Day.IconPhrase}} -->
                 </div>
+
                 <div class="col-xs-3 forecastTemp nospacing">
                     {{day.Temperature.Maximum.Value >= 0 ? '&nbsp;' : ''}}{{Math.round(day.Temperature.Maximum.Value)}}&deg;
                     <br>
@@ -168,8 +163,10 @@ export default {
                     lng: Number(splitCur[1])
                 }
 
-                return Math.sqrt((cachedLoc.lat - curLoc.lat)*(cachedLoc.lat - curLoc.lat) +
-                                 (cachedLoc.lng - curLoc.lng)*(cachedLoc.lng - curLoc.lng))
+                return  Math.sqrt(
+                            (cachedLoc.lat - curLoc.lat)*(cachedLoc.lat - curLoc.lat) +
+                            (cachedLoc.lng - curLoc.lng)*(cachedLoc.lng - curLoc.lng)
+                        )
             }
 
             return 1
@@ -185,7 +182,7 @@ export default {
 
             // If there is previous data, check that the users location hasn't changed or the data hasn't expired
             if (weather) {
-                if (this.distanceBetween(weather.requestLoc, location) < 1 && this.checkExpirey(weather)) {
+                if (this.distanceBetween(weather.requestLoc, location) < 0.05 && this.checkExpirey(weather)) {
                     this.weather = weather
 
                     console.log('%c Cached Weather ', 'background: #222; color: #bada55');
@@ -255,7 +252,7 @@ export default {
         height: 100% !important;
         width: 100% !important;
 
-        margin-bottom: 5vh;
+        margin: 0 0 5vh 0;
     }
 
     .forecast {
@@ -274,6 +271,7 @@ export default {
     .day:hover {
         background: rgba(230, 230, 250, 0.95);
         height: 100% !important;
+        width: 200% !important;
     }
 
     .day i {
