@@ -186,7 +186,7 @@ export default {
     }
 
     .clickable {
-        cursor: pointer;
+        cursor: pointer !important;
     }
 
     .textSpecial {

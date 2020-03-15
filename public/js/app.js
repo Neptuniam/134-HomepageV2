@@ -1998,7 +1998,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2031,6 +2030,9 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return (zero + num).slice(-digit);
+    },
+    tooltip: function tooltip() {
+      return "Showing time in <i>".concat(this.utcTime ? 'UTC' : 'Local', " Time </i>.<br>Click to switch.");
     }
   },
   created: function created() {
@@ -3687,7 +3689,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Homepage {\n    overflow-y:hidden;\n    overflow-x:hidden;\n    overflow: hidden !important;\n\n    color: black;\n\n    height: 100vh;\n    width: 100vw;\n}\n.pageControl {\n    position: fixed;\n    top: 10px;\n    left: 10px;\n    width: 175px;\n}\n.pageControl .uk-icon:hover {\n    color: white;\n}\n.uk-tooltip {\n    font-family: 'Roboto' !important;\n    font-weight: 300px;\n    font-size: 16px;\n\n    max-width: 400px;\n}\ndiv {\n    cursor: default;\n}\n.fullWidth {\n    width: 100% !important;\n}\n.fullHeight {\n    height: 100% !important;\n}\n.nopadding {\n    padding: 0 !important;\n}\n.nomargin {\n    margin: 0 !important;\n}\n.nospacing {\n    margin: 0 !important;\n    padding: 0 !important;\n}\n.clickable {\n    cursor: pointer;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive !important;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive !important;\n}\n.textBody {\n    font-family: 'Roboto' !important;\n}\n.roundedButton {\n    color: white;\n    border-radius: 10px;\n    padding: auto 10px;\n    margin: 0 5px;\n    outline: none;\n}\n.uk-button-success {\n    background-color: #228B22;\n    color: white;\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
+exports.push([module.i, "\n.Homepage {\n    overflow-y:hidden;\n    overflow-x:hidden;\n    overflow: hidden !important;\n\n    color: black;\n\n    height: 100vh;\n    width: 100vw;\n}\n.pageControl {\n    position: fixed;\n    top: 10px;\n    left: 10px;\n    width: 175px;\n}\n.pageControl .uk-icon:hover {\n    color: white;\n}\n.uk-tooltip {\n    font-family: 'Roboto' !important;\n    font-weight: 300px;\n    font-size: 16px;\n\n    max-width: 400px;\n}\ndiv {\n    cursor: default;\n}\n.fullWidth {\n    width: 100% !important;\n}\n.fullHeight {\n    height: 100% !important;\n}\n.nopadding {\n    padding: 0 !important;\n}\n.nomargin {\n    margin: 0 !important;\n}\n.nospacing {\n    margin: 0 !important;\n    padding: 0 !important;\n}\n.clickable {\n    cursor: pointer !important;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive !important;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive !important;\n}\n.textBody {\n    font-family: 'Roboto' !important;\n}\n.roundedButton {\n    color: white;\n    border-radius: 10px;\n    padding: auto 10px;\n    margin: 0 5px;\n    outline: none;\n}\n.uk-button-success {\n    background-color: #228B22;\n    color: white;\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
 
 // exports
 
@@ -3725,7 +3727,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.clock[data-v-6994ebce] {\n    position: absolute;\n    top: 0px;\n    right: 10px;\n}\n.time[data-v-6994ebce] {\n    font-size: 1.7rem;\n}\n.date[data-v-6994ebce] {\n    font-size: 1.2rem;\n}\ndiv[data-v-6994ebce] {\n    padding: 0;\n}\n", ""]);
+exports.push([module.i, "\n.clock[data-v-6994ebce] {\n    position: absolute;\n    top: 0px;\n    right: 10px;\n}\n.clock[data-v-6994ebce]:hover {\n    color: white;\n}\n.time[data-v-6994ebce] {\n    font-size: 1.7rem;\n}\n.date[data-v-6994ebce] {\n    font-size: 1.2rem;\n}\n\n/* div {\n    padding: 0;\n} */\n", ""]);
 
 // exports
 
@@ -25727,17 +25729,16 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "clock textBody uk-link-toggle clickable",
+      staticClass: "clock textBody clickable noselect",
+      attrs: { "uk-tooltip": _vm.tooltip() },
       on: { click: _vm.changeTZ }
     },
     [
-      _c("a", { staticClass: "time uk-link-heading" }, [
+      _c("div", { staticClass: "time clickable" }, [
         _vm._v("\n        " + _vm._s(_vm.time) + "\n    ")
       ]),
       _vm._v(" "),
-      _c("br"),
-      _vm._v(" "),
-      _c("a", { staticClass: "date uk-link-heading" }, [
+      _c("div", { staticClass: "date clickable" }, [
         _vm._v("\n        " + _vm._s(_vm.date) + "\n    ")
       ]),
       _vm._v(" "),

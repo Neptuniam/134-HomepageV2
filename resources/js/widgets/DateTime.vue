@@ -1,12 +1,11 @@
 <template>
-<div class="clock textBody uk-link-toggle clickable" @click="changeTZ">
-    <a class="time uk-link-heading">
+<div class="clock textBody clickable noselect" @click="changeTZ" :uk-tooltip="tooltip()">
+    <div class="time clickable">
         {{time}}
-    </a>
-    <br>
-    <a class="date uk-link-heading">
+    </div>
+    <div class="date clickable">
         {{date}}
-    </a>
+    </div>
 
     <div v-if="utcTime">
         UTC Time
@@ -53,6 +52,10 @@ export default {
                 zero += '0';
             return (zero + num).slice(-digit);
         },
+
+        tooltip() {
+            return `Showing time in <i>${this.utcTime ? 'UTC' : 'Local'} Time </i>.<br>Click to switch.`
+        },
     },
     created() {
         this.updateTime();
@@ -61,11 +64,16 @@ export default {
 }
 </script>
 
+
+
 <style scoped>
     .clock {
         position: absolute;
         top: 0px;
         right: 10px;
+    }
+    .clock:hover {
+        color: white;
     }
 
     .time {
@@ -76,7 +84,7 @@ export default {
         font-size: 1.2rem;
     }
 
-    div {
+    /* div {
         padding: 0;
-    }
+    } */
 </style>
