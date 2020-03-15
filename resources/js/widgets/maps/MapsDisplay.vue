@@ -15,7 +15,14 @@
                 <gmap-marker :position="destination" />
             </gmap-map>
 
-            <div v-if="showingMap && directions" class="col-xs-4 instructionsContainer start-xs" v-html="parseDirections()" />
+            <div v-if="showingMap && directions" class="col-xs-4 instructionsContainer start-xs">
+                <img class="qrCode" :src="getQR()" alt="Google Maps QR Code">
+                <h1> Directions </h1>
+
+                <ol>
+                    <li v-for="step in directions.routes[0].legs[0].steps" style="margin: 10px 0px" v-html="step.instructions" />
+                </ol>
+            </div>
         </div>
     </div>
 </div>
@@ -50,6 +57,10 @@ export default {
         })
     },
     methods: {
+        getQR() {
+            return `https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=http://maps.google.com/maps?q=${this.destination.lat},${this.destination.lng}`
+        },
+
         distanceToLoc(loc) {
             return Math.sqrt((this.userLat - loc.lat)*(this.userLat - loc.lat) +
                              (this.userLng - loc.lng)*(this.userLng - loc.lng))
@@ -124,17 +135,6 @@ export default {
             }
 
             this.getDirections(payload)
-        },
-
-        parseDirections() {
-            let content = "<h1> Directions </h1> <ol>"
-
-            for (let step of this.directions.routes[0].legs[0].steps)
-                content += `<li style="margin: 10px 0px"> ${step.instructions} </li>`
-
-            content += "</ol>"
-
-            return content
         },
 
         hideMap($event) {
@@ -252,6 +252,8 @@ export default {
         z-index: 1;
     }
     .mapsPosition .instructionsContainer {
+        position: relative;
+
         min-width: 500px;
         max-width: 500px;
         height: 80vh;
@@ -259,5 +261,15 @@ export default {
         background-color: white;
 
         overflow-y: auto;
+    }
+    .instructionsContainer h1 {
+        margin: 30px 0 0 10px;
+        text-decoration: underline;
+    }
+
+    .qrCode {
+        position: absolute;
+        top: 0px;
+        right: 0px;
     }
 </style>

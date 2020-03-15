@@ -2512,6 +2512,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['widget'],
@@ -2538,6 +2545,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     mapsSettings: 'getMapsSettings'
   })),
   methods: _objectSpread({
+    getQR: function getQR() {
+      return "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=http://maps.google.com/maps?q=".concat(this.destination.lat, ",").concat(this.destination.lng);
+    },
     distanceToLoc: function distanceToLoc(loc) {
       return Math.sqrt((this.userLat - loc.lat) * (this.userLat - loc.lat) + (this.userLng - loc.lng) * (this.userLng - loc.lng));
     },
@@ -2606,35 +2616,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         travelMode: this.travelMode
       };
       this.getDirections(payload);
-    },
-    parseDirections: function parseDirections() {
-      var content = "<h1> Directions </h1> <ol>";
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this.directions.routes[0].legs[0].steps[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var step = _step.value;
-          content += "<li style=\"margin: 10px 0px\"> ".concat(step.instructions, " </li>");
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-            _iterator["return"]();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
-      content += "</ol>";
-      return content;
     },
     hideMap: function hideMap($event) {
       if ($event.target.id == 'container') this.showingMap = false;
@@ -3841,7 +3822,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.travelText[data-v-3385321e] {\n    font-weight: 600px;\n    font-size: 4vh;\n    text-align: center;\n}\na[data-v-3385321e] {\n    color: black;\n}\n.mapsPosition[data-v-3385321e] {\n    position: fixed;\n    top: 0px;\n    left: 0px;\n\n    padding: 10vh 5vw;\n\n    height: 100vh;\n    width: 100vw;\n\n    z-index: 5;\n}\n.mapsPosition .vue-map-container[data-v-3385321e] {\n    /* width: 80vw;\n    height: 80vh; */\n\n    /* border: 1px black solid; */\n    z-index: 1;\n}\n.mapsPosition .instructionsContainer[data-v-3385321e] {\n    min-width: 500px;\n    max-width: 500px;\n    height: 80vh;\n\n    background-color: white;\n\n    overflow-y: auto;\n}\n", ""]);
+exports.push([module.i, "\n.travelText[data-v-3385321e] {\n    font-weight: 600px;\n    font-size: 4vh;\n    text-align: center;\n}\na[data-v-3385321e] {\n    color: black;\n}\n.mapsPosition[data-v-3385321e] {\n    position: fixed;\n    top: 0px;\n    left: 0px;\n\n    padding: 10vh 5vw;\n\n    height: 100vh;\n    width: 100vw;\n\n    z-index: 5;\n}\n.mapsPosition .vue-map-container[data-v-3385321e] {\n    /* width: 80vw;\n    height: 80vh; */\n\n    /* border: 1px black solid; */\n    z-index: 1;\n}\n.mapsPosition .instructionsContainer[data-v-3385321e] {\n    position: relative;\n\n    min-width: 500px;\n    max-width: 500px;\n    height: 80vh;\n\n    background-color: white;\n\n    overflow-y: auto;\n}\n.instructionsContainer h1[data-v-3385321e] {\n    margin: 30px 0 0 10px;\n    text-decoration: underline;\n}\n.qrCode[data-v-3385321e] {\n    position: absolute;\n    top: 0px;\n    right: 0px;\n}\n", ""]);
 
 // exports
 
@@ -26315,10 +26296,39 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _vm.showingMap && _vm.directions
-                  ? _c("div", {
-                      staticClass: "col-xs-4 instructionsContainer start-xs",
-                      domProps: { innerHTML: _vm._s(_vm.parseDirections()) }
-                    })
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "col-xs-4 instructionsContainer start-xs"
+                      },
+                      [
+                        _c("img", {
+                          staticClass: "qrCode",
+                          attrs: {
+                            src: _vm.getQR(),
+                            alt: "Google Maps QR Code"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("h1", [_vm._v(" Directions ")]),
+                        _vm._v(" "),
+                        _c(
+                          "ol",
+                          _vm._l(
+                            _vm.directions.routes[0].legs[0].steps,
+                            function(step) {
+                              return _c("li", {
+                                staticStyle: { margin: "10px 0px" },
+                                domProps: {
+                                  innerHTML: _vm._s(step.instructions)
+                                }
+                              })
+                            }
+                          ),
+                          0
+                        )
+                      ]
+                    )
                   : _vm._e()
               ],
               1
