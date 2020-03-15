@@ -9,7 +9,7 @@
 <script>
 export default {
     props: ['widget'],
-    data: function() {
+    data() {
         return {
             news: null,
             index: 0,
@@ -38,7 +38,7 @@ export default {
             }
         },
     },
-    mounted: function() {
+    mounted() {
         document.addEventListener("keyup", this.onKeyPress);
 
         this.getNews()
@@ -56,7 +56,7 @@ export default {
 
     .News {
         font-weight: 600px;
-        font-size: 4vh;
+        font-size: 3.5vh;
 
         padding: 5px 20px;
     }

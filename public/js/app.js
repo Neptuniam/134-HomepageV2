@@ -1729,7 +1729,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({
     activeWidgets: function activeWidgets() {
       if (this.widgets) return this.widgets.filter(function (widget) {
-        return widget.status == 1 && !(widget.title === 'Notes' || widget.title === 'Background');
+        return widget.status == 1 && !(widget.title === 'Notes' || widget.title === 'Trello' || widget.title === 'Background');
       });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
@@ -1793,8 +1793,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      TrelloDueToday: null
+    };
+  },
   computed: _objectSpread({
     controlIcon: function controlIcon() {
       return this.activePage === 'Home' ? 'cog' : 'home';
@@ -1811,6 +1825,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     notesStatus: function notesStatus() {
       if (this.widgets) return this.widgets.find(function (widget) {
         return widget.title === 'Notes';
+      });
+      return {};
+    },
+    trelloStatus: function trelloStatus() {
+      if (this.widgets) return this.widgets.find(function (widget) {
+        return widget.title === 'Trello';
       });
       return {};
     },
@@ -1909,7 +1929,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     });
     this.fetchUsers();
     this.getLocation();
-    this.getBackground();
+    this.getBackground(); // this.axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/cards?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TRELLO_SECRET}`).then(trello => {
+    //     console.log('trello', trello);
+    // })
   }
 });
 
@@ -3267,6 +3289,339 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      today: new Date(),
+      dueToday: null
+    };
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])('settings', {
+    board: 'getBoard',
+    cards: 'getCards'
+  })),
+  methods: _objectSpread({
+    numDaysAgo: function numDaysAgo(due) {
+      return Math.round((new Date(due) - this.today) / 86400000);
+    },
+    processCards: function () {
+      var _processCards = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, card, dayIndex;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return this.fetchCards();
+
+              case 2:
+                this.dueToday = 0;
+                _iteratorNormalCompletion = true;
+                _didIteratorError = false;
+                _iteratorError = undefined;
+                _context.prev = 6;
+
+                for (_iterator = this.cards[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                  card = _step.value;
+
+                  // Some cards don't have a due date
+                  if (card.due) {
+                    dayIndex = this.numDaysAgo(card.due);
+                    if (dayIndex == 0) this.dueToday++;
+                  }
+                }
+
+                _context.next = 14;
+                break;
+
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context["catch"](6);
+                _didIteratorError = true;
+                _iteratorError = _context.t0;
+
+              case 14:
+                _context.prev = 14;
+                _context.prev = 15;
+
+                if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+                  _iterator["return"]();
+                }
+
+              case 17:
+                _context.prev = 17;
+
+                if (!_didIteratorError) {
+                  _context.next = 20;
+                  break;
+                }
+
+                throw _iteratorError;
+
+              case 20:
+                return _context.finish(17);
+
+              case 21:
+                return _context.finish(14);
+
+              case 22:
+                console.log('Due Today', this.dueToday);
+                this.$emit('input', this.dueToday);
+
+              case 24:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[6, 10, 14, 22], [15,, 17, 21]]);
+      }));
+
+      function processCards() {
+        return _processCards.apply(this, arguments);
+      }
+
+      return processCards;
+    }()
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('settings', {
+    fetchCards: 'fetchTrelloCards'
+  })),
+  mounted: function mounted() {
+    this.processCards();
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloPage.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/TrelloPage.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      today: new Date(),
+      comingUp: null,
+      noDue: null,
+      past: null,
+      showComingUp: true,
+      showNoDue: false,
+      showPast: false
+    };
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
+    board: 'getBoard',
+    cards: 'getCards'
+  })),
+  methods: _objectSpread({
+    numDaysAgo: function numDaysAgo(due) {
+      return Math.round((new Date(due) - this.today) / 86400000);
+    },
+    readableDay: function readableDay(day) {
+      if (!day || !'due' in day) return "N/A";
+      var daysTill = this.numDaysAgo(day.due); // Have more fitting text for FE
+
+      if (daysTill >= 0) {
+        switch (daysTill) {
+          case 0:
+            return "Today";
+
+          case 1:
+            return "Tomorrow";
+
+          default:
+            return "In ".concat(daysTill, " Days");
+        }
+      } else {
+        daysTill = Math.abs(daysTill);
+
+        switch (daysTill) {
+          case 1:
+            return "Yesterday";
+
+          default:
+            return "".concat(daysTill, " Days ago");
+        }
+      }
+    },
+    countList: function countList(list) {
+      // No due is just a standard array
+      if ('length' in list) return list.length; // The lists with due dates are seperates in an object by days
+
+      var count = 0;
+
+      for (var day in list) {
+        count += list[day].length;
+      }
+
+      return count;
+    },
+    addToList: function addToList(list, dayIndex, card) {
+      // Initalize each day to an array starting with the card
+      if (!list[dayIndex]) {
+        list[dayIndex] = [card];
+      } else {
+        list[dayIndex].push(card);
+      }
+    },
+    processCards: function processCards() {
+      this.comingUp = {};
+      this.past = {};
+      this.noDue = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.cards[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var card = _step.value;
+
+          // Some cards don't have a due date
+          if (card.due) {
+            var dayIndex = this.numDaysAgo(card.due);
+
+            if (dayIndex >= 0) {
+              this.addToList(this.comingUp, dayIndex, card);
+            } else {
+              this.addToList(this.past, Math.abs(dayIndex), card);
+            }
+          } else {
+            this.noDue.push(card);
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      console.log('By Due date', this.comingUp);
+      console.log('past', this.past);
+      console.log('no due date', this.noDue);
+    }
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
+    fetchBoard: 'fetchBoard',
+    fetchCards: 'fetchTrelloCards'
+  })),
+  mounted: function mounted() {
+    this.fetchBoard();
+    this.processCards();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/weather/weatherdisplay.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/weather/weatherdisplay.vue?vue&type=script&lang=js& ***!
@@ -3670,7 +4025,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Homepage {\n    overflow-y:hidden;\n    overflow-x:hidden;\n    overflow: hidden !important;\n\n    color: black;\n\n    height: 100vh;\n    width: 100vw;\n}\n.pageControl {\n    position: fixed;\n    top: 10px;\n    left: 10px;\n    width: 175px;\n}\n.pageControl .uk-icon:hover {\n    color: white;\n}\n.uk-tooltip {\n    font-family: 'Roboto' !important;\n    font-weight: 300px;\n    font-size: 16px;\n\n    max-width: 400px;\n}\ndiv {\n    cursor: default;\n}\n.fullWidth {\n    width: 100% !important;\n}\n.fullHeight {\n    height: 100% !important;\n}\n.nopadding {\n    padding: 0 !important;\n}\n.nomargin {\n    margin: 0 !important;\n}\n.nospacing {\n    margin: 0 !important;\n    padding: 0 !important;\n}\n.clickable {\n    cursor: pointer !important;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive !important;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive !important;\n}\n.textBody {\n    font-family: 'Roboto' !important;\n}\n.roundedButton {\n    color: white;\n    border-radius: 10px;\n    padding: auto 10px;\n    margin: 0 5px;\n    outline: none;\n}\n.uk-button-success {\n    background-color: #228B22;\n    color: white;\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
+exports.push([module.i, "\n.Homepage {\n    overflow-y:hidden;\n    overflow-x:hidden;\n    overflow: hidden !important;\n\n    color: black;\n\n    height: 100vh;\n    width: 100vw;\n}\n.pageControl {\n    position: fixed;\n    top: 10px;\n    left: 10px;\n    width: 220px;\n}\n.pageControl .uk-icon:hover {\n    color: white;\n}\n.TrelloDueToday {\n    position: absolute;\n    top: -15px;\n    right: -5px;\n    z-index: 0;\n    /* color: blue; */\n    font-weight: 700;\n    font-size: 20px;\n}\n.uk-tooltip {\n    font-family: 'Roboto' !important;\n    font-weight: 300px;\n    font-size: 16px;\n\n    max-width: 400px;\n}\ndiv {\n    cursor: default;\n}\n.fullWidth {\n    width: 100% !important;\n}\n.fullHeight {\n    height: 100% !important;\n}\n.nopadding {\n    padding: 0 !important;\n}\n.nomargin {\n    margin: 0 !important;\n}\n.nospacing {\n    margin: 0 !important;\n    padding: 0 !important;\n}\n.clickable {\n    cursor: pointer !important;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive !important;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive !important;\n}\n.textBody {\n    font-family: 'Roboto' !important;\n}\n.roundedButton {\n    color: white;\n    border-radius: 10px;\n    padding: auto 10px;\n    margin: 0 5px;\n    outline: none;\n}\n.card {\n    border: 1.5px solid grey;\n    border-radius: 5px;\n    background: rgba(230, 230, 250, 0.5);\n\n    margin: 10px;\n    padding: 5px 10px;\n}\n.uk-button-success {\n    background-color: #228B22;\n    color: white;\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
 
 // exports
 
@@ -3784,7 +4139,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.favouritesBar[data-v-69b40203] {\n    height: 15vh !important;\n}\n.favButtons[data-v-69b40203] {\n    height: 75%;\n    width: 75%;\n}\n.favButtons[data-v-69b40203]:hover {\n    height: 100%;\n    width: 100%;\n}\n", ""]);
+exports.push([module.i, "\n.favouritesBar[data-v-69b40203] {\n    height: 15vh !important;\n}\n.favButtons[data-v-69b40203] {\n    height: 70%;\n    width: 70%;\n}\n.favButtons[data-v-69b40203]:hover {\n    height: 100%;\n    width: 100%;\n}\n", ""]);
 
 // exports
 
@@ -3822,7 +4177,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.travelText[data-v-3385321e] {\n    font-weight: 600px;\n    font-size: 4vh;\n    text-align: center;\n}\na[data-v-3385321e] {\n    color: black;\n}\n.mapsPosition[data-v-3385321e] {\n    position: fixed;\n    top: 0px;\n    left: 0px;\n\n    padding: 10vh 5vw;\n\n    height: 100vh;\n    width: 100vw;\n\n    z-index: 5;\n}\n.mapsPosition .vue-map-container[data-v-3385321e] {\n    /* width: 80vw;\n    height: 80vh; */\n\n    /* border: 1px black solid; */\n    z-index: 1;\n}\n.mapsPosition .instructionsContainer[data-v-3385321e] {\n    position: relative;\n\n    min-width: 500px;\n    max-width: 500px;\n    height: 80vh;\n\n    background-color: white;\n\n    overflow-y: auto;\n}\n.instructionsContainer h1[data-v-3385321e] {\n    margin: 30px 0 0 10px;\n    text-decoration: underline;\n}\n.qrCode[data-v-3385321e] {\n    position: absolute;\n    top: 0px;\n    right: 0px;\n}\n", ""]);
+exports.push([module.i, "\n.travelText[data-v-3385321e] {\n    font-weight: 600px;\n    font-size: 3.5vh;\n    text-align: center;\n}\na[data-v-3385321e] {\n    color: black;\n}\n.mapsPosition[data-v-3385321e] {\n    position: fixed;\n    top: 0px;\n    left: 0px;\n\n    padding: 10vh 5vw;\n\n    height: 100vh;\n    width: 100vw;\n\n    z-index: 5;\n}\n.mapsPosition .vue-map-container[data-v-3385321e] {\n    /* width: 80vw;\n    height: 80vh; */\n\n    /* border: 1px black solid; */\n    z-index: 1;\n}\n.mapsPosition .instructionsContainer[data-v-3385321e] {\n    position: relative;\n\n    min-width: 500px;\n    max-width: 500px;\n    height: 80vh;\n\n    background-color: white;\n\n    overflow-y: auto;\n}\n.instructionsContainer h1[data-v-3385321e] {\n    margin: 30px 0 0 10px;\n    text-decoration: underline;\n}\n.qrCode[data-v-3385321e] {\n    position: absolute;\n    top: 0px;\n    right: 0px;\n}\n", ""]);
 
 // exports
 
@@ -3860,7 +4215,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.NewsDisplay[data-v-b91d5c9e] {\n    margin-top: 30px;\n    height: 650px;\n}\n.News[data-v-b91d5c9e] {\n    font-weight: 600px;\n    font-size: 4vh;\n\n    padding: 5px 20px;\n}\n.News a[data-v-b91d5c9e] {\n    color: black;\n}\n.newsIcon[data-v-b91d5c9e] {\n    position: absolute;\n    left: 60px;\n    top: 10px;\n}\n.newsIcon[data-v-b91d5c9e]:hover {\n    color: white;\n}\n.articleNum[data-v-b91d5c9e] {\n    margin: 10px 400px 40px 400px;\n}\n.headlineTitle[data-v-b91d5c9e] {\n    font-weight: 800px;\n    font-size: 30px;\n\n    min-height: 110px;\n}\n.headlineContent[data-v-b91d5c9e] {\n    font-weight: 400px;\n    font-size: 25px;\n\n    min-height: 200px;\n}\n.headlineSrc[data-v-b91d5c9e] {\n    font-weight: 300px;\n    font-size: 20px;\n\n    min-height: 150px;\n}\n.headlineUrl[data-v-b91d5c9e] {\n    font-weight: 200px;\n    font-size: 20px;\n\n    color: blue;\n}\n", ""]);
+exports.push([module.i, "\n.NewsDisplay[data-v-b91d5c9e] {\n    margin-top: 30px;\n    height: 650px;\n}\n.News[data-v-b91d5c9e] {\n    font-weight: 600px;\n    font-size: 3.5vh;\n\n    padding: 5px 20px;\n}\n.News a[data-v-b91d5c9e] {\n    color: black;\n}\n.newsIcon[data-v-b91d5c9e] {\n    position: absolute;\n    left: 60px;\n    top: 10px;\n}\n.newsIcon[data-v-b91d5c9e]:hover {\n    color: white;\n}\n.articleNum[data-v-b91d5c9e] {\n    margin: 10px 400px 40px 400px;\n}\n.headlineTitle[data-v-b91d5c9e] {\n    font-weight: 800px;\n    font-size: 30px;\n\n    min-height: 110px;\n}\n.headlineContent[data-v-b91d5c9e] {\n    font-weight: 400px;\n    font-size: 25px;\n\n    min-height: 200px;\n}\n.headlineSrc[data-v-b91d5c9e] {\n    font-weight: 300px;\n    font-size: 20px;\n\n    min-height: 150px;\n}\n.headlineUrl[data-v-b91d5c9e] {\n    font-weight: 200px;\n    font-size: 20px;\n\n    color: blue;\n}\n", ""]);
 
 // exports
 
@@ -3905,6 +4260,25 @@ exports.push([module.i, "\n.NotesDisplay {\n    width: 90vw;\n\n    color: rgb(2
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloPage.vue?vue&type=style&index=0&id=6523a850&scoped=true&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/TrelloPage.vue?vue&type=style&index=0&id=6523a850&scoped=true&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.TrelloContainer[data-v-6523a850] {\n    height: 85vh;\n    width: 90vw;\n\n    overflow-y: auto;\n    overflow-x: hidden;\n\n    padding: 0px 50px;\n\n    /* color: rgb(245, 245, 245) !important; */\n    /* background-color: rgba(75, 75, 75, 0.75); */\n\n    /* border-radius: 10px;\n    border: 1px grey solid; */\n}\n.listLabel[data-v-6523a850] {\n    font-size: 25px;\n    font-weight: 600;\n}\nhr[data-v-6523a850] {\n    margin: 5px 0px 20px 0px;\n}\n.ListContainer[data-v-6523a850] {\n    margin: 10px;\n\n    max-height: 50vh;\n    overflow-y: auto;\n    overflow-x: hidden;\n}\n.dayContainer[data-v-6523a850] {\n    margin: 10px 10px 50px 10px;\n}\n.dayContainer .col-xs-3[data-v-6523a850] {\n    min-width: 300px;\n    max-width: 19%;\n\n    max-height: 200px;\n\n    font-size: 2.5vh;\n\n    margin: 0.5% !important;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/weather/weatherdisplay.vue?vue&type=style&index=0&id=261436a7&scoped=true&lang=css&":
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/weather/weatherdisplay.vue?vue&type=style&index=0&id=261436a7&scoped=true&lang=css& ***!
@@ -3917,7 +4291,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.Weather[data-v-261436a7] {\n    height: 100% !important;\n    width: 100% !important;\n\n    margin: 0 0 5vh 0;\n}\n.forecast[data-v-261436a7] {\n    height: 28vh;\n}\n.day[data-v-261436a7] {\n    border: 1.5px solid grey;\n    border-radius: 5px;\n\n    margin: 0px 7.5px;\n    background: rgba(230, 230, 250, 0.5);\n\n    height: 60% !important;\n}\n.day[data-v-261436a7]:hover {\n    background: rgba(230, 230, 250, 0.95);\n    height: 100% !important;\n    width: 200% !important;\n}\n.day i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 5vh;\n}\n.day:hover i[data-v-261436a7] {\n    margin-top: 0vh !important;\n    font-size: 7vh;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: left;\n}\n.day:hover .forecastTemp[data-v-261436a7] {\n    font-size: 5vh;\n    text-align: right;\n}\n.forecastDesc[data-v-261436a7] {\n    margin-top: 1vh;\n}\n.forecastDay[data-v-261436a7], .forecastDesc[data-v-261436a7] {\n    font-size: 2vh;\n}\n.day:hover .forecastDay[data-v-261436a7], .day:hover .forecastDesc[data-v-261436a7] {\n    font-size: 4vh;\n}\n.day hr[data-v-261436a7] {\n    /* margin: 10px 0px 5px 0px; */\n    margin: 0px;\n    border-color: grey;\n}\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n", ""]);
+exports.push([module.i, "\n.Weather[data-v-261436a7] {\n    height: 100% !important;\n    width: 100% !important;\n\n    margin: 0 0 5vh 0;\n}\n.forecast[data-v-261436a7] {\n    height: 28vh;\n}\n.day[data-v-261436a7] {\n    /* border: 1.5px solid grey;\n    border-radius: 5px;\n\n    margin: 0px 7.5px;\n    background: rgba(230, 230, 250, 0.5); */\n\n    height: 60% !important;\n}\n.day[data-v-261436a7]:hover {\n    background: rgba(230, 230, 250, 0.95);\n    height: 100% !important;\n    min-width: 35% !important;\n}\n.day i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 5vh;\n}\n.day:hover i[data-v-261436a7] {\n    margin-top: 1vh !important;\n    font-size: 10vh;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: left;\n}\n.day:hover .forecastTemp[data-v-261436a7] {\n    font-size: 5vh;\n    text-align: right;\n}\n.forecastDesc[data-v-261436a7] {\n    margin-top: 1vh;\n}\n.forecastDay[data-v-261436a7], .forecastDesc[data-v-261436a7] {\n    font-size: 2vh;\n}\n.day:hover .forecastDay[data-v-261436a7], .day:hover .forecastDesc[data-v-261436a7] {\n    font-size: 4vh;\n}\n.day hr[data-v-261436a7] {\n    /* margin: 10px 0px 5px 0px; */\n    margin: 0px;\n    border-color: grey;\n}\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n", ""]);
 
 // exports
 
@@ -24501,6 +24875,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloPage.vue?vue&type=style&index=0&id=6523a850&scoped=true&lang=css&":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/TrelloPage.vue?vue&type=style&index=0&id=6523a850&scoped=true&lang=css& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./TrelloPage.vue?vue&type=style&index=0&id=6523a850&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloPage.vue?vue&type=style&index=0&id=6523a850&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/weather/weatherdisplay.vue?vue&type=style&index=0&id=261436a7&scoped=true&lang=css&":
 /*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/weather/weatherdisplay.vue?vue&type=style&index=0&id=261436a7&scoped=true&lang=css& ***!
@@ -25520,8 +25924,8 @@ var render = function() {
       style: "background: rgba(200,200,200," + _vm.transparency + ");"
     },
     [
-      _c("div", { staticClass: "row middle-xs pageControl" }, [
-        _c("div", { staticClass: "col-xs" }, [
+      _c("div", { staticClass: "row start-xs middle-xs pageControl" }, [
+        _c("div", { staticClass: "col-xs-3" }, [
           _c("a", {
             staticClass: "uk-icon ",
             attrs: {
@@ -25538,11 +25942,11 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-xs" }, [
-          _vm.newsStatus &&
-          _vm.newsStatus.status === 1 &&
-          _vm.activePage === "Home"
-            ? _c("a", {
+        _vm.newsStatus &&
+        _vm.newsStatus.status === 1 &&
+        _vm.activePage === "Home"
+          ? _c("div", { staticClass: "col-xs-3" }, [
+              _c("a", {
                 staticClass: "uk-icon newsIcon",
                 attrs: {
                   "uk-icon": "icon: world; ratio: 2",
@@ -25554,14 +25958,48 @@ var render = function() {
                   }
                 }
               })
-            : _vm._e()
-        ]),
+            ])
+          : _vm._e(),
         _vm._v(" "),
-        _c("div", { staticClass: "col-xs" }, [
-          _vm.notesStatus &&
-          _vm.notesStatus.status === 1 &&
-          _vm.activePage === "Home"
-            ? _c("a", {
+        _vm.trelloStatus &&
+        _vm.trelloStatus.status === 1 &&
+        _vm.activePage === "Home"
+          ? _c(
+              "div",
+              {
+                staticClass: "col-xs-3",
+                staticStyle: { position: "relative" }
+              },
+              [
+                _c("a", {
+                  staticClass: "uk-icon notesIcon",
+                  attrs: {
+                    "uk-icon": "icon: gitter; ratio: 2;",
+                    "uk-tooltip": "View Trello Cards"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.setActivePage("Trello")
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("span", { staticClass: "TrelloDueToday" }, [
+                  _vm._v(
+                    "\n                   " +
+                      _vm._s(_vm.TrelloDueToday) +
+                      "\n               "
+                  )
+                ])
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.notesStatus &&
+        _vm.notesStatus.status === 1 &&
+        _vm.activePage === "Home"
+          ? _c("div", { staticClass: "col-xs-3" }, [
+              _c("a", {
                 staticClass: "uk-icon notesIcon",
                 attrs: {
                   "uk-icon": "icon: pencil; ratio: 2;",
@@ -25573,11 +26011,23 @@ var render = function() {
                   }
                 }
               })
-            : _vm._e()
-        ])
+            ])
+          : _vm._e()
       ]),
       _vm._v(" "),
       _c("DateTime"),
+      _vm._v(" "),
+      _vm.trelloStatus && _vm.trelloStatus.status === 1
+        ? _c("TrelloDisplay", {
+            model: {
+              value: _vm.TrelloDueToday,
+              callback: function($$v) {
+                _vm.TrelloDueToday = $$v
+              },
+              expression: "TrelloDueToday"
+            }
+          })
+        : _vm._e(),
       _vm._v(" "),
       _vm.activeUser && _vm.location
         ? _c(
@@ -25881,7 +26331,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _vm.quote
     ? _c("div", { staticClass: "qotd" }, [
-        _vm._v("\r\n    " + _vm._s(_vm.quote) + "\r\n")
+        _vm._v("\n    " + _vm._s(_vm.quote) + "\n")
       ])
     : _vm._e()
 }
@@ -26958,31 +27408,23 @@ var render = function() {
         ]),
         _vm._v(" "),
         _vm.news[_vm.index].title
-          ? _c("div", { staticClass: "textSpecial headlineTitle" }, [
-              _vm._v(
-                "\n        " +
-                  _vm._s(_vm.news[_vm.index].title.split(" -")[0]) +
-                  "\n    "
-              )
-            ])
+          ? _c("div", {
+              staticClass: "textSpecial headlineTitle",
+              domProps: {
+                innerHTML: _vm._s(_vm.news[_vm.index].title.split(" -")[0])
+              }
+            })
           : _vm._e(),
         _vm._v(" "),
         _c("hr", { staticClass: "fullWidth" }),
         _vm._v(" "),
         _vm.news[_vm.index].content
-          ? _c(
-              "div",
-              {
-                staticClass: "row center-xs fullWidth textBody headlineContent"
-              },
-              [
-                _vm._v(
-                  "\n        " +
-                    _vm._s(_vm.news[_vm.index].content.split("[+")[0]) +
-                    "\n    "
-                )
-              ]
-            )
+          ? _c("div", {
+              staticClass: "row center-xs fullWidth textBody headlineContent",
+              domProps: {
+                innerHTML: _vm._s(_vm.news[_vm.index].content.split("[+")[0])
+              }
+            })
           : _vm._e(),
         _vm._v(" "),
         _c("div", { staticClass: "fullWidth textBody headlineSrc" }, [
@@ -27185,6 +27627,246 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=template&id=6e02bb11&scoped=true&":
+/*!********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=template&id=6e02bb11&scoped=true& ***!
+  \********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloPage.vue?vue&type=template&id=6523a850&scoped=true&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/TrelloPage.vue?vue&type=template&id=6523a850&scoped=true& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.board && _vm.cards
+    ? _c("div", { staticClass: "start-xs TrelloContainer" }, [
+        _c("a", { attrs: { href: _vm.board.shortUrl, target: "_blank" } }, [
+          _c("h1", { staticClass: "textSpecial" }, [
+            _vm._v(" " + _vm._s(_vm.board.name) + " ")
+          ])
+        ]),
+        _vm._v(" "),
+        _vm.comingUp
+          ? _c("div", { staticClass: "Container textBody" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "middle-xs",
+                  on: {
+                    click: function($event) {
+                      _vm.showComingUp = !_vm.showComingUp
+                    }
+                  }
+                },
+                [
+                  _c("span", {
+                    staticClass: "uk-icon",
+                    attrs: {
+                      "uk-icon":
+                        "icon: " +
+                        (_vm.showComingUp ? "chevron-down" : "chevron-right") +
+                        "; ratio: 1.5;"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "listLabel textTitle" }, [
+                    _vm._v(
+                      "Coming Up (" + _vm._s(_vm.countList(_vm.comingUp)) + ")"
+                    )
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c("hr"),
+              _vm._v(" "),
+              _vm.showComingUp
+                ? _c(
+                    "div",
+                    { staticClass: "ListContainer" },
+                    _vm._l(_vm.comingUp, function(day) {
+                      return _c("div", [
+                        _c("b", [
+                          _vm._v(" " + _vm._s(_vm.readableDay(day[0])) + " ")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "row fullWidth dayContainer" },
+                          _vm._l(day, function(card) {
+                            return _c("div", { staticClass: "col-xs-3 card" }, [
+                              _vm._v(
+                                "\r\n                        " +
+                                  _vm._s(card.name) +
+                                  "\r\n                    "
+                              )
+                            ])
+                          }),
+                          0
+                        )
+                      ])
+                    }),
+                    0
+                  )
+                : _vm._e()
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.noDue
+          ? _c("div", { staticClass: "Container textBody" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "middle-xs",
+                  on: {
+                    click: function($event) {
+                      _vm.showNoDue = !_vm.showNoDue
+                    }
+                  }
+                },
+                [
+                  _c("span", {
+                    staticClass: "uk-icon",
+                    attrs: {
+                      "uk-icon":
+                        "icon: " +
+                        (_vm.showNoDue ? "chevron-down" : "chevron-right") +
+                        "; ratio: 1.5;"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "listLabel textTitle" }, [
+                    _vm._v(
+                      "No Due Date (" + _vm._s(_vm.countList(_vm.noDue)) + ")"
+                    )
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c("hr"),
+              _vm._v(" "),
+              _vm.showNoDue
+                ? _c("div", { staticClass: "ListContainer" }, [
+                    _c(
+                      "div",
+                      { staticClass: "row fullWidth dayContainer" },
+                      _vm._l(_vm.noDue, function(card) {
+                        return _c("div", { staticClass: "col-xs-3 card" }, [
+                          _vm._v(
+                            "\r\n                    " +
+                              _vm._s(card.name) +
+                              "\r\n                "
+                          )
+                        ])
+                      }),
+                      0
+                    )
+                  ])
+                : _vm._e()
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.past
+          ? _c("div", { staticClass: "Container textBody" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "middle-xs",
+                  on: {
+                    click: function($event) {
+                      _vm.showPast = !_vm.showPast
+                    }
+                  }
+                },
+                [
+                  _c("span", {
+                    staticClass: "uk-icon",
+                    attrs: {
+                      "uk-icon":
+                        "icon: " +
+                        (_vm.showPast ? "chevron-down" : "chevron-right") +
+                        "; ratio: 1.5;"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "listLabel textTitle" }, [
+                    _vm._v(
+                      "Past Cards (" + _vm._s(_vm.countList(_vm.past)) + ")"
+                    )
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c("hr"),
+              _vm._v(" "),
+              _vm.showPast
+                ? _c(
+                    "div",
+                    { staticClass: "ListContainer" },
+                    _vm._l(_vm.past, function(day) {
+                      return _c("div", [
+                        _c("b", [
+                          _vm._v(" " + _vm._s(_vm.readableDay(day[0])) + " ")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "row fullWidth dayContainer" },
+                          _vm._l(day, function(card) {
+                            return _c("div", { staticClass: "col-xs-3 card" }, [
+                              _vm._v(
+                                "\r\n                        " +
+                                  _vm._s(card.name) +
+                                  "\r\n                    "
+                              )
+                            ])
+                          }),
+                          0
+                        )
+                      ])
+                    }),
+                    0
+                  )
+                : _vm._e()
+            ])
+          : _vm._e()
+      ])
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/weather/weatherdisplay.vue?vue&type=template&id=261436a7&scoped=true&":
 /*!**********************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/weather/weatherdisplay.vue?vue&type=template&id=261436a7&scoped=true& ***!
@@ -27249,7 +27931,7 @@ var render = function() {
           _vm._l(_vm.weather.forecast, function(day) {
             return _c(
               "div",
-              { staticClass: "col-xs day uk-box-shadow-hover-large" },
+              { staticClass: "col-xs day card uk-box-shadow-hover-xlarge" },
               [
                 _c("div", { staticClass: "row middle-xs" }, [
                   _c("div", { staticClass: "col-xs-7" }, [
@@ -43109,7 +43791,10 @@ Vue.component('Maps', __webpack_require__(/*! ./widgets/maps/MapsDisplay.vue */ 
 Vue.component('MapsSettings', __webpack_require__(/*! ./widgets/maps/MapsSettings.vue */ "./resources/js/widgets/maps/MapsSettings.vue")["default"]);
 Vue.component('Favourites', __webpack_require__(/*! ./widgets/favourites/FavsDisplay.vue */ "./resources/js/widgets/favourites/FavsDisplay.vue")["default"]);
 Vue.component('FavSettings', __webpack_require__(/*! ./widgets/favourites/FavsSettings.vue */ "./resources/js/widgets/favourites/FavsSettings.vue")["default"]);
-Vue.component('QOTD', __webpack_require__(/*! ./widgets/QOTD/QotdDisplay.vue */ "./resources/js/widgets/QOTD/QotdDisplay.vue")["default"]); // Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.vue').default);
+Vue.component('QOTD', __webpack_require__(/*! ./widgets/QOTD/QotdDisplay.vue */ "./resources/js/widgets/QOTD/QotdDisplay.vue")["default"]);
+Vue.component('Trello', __webpack_require__(/*! ./widgets/trello/TrelloPage.vue */ "./resources/js/widgets/trello/TrelloPage.vue")["default"]);
+Vue.component('TrelloDisplay', __webpack_require__(/*! ./widgets/trello/TrelloDisplay.vue */ "./resources/js/widgets/trello/TrelloDisplay.vue")["default"]); // Vue.component('TrelloSettings',     require('./widgets/trello/TrelloSettings.vue').default);
+// Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.vue').default);
 
 Vue.component('WidgetsSettings', __webpack_require__(/*! ./widgets/WidgetsSettings.vue */ "./resources/js/widgets/WidgetsSettings.vue")["default"]);
 Vue.component('LoginSettings', __webpack_require__(/*! ./widgets/LoginSettings.vue */ "./resources/js/widgets/LoginSettings.vue")["default"]);
@@ -43403,6 +44088,8 @@ var state = {
   favourites: null,
   mapsSettings: null,
   notes: null,
+  board: null,
+  cards: null,
   // Users
   users: null,
   user: null
@@ -43438,6 +44125,12 @@ var getters = {
   },
   getNotes: function getNotes(state) {
     return state.notes;
+  },
+  getBoard: function getBoard(state) {
+    return state.board;
+  },
+  getCards: function getCards(state) {
+    return state.cards;
   },
   // Users
   getUsers: function getUsers(state) {
@@ -43475,6 +44168,12 @@ var mutations = {
   },
   setNotes: function setNotes(state, payload) {
     state.notes = payload;
+  },
+  setBoard: function setBoard(state, payload) {
+    state.board = payload;
+  },
+  setCards: function setCards(state, payload) {
+    state.cards = payload;
   },
   //Users
   setUsers: function setUsers(state, payload) {
@@ -43520,9 +44219,7 @@ var actions = {
         dispatch = _ref5.dispatch;
     window.localStorage.setItem('activeUser', JSON.stringify(payload));
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users', payload).then(function () {
-      commit('setUser', payload); // dispatch('fetchWidgets')
-      // dispatch('fetchMapsSettings')
-      // dispatch('fetchFavourites')
+      commit('setUser', payload);
     });
   },
   fetchUsers: function fetchUsers(_ref6) {
@@ -43663,6 +44360,23 @@ var actions = {
         dispatch = _ref20.dispatch;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/notes/delete', payload).then(function (response) {
       dispatch('fetchNotes');
+    });
+  },
+  // Trello Controllers
+  fetchBoard: function fetchBoard(_ref21) {
+    var commit = _ref21.commit;
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://api.trello.com/1/boards/5e0b302d93a3935125fd3503?key=".concat("2625f163643b9956e21a7b966f9714ba", "&token=").concat("57382570d1c035d17da5bad54834c7c89beecc548c31bab25f19a95abad08ca3")).then(function (response) {
+      console.log('%c Board ', 'background: #222; color: #bada55');
+      console.log(response.data);
+      commit('setBoard', response.data);
+    });
+  },
+  fetchTrelloCards: function fetchTrelloCards(_ref22) {
+    var commit = _ref22.commit;
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/cards?key=".concat("2625f163643b9956e21a7b966f9714ba", "&token=").concat("57382570d1c035d17da5bad54834c7c89beecc548c31bab25f19a95abad08ca3")).then(function (response) {
+      console.log('%c Cards ', 'background: #222; color: #bada55');
+      console.log(response.data);
+      commit('setCards', response.data);
     });
   }
 };
@@ -44654,6 +45368,162 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NotesDisplay_vue_vue_type_template_id_42e60c4d___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NotesDisplay_vue_vue_type_template_id_42e60c4d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/TrelloDisplay.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/widgets/trello/TrelloDisplay.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TrelloDisplay_vue_vue_type_template_id_6e02bb11_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TrelloDisplay.vue?vue&type=template&id=6e02bb11&scoped=true& */ "./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=template&id=6e02bb11&scoped=true&");
+/* harmony import */ var _TrelloDisplay_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TrelloDisplay.vue?vue&type=script&lang=js& */ "./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TrelloDisplay_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TrelloDisplay_vue_vue_type_template_id_6e02bb11_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TrelloDisplay_vue_vue_type_template_id_6e02bb11_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "6e02bb11",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/widgets/trello/TrelloDisplay.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloDisplay_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TrelloDisplay.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloDisplay_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=template&id=6e02bb11&scoped=true&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=template&id=6e02bb11&scoped=true& ***!
+  \**************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloDisplay_vue_vue_type_template_id_6e02bb11_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TrelloDisplay.vue?vue&type=template&id=6e02bb11&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=template&id=6e02bb11&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloDisplay_vue_vue_type_template_id_6e02bb11_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloDisplay_vue_vue_type_template_id_6e02bb11_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/TrelloPage.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/widgets/trello/TrelloPage.vue ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TrelloPage_vue_vue_type_template_id_6523a850_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TrelloPage.vue?vue&type=template&id=6523a850&scoped=true& */ "./resources/js/widgets/trello/TrelloPage.vue?vue&type=template&id=6523a850&scoped=true&");
+/* harmony import */ var _TrelloPage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TrelloPage.vue?vue&type=script&lang=js& */ "./resources/js/widgets/trello/TrelloPage.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _TrelloPage_vue_vue_type_style_index_0_id_6523a850_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TrelloPage.vue?vue&type=style&index=0&id=6523a850&scoped=true&lang=css& */ "./resources/js/widgets/trello/TrelloPage.vue?vue&type=style&index=0&id=6523a850&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _TrelloPage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TrelloPage_vue_vue_type_template_id_6523a850_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TrelloPage_vue_vue_type_template_id_6523a850_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "6523a850",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/widgets/trello/TrelloPage.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/TrelloPage.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/widgets/trello/TrelloPage.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TrelloPage.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloPage.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/TrelloPage.vue?vue&type=style&index=0&id=6523a850&scoped=true&lang=css&":
+/*!*************************************************************************************************************!*\
+  !*** ./resources/js/widgets/trello/TrelloPage.vue?vue&type=style&index=0&id=6523a850&scoped=true&lang=css& ***!
+  \*************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_style_index_0_id_6523a850_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./TrelloPage.vue?vue&type=style&index=0&id=6523a850&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloPage.vue?vue&type=style&index=0&id=6523a850&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_style_index_0_id_6523a850_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_style_index_0_id_6523a850_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_style_index_0_id_6523a850_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_style_index_0_id_6523a850_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_style_index_0_id_6523a850_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/TrelloPage.vue?vue&type=template&id=6523a850&scoped=true&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/widgets/trello/TrelloPage.vue?vue&type=template&id=6523a850&scoped=true& ***!
+  \***********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_template_id_6523a850_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TrelloPage.vue?vue&type=template&id=6523a850&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloPage.vue?vue&type=template&id=6523a850&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_template_id_6523a850_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_template_id_6523a850_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

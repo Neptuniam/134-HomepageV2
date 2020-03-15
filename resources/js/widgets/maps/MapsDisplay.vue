@@ -225,7 +225,7 @@ export default {
 <style scoped>
     .travelText {
         font-weight: 600px;
-        font-size: 4vh;
+        font-size: 3.5vh;
         text-align: center;
     }
     a {

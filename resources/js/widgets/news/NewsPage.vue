@@ -24,14 +24,14 @@
         Article {{index+1}} / {{news.length}}
     </div>
 
-    <div v-if="news[index].title" class="textSpecial headlineTitle">
-        {{news[index].title.split(' -')[0]}}
+    <div v-if="news[index].title" class="textSpecial headlineTitle" v-html="news[index].title.split(' -')[0]">
+        <!-- {{news[index].title.split(' -')[0]}} -->
     </div>
 
     <hr class="fullWidth">
 
-    <div v-if="news[index].content" class="row center-xs fullWidth textBody headlineContent">
-        {{news[index].content.split('[+')[0]}}
+    <div v-if="news[index].content" class="row center-xs fullWidth textBody headlineContent" v-html="news[index].content.split('[+')[0]">
+        <!-- {{news[index].content.split('[+')[0]}} -->
     </div>
 
 

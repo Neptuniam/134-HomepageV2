@@ -14,7 +14,7 @@
     </div>
 
     <div class="row center-xs middle-xs textBody fullWidth forecast">
-        <div v-for="day in weather.forecast" class="col-xs day uk-box-shadow-hover-large">
+        <div v-for="day in weather.forecast" class="col-xs day card uk-box-shadow-hover-xlarge">
             <div class="row middle-xs">
                 <div class="col-xs-7">
                     <i :class="getIcon(day.Day.IconPhrase)" />
@@ -260,18 +260,18 @@ export default {
     }
 
     .day {
-        border: 1.5px solid grey;
+        /* border: 1.5px solid grey;
         border-radius: 5px;
 
         margin: 0px 7.5px;
-        background: rgba(230, 230, 250, 0.5);
+        background: rgba(230, 230, 250, 0.5); */
 
         height: 60% !important;
     }
     .day:hover {
         background: rgba(230, 230, 250, 0.95);
         height: 100% !important;
-        width: 200% !important;
+        min-width: 35% !important;
     }
 
     .day i {
@@ -279,8 +279,8 @@ export default {
         font-size: 5vh;
     }
     .day:hover i {
-        margin-top: 0vh !important;
-        font-size: 7vh;
+        margin-top: 1vh !important;
+        font-size: 10vh;
     }
 
     .forecastTemp {

@@ -17,6 +17,7 @@ class WidgetSeeder extends Seeder {
             ['user_id' => '1',  'title' => 'News'],
             ['user_id' => '1',  'title' => 'Notes'],
             ['user_id' => '1',  'title' => 'QOTD'],
+            ['user_id' => '1',  'title' => 'Trello'],
         ];
 
         foreach ($widgets as $widget)

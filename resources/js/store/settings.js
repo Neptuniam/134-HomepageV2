@@ -14,6 +14,9 @@ const state = {
 
     notes: null,
 
+    board: null,
+    cards: null,
+
     // Users
     users: null,
     user: null,
@@ -34,6 +37,9 @@ const getters = {
 
     getNotes: (state) => state.notes,
 
+    getBoard: (state) => state.board,
+    getCards: (state) => state.cards,
+
     // Users
     getUsers: (state) => state.users,
     getUser: (state) => state.user,
@@ -52,6 +58,9 @@ const mutations = {
     setMapsSettings: (state, payload) => { state.mapsSettings = payload },
 
     setNotes: (state, payload) => { state.notes = payload },
+
+    setBoard: (state, payload) => { state.board = payload },
+    setCards: (state, payload) => { state.cards = payload },
 
     //Users
     setUsers: (state, payload) => { state.users = payload; },
@@ -91,10 +100,6 @@ const actions = {
         window.localStorage.setItem('activeUser', JSON.stringify(payload));
         return axios.put('/settings/users', payload).then(() => {
             commit('setUser', payload)
-
-            // dispatch('fetchWidgets')
-            // dispatch('fetchMapsSettings')
-            // dispatch('fetchFavourites')
         })
     },
 
@@ -225,6 +230,25 @@ const actions = {
     deleteNote: ({commit, dispatch}, payload) => {
         return axios.put('/notes/delete',payload).then(response => {
             dispatch('fetchNotes')
+        })
+    },
+
+
+    // Trello Controllers
+    fetchBoard: ({commit}) => {
+        return axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`).then(response => {
+            console.log('%c Board ', 'background: #222; color: #bada55');
+            console.log(response.data);
+
+            commit('setBoard', response.data)
+        })
+    },
+    fetchTrelloCards: ({commit}) => {
+        return axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/cards?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`).then(response => {
+            console.log('%c Cards ', 'background: #222; color: #bada55');
+            console.log(response.data);
+
+            commit('setCards', response.data)
         })
     },
 }
