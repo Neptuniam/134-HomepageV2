@@ -8,7 +8,7 @@ Vue.component('Settings',           require('./pages/Settings.vue').default);
 Vue.component('Weather',            require('./widgets/weather/weatherdisplay.vue').default);
 
 Vue.component('News',               require('./widgets/news/newsdisplay.vue').default);
-Vue.component('NewsPage',               require('./widgets/news/newspage.vue').default);
+Vue.component('NewsPage',           require('./widgets/news/newspage.vue').default);
 
 Vue.component('Notes',              require('./widgets/notes/NotesDisplay.vue').default);
 
@@ -18,7 +18,9 @@ Vue.component('MapsSettings',       require('./widgets/maps/MapsSettings.vue').d
 Vue.component('Favourites',         require('./widgets/favourites/FavsDisplay.vue').default);
 Vue.component('FavSettings',        require('./widgets/favourites/FavsSettings.vue').default);
 
-Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.vue').default);
+Vue.component('QOTD',               require('./widgets/QOTD/QotdDisplay.vue').default);
+
+// Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.vue').default);
 
 Vue.component('WidgetsSettings',    require('./widgets/WidgetsSettings.vue').default);
 Vue.component('LoginSettings',      require('./widgets/LoginSettings.vue').default);

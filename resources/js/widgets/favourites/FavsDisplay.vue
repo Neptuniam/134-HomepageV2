@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex';
 export default {
     computed: {
         favsOrder() {
@@ -26,6 +26,7 @@ export default {
             favourites: 'getFavourites',
         })
     },
+
     methods: {
         getImg(favourite) {
             // if the user set an img to use, return that. Otherwise use the sites favicon
@@ -35,10 +36,18 @@ export default {
         byPos(a, b) {
             if (a.pos < b.pos)
                 return -1
-            else if (a.pos > b.pos)
+            if (a.pos > b.pos)
                 return 1
             return 0
-        }
+        },
+
+        ...mapActions('settings', {
+            fetchFavourites: 'fetchFavourites',
+        })
+    },
+
+    created() {
+        this.fetchFavourites()
     },
 }
 </script>

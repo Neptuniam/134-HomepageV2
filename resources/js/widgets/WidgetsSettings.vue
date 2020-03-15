@@ -18,7 +18,7 @@
                 {{widget.title}}
             </div>
             <div class="col-xs-3">
-                <button type="button" :class="['uk-button-default uk-button-small', color(widget)]" @click="toggleStatus(widget)">
+                <button type="button" :class="['uk-button-default uk-button-small clickable', color(widget)]" @click="toggleStatus(widget)">
                     {{readable[widget.status]}}
                 </button>
             </div>

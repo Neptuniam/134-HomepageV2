@@ -2,20 +2,21 @@
 
 use Illuminate\Database\Seeder;
 
-class WidgetSeeder extends Seeder
-{
+class WidgetSeeder extends Seeder {
     /**
      * Run the database seeds.
-     *
      * @return void
      */
-    public function run()
-    {
+    public function run() {
         $widgets = [
-            ['user_id' => '1',  'title' => 'Weather',   'status' => '1'],
-            ['user_id' => '1',  'title' => 'Maps',      'status' => '0'],
-            ['user_id' => '1',  'title' => 'Favourites','status' => '1'],
-            ['user_id' => '1',  'title' => 'Calendar',  'status' => '0']
+            ['user_id' => '1',  'title' => 'Background'],
+            ['user_id' => '1',  'title' => 'Weather'],
+            ['user_id' => '1',  'title' => 'Maps'],
+            ['user_id' => '1',  'title' => 'Favourites'],
+            // ['user_id' => '1',  'title' => 'Calendar'],
+            ['user_id' => '1',  'title' => 'News'],
+            ['user_id' => '1',  'title' => 'Notes'],
+            ['user_id' => '1',  'title' => 'QOTD'],
         ];
 
         foreach ($widgets as $widget)

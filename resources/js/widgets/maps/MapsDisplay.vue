@@ -10,7 +10,6 @@
 
     <div v-if="origin" v-show="showingMap" class="mapsPosition" @click="hideMap" id="container">
         <div class="row" style="border: 1px black solid; width: 90vw">
-            <!-- TODO: Fix lat,lng? -->
             <gmap-map ref="map" :center="origin" :zoom="15" class="col-xs" id="map">
                 <gmap-marker :position="origin" />
                 <gmap-marker :position="destination" />
@@ -24,10 +23,10 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import DateTime from '../DateTime'
 
 export default {
-    extends: DateTime,
+    props: ['widget',],
+
     data() {
         return {
             home: null,
@@ -39,23 +38,11 @@ export default {
 
             showingMap: false,
             directions: null,
-            response: null,
             travelText: null,
         }
     },
     computed: {
-        loc() {
-            return { title: 'loc', lat: this.userLat, lng: this.userLng }
-        },
-
-        widget() {
-            if (this.widgets)
-                return this.widgets.find(widget => widget.title === 'Maps')
-        },
-
         ...mapGetters('settings', {
-            widgets: 'getWidgets',
-            activePage: 'getActivePage',
             userLat: 'getLat',
             userLng: 'getLng',
             locations: 'getLocations',
@@ -64,8 +51,8 @@ export default {
     },
     methods: {
         distanceToLoc(loc) {
-            return Math.sqrt((this.userLat - this.loc.lat)*(this.userLat - this.loc.lat) +
-                             (this.userLng - this.loc.lng)*(this.userLng - this.loc.lng))
+            return Math.sqrt((this.userLat - loc.lat)*(this.userLat - loc.lat) +
+                             (this.userLng - loc.lng)*(this.userLng - loc.lng))
         },
         findLoc(toFind) {
             if (this.locations) {
@@ -82,7 +69,7 @@ export default {
                 return home
             if (this.distanceToLoc(fav) < 0.05)
                 return fav
-            return this.loc
+            return { title: 'loc', lat: this.userLat, lng: this.userLng }
         },
         determineDest(home, fav) {
             return this.origin == home ? fav : home
