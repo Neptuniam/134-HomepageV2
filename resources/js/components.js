@@ -20,6 +20,11 @@ Vue.component('FavSettings',        require('./widgets/favourites/FavsSettings.v
 
 Vue.component('QOTD',               require('./widgets/QOTD/QotdDisplay.vue').default);
 
+Vue.component('Trello',             require('./widgets/trello/TrelloPage.vue').default);
+Vue.component('TrelloDisplay',      require('./widgets/trello/TrelloDisplay.vue').default);
+// Vue.component('TrelloSettings',     require('./widgets/trello/TrelloSettings.vue').default);
+
+
 // Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.vue').default);
 
 Vue.component('WidgetsSettings',    require('./widgets/WidgetsSettings.vue').default);

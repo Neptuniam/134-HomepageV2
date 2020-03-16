@@ -14,7 +14,7 @@ export default {
     computed: {
         activeWidgets() {
             if (this.widgets)
-                return this.widgets.filter(widget => widget.status == 1 && !(widget.title === 'Notes' || widget.title === 'Background'))
+                return this.widgets.filter(widget => widget.status == 1 && !(widget.title === 'Notes' || widget.title === 'Trello' || widget.title === 'Background'))
         },
 
         ...mapGetters('settings', {

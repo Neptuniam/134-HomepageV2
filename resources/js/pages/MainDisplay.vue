@@ -1,25 +1,34 @@
 <template>
 <div class="row center-xs middle-xs Homepage nomargin uk-animation-fade" :style="`background: rgba(200,200,200,${transparency});`">
-    <div class="row middle-xs pageControl">
-        <div class="col-xs">
+    <div class="row start-xs middle-xs pageControl">
+        <div class="col-xs-3">
             <a @click="setActivePage(activePage === 'Home' ? 'Settings' : 'Home')" class="uk-icon "
               :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" :uk-tooltip="activePage == 'Home' ? 'Settings' : 'Home'" />
         </div>
 
-        <div class="col-xs">
-            <a v-if="newsStatus && newsStatus.status === 1  && activePage === 'Home'"
-               @click="setActivePage('NewsPage')" class="uk-icon newsIcon"
+        <div v-if="newsStatus && newsStatus.status === 1  && activePage === 'Home'" class="col-xs-3">
+            <a @click="setActivePage('NewsPage')" class="uk-icon newsIcon"
                uk-icon="icon: world; ratio: 2" uk-tooltip="News"/>
         </div>
 
-        <div class="col-xs">
-            <a v-if="notesStatus && notesStatus.status === 1 && activePage === 'Home'"
-               @click="setActivePage('Notes')" class="uk-icon notesIcon"
+        <div v-if="trelloStatus && trelloStatus.status === 1 && activePage === 'Home'" class="col-xs-3" style="position: relative;">
+            <a @click="setActivePage('Trello')" class="uk-icon notesIcon"
+               uk-icon="icon: gitter; ratio: 2;" uk-tooltip="View Trello Cards" />
+
+               <span class="TrelloDueToday">
+                   {{TrelloDueToday}}
+               </span>
+        </div>
+
+        <div v-if="notesStatus && notesStatus.status === 1 && activePage === 'Home'" class="col-xs-3">
+            <a @click="setActivePage('Notes')" class="uk-icon notesIcon"
                uk-icon="icon: pencil; ratio: 2;" uk-tooltip="Personal Notes" />
         </div>
     </div>
 
     <DateTime />
+
+    <TrelloDisplay v-if="trelloStatus && trelloStatus.status === 1" v-model="TrelloDueToday" />
 
     <div v-if="activeUser && location" v-show="activePage === 'Home'">
         <Home />
@@ -32,6 +41,12 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 export default {
+    data() {
+        return {
+            TrelloDueToday: null
+        }
+    },
+
     computed: {
         controlIcon() {
             return this.activePage === 'Home' ? 'cog' : 'home'
@@ -48,6 +63,11 @@ export default {
         notesStatus() {
             if (this.widgets)
                 return this.widgets.find(widget => widget.title === 'Notes')
+            return {}
+        },
+        trelloStatus() {
+            if (this.widgets)
+                return this.widgets.find(widget => widget.title === 'Trello')
             return {}
         },
         backgroundStatus() {
@@ -126,6 +146,10 @@ export default {
         this.fetchUsers()
         this.getLocation()
         this.getBackground()
+
+        // this.axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/cards?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TRELLO_SECRET}`).then(trello => {
+        //     console.log('trello', trello);
+        // })
     },
 }
 </script>
@@ -146,11 +170,21 @@ export default {
         position: fixed;
         top: 10px;
         left: 10px;
-        width: 175px;
+        width: 220px;
     }
 
     .pageControl .uk-icon:hover {
         color: white;
+    }
+
+    .TrelloDueToday {
+        position: absolute;
+        top: -15px;
+        right: -5px;
+        z-index: 0;
+        /* color: blue; */
+        font-weight: 700;
+        font-size: 20px;
     }
 
     .uk-tooltip {
@@ -207,6 +241,15 @@ export default {
         padding: auto 10px;
         margin: 0 5px;
         outline: none;
+    }
+
+    .card {
+        border: 1.5px solid grey;
+        border-radius: 5px;
+        background: rgba(230, 230, 250, 0.5);
+
+        margin: 10px;
+        padding: 5px 10px;
     }
 
     .uk-button-success {

@@ -58,8 +58,8 @@ export default {
     }
 
     .favButtons {
-        height: 75%;
-        width: 75%;
+        height: 70%;
+        width: 70%;
     }
     .favButtons:hover {
         height: 100%;
