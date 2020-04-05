@@ -9,27 +9,27 @@ const routes = [
     {
 		path: '/',
 		name: 'Home',
-		component: Home, //'./pages/Home.vue'
+		component: Home,
 	},
     {
 		path: '/settings',
 		name: 'Settings',
-		component: Settings, //'./pages/Settings.vue'
+		component: Settings,
 	},
 	{
 		path: '/news',
 		name: 'News',
-		component: News, //'./widgets/news/Newspage.vue'
+		component: News,
 	},
 	{
 		path: '/trello',
 		name: 'Trello',
-		component: Trello, //'./widgets/trello/Trellopage.vue'
+		component: Trello,
 	},
 	{
 		path: '/notes',
 		name: 'Notes',
-		component: Notes, //'./widgets/notes/NotesDisplay.vue'
+		component: Notes,
 	},
 ];
 
