@@ -79,10 +79,10 @@ export default {
     }
 
     .rowHeight input {
-        font-size: 1.3rem;
-        color: black;
-        background: none;
-        border: none;
+        font-size: 1.3rem !important;
+        color: black !important;
+        background: none !important;
+        border: none !important;
     }
     .rowHeight:hover {
         background-color: rgba(100, 100, 100,  0.15);

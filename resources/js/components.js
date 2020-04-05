@@ -1,16 +1,11 @@
 // Pages
 Vue.component('maindisplay',        require('./pages/MainDisplay.vue').default);
-Vue.component('Home',               require('./pages/Home.vue').default);
-Vue.component('Settings',           require('./pages/Settings.vue').default);
 
 
 // Widgets
 Vue.component('Weather',            require('./widgets/weather/weatherdisplay.vue').default);
 
 Vue.component('News',               require('./widgets/news/newsdisplay.vue').default);
-Vue.component('NewsPage',           require('./widgets/news/newspage.vue').default);
-
-Vue.component('Notes',              require('./widgets/notes/NotesDisplay.vue').default);
 
 Vue.component('Maps',               require('./widgets/maps/MapsDisplay.vue').default);
 Vue.component('MapsSettings',       require('./widgets/maps/MapsSettings.vue').default);
@@ -20,9 +15,7 @@ Vue.component('FavSettings',        require('./widgets/favourites/FavsSettings.v
 
 Vue.component('QOTD',               require('./widgets/QOTD/QotdDisplay.vue').default);
 
-Vue.component('Trello',             require('./widgets/trello/TrelloPage.vue').default);
 Vue.component('TrelloDisplay',      require('./widgets/trello/TrelloDisplay.vue').default);
-// Vue.component('TrelloSettings',     require('./widgets/trello/TrelloSettings.vue').default);
 
 
 // Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.vue').default);

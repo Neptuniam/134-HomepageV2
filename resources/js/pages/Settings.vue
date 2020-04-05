@@ -21,7 +21,7 @@
 
 <script>
 export default {
-    data: function() {
+    data() {
         return {
             scrollSettings: {
                 suppressScrollX: true
@@ -67,19 +67,19 @@ export default {
 
     .uk-tab>*>a {
         font-weight: 600;
-        font-size: 4vh;
+        font-size: 4vh !important;
         color: rgb(100, 100, 100);
     }
 
     .textColor, .Settings h1, h2, h4, h5, .uk-tab > .uk-active > a {
-        color: black;
+        color: black !important;
     }
 
     input, select, .uk-input, .uk-select, textarea {
-        border-radius: 10px;
-        background: rgba(60,60,60,0.7);
-        color: rgb(240, 240, 240);
-        outline: none;
+        border-radius: 10px !important;
+        background: rgba(60,60,60,0.7) !important;
+        color: rgb(240, 240, 240) !important;
+        outline: none !important;
     }
 
     input:focus, select:focus, .uk-input:focus, .uk-select:focus, textarea:focus {

@@ -72,7 +72,7 @@ export default {
     }
 
     h1 {
-        font-weight: 550px;
+        font-weight: 550px !important;
     }
 
     .inputRow {
