@@ -14,6 +14,10 @@
         <!-- Weather icons -->
         <link rel="stylesheet" href="weatherIcons/weather-icons.css">
         <link rel="stylesheet" href="weatherIcons/weather-icons-wind.css">
+
+        <!-- Main CSS stylesheet -->
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="main.css">
     </head>
     <body>
         <div id='app'>

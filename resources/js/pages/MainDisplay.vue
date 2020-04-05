@@ -1,40 +1,43 @@
 <template>
 <div class="row center-xs middle-xs Homepage nomargin uk-animation-fade" :style="`background: rgba(200,200,200,${transparency});`">
-    <div class="row start-xs middle-xs pageControl">
-        <div class="col-xs-3">
-            <a @click="setActivePage(activePage === 'Home' ? 'Settings' : 'Home')" class="uk-icon "
-              :uk-icon="'icon: '+controlIcon+'; ratio: 2;'" :uk-tooltip="activePage == 'Home' ? 'Settings' : 'Home'" />
-        </div>
+    <div v-if="$route.name == 'Home'" class="row start-xs middle-xs pageControl">
+        <router-link to="/settings" class="col-xs-3">
+            <span class="uk-icon" uk-icon="icon: cog; ratio:2;" uk-tooltip="Settings" />
+        </router-link>
 
-        <div v-if="newsStatus && newsStatus.status === 1  && activePage === 'Home'" class="col-xs-3">
-            <a @click="setActivePage('NewsPage')" class="uk-icon newsIcon"
-               uk-icon="icon: world; ratio: 2" uk-tooltip="News"/>
-        </div>
+        <router-link v-if="isActive(newsStatus)" to="/news" class="col-xs-3">
+            <span class="uk-icon" uk-icon="icon: world; ratio: 2" uk-tooltip="News"/>
+        </router-link>
 
-        <div v-if="trelloStatus && trelloStatus.status === 1 && activePage === 'Home'" class="col-xs-3" style="position: relative;">
-            <a @click="setActivePage('Trello')" class="uk-icon notesIcon"
-               uk-icon="icon: gitter; ratio: 2;" uk-tooltip="View Trello Cards" />
+        <router-link v-if="isActive(trelloStatus)" to="/trello" class="col-xs-3" style="position: relative;">
+            <span class="uk-icon" uk-icon="icon: gitter; ratio: 2;" uk-tooltip="View Trello Cards" />
 
-               <span class="TrelloDueToday">
-                   {{TrelloDueToday}}
-               </span>
-        </div>
+            <span class="TrelloDueToday">
+                {{TrelloDueToday}}
+            </span>
+        </router-link>
 
-        <div v-if="notesStatus && notesStatus.status === 1 && activePage === 'Home'" class="col-xs-3">
-            <a @click="setActivePage('Notes')" class="uk-icon notesIcon"
-               uk-icon="icon: pencil; ratio: 2;" uk-tooltip="Personal Notes" />
-        </div>
+        <router-link v-if="isActive(notesStatus)" to="/notes" class="col-xs-3">
+            <span class="uk-icon" uk-icon="icon: pencil; ratio: 2;" uk-tooltip="Personal Notes" />
+        </router-link>
+    </div>
+    <div v-else class="row start-xs middle-xs pageControl">
+        <router-link to="/" class="col-xs-3">
+            <a class="uk-icon" uk-icon="icon: home; ratio:2;" uk-tooltip="Back Home" />
+        </router-link>
     </div>
 
     <DateTime />
 
     <TrelloDisplay v-if="trelloStatus && trelloStatus.status === 1" v-model="TrelloDueToday" />
 
-    <div v-if="activeUser && location" v-show="activePage === 'Home'">
+    <router-view v-if="activeUser && location" />
+
+    <!-- <div v-if="activeUser && location" v-show="activePage === 'Home'">
         <Home />
     </div>
 
-    <component v-if="activePage && activePage != 'Home'" :is="activePage" />
+    <component v-if="activePage && activePage != 'Home'" :is="activePage" /> -->
 </div>
 </template>
 
@@ -84,6 +87,10 @@ export default {
         })
     },
     methods: {
+        isActive(widget) {
+            return widget && widget.status === 1
+        },
+
         async fetchLocation() {
             // Retrieve the users location on created
             let response = await this.axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.MIX_GOOGLE_KEY}`)
@@ -173,6 +180,9 @@ export default {
         width: 220px;
     }
 
+    .pageControl .uk-icon {
+        color: black;
+    }
     .pageControl .uk-icon:hover {
         color: white;
     }

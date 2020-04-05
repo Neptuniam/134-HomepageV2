@@ -1,4 +1,16 @@
-// Import the vuex store with its modules for managing state
+import Vue from 'vue'
+
+// Import Vue
+window.Vue = require('vue');
+Vue.config.productionTip = false
+
+// Register all Vue components in a components file for global access and cleaner code
+require('./components.js');
+
+
+// Import the Vue router and vuex store with its modules for managing state
+import VueRouter from 'vue-router'
+import routes from './routes'
 import store from './store/store'
 
 // Third party dependencies
@@ -15,16 +27,10 @@ import UIkit from 'uikit/dist/js/uikit.min.js'
 import flexbox from 'flexboxgrid/dist/flexboxgrid.min.css'
 
 // Standard libraries
-window._   = require('lodash');
+// window._   = require('lodash');
 window.marked = require("marked");
 
-// Import Vue
-window.Vue = require('vue');
-Vue.config.productionTip = false
-
-// Register all Vue components in a components file for global access and cleaner code
-require('./components.js');
-
+// Initiaize the $bus
 const EventBus = new Vue();
 Object.defineProperties(Vue.prototype, {
     $bus: {
@@ -34,6 +40,8 @@ Object.defineProperties(Vue.prototype, {
     }
 });
 
+Vue.use(VueRouter);
+
 // Use Uikit icons and make UIkit globally accessible for stuff like notifications
 UIkit.use(Icons);
 // hack to make uikit (notifications) usable
@@ -42,13 +50,16 @@ window.UIkit = UIkit;
 Vue.use(VueAxios, axios)
 Vue.use(VueGoogleMaps, {
   load: {
-    key: process.env.MIX_GOOGLE_KEY,
+    key: process.env.MIX_MAPS_KEY,
     // libraries: 'places', // This is required if you use the Autocomplete plugin
   },
 })
 
 
+const router = new VueRouter({routes});
+
 const app = new Vue({
     store,
+    router,
     el: '#app',
 });

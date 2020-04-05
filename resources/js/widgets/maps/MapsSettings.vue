@@ -53,10 +53,10 @@
         </thead>
         <tbody class="textBody">
             <tr v-for="location in locations" :key="location.id">
-                <td> <input type="text" class="uk-input" v-model="location.title"> </td>
-                <td> <input type="text" class="uk-input" v-model="location.address"> </td>
-                <td> <input type="text" class="uk-input" v-model="location.lat"> </td>
-                <td> <input type="text" class="uk-input" v-model="location.lng"> </td>
+                <td> <input type="text" class="uk-input fullWidth" v-model="location.title"> </td>
+                <td> <input type="text" class="uk-input fullWidth" v-model="location.address"> </td>
+                <td> <input type="text" class="uk-input fullWidth" v-model="location.lat"> </td>
+                <td> <input type="text" class="uk-input fullWidth" v-model="location.lng"> </td>
                 <td class="uk-button-group">
                     <a class="uk-icon-button uk-button-primary roundedButton" @click="updateLocation(location)" uk-icon="pencil" />
                     <a class="uk-icon-button uk-button-danger roundedButton" @click="deleteLocation(location)" uk-icon="trash" />
@@ -64,10 +64,10 @@
             </tr>
 
             <tr>
-                <td> <input type="text" class="uk-input" v-model="newLocation.title"> </td>
-                <td> <input type="text" class="uk-input" v-model="newLocation.address"> </td>
-                <td> <input type="text" class="uk-input" v-model="newLocation.lat"> </td>
-                <td> <input type="text" class="uk-input" v-model="newLocation.lng"> </td>
+                <td> <input type="text" class="uk-input fullWidth" v-model="newLocation.title"> </td>
+                <td> <input type="text" class="uk-input fullWidth" v-model="newLocation.address"> </td>
+                <td> <input type="text" class="uk-input fullWidth" v-model="newLocation.lat"> </td>
+                <td> <input type="text" class="uk-input fullWidth" v-model="newLocation.lng"> </td>
                 <td class="posWidth">
                     <a class="uk-icon-button uk-button-success roundedButton" @click="addLoc(newLocation)" uk-icon="plus" />
                </td>
@@ -135,7 +135,8 @@ export default {
         font-weight: 500px;
         font-size: 22px;
 
-        padding: 30px 0 0 0;
+        padding: 30px 0 0 20px;
+        color: black !important;
     }
 
     .uk-form-label {
