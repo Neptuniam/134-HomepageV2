@@ -1,5 +1,7 @@
 <template>
-
+<span class="TrelloDueToday">
+    {{dueToday}}
+</span>
 </template>
 
 <script>
@@ -40,7 +42,6 @@ export default {
             }
 
             console.log('Due Today', this.dueToday);
-            this.$emit('input', this.dueToday)
         },
 
         ...mapActions('settings', {
@@ -55,5 +56,16 @@ export default {
 </script>
 
 <style scoped>
+.TrelloDueToday {
+    z-index: 0;
+    
+	position: absolute;
+	top: -15px;
+	right: 0px;
 
+	font-weight: 700;
+	font-size: 20px;
+
+    color: black;
+}
 </style>

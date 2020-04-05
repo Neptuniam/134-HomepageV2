@@ -20,11 +20,12 @@ Vue.component('TrelloDisplay',      require('./widgets/trello/TrelloDisplay.vue'
 
 // Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.vue').default);
 
-Vue.component('WidgetsSettings',    require('./widgets/WidgetsSettings.vue').default);
-Vue.component('LoginSettings',      require('./widgets/LoginSettings.vue').default);
+Vue.component('WidgetsSettings',    require('./components/WidgetsSettings.vue').default);
+Vue.component('LoginSettings',      require('./components/LoginSettings.vue').default);
 
 
-Vue.component('DateTime',           require('./widgets/DateTime.vue').default);
+Vue.component('DateTime',           require('./components/DateTime.vue').default);
+Vue.component('ControlBar',         require('./components/ControlBar.vue').default);
 
 
 // Packages

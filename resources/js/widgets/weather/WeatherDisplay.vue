@@ -16,11 +16,11 @@
     <div class="row center-xs middle-xs textBody fullWidth forecast">
         <div v-for="day in weather.forecast" class="col-xs day card uk-box-shadow-hover-xlarge">
             <div class="row middle-xs">
-                <div class="col-xs-7">
+                <div class="col-xs-8">
                     <i :class="getIcon(day.Day.IconPhrase)" />
                 </div>
 
-                <div class="col-xs-3 forecastTemp nospacing">
+                <div class="col-xs forecastTemp nospacing">
                     {{day.Temperature.Maximum.Value >= 0 ? '&nbsp;' : ''}}{{Math.round(day.Temperature.Maximum.Value)}}&deg;
                     <br>
                     {{day.Temperature.Minimum.Value >= 0 ? '&nbsp;' : ''}}{{Math.round(day.Temperature.Minimum.Value)}}&deg;
