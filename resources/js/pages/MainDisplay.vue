@@ -13,6 +13,7 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     computed: {
         ...mapGetters('settings', {
+            widgets:    'getWidgets',
             activeUser: 'getUser',
             location:   'getLocation'
         })
@@ -32,14 +33,13 @@ export default {
             this.setLocation(response.data.location)
             localStorage.setItem('LastLocation', JSON.stringify(response.data))
         },
-        checkTimeSince(cachedTime) {
-            // Check that the cached data isn't "too old"
-            return ((new Date().getTime() - new Date(cachedTime).getTime()) / 300000) < 1
-        },
         getLocation() {
             let CachedLoc = JSON.parse(localStorage.getItem('LastLocation'))
 
-            if (CachedLoc && 'fetched' in CachedLoc && this.checkTimeSince(CachedLoc.fetched)) {
+            // Check that the cached data isn't "too old"
+            let checkTimeSince = (cachedTime) => ((new Date().getTime() - new Date(cachedTime).getTime()) / 300000) < 1
+
+            if (CachedLoc && 'fetched' in CachedLoc && checkTimeSince(CachedLoc.fetched)) {
                 console.log('%c Cached geoLocation', 'background: #222; color: #bada55');
                 console.log(CachedLoc);
 
