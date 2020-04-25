@@ -9,6 +9,8 @@ class Favourite extends Model {
             'user_id',
             'title',
             'url',
+            'src',
             'pos'
         ];
+    const CREATED_AT = null;
 }

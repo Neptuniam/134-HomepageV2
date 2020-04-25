@@ -1,16 +1,14 @@
 <template>
 <!--Favourite tabs Row-->
-<div class="row center-xs fullWidth">
-    <div class="col-xs-10">
+<!-- <div class="row center-xs fullWidth"> -->
+    <!-- <div class="col-xs-10"> -->
         <div class="row center-xs middle-xs favouritesBar">
-            <div v-for="favourite in favsOrder" class="col-xs">
-                <a :href="favourite.url" :uk-tooltip="favourite.title">
-                    <img :src="getImg(favourite)" class="favButtons">
-                </a>
-            </div>
+            <a v-for="favourite in favsOrder" class="col-xs" :uk-tooltip="favourite.title" :href="favourite.url">
+                <img :src="getImg(favourite)" class="favButtons">
+            </a>
         </div>
-    </div>
-</div>
+    <!-- </div> -->
+<!-- </div> -->
 </template>
 
 <script>
@@ -55,6 +53,8 @@ export default {
 <style scoped>
     .favouritesBar {
         height: 15vh !important;
+        max-width: 60vw !important;
+        margin: auto;
     }
 
     .favButtons {

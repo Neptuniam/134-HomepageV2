@@ -19,7 +19,10 @@ class FavouriteController extends Controller {
 
     public function updateFavourite(Request $request) {
         $favourite = $request->all();
-        return Favourite::find($favourite['id'])->update($favourite);
+        $toSave = Favourite::find($favourite['id']);
+        $toSave->update($favourite);
+        // return Favourite::find($favourite['id']);
+        return [$toSave, Favourite::find($favourite['id']), $favourite];
     }
 
     public function deleteFavourite(Request $request) {

@@ -24,17 +24,29 @@
         <div v-for="(favourite, index) in favourites" class="row middle-xs textBody SettingsRow" :id="favourite.id">
             <div class="uk-sortable-handle col-xs-1 start-xs" uk-icon="icon: grid; ratio: 1.5"></div>
 
-            <input class="col-xs uk-input" v-model="favourite.title">
-            <input class="col-xs uk-input" v-model="favourite.url">
-            <input class="col-xs uk-input" v-model="favourite.src">
+            <input type="text" class="col-xs uk-input" v-model="favourite.title">
+            <input type="text" class="col-xs uk-input" v-model="favourite.url">
+            <input type="text" class="col-xs uk-input" v-model="favourite.src">
 
             <div class="col-xs-2 end-xs uk-button-group">
-                <a class="uk-icon-button uk-button-primary roundedButton uk-box-shadow-hover-xlarge" @click="updateFavourite(favourite)" uk-icon="pencil" />
+                <a class="uk-icon-button uk-button-primary roundedButton uk-box-shadow-hover-xlarge" @click="saveChange(favourite)" uk-icon="pencil" />
                 <a class="uk-icon-button uk-button-danger roundedButton uk-box-shadow-hover-xlarge" @click="deleteFavourite(favourite)" uk-icon="trash" />
             </div>
         </div>
     </div>
 
+    <div class="row middle-xs textBody SettingsRow" :id="newFavourite.id">
+        <div class="col-xs-1">
+        </div>
+
+        <input type="text" class="col-xs uk-input" v-model="newFavourite.title">
+        <input type="text" class="col-xs uk-input" v-model="newFavourite.url">
+        <input type="text" class="col-xs uk-input" v-model="newFavourite.src">
+
+        <div class="col-xs-2 center-xs uk-button-group">
+            <a class="uk-icon-button uk-button-primary roundedButton uk-box-shadow-hover-xlarge" @click="addFav()" uk-icon="pencil" />
+        </div>
+    </div>
 </div>
 </template>
 
@@ -52,17 +64,34 @@ export default {
         ...mapGetters('settings', {
             favourites: 'getFavourites',
             activeUser: 'getUser',
-    })
+        })
     },
     methods: {
+        saveChange(favourite) {
+            this.updateFavourite(favourite).then(() => {
+                UIkit.notification({
+                    message: '<span uk-icon=\'icon: check\'></span> Changes Saved!',
+                    status: 'success'
+                })
+            }).catch(error => {
+                console.log('Error:', error);
+
+                UIkit.notification({
+                    message: '<span uk-icon=\'icon: check\'></span> Error: '+error,
+                    status: 'danger'
+                })
+            })
+        },
+
         addFav() {
             // Only create a favourite if we know the user
             if (this.activeUser) {
                 // Add the user id
                 this.newFavourite.user_id = this.activeUser.id
+                this.newFavourite.pos = this.favourites.length
 
                 // Add the fav to the db
-                this.updateFavourite(this.newFavourite)
+                this.saveChange(this.newFavourite)
 
                 // Clear the new object so another can be created
                 this.newFavourite = {id: null, user_id: this.activeUser.id, title: '', url: '', src: ''}
@@ -93,7 +122,6 @@ export default {
                     _this.updatedOrder.push(fav)
                 }
             }
-
         });
     },
 
