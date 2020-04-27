@@ -163,6 +163,7 @@ export default {
     background-color: rgba(75, 75, 75, 0.75);
 
     border-radius: 10px;
+    /* margin-bottom: 40px; */
 }
 
 .scrollSpace {

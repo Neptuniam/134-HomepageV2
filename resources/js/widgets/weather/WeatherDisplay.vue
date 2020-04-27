@@ -2,13 +2,13 @@
 <div v-if="weather" class="row fullWidth Weather">
     <div v-if="weather && weather.current" class="row curDescription textSpecial fullWidth nopadding"
         :uk-tooltip="address && address.formatted_address ? address.formatted_address : 'Could not find Address'">
-        <div class="col-xs start-xs">
+        <div class="col-xs center-xs">
             <i :class="getIcon(weather.current.IconPhrase)" />
         </div>
         <div class="col-xs-7 center-xs">
             {{weather.location.LocalizedName}}
         </div>
-        <div class="col-xs end-xs">
+        <div class="col-xs center-xs">
             {{Math.round(weather.current.value)}}&deg; C
         </div>
     </div>
@@ -260,18 +260,15 @@ export default {
     }
 
     .day {
-        /* border: 1.5px solid grey;
-        border-radius: 5px;
-
-        margin: 0px 7.5px;
-        background: rgba(230, 230, 250, 0.5); */
-
         height: 60% !important;
+        transition: all .1s ease-in-out;
     }
     .day:hover {
         background: rgba(230, 230, 250, 0.95);
+
         height: 100% !important;
         min-width: 35% !important;
+        transform: scale(1);
     }
 
     .day i {
@@ -289,7 +286,7 @@ export default {
     }
     .day:hover .forecastTemp {
         font-size: 5vh;
-        text-align: right;
+        /* text-align: right; */
     }
 
     .forecastDesc {

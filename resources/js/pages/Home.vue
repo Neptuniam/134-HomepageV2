@@ -1,9 +1,35 @@
 <template>
-<div v-if="activeWidgets" class="row center-xs middle-xs nomargin Home">
+<!-- <div v-if="activeWidgets" class="row center-xs middle-xs nomargin Home">
     <div class="col-xs-8">
         <div v-for="widget in activeWidgets">
             <component :is="widget.title" :widget="widget" />
         </div>
+    </div>
+</div> -->
+<div v-if="activeWidgets" class="row center-xs middle-xs nomargin Home">
+    <div class="col-xs-10">
+        <Weather v-if="isActive('Weather')" />
+
+        <Maps v-if="isActive('Maps')" />
+        <hr style="width: 600px; margin: auto;">
+        <News v-if="isActive('News')" />
+
+        <!-- <div class="row fullWidth">
+            <div class="col-xs card start-xs">
+                <b class="start-xs">News</b>: <br>
+                <News v-if="isActive('News')" />
+            </div>
+
+            <Maps v-if="isActive('Maps')" class="col-xs" style="max-width: 400px !important;" />
+
+            <div class="col-xs card start-xs">
+                <b class="start-xs">Quote</b>: <br>
+                <QOTD v-if="isActive('QOTD')" class="" />
+            </div>
+        </div> -->
+
+        <Favourites v-if="isActive('Favourites')" />
+        <QOTD v-if="isActive('QOTD')" class="" />
     </div>
 </div>
 </template>
@@ -18,9 +44,15 @@ export default {
         },
 
         ...mapGetters('settings', {
-            activePage: 'getActivePage',
+            // activePage: 'getActivePage',
             widgets: 'getWidgets'
         })
+    },
+    methods: {
+        isActive(title) {
+            let found = this.widgets.find(widget => widget.title == title)
+            return found && found.status == 1
+        }
     },
 }
 </script>
@@ -28,6 +60,9 @@ export default {
 <style>
     .Home {
         width: 100vw !important;
+
+        position: fixed;
+        top: 10vh;
     }
 
     .Widget {

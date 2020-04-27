@@ -26,10 +26,10 @@ export default {
 <style scoped>
     .qotd {
         position: fixed;
-        bottom: 0px;
+        top: 0px;
         left: 0px;
 
-        width: 100vw;
+        width: 100%;
 
         font-size: 2vh;
     }

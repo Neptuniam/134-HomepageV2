@@ -1,7 +1,7 @@
 <template>
     <div class="row center-xs middle-xs nomargin Settings">
         <ul uk-tab>
-            <li v-for="tab in tabs">
+            <li v-for="tab in tabs" :class="{'uk-active': tab.title == activeTab.title}">
                 <a class="uk-text-capitalize textTitle noselect" @click="activeTab = tab">
                     {{tab.title}}
                 </a>
@@ -27,9 +27,9 @@ export default {
                 suppressScrollX: true
             },
             activeTab: {
-                title: 'Favourites',
-                src: 'FavSettings'
-            },
+                    title: 'Profile',
+                    src: 'LoginSettings'
+                },
             tabs: [{
                     title: 'Profile',
                     src: 'LoginSettings'

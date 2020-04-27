@@ -2030,6 +2030,32 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: _objectSpread({
@@ -2039,9 +2065,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
-    activePage: 'getActivePage',
+    // activePage: 'getActivePage',
     widgets: 'getWidgets'
-  }))
+  })),
+  methods: {
+    isActive: function isActive(title) {
+      var found = this.widgets.find(function (widget) {
+        return widget.title == title;
+      });
+      return found && found.status == 1;
+    }
+  }
 });
 
 /***/ }),
@@ -2298,16 +2332,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: _objectSpread({
     favsOrder: function favsOrder() {
-      if (this.favourites) return this.favourites.sort(this.byPos);
+      var byPos = function byPos(a, b) {
+        if (a.pos < b.pos) return -1;
+        if (a.pos > b.pos) return 1;
+        return 0;
+      };
+
+      if (this.favourites) return this.favourites.sort(byPos);
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
     favourites: 'getFavourites'
@@ -2315,12 +2350,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   methods: _objectSpread({
     getImg: function getImg(favourite) {
       // if the user set an img to use, return that. Otherwise use the sites favicon
-      return favourite.src ? 'images/favouritesIcons/' + favourite.src : favourite.url + 'favicon.ico';
-    },
-    byPos: function byPos(a, b) {
-      if (a.pos < b.pos) return -1;
-      if (a.pos > b.pos) return 1;
-      return 0;
+      return favourite && favourite.src ? 'images/favouritesIcons/' + favourite.src : favourite.url + 'favicon.ico';
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
     fetchFavourites: 'fetchFavourites'
@@ -2396,6 +2426,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2415,13 +2457,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     activeUser: 'getUser'
   })),
   methods: _objectSpread({
+    saveChange: function saveChange(favourite) {
+      this.updateFavourite(favourite).then(function () {
+        UIkit.notification({
+          message: '<span uk-icon=\'icon: check\'></span> Changes Saved!',
+          status: 'success'
+        });
+      })["catch"](function (error) {
+        console.log('Error:', error);
+        UIkit.notification({
+          message: '<span uk-icon=\'icon: check\'></span> Error: ' + error,
+          status: 'danger'
+        });
+      });
+    },
     addFav: function addFav() {
       // Only create a favourite if we know the user
       if (this.activeUser) {
         // Add the user id
-        this.newFavourite.user_id = this.activeUser.id; // Add the fav to the db
+        this.newFavourite.user_id = this.activeUser.id;
+        this.newFavourite.pos = this.favourites.length; // Add the fav to the db
 
-        this.updateFavourite(this.newFavourite); // Clear the new object so another can be created
+        this.saveChange(this.newFavourite); // Clear the new object so another can be created
 
         this.newFavourite = {
           id: null,
@@ -2519,6 +2576,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
 //
 //
 //
@@ -3059,35 +3118,22 @@ __webpack_require__.r(__webpack_exports__);
   props: ['widget'],
   data: function data() {
     return {
-      news: null,
-      index: 0,
-      categorys: ['general', 'technology', 'sports', 'science', 'entertainment'],
-      activeCat: 'general'
+      news: null
     };
   },
   methods: {
     getNews: function getNews() {
       var _this = this;
 
-      var query = "https://newsapi.org/v2/top-headlines?country=ca&category=" + this.activeCat + "&apiKey=2b056b1596eb4356a56510c4e19da2b7";
+      var query = "https://newsapi.org/v2/top-headlines?country=ca&category=general&apiKey=2b056b1596eb4356a56510c4e19da2b7";
       this.axios.get(query).then(function (news) {
-        // Reset index to the first article everytime we switch categories
-        _this.index = 0;
-        _this.news = news.data.articles;
+        _this.news = news.data.articles[0];
         console.log('%c News ', 'background: #222; color: #bada55');
         console.log(news.data.articles);
       });
-    },
-    onKeyPress: function onKeyPress() {
-      if (event.keyCode == 37 && this.index > 0) {
-        this.index--;
-      } else if (event.keyCode == 39 && this.index < 19) {
-        this.index++;
-      }
     }
   },
   mounted: function mounted() {
-    document.addEventListener("keyup", this.onKeyPress);
     this.getNews();
     if (this.widget && this.widget.interval) setInterval(this.getNews(), this.widget.interval * 60000);
   }
@@ -4048,7 +4094,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Home {\n    width: 100vw !important;\n}\n.Widget {\n    padding: 5px 20px;\n}\n.Widget:hover {\n    /* border: 1.5px solid grey; */\n    border-radius: 5px;\n    background: rgba(230, 230, 250, 0.85);\n}\n", ""]);
+exports.push([module.i, "\n.Home {\n    width: 100vw !important;\n\n    position: fixed;\n    top: 10vh;\n}\n.Widget {\n    padding: 5px 20px;\n}\n.Widget:hover {\n    /* border: 1.5px solid grey; */\n    border-radius: 5px;\n    background: rgba(230, 230, 250, 0.85);\n}\n", ""]);
 
 // exports
 
@@ -4105,7 +4151,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.qotd[data-v-58c69ede] {\n    position: fixed;\n    bottom: 0px;\n    left: 0px;\n\n    width: 100vw;\n\n    font-size: 2vh;\n}\n", ""]);
+exports.push([module.i, "\n.qotd[data-v-58c69ede] {\n    position: fixed;\n    top: 0px;\n    left: 0px;\n\n    width: 100%;\n\n    font-size: 2vh;\n}\n", ""]);
 
 // exports
 
@@ -4124,7 +4170,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.favouritesBar[data-v-69b40203] {\n    height: 15vh !important;\n}\n.favButtons[data-v-69b40203] {\n    height: 70%;\n    width: 70%;\n}\n.favButtons[data-v-69b40203]:hover {\n    height: 100%;\n    width: 100%;\n}\n", ""]);
+exports.push([module.i, "\n.favouritesBar[data-v-69b40203] {\n    position: fixed;\n    bottom: 5px;\n}\n.favButtons[data-v-69b40203]{\n    height: 7.5vh;\n    width: 7.5vh;\n\n    transition: all .12s ease-in-out;\n}\n.favouritesBar:hover .favButtons[data-v-69b40203] {\n    height: 13vh;\n    width: 13vh;\n}\n.col-xs:hover .favButtons[data-v-69b40203]{\n    margin-bottom: 3vh;\n}\n", ""]);
 
 // exports
 
@@ -4162,7 +4208,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.travelText[data-v-3385321e] {\n    font-weight: 600px;\n    font-size: 3.5vh;\n    text-align: center;\n}\na[data-v-3385321e] {\n    color: black;\n}\n.mapsPosition[data-v-3385321e] {\n    position: fixed;\n    top: 0px;\n    left: 0px;\n\n    padding: 10vh 5vw;\n\n    height: 100vh;\n    width: 100vw;\n\n    z-index: 5;\n}\n.mapsPosition .vue-map-container[data-v-3385321e] {\n    /* width: 80vw;\n    height: 80vh; */\n\n    /* border: 1px black solid; */\n    z-index: 1;\n}\n.mapsPosition .instructionsContainer[data-v-3385321e] {\n    position: relative;\n\n    min-width: 500px;\n    max-width: 500px;\n    height: 80vh;\n\n    background-color: white;\n\n    overflow-y: auto;\n}\n.instructionsContainer h1[data-v-3385321e] {\n    margin: 30px 0 0 10px;\n    text-decoration: underline;\n}\n.qrCode[data-v-3385321e] {\n    position: absolute;\n    top: 0px;\n    right: 0px;\n}\n", ""]);
+exports.push([module.i, "\n.travelText[data-v-3385321e] {\n    font-weight: 600px;\n    font-size: 3.5vh;\n    /* text-align: center; */\n}\na[data-v-3385321e] {\n    color: black;\n}\n.mapsPosition[data-v-3385321e] {\n    position: fixed;\n    top: 0px;\n    left: 0px;\n\n    padding: 10vh 5vw;\n\n    height: 100vh;\n    width: 100vw;\n\n    z-index: 5;\n}\n.mapsPosition .vue-map-container[data-v-3385321e] {\n    /* width: 80vw;\n    height: 80vh; */\n\n    /* border: 1px black solid; */\n    z-index: 1;\n}\n.mapsPosition .instructionsContainer[data-v-3385321e] {\n    position: relative;\n\n    min-width: 500px;\n    max-width: 500px;\n    height: 80vh;\n\n    background-color: white;\n\n    overflow-y: auto;\n}\n.instructionsContainer h1[data-v-3385321e] {\n    margin: 30px 0 0 10px;\n    text-decoration: underline;\n}\n.qrCode[data-v-3385321e] {\n    position: absolute;\n    top: 0px;\n    right: 0px;\n}\n", ""]);
 
 // exports
 
@@ -4219,7 +4265,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.NewsDisplay[data-v-b91d5c9e] {\n    margin-top: 30px;\n    height: 650px;\n}\n.News[data-v-b91d5c9e] {\n    font-weight: 600px;\n    font-size: 3.5vh;\n\n    padding: 5px 20px;\n}\n.News a[data-v-b91d5c9e] {\n    color: black;\n}\n.newsIcon[data-v-b91d5c9e] {\n    position: absolute;\n    left: 60px;\n    top: 10px;\n}\n.newsIcon[data-v-b91d5c9e]:hover {\n    color: white;\n}\n.articleNum[data-v-b91d5c9e] {\n    margin: 10px 400px 40px 400px;\n}\n.headlineTitle[data-v-b91d5c9e] {\n    font-weight: 800px;\n    font-size: 30px;\n\n    min-height: 110px;\n}\n.headlineContent[data-v-b91d5c9e] {\n    font-weight: 400px;\n    font-size: 25px;\n\n    min-height: 200px;\n}\n.headlineSrc[data-v-b91d5c9e] {\n    font-weight: 300px;\n    font-size: 20px;\n\n    min-height: 150px;\n}\n.headlineUrl[data-v-b91d5c9e] {\n    font-weight: 200px;\n    font-size: 20px;\n\n    color: blue;\n}\n", ""]);
+exports.push([module.i, "\n.News[data-v-b91d5c9e] {\n    font-weight: 600px;\n    font-size: 3.5vh;\n\n    /* padding: 5px 20px; */\n}\na[data-v-b91d5c9e] {\n    color: black;\n}\n.limitReadable[data-v-b91d5c9e] {\n    max-width: 1000px;\n}\n", ""]);
 
 // exports
 
@@ -4238,7 +4284,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.NotesDisplay {\n    width: 90vw;\n\n    color: rgb(245, 245, 245) !important;\n    background-color: rgba(75, 75, 75, 0.75);\n\n    border-radius: 10px;\n}\n.scrollSpace {\n    height: 80vh;\n    overflow: auto;\n}\n.NotesDisplay .uk-divider-vertical {\n    height: 80vh;\n    margin: 0 !important;\n    position: absolute;\n}\n.NotesDisplay hr {\n    border-top: 1px solid #959595;\n}\n.NotesDisplay .secondHR {\n    right: 43vw;\n}\n.NotesDisplay .col-xs-2 {\n    padding: 0px;\n    min-width: 230px;\n    max-width: 230px;\n}\n.savedNotes {\n    text-align: left;\n    font-weight: 600px;\n    font-size: 20px;\n\n    overflow-x: hidden;\n}\n.savedNote {\n    padding: 10px 0;\n    margin: 0;\n}\n.savedNote:hover {\n    background-color: rgba(150, 150, 150, 0.5);\n}\n.savedNotes button {\n    color: rgb(245, 245, 245) !important;\n    margin: 20px 0;\n}\n.savedNotes hr {\n    margin: 0;\n}\n.controlButtons {\n    padding: 0 10px;\n}\n.controlButtons button {\n    margin: 5px;\n    max-width: 50%;\n}\n.controlButtons .updatedAt {\n    font-weight: 300px;\n    font-size: 15px;\n    margin: 5px 0;\n}\n.noteBody {\n    font-weight: 350px;\n    font-size: 20px;\n    text-align: left;\n    color: rgb(225, 225, 225) !important;\n\n    background-color: rgba(0, 0, 0, 0);\n    border-width: 0px;\n\n    padding: 5px;\n    margin: 0 10px;\n}\ntextarea:focus {\n    background-color: rgba(0,0,0,0);\n}\n.noteBody h1, .noteBody h2, .noteBody h3, .noteBody h4, .noteBody h5, .noteBody h6, .noteBody ul {\n    color: rgb(225, 225, 225) !important;\n}\n", ""]);
+exports.push([module.i, "\n.NotesDisplay {\n    width: 90vw;\n\n    color: rgb(245, 245, 245) !important;\n    background-color: rgba(75, 75, 75, 0.75);\n\n    border-radius: 10px;\n    /* margin-bottom: 40px; */\n}\n.scrollSpace {\n    height: 80vh;\n    overflow: auto;\n}\n.NotesDisplay .uk-divider-vertical {\n    height: 80vh;\n    margin: 0 !important;\n    position: absolute;\n}\n.NotesDisplay hr {\n    border-top: 1px solid #959595;\n}\n.NotesDisplay .secondHR {\n    right: 43vw;\n}\n.NotesDisplay .col-xs-2 {\n    padding: 0px;\n    min-width: 230px;\n    max-width: 230px;\n}\n.savedNotes {\n    text-align: left;\n    font-weight: 600px;\n    font-size: 20px;\n\n    overflow-x: hidden;\n}\n.savedNote {\n    padding: 10px 0;\n    margin: 0;\n}\n.savedNote:hover {\n    background-color: rgba(150, 150, 150, 0.5);\n}\n.savedNotes button {\n    color: rgb(245, 245, 245) !important;\n    margin: 20px 0;\n}\n.savedNotes hr {\n    margin: 0;\n}\n.controlButtons {\n    padding: 0 10px;\n}\n.controlButtons button {\n    margin: 5px;\n    max-width: 50%;\n}\n.controlButtons .updatedAt {\n    font-weight: 300px;\n    font-size: 15px;\n    margin: 5px 0;\n}\n.noteBody {\n    font-weight: 350px;\n    font-size: 20px;\n    text-align: left;\n    color: rgb(225, 225, 225) !important;\n\n    background-color: rgba(0, 0, 0, 0);\n    border-width: 0px;\n\n    padding: 5px;\n    margin: 0 10px;\n}\ntextarea:focus {\n    background-color: rgba(0,0,0,0);\n}\n.noteBody h1, .noteBody h2, .noteBody h3, .noteBody h4, .noteBody h5, .noteBody h6, .noteBody ul {\n    color: rgb(225, 225, 225) !important;\n}\n", ""]);
 
 // exports
 
@@ -4295,7 +4341,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.Weather[data-v-261436a7] {\n    height: 100% !important;\n    width: 100% !important;\n\n    margin: 0 0 5vh 0;\n}\n.forecast[data-v-261436a7] {\n    height: 28vh;\n}\n.day[data-v-261436a7] {\n    /* border: 1.5px solid grey;\n    border-radius: 5px;\n\n    margin: 0px 7.5px;\n    background: rgba(230, 230, 250, 0.5); */\n\n    height: 60% !important;\n}\n.day[data-v-261436a7]:hover {\n    background: rgba(230, 230, 250, 0.95);\n    height: 100% !important;\n    min-width: 35% !important;\n}\n.day i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 5vh;\n}\n.day:hover i[data-v-261436a7] {\n    margin-top: 1vh !important;\n    font-size: 10vh;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: left;\n}\n.day:hover .forecastTemp[data-v-261436a7] {\n    font-size: 5vh;\n    text-align: right;\n}\n.forecastDesc[data-v-261436a7] {\n    margin-top: 1vh;\n}\n.forecastDay[data-v-261436a7], .forecastDesc[data-v-261436a7] {\n    font-size: 2vh;\n}\n.day:hover .forecastDay[data-v-261436a7], .day:hover .forecastDesc[data-v-261436a7] {\n    font-size: 4vh;\n}\n.day hr[data-v-261436a7] {\n    /* margin: 10px 0px 5px 0px; */\n    margin: 0px;\n    border-color: grey;\n}\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n", ""]);
+exports.push([module.i, "\n.Weather[data-v-261436a7] {\n    height: 100% !important;\n    width: 100% !important;\n\n    margin: 0 0 5vh 0;\n}\n.forecast[data-v-261436a7] {\n    height: 28vh;\n}\n.day[data-v-261436a7] {\n    height: 60% !important;\n    transition: all .1s ease-in-out;\n}\n.day[data-v-261436a7]:hover {\n    background: rgba(230, 230, 250, 0.95);\n\n    height: 100% !important;\n    min-width: 35% !important;\n    transform: scale(1);\n}\n.day i[data-v-261436a7] {\n    margin-top: 2vh !important;\n    font-size: 5vh;\n}\n.day:hover i[data-v-261436a7] {\n    margin-top: 1vh !important;\n    font-size: 10vh;\n}\n.forecastTemp[data-v-261436a7] {\n    font-size: 3vh;\n    text-align: left;\n}\n.day:hover .forecastTemp[data-v-261436a7] {\n    font-size: 5vh;\n    /* text-align: right; */\n}\n.forecastDesc[data-v-261436a7] {\n    margin-top: 1vh;\n}\n.forecastDay[data-v-261436a7], .forecastDesc[data-v-261436a7] {\n    font-size: 2vh;\n}\n.day:hover .forecastDay[data-v-261436a7], .day:hover .forecastDesc[data-v-261436a7] {\n    font-size: 4vh;\n}\n.day hr[data-v-261436a7] {\n    /* margin: 10px 0px 5px 0px; */\n    margin: 0px;\n    border-color: grey;\n}\n.curDescription[data-v-261436a7], .curDescription input[data-v-261436a7] {\n    font-size: 4vw;\n}\n", ""]);
 
 // exports
 
@@ -9174,6 +9220,7 @@ var render = function() {
                     ],
                     staticClass: "col-xs-6",
                     attrs: {
+                      disabled: !widget.status,
                       onClick: "this.select();",
                       type: "number",
                       min: "0"
@@ -9245,20 +9292,21 @@ var render = function() {
     ? _c("div", { staticClass: "row center-xs middle-xs nomargin Home" }, [
         _c(
           "div",
-          { staticClass: "col-xs-8" },
-          _vm._l(_vm.activeWidgets, function(widget) {
-            return _c(
-              "div",
-              [
-                _c(widget.title, {
-                  tag: "component",
-                  attrs: { widget: widget }
-                })
-              ],
-              1
-            )
-          }),
-          0
+          { staticClass: "col-xs-10" },
+          [
+            _vm.isActive("Weather") ? _c("Weather") : _vm._e(),
+            _vm._v(" "),
+            _vm.isActive("Maps") ? _c("Maps") : _vm._e(),
+            _vm._v(" "),
+            _c("hr", { staticStyle: { width: "600px", margin: "auto" } }),
+            _vm._v(" "),
+            _vm.isActive("News") ? _c("News") : _vm._e(),
+            _vm._v(" "),
+            _vm.isActive("Favourites") ? _c("Favourites") : _vm._e(),
+            _vm._v(" "),
+            _vm.isActive("QOTD") ? _c("QOTD", {}) : _vm._e()
+          ],
+          1
         )
       ])
     : _vm._e()
@@ -9330,24 +9378,28 @@ var render = function() {
         "ul",
         { attrs: { "uk-tab": "" } },
         _vm._l(_vm.tabs, function(tab) {
-          return _c("li", [
-            _c(
-              "a",
-              {
-                staticClass: "uk-text-capitalize textTitle noselect",
-                on: {
-                  click: function($event) {
-                    _vm.activeTab = tab
+          return _c(
+            "li",
+            { class: { "uk-active": tab.title == _vm.activeTab.title } },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "uk-text-capitalize textTitle noselect",
+                  on: {
+                    click: function($event) {
+                      _vm.activeTab = tab
+                    }
                   }
-                }
-              },
-              [
-                _vm._v(
-                  "\n                " + _vm._s(tab.title) + "\n            "
-                )
-              ]
-            )
-          ])
+                },
+                [
+                  _vm._v(
+                    "\n                " + _vm._s(tab.title) + "\n            "
+                  )
+                ]
+              )
+            ]
+          )
         }),
         0
       ),
@@ -9431,28 +9483,27 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row center-xs fullWidth" }, [
-    _c("div", { staticClass: "col-xs-10" }, [
-      _c(
-        "div",
-        { staticClass: "row center-xs middle-xs favouritesBar" },
-        _vm._l(_vm.favsOrder, function(favourite) {
-          return _c("div", { staticClass: "col-xs" }, [
-            _c(
-              "a",
-              { attrs: { href: favourite.url, "uk-tooltip": favourite.title } },
-              [
-                _c("img", {
-                  staticClass: "favButtons",
-                  attrs: { src: _vm.getImg(favourite) }
-                })
-              ]
-            )
-          ])
-        }),
-        0
-      )
-    ])
+  return _c("div", { staticClass: "row center-xs" }, [
+    _c(
+      "div",
+      { staticClass: "row bottom-xs favouritesBar" },
+      _vm._l(_vm.favsOrder, function(favourite) {
+        return _c(
+          "a",
+          { staticClass: "col-xs", attrs: { href: favourite.url } },
+          [
+            _c("img", {
+              staticClass: "favButtons",
+              attrs: {
+                "uk-tooltip": favourite.title,
+                src: _vm.getImg(favourite)
+              }
+            })
+          ]
+        )
+      }),
+      0
+    )
   ])
 }
 var staticRenderFns = []
@@ -9506,6 +9557,7 @@ var render = function() {
                 }
               ],
               staticClass: "col-xs uk-input",
+              attrs: { type: "text" },
               domProps: { value: favourite.title },
               on: {
                 input: function($event) {
@@ -9527,6 +9579,7 @@ var render = function() {
                 }
               ],
               staticClass: "col-xs uk-input",
+              attrs: { type: "text" },
               domProps: { value: favourite.url },
               on: {
                 input: function($event) {
@@ -9548,6 +9601,7 @@ var render = function() {
                 }
               ],
               staticClass: "col-xs uk-input",
+              attrs: { type: "text" },
               domProps: { value: favourite.src },
               on: {
                 input: function($event) {
@@ -9566,7 +9620,7 @@ var render = function() {
                 attrs: { "uk-icon": "pencil" },
                 on: {
                   click: function($event) {
-                    return _vm.updateFavourite(favourite)
+                    return _vm.saveChange(favourite)
                   }
                 }
               }),
@@ -9586,6 +9640,96 @@ var render = function() {
         )
       }),
       0
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "row middle-xs textBody SettingsRow",
+        attrs: { id: _vm.newFavourite.id }
+      },
+      [
+        _c("div", { staticClass: "col-xs-1" }),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.newFavourite.title,
+              expression: "newFavourite.title"
+            }
+          ],
+          staticClass: "col-xs uk-input",
+          attrs: { type: "text" },
+          domProps: { value: _vm.newFavourite.title },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.newFavourite, "title", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.newFavourite.url,
+              expression: "newFavourite.url"
+            }
+          ],
+          staticClass: "col-xs uk-input",
+          attrs: { type: "text" },
+          domProps: { value: _vm.newFavourite.url },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.newFavourite, "url", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.newFavourite.src,
+              expression: "newFavourite.src"
+            }
+          ],
+          staticClass: "col-xs uk-input",
+          attrs: { type: "text" },
+          domProps: { value: _vm.newFavourite.src },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.newFavourite, "src", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-xs-2 center-xs uk-button-group" }, [
+          _c("a", {
+            staticClass:
+              "uk-icon-button uk-button-primary roundedButton uk-box-shadow-hover-xlarge",
+            attrs: { "uk-icon": "pencil" },
+            on: {
+              click: function($event) {
+                return _vm.addFav()
+              }
+            }
+          })
+        ])
+      ]
     )
   ])
 }
@@ -10388,18 +10532,18 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.news
-    ? _c("div", { staticClass: "row center-xs News" }, [
-        _c(
+  return _c("div", { staticClass: "row center-xs News" }, [
+    _vm.news
+      ? _c(
           "a",
           {
-            staticClass: "Widget",
-            attrs: { href: _vm.news[_vm.index].url, target: "_blank" }
+            staticClass: "Widget limitReadable",
+            attrs: { href: _vm.news.url, target: "_blank" }
           },
-          [_vm._v("\n        " + _vm._s(_vm.news[_vm.index].title) + "\n    ")]
+          [_vm._v("\n        " + _vm._s(_vm.news.title) + "\n    ")]
         )
-      ])
-    : _vm._e()
+      : _vm._e()
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -10851,7 +10995,7 @@ var render = function() {
                 }
               },
               [
-                _c("div", { staticClass: "col-xs start-xs" }, [
+                _c("div", { staticClass: "col-xs center-xs" }, [
                   _c("i", {
                     class: _vm.getIcon(_vm.weather.current.IconPhrase)
                   })
@@ -10865,7 +11009,7 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-xs end-xs" }, [
+                _c("div", { staticClass: "col-xs center-xs" }, [
                   _vm._v(
                     "\n            " +
                       _vm._s(Math.round(_vm.weather.current.value)) +
@@ -29614,7 +29758,7 @@ module.exports = g;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
@@ -29674,7 +29818,7 @@ window.UIkit = uikit_dist_js_uikit_min_js__WEBPACK_IMPORTED_MODULE_9___default.a
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_axios__WEBPACK_IMPORTED_MODULE_5___default.a, axios__WEBPACK_IMPORTED_MODULE_4___default.a);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue2_google_maps__WEBPACK_IMPORTED_MODULE_6__, {
   load: {
-    key: process.env.MIX_MAPS_KEY // libraries: 'places', // This is required if you use the Autocomplete plugin
+    key: "AIzaSyBJpygRQCiPNVHpLc5jQxBFPxyMw7avbh8" // libraries: 'places', // This is required if you use the Autocomplete plugin
 
   }
 });
@@ -29686,7 +29830,6 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   router: router,
   el: '#app'
 });
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 

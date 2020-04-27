@@ -5,6 +5,8 @@
             <span @click="forceUpdate"> {{travelText}} </span>
             <a @click="showMap" class="uk-text-capitalize"> Via: {{travelMode}} </a>
         </div>
+
+        <!-- <hr class="" style="margin: 20px 0 0 0 !important; width: 50vw !important;"> -->
     </div>
 
 
@@ -226,7 +228,7 @@ export default {
     .travelText {
         font-weight: 600px;
         font-size: 3.5vh;
-        text-align: center;
+        /* text-align: center; */
     }
     a {
         color: black;

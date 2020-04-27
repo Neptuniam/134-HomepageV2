@@ -51,17 +51,17 @@ export default {
 </script>
 
 <style scoped>
-.pageControl {
-	position: fixed;
-	top: 10px;
-	left: 10px;
-	width: 220px;
-}
+	.pageControl {
+		position: fixed;
+		top: 10px;
+		left: 10px;
+		width: 220px;
+	}
 
-.pageControl .uk-icon {
-	color: black;
-}
-.pageControl .uk-icon:hover {
-	color: white;
-}
+	.pageControl .uk-icon {
+		color: black;
+	}
+	.pageControl .uk-icon:hover {
+		color: white;
+	}
 </style>

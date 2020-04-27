@@ -1,14 +1,11 @@
 <template>
-<!--Favourite tabs Row-->
-<!-- <div class="row center-xs fullWidth"> -->
-    <!-- <div class="col-xs-10"> -->
-        <div class="row center-xs middle-xs favouritesBar">
-            <a v-for="favourite in favsOrder" class="col-xs" :uk-tooltip="favourite.title" :href="favourite.url">
-                <img :src="getImg(favourite)" class="favButtons">
+    <div class="row center-xs">
+        <div class="row bottom-xs favouritesBar">
+            <a v-for="favourite in favsOrder" class="col-xs" :href="favourite.url">
+                <img :uk-tooltip="favourite.title" :src="getImg(favourite)" class="favButtons">
             </a>
         </div>
-    <!-- </div> -->
-<!-- </div> -->
+    </div>
 </template>
 
 <script>
@@ -16,8 +13,16 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     computed: {
         favsOrder() {
+            let byPos = (a, b) => {
+                if (a.pos < b.pos)
+                    return -1
+                if (a.pos > b.pos)
+                    return 1
+                return 0
+            }
+
             if (this.favourites)
-                return this.favourites.sort(this.byPos)
+                return this.favourites.sort(byPos)
         },
 
         ...mapGetters('settings', {
@@ -28,15 +33,7 @@ export default {
     methods: {
         getImg(favourite) {
             // if the user set an img to use, return that. Otherwise use the sites favicon
-            return favourite.src ?  'images/favouritesIcons/'+favourite.src : favourite.url+'favicon.ico'
-        },
-
-        byPos(a, b) {
-            if (a.pos < b.pos)
-                return -1
-            if (a.pos > b.pos)
-                return 1
-            return 0
+            return favourite && favourite.src ? 'images/favouritesIcons/'+favourite.src : favourite.url+'favicon.ico'
         },
 
         ...mapActions('settings', {
@@ -52,17 +49,23 @@ export default {
 
 <style scoped>
     .favouritesBar {
-        height: 15vh !important;
-        max-width: 60vw !important;
-        margin: auto;
+        position: fixed;
+        bottom: 5px;
     }
 
-    .favButtons {
-        height: 70%;
-        width: 70%;
+    .favButtons{
+        height: 7.5vh;
+        width: 7.5vh;
+
+        transition: all .12s ease-in-out;
     }
-    .favButtons:hover {
-        height: 100%;
-        width: 100%;
+
+    .favouritesBar:hover .favButtons {
+        height: 13vh;
+        width: 13vh;
+    }
+
+    .col-xs:hover .favButtons{
+        margin-bottom: 3vh;
     }
 </style>

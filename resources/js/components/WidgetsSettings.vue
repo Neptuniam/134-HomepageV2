@@ -24,7 +24,7 @@
             </div>
             <div class="col-xs-3">
                 <div class="row center-xs middle-xs">
-                    <input v-model="widget.interval" @input="updateWidget(widget)" onClick="this.select();" type="number" min="0" class="col-xs-6">
+                    <input v-model="widget.interval" @input="updateWidget(widget)" :disabled="!widget.status" onClick="this.select();" type="number" min="0" class="col-xs-6">
                     Min
                 </div>
             </div>

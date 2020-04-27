@@ -62,6 +62,9 @@ div {
 	margin: 10px;
 	padding: 5px 10px;
 }
+.card:hover {
+	/* box-shadow: 5px 5px 10px; */
+}
 
 .uk-button-success {
 	background-color: #228B22;
@@ -75,4 +78,8 @@ div {
 	   -moz-user-select: none; /* Firefox */
 		-ms-user-select: none; /* Internet Explorer/Edge */
 			user-select: none; /* Non-prefixed version,(Chrome and Opera) */
+}
+
+.limitReadable {
+	max-width: 1000px;
 }
