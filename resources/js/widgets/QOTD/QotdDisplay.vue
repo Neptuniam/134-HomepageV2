@@ -1,6 +1,8 @@
 <template>
-<div v-if="quote" class="qotd">
-    {{ quote }}
+<div v-if="quote" class="row center-xs">
+    <div class="qotd Widget">
+        {{ quote }}
+    </div>
 </div>
 </template>
 
@@ -25,12 +27,14 @@ export default {
 
 <style scoped>
     .qotd {
-        position: fixed;
+        /* position: fixed;
         top: 0px;
         left: 0px;
 
-        width: 100%;
+        width: 100%; */
 
-        font-size: 2vh;
+        font-weight: 400;
+        font-size: 2.5vh;
+        max-width: 1000px;
     }
 </style>

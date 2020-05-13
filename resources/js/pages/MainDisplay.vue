@@ -4,6 +4,8 @@
 
     <DateTime />
 
+    <FilePreviewer />
+
     <router-view v-if="activeUser && location" />
 </div>
 </template>
@@ -11,6 +13,11 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 export default {
+    data() {
+        return {
+            toPreview: null
+        }
+    },
     computed: {
         ...mapGetters('settings', {
             widgets:    'getWidgets',
@@ -99,86 +106,96 @@ export default {
         background: rgba(200,200,200,0.7);
     }
 
-
-
     .uk-tooltip {
-        font-family: 'Roboto' !important;
-        font-weight: 300px;
-        font-size: 16px;
+    	font-family: 'Roboto' !important;
+    	font-weight: 300px;
+    	font-size: 16px;
 
-        max-width: 400px;
+    	max-width: 400px;
     }
 
     div {
-        cursor: default;
+    	cursor: default;
     }
 
+    .limitReadable {
+    	max-width: 1000px;
+    }
     .fullWidth {
-        width: 100% !important;
+    	width: 100% !important;
     }
     .fullHeight {
-        height: 100% !important;
+    	height: 100% !important;
     }
 
     .nopadding {
-        padding: 0 !important;
+    	padding: 0 !important;
     }
 
     .nomargin {
-        margin: 0 !important;
+    	margin: 0 !important;
     }
 
     .nospacing {
-        margin: 0 !important;
-        padding: 0 !important;
+    	margin: 0 !important;
+    	padding: 0 !important;
     }
 
     .clickable {
-        cursor: pointer !important;
+    	cursor: pointer !important;
     }
 
     .textSpecial {
-        font-family: 'Arima Madurai', cursive !important;
+    	font-family: 'Arima Madurai', cursive !important;
     }
 
     .textTitle {
-        font-family: 'Poiret One', cursive !important;
+    	font-family: 'Poiret One', cursive !important;
     }
 
     .textBody {
-        font-family: 'Roboto' !important;
+    	font-family: 'Roboto' !important;
     }
 
     .roundedButton {
-        color: white;
-        border-radius: 10px;
-        padding: auto 10px;
-        margin: 0 5px;
-        outline: none;
+    	color: white;
+    	border-radius: 10px;
+    	padding: auto 10px;
+    	margin: 0 5px;
+    	outline: none;
     }
 
     .card {
-        border: 1.5px solid grey;
-        border-radius: 5px;
-        background: rgba(230, 230, 250, 0.5);
+    	border: 1.5px solid grey;
+    	border-radius: 5px;
+    	background: rgba(230, 230, 250, 0.5);
 
-        margin: 10px;
-        padding: 5px 10px;
+    	margin: 10px;
+    	padding: 5px 10px;
     }
 
     .uk-button-success {
-        background-color: #228B22;
-        color: white;
+    	background-color: #228B22;
+    	color: white;
     }
 
     .noselect {
       -webkit-touch-callout: none; /* iOS Safari */
-        -webkit-user-select: none; /* Safari */
-         -khtml-user-select: none; /* Konqueror HTML */
-           -moz-user-select: none; /* Firefox */
-            -ms-user-select: none; /* Internet Explorer/Edge */
-                user-select: none; /* Non-prefixed version,(Chrome and Opera) */
+    	-webkit-user-select: none; /* Safari */
+    	 -khtml-user-select: none; /* Konqueror HTML */
+    	   -moz-user-select: none; /* Firefox */
+    		-ms-user-select: none; /* Internet Explorer/Edge */
+    			user-select: none; /* Non-prefixed version,(Chrome and Opera) */
     }
+
+    .invertedText {
+    	color: silver !important;
+    }
+
+    .blueText {
+    	color: blue !important;
+    }
+
 </style>
 
 

@@ -2,7 +2,6 @@
 <html>
     <head>
         <script src="{{ asset('js/app.js') }}" defer></script>
-        <!-- <meta name="csrf-token" content="{{csrf_token()}}"> -->
 
         <title>
             HomepageV2
@@ -16,8 +15,7 @@
         <link rel="stylesheet" href="weatherIcons/weather-icons-wind.css">
 
         <!-- Main CSS stylesheet -->
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
     </head>
     <body>
         <div id='app'>

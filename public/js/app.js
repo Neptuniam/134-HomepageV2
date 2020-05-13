@@ -1835,6 +1835,131 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FilePreviewer.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FilePreviewer.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  // props: ['file'],
+  data: function data() {
+    return {
+      file: null,
+      type: null,
+      fullScreen: false,
+      text: null
+    };
+  },
+  computed: {
+    fileType: function fileType() {
+      if (!this.file) return null;
+
+      if (this.file.length > 100) {
+        this.text = this.file;
+        this.fullScreen = true;
+        return 'str';
+      }
+
+      switch (this.file.split('.').pop().toLowerCase()) {
+        case "png":
+        case "jpg":
+        case "jpeg":
+          return 'img';
+
+        case "mp4":
+          return 'vid';
+
+        case "pdf":
+          return 'pdf';
+
+        case "gz":
+        case "tar":
+        case "zip":
+          console.log({
+            message: 'Cannot preview compressed files!',
+            status: 'warning'
+          });
+          return "Compressed (Cannot Preview)";
+
+        default:
+          this.readFile(this.file);
+          return 'text';
+      }
+    }
+  },
+  methods: {
+    readFile: function readFile(file) {
+      var _this = this;
+
+      this.text = null;
+      fetch(file).then(function (response) {
+        return response.text();
+      }).then(function (text) {
+        return _this.text = text;
+      });
+    },
+    hidePreview: function hidePreview(event) {
+      if (event.target.id == 'action') {
+        event.target.onclick(this);
+      } // Only hide if the user didn't click the text area to allow for highlighting
+
+
+      if (!this.text || event.target.id == 'Previewer' || event.target.parentNode.id == 'close') {
+        this.fullScreen = false;
+        this.file = null;
+      }
+    },
+    togglePreview: function togglePreview(event) {
+      // If in fullscreen mode, we need to check the click zone before closing
+      if (this.fullScreen) {
+        this.hidePreview(event);
+      } else {
+        this.fullScreen = true;
+      }
+    },
+    getPath: function getPath(src) {
+      if (util.imageExists(src)) return util.noCachePath(src);
+      UIkit.notification({
+        message: "<span uk-icon=\"close\"></span>Path: ".concat(src, " could not be found!"),
+        status: 'danger'
+      });
+    }
+  },
+  mounted: function mounted() {
+    var _this2 = this;
+
+    this.$bus.$on('showPreview', function (toPreview) {
+      _this2.file = toPreview;
+    });
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoginSettings.vue?vue&type=script&lang=js&":
 /*!************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LoginSettings.vue?vue&type=script&lang=js& ***!
@@ -2043,29 +2168,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  computed: _objectSpread({
-    activeWidgets: function activeWidgets() {
-      if (this.widgets) return this.widgets.filter(function (widget) {
-        return widget.status == 1 && !(widget.title === 'Notes' || widget.title === 'Trello' || widget.title === 'Background');
-      });
-    }
-  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
-    // activePage: 'getActivePage',
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
     widgets: 'getWidgets'
   })),
   methods: {
@@ -2114,8 +2219,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      toPreview: null
+    };
+  },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])('settings', {
     widgets: 'getWidgets',
     activeUser: 'getUser',
@@ -2281,6 +2393,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -3331,6 +3445,295 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/Card.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/Card.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['card'],
+  data: function data() {
+    return {
+      members: null
+    };
+  },
+  methods: {
+    hasDesc: function hasDesc(card) {
+      return card && (card.desc || card.idChecklists && card.idChecklists.length);
+    },
+    hashCode: function hashCode(str) {
+      // java String#hashCode
+      var hash = 0;
+
+      for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      }
+
+      return hash;
+    },
+    numberFromText: function numberFromText(text) {
+      var hashed = this.hashCode(text);
+      var RGB = (hashed & 0x00FFFFFF).toString(16).toUpperCase();
+      return "00000".substring(0, 6 - RGB.length) + RGB;
+    },
+    numDaysAgo: function numDaysAgo(due) {
+      return Math.round((new Date(due) - this.today) / 86400000);
+    },
+    readableDay: function readableDay(date) {
+      if (!date) return "N/A";
+      var daysTill = this.numDaysAgo(date); // Have more fitting text for FE
+
+      if (daysTill >= 0) {
+        switch (daysTill) {
+          case 0:
+            return "Today";
+
+          case 1:
+            return "Tomorrow";
+
+          default:
+            return "In ".concat(daysTill, " Days");
+        }
+      } else {
+        daysTill = Math.abs(daysTill);
+
+        switch (daysTill) {
+          case 1:
+            return "Yesterday";
+
+          default:
+            return "".concat(daysTill, " Days ago");
+        }
+      }
+    },
+    openPreview: function openPreview(card) {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var desc, response, checklist, index, checkItem;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                console.log(card);
+                desc = card.desc.replace('↵', '<br>');
+
+                if (!_this.hasDesc(card)) {
+                  _context.next = 7;
+                  break;
+                }
+
+                _context.next = 5;
+                return _this.axios.get("https://api.trello.com/1/cards/".concat(card.id, "/checklists?key=").concat("2625f163643b9956e21a7b966f9714ba", "&token=").concat("57382570d1c035d17da5bad54834c7c89beecc548c31bab25f19a95abad08ca3"));
+
+              case 5:
+                response = _context.sent;
+
+                for (checklist in response.data) {
+                  for (index in response.data[checklist].checkItems) {
+                    checkItem = response.data[checklist].checkItems[index];
+                    desc += "<input type=\"checkbox\" disabled=\"true\" ".concat(checkItem.state == 'complete' ? 'checked' : '', "> ").concat(checkItem.name, " <br>");
+                  }
+                }
+
+              case 7:
+                // Emit a signal to the FilePreviewer component located in Main.vue to preview the card contents
+                _this.$bus.$emit('showPreview', "\n\t\t\t\t<div style=\"max-width: 1000px\">\n\t\t\t\t\t<a href=\"".concat(card.shortUrl, "\" target=\"_blank\">\n\t\t\t\t\t\t<h1 class=\"blueText\"> ").concat(card.name, " </h1>\n\t\t\t\t\t</a>\n\t\t\t\t\t<hr>\n\n\t\t\t\t\t<h3 class=\"start-xs invertedText\"> ").concat(desc, " </h3>\n\n\t\t\t\t\t<br>\n\t\t\t\t\t<br>\n\t\t\t\t\t<br>\n\n\t\t\t\t\t<p class=\"start-xs\"> Due: ").concat(_this.readableDay(card.due), "\n\t\t\t\t\t<p class=\"start-xs\"> Last Updated: ").concat(_this.readableDay(card.dateLastActivity), "\n\t\t\t\t</div>\n\t\t\t"));
+
+              case 8:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    }
+  },
+  created: function created() {
+    var _this2 = this;
+
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+      var memberID, member;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              if (!(_this2.card.idMembers && _this2.card.idMembers.length)) {
+                _context2.next = 11;
+                break;
+              }
+
+              _this2.members = [];
+              _context2.t0 = _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.keys(_this2.card.idMembers);
+
+            case 3:
+              if ((_context2.t1 = _context2.t0()).done) {
+                _context2.next = 11;
+                break;
+              }
+
+              memberID = _context2.t1.value;
+              _context2.next = 7;
+              return _this2.axios.get("https://api.trello.com/1/members/".concat(_this2.card.idMembers[memberID], "?key=").concat("2625f163643b9956e21a7b966f9714ba", "&token=").concat("57382570d1c035d17da5bad54834c7c89beecc548c31bab25f19a95abad08ca3"));
+
+            case 7:
+              member = _context2.sent;
+
+              _this2.members.push(member.data);
+
+              _context2.next = 3;
+              break;
+
+            case 11:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }))();
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/CardBuilder.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/CardBuilder.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['list', 'title'],
+  data: function data() {
+    return {
+      today: new Date(),
+      showBuilder: false
+    };
+  },
+  methods: {
+    hasDesc: function hasDesc(card) {
+      return card && (card.desc || card.idChecklists && card.idChecklists.length);
+    },
+    numDaysAgo: function numDaysAgo(due) {
+      return Math.round((new Date(due) - this.today) / 86400000);
+    },
+    readableDay: function readableDay(date) {
+      if (!date) return "N/A";
+      var daysTill = this.numDaysAgo(date); // Have more fitting text for FE
+
+      if (daysTill >= 0) {
+        switch (daysTill) {
+          case 0:
+            return "Today";
+
+          case 1:
+            return "Tomorrow";
+
+          default:
+            return "In ".concat(daysTill, " Days");
+        }
+      } else {
+        daysTill = Math.abs(daysTill);
+
+        switch (daysTill) {
+          case 1:
+            return "Yesterday";
+
+          default:
+            return "".concat(daysTill, " Days ago");
+        }
+      }
+    },
+    countList: function countList(list) {
+      // No due is just a standard array
+      if ('length' in list) return list.length; // The lists with due dates are seperates in an object by days
+
+      var count = 0;
+
+      for (var day in list) {
+        count += list[day].length;
+      }
+
+      return count;
+    }
+  },
+  mounted: function mounted() {
+    // Show coming up cards by default
+    if (this.title == 'Coming Up') this.showBuilder = true;
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=script&lang=js&":
 /*!****************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=script&lang=js& ***!
@@ -3490,47 +3893,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       today: new Date(),
+      DoneID: "5e0b302d93a3935125fd3506",
       comingUp: null,
       noDue: null,
-      past: null,
-      showComingUp: true,
-      showNoDue: false,
-      showPast: false
+      done: null,
+      past: null
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
@@ -3538,12 +3910,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     cards: 'getCards'
   })),
   methods: _objectSpread({
+    addToList: function addToList(list, dayIndex, card) {
+      // Initalize each day to an array starting with the card
+      if (!list[dayIndex]) {
+        list[dayIndex] = [card];
+      } else {
+        list[dayIndex].push(card);
+      }
+    },
     numDaysAgo: function numDaysAgo(due) {
       return Math.round((new Date(due) - this.today) / 86400000);
     },
-    readableDay: function readableDay(day) {
-      if (!day || !'due' in day) return "N/A";
-      var daysTill = this.numDaysAgo(day.due); // Have more fitting text for FE
+    readableDay: function readableDay(date) {
+      if (!date) return "N/A";
+      var daysTill = this.numDaysAgo(date); // Have more fitting text for FE
 
       if (daysTill >= 0) {
         switch (daysTill) {
@@ -3568,29 +3948,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       }
     },
-    countList: function countList(list) {
-      // No due is just a standard array
-      if ('length' in list) return list.length; // The lists with due dates are seperates in an object by days
-
-      var count = 0;
-
-      for (var day in list) {
-        count += list[day].length;
-      }
-
-      return count;
-    },
-    addToList: function addToList(list, dayIndex, card) {
-      // Initalize each day to an array starting with the card
-      if (!list[dayIndex]) {
-        list[dayIndex] = [card];
-      } else {
-        list[dayIndex].push(card);
-      }
-    },
     processCards: function processCards() {
       this.comingUp = {};
       this.past = {};
+      this.done = {};
       this.noDue = [];
 
       var _iterator = _createForOfIteratorHelper(this.cards),
@@ -3600,16 +3961,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var card = _step.value;
 
-          // Some cards don't have a due date
           if (card.due) {
             var dayIndex = this.numDaysAgo(card.due);
-
-            if (dayIndex >= 0) {
+            if (card.idList == this.DoneID) this.addToList(this.done, Math.abs(dayIndex), card);else if (dayIndex >= 0) {
               this.addToList(this.comingUp, dayIndex, card);
             } else {
               this.addToList(this.past, Math.abs(dayIndex), card);
             }
           } else {
+            // Some cards don't have a due date
             this.noDue.push(card);
           }
         }
@@ -4044,6 +4404,25 @@ exports.push([module.i, "\n.clock[data-v-3e8aff86] {\n    position: absolute;\n 
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FilePreviewer.vue?vue&type=style&index=0&id=0215fb7e&scoped=true&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FilePreviewer.vue?vue&type=style&index=0&id=0215fb7e&scoped=true&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.FilePreviewer[data-v-0215fb7e] {\n    max-height: 100%;\n    max-width: auto;\n}\ntextarea[data-v-0215fb7e] {\n    resize: none !important;\n}\n.fullScreen[data-v-0215fb7e] {\n    position: fixed;\n    top: 0;\n    left: 0;\n    height: 100vh !important;\n    width: 100vw !important;\n    z-index: 1;\n\n    overflow: auto;\n\n    background-color: rgba(0, 0, 0, 0.95);\n}\n.fullScreen img[data-v-0215fb7e], .fullScreen video[data-v-0215fb7e] {\n    max-height: 80vh;\n    width:  auto;\n    z-index: 1;\n}\n.fullScreen textarea[data-v-0215fb7e], .fullScreen embed[data-v-0215fb7e] {\n    height: 80vh;\n    width:  80vw;\n    max-width: 1500px;\n    z-index: 1;\n}\n.fullScreen textarea[data-v-0215fb7e] {\n    font-size: 16px;\n\n    padding: 10px;\n    cursor: pointer;\n}\n.fullScreen .textDisplay[data-v-0215fb7e] {\n    color: white !important;\n}\n.closeButton[data-v-0215fb7e] {\n    position: fixed;\n    top: 25px;\n    right: 25px;\n\n    z-index: 2;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoginSettings.vue?vue&type=style&index=0&id=37c47c51&scoped=true&lang=css&":
 /*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LoginSettings.vue?vue&type=style&index=0&id=37c47c51&scoped=true&lang=css& ***!
@@ -4113,7 +4492,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Homepage {\n    overflow-y:hidden;\n    overflow-x:hidden;\n    overflow: hidden !important;\n\n    color: black;\n\n    height: 100vh;\n    width: 100vw;\n\n    background: rgba(200,200,200,0.7);\n}\n.uk-tooltip {\n    font-family: 'Roboto' !important;\n    font-weight: 300px;\n    font-size: 16px;\n\n    max-width: 400px;\n}\ndiv {\n    cursor: default;\n}\n.fullWidth {\n    width: 100% !important;\n}\n.fullHeight {\n    height: 100% !important;\n}\n.nopadding {\n    padding: 0 !important;\n}\n.nomargin {\n    margin: 0 !important;\n}\n.nospacing {\n    margin: 0 !important;\n    padding: 0 !important;\n}\n.clickable {\n    cursor: pointer !important;\n}\n.textSpecial {\n    font-family: 'Arima Madurai', cursive !important;\n}\n.textTitle {\n    font-family: 'Poiret One', cursive !important;\n}\n.textBody {\n    font-family: 'Roboto' !important;\n}\n.roundedButton {\n    color: white;\n    border-radius: 10px;\n    padding: auto 10px;\n    margin: 0 5px;\n    outline: none;\n}\n.card {\n    border: 1.5px solid grey;\n    border-radius: 5px;\n    background: rgba(230, 230, 250, 0.5);\n\n    margin: 10px;\n    padding: 5px 10px;\n}\n.uk-button-success {\n    background-color: #228B22;\n    color: white;\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n       -moz-user-select: none; /* Firefox */\n        -ms-user-select: none; /* Internet Explorer/Edge */\n            user-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n", ""]);
+exports.push([module.i, "\n.Homepage {\n    overflow-y:hidden;\n    overflow-x:hidden;\n    overflow: hidden !important;\n\n    color: black;\n\n    height: 100vh;\n    width: 100vw;\n\n    background: rgba(200,200,200,0.7);\n}\n.uk-tooltip {\n\tfont-family: 'Roboto' !important;\n\tfont-weight: 300px;\n\tfont-size: 16px;\n\n\tmax-width: 400px;\n}\ndiv {\n\tcursor: default;\n}\n.limitReadable {\n\tmax-width: 1000px;\n}\n.fullWidth {\n\twidth: 100% !important;\n}\n.fullHeight {\n\theight: 100% !important;\n}\n.nopadding {\n\tpadding: 0 !important;\n}\n.nomargin {\n\tmargin: 0 !important;\n}\n.nospacing {\n\tmargin: 0 !important;\n\tpadding: 0 !important;\n}\n.clickable {\n\tcursor: pointer !important;\n}\n.textSpecial {\n\tfont-family: 'Arima Madurai', cursive !important;\n}\n.textTitle {\n\tfont-family: 'Poiret One', cursive !important;\n}\n.textBody {\n\tfont-family: 'Roboto' !important;\n}\n.roundedButton {\n\tcolor: white;\n\tborder-radius: 10px;\n\tpadding: auto 10px;\n\tmargin: 0 5px;\n\toutline: none;\n}\n.card {\n\tborder: 1.5px solid grey;\n\tborder-radius: 5px;\n\tbackground: rgba(230, 230, 250, 0.5);\n\n\tmargin: 10px;\n\tpadding: 5px 10px;\n}\n.uk-button-success {\n\tbackground-color: #228B22;\n\tcolor: white;\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n\t-webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n\t   -moz-user-select: none; /* Firefox */\n\t\t-ms-user-select: none; /* Internet Explorer/Edge */\n\t\t\tuser-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n.invertedText {\n\tcolor: silver !important;\n}\n.blueText {\n\tcolor: blue !important;\n}\n\n", ""]);
 
 // exports
 
@@ -4151,7 +4530,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.qotd[data-v-58c69ede] {\n    position: fixed;\n    top: 0px;\n    left: 0px;\n\n    width: 100%;\n\n    font-size: 2vh;\n}\n", ""]);
+exports.push([module.i, "\n.qotd[data-v-58c69ede] {\n    /* position: fixed;\n    top: 0px;\n    left: 0px;\n\n    width: 100%; */\n\n    font-weight: 400;\n    font-size: 2.5vh;\n    max-width: 1000px;\n}\n", ""]);
 
 // exports
 
@@ -4291,6 +4670,44 @@ exports.push([module.i, "\n.NotesDisplay {\n    width: 90vw;\n\n    color: rgb(2
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/Card.vue?vue&type=style&index=0&id=3d303d09&scoped=true&lang=css&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/Card.vue?vue&type=style&index=0&id=3d303d09&scoped=true&lang=css& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.uk-icon[data-v-3d303d09] {\n}\nspan[data-v-3d303d09] {\n\tfont-size: 14px;\n\tmargin: 0px 0px 0px 5px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/CardBuilder.vue?vue&type=style&index=0&id=6ccdedfc&scoped=true&lang=css&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/CardBuilder.vue?vue&type=style&index=0&id=6ccdedfc&scoped=true&lang=css& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.listLabel[data-v-6ccdedfc] {\n\tfont-size: 25px;\n\tfont-weight: 600;\n}\nhr[data-v-6ccdedfc] {\n\tmargin: 5px 0px 20px 0px;\n}\n.ListContainer[data-v-6ccdedfc] {\n\tmargin: 10px;\n\n\tmax-height: 50vh;\n\toverflow-y: auto;\n\toverflow-x: hidden;\n}\n.dayContainer[data-v-6ccdedfc] {\n\tmargin: 10px 10px 50px 10px;\n}\n.dayContainer .col-xs-3[data-v-6ccdedfc] {\n\tmin-width: 300px;\n\tmax-width: 19%;\n\n\tmax-height: 200px;\n\n\tfont-size: 2.5vh;\n\n\tmargin: 0.5% !important;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=style&index=0&id=6e02bb11&scoped=true&lang=css&":
 /*!***********************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=style&index=0&id=6e02bb11&scoped=true&lang=css& ***!
@@ -4322,7 +4739,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.TrelloContainer[data-v-61494430] {\n    height: 85vh;\n    width: 90vw;\n\n    overflow-y: auto;\n    overflow-x: hidden;\n\n    padding: 0px 50px;\n\n    /* color: rgb(245, 245, 245) !important; */\n    /* background-color: rgba(75, 75, 75, 0.75); */\n\n    /* border-radius: 10px;\n    border: 1px grey solid; */\n}\n.listLabel[data-v-61494430] {\n    font-size: 25px;\n    font-weight: 600;\n}\nhr[data-v-61494430] {\n    margin: 5px 0px 20px 0px;\n}\n.ListContainer[data-v-61494430] {\n    margin: 10px;\n\n    max-height: 50vh;\n    overflow-y: auto;\n    overflow-x: hidden;\n}\n.dayContainer[data-v-61494430] {\n    margin: 10px 10px 50px 10px;\n}\n.dayContainer .col-xs-3[data-v-61494430] {\n    min-width: 300px;\n    max-width: 19%;\n\n    max-height: 200px;\n\n    font-size: 2.5vh;\n\n    margin: 0.5% !important;\n}\n", ""]);
+exports.push([module.i, "\n.TrelloContainer[data-v-61494430] {\n    height: 85vh;\n    width: 90vw;\n\n    overflow-y: auto;\n    overflow-x: hidden;\n\n    padding: 0px 50px;\n}\nbutton[data-v-61494430] {\n    position: fixed;\n    top: 20px;\n    right: 200px;\n}\n", ""]);
 
 // exports
 
@@ -7452,6 +7869,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FilePreviewer.vue?vue&type=style&index=0&id=0215fb7e&scoped=true&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FilePreviewer.vue?vue&type=style&index=0&id=0215fb7e&scoped=true&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./FilePreviewer.vue?vue&type=style&index=0&id=0215fb7e&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FilePreviewer.vue?vue&type=style&index=0&id=0215fb7e&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoginSettings.vue?vue&type=style&index=0&id=37c47c51&scoped=true&lang=css&":
 /*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LoginSettings.vue?vue&type=style&index=0&id=37c47c51&scoped=true&lang=css& ***!
@@ -7821,6 +8268,66 @@ if(false) {}
 
 
 var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./NotesDisplay.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/notes/NotesDisplay.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/Card.vue?vue&type=style&index=0&id=3d303d09&scoped=true&lang=css&":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/Card.vue?vue&type=style&index=0&id=3d303d09&scoped=true&lang=css& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Card.vue?vue&type=style&index=0&id=3d303d09&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/Card.vue?vue&type=style&index=0&id=3d303d09&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/CardBuilder.vue?vue&type=style&index=0&id=6ccdedfc&scoped=true&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/CardBuilder.vue?vue&type=style&index=0&id=6ccdedfc&scoped=true&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./CardBuilder.vue?vue&type=style&index=0&id=6ccdedfc&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/CardBuilder.vue?vue&type=style&index=0&id=6ccdedfc&scoped=true&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -9019,6 +9526,84 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FilePreviewer.vue?vue&type=template&id=0215fb7e&scoped=true&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FilePreviewer.vue?vue&type=template&id=0215fb7e&scoped=true& ***!
+  \****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.fileType
+    ? _c(
+        "div",
+        {
+          staticClass:
+            "row center-xs middle-xs nospacing fullScreen FilePreviewer",
+          class: { fullScreen: _vm.fullScreen, preview: !_vm.fullScreen },
+          attrs: { id: "Previewer" },
+          on: { click: _vm.togglePreview }
+        },
+        [
+          _vm.fileType === "img"
+            ? _c("img", {
+                attrs: { src: _vm.getPath(_vm.file), alt: "Image Preview" }
+              })
+            : _vm.fileType === "vid"
+            ? _c("video", {
+                attrs: { src: _vm.getPath(_vm.file), autoplay: "", muted: "" },
+                domProps: { muted: true }
+              })
+            : _vm.fileType === "str" && _vm.text
+            ? _c("div", {
+                staticClass: "textDisplay",
+                attrs: { id: "scrollSpace" },
+                domProps: { innerHTML: _vm._s(_vm.text) }
+              })
+            : _vm.fileType === "text" && _vm.text
+            ? _c("div", { staticClass: "textDisplay" }, [
+                _c("textarea", {
+                  attrs: { id: "scrollSpace", readonly: "" },
+                  domProps: { innerHTML: _vm._s(_vm.text) }
+                })
+              ])
+            : _vm.fileType === "pdf"
+            ? _c("embed", {
+                attrs: {
+                  src: _vm.getPath(_vm.file),
+                  type: "application/" + _vm.fileType
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.fullScreen
+            ? _c("a", {
+                staticClass: "uk-icon-button closeButton",
+                attrs: {
+                  "uk-icon": "close",
+                  "uk-tooltip": "Close",
+                  id: "close"
+                }
+              })
+            : _vm._e()
+        ]
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoginSettings.vue?vue&type=template&id=37c47c51&scoped=true&":
 /*!****************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LoginSettings.vue?vue&type=template&id=37c47c51&scoped=true& ***!
@@ -9288,7 +9873,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.activeWidgets
+  return _vm.widgets
     ? _c("div", { staticClass: "row center-xs middle-xs nomargin Home" }, [
         _c(
           "div",
@@ -9298,13 +9883,23 @@ var render = function() {
             _vm._v(" "),
             _vm.isActive("Maps") ? _c("Maps") : _vm._e(),
             _vm._v(" "),
-            _c("hr", { staticStyle: { width: "600px", margin: "auto" } }),
+            _vm.isActive("Maps")
+              ? _c("hr", {
+                  staticStyle: { width: "600px", margin: "10px auto" }
+                })
+              : _vm._e(),
             _vm._v(" "),
             _vm.isActive("News") ? _c("News") : _vm._e(),
             _vm._v(" "),
-            _vm.isActive("Favourites") ? _c("Favourites") : _vm._e(),
+            _vm.isActive("News")
+              ? _c("hr", {
+                  staticStyle: { width: "600px", margin: "10px auto" }
+                })
+              : _vm._e(),
             _vm._v(" "),
-            _vm.isActive("QOTD") ? _c("QOTD", {}) : _vm._e()
+            _vm.isActive("QOTD") ? _c("QOTD", {}) : _vm._e(),
+            _vm._v(" "),
+            _vm.isActive("Favourites") ? _c("Favourites") : _vm._e()
           ],
           1
         )
@@ -9342,6 +9937,8 @@ var render = function() {
       _c("ControlBar"),
       _vm._v(" "),
       _c("DateTime"),
+      _vm._v(" "),
+      _c("FilePreviewer"),
       _vm._v(" "),
       _vm.activeUser && _vm.location ? _c("router-view") : _vm._e()
     ],
@@ -9456,8 +10053,10 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.quote
-    ? _c("div", { staticClass: "qotd" }, [
-        _vm._v("\n    " + _vm._s(_vm.quote) + "\n")
+    ? _c("div", { staticClass: "row center-xs" }, [
+        _c("div", { staticClass: "qotd Widget" }, [
+          _vm._v("\n        " + _vm._s(_vm.quote) + "\n    ")
+        ])
       ])
     : _vm._e()
 }
@@ -10722,6 +11321,194 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/Card.vue?vue&type=template&id=3d303d09&scoped=true&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/Card.vue?vue&type=template&id=3d303d09&scoped=true& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "card",
+      class: {
+        clickable: _vm.hasDesc(_vm.card),
+        "uk-box-shadow-hover-large": _vm.hasDesc(_vm.card)
+      },
+      on: {
+        click: function($event) {
+          return _vm.openPreview(_vm.card)
+        }
+      }
+    },
+    [
+      _c(
+        "div",
+        { staticClass: "row middle-xs" },
+        [
+          _vm.hasDesc(_vm.card)
+            ? _c("span", {
+                staticClass: "uk-icon",
+                attrs: { "uk-icon": "icon: info; ratio:1" }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.members, function(member) {
+            return _vm.members
+              ? _c(
+                  "span",
+                  {
+                    staticClass: "uk-badge",
+                    style:
+                      "background-color: #" +
+                      _vm.numberFromText(member.fullName)
+                  },
+                  [_vm._v("\n\t\t    " + _vm._s(member.initials) + "\n\t\t")]
+                )
+              : _vm._e()
+          }),
+          _vm._v(" "),
+          _vm._l(_vm.card.labels, function(label) {
+            return _vm.card.labels
+              ? _c(
+                  "span",
+                  {
+                    staticClass: "uk-badge",
+                    style: "background-color: " + label.color
+                  },
+                  [_vm._v("\n\t\t\t" + _vm._s(label.name) + "\n\t\t")]
+                )
+              : _vm._e()
+          })
+        ],
+        2
+      ),
+      _vm._v("\n\n\t" + _vm._s(_vm.card.name) + "\n")
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/CardBuilder.vue?vue&type=template&id=6ccdedfc&scoped=true&":
+/*!******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/CardBuilder.vue?vue&type=template&id=6ccdedfc&scoped=true& ***!
+  \******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.list
+    ? _c("div", { staticClass: "Container textBody" }, [
+        _c(
+          "div",
+          {
+            staticClass: "middle-xs clickable",
+            on: {
+              click: function($event) {
+                _vm.showBuilder = !_vm.showBuilder
+              }
+            }
+          },
+          [
+            _c("span", {
+              staticClass: "uk-icon",
+              attrs: {
+                "uk-icon":
+                  "icon: " +
+                  (_vm.showBuilder ? "chevron-down" : "chevron-right") +
+                  "; ratio: 1.5;"
+              }
+            }),
+            _vm._v(" "),
+            _c("span", { staticClass: "listLabel textTitle" }, [
+              _vm._v(
+                "\r\n\t\t\t" +
+                  _vm._s(_vm.title) +
+                  " (" +
+                  _vm._s(_vm.countList(_vm.list)) +
+                  ")\r\n\t\t"
+              )
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _c("hr"),
+        _vm._v(" "),
+        _vm.showBuilder
+          ? _c(
+              "div",
+              { staticClass: "ListContainer" },
+              [
+                _vm.title == "No Due Date"
+                  ? _c(
+                      "div",
+                      { staticClass: "row fullWidth dayContainer" },
+                      _vm._l(_vm.list, function(card) {
+                        return _c("Card", {
+                          key: card.id,
+                          staticClass: "col-xs-3",
+                          attrs: { card: card }
+                        })
+                      }),
+                      1
+                    )
+                  : _vm._l(_vm.list, function(day) {
+                      return _c("div", [
+                        _c("b", [
+                          _vm._v(
+                            " " + _vm._s(_vm.readableDay(day[0].due)) + " "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "row fullWidth dayContainer" },
+                          _vm._l(day, function(card) {
+                            return _c("Card", {
+                              key: card.id,
+                              staticClass: "col-xs-3",
+                              attrs: { card: card }
+                            })
+                          }),
+                          1
+                        )
+                      ])
+                    })
+              ],
+              2
+            )
+          : _vm._e()
+      ])
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=template&id=6e02bb11&scoped=true&":
 /*!********************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/TrelloDisplay.vue?vue&type=template&id=6e02bb11&scoped=true& ***!
@@ -10764,197 +11551,94 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.board && _vm.cards
-    ? _c("div", { staticClass: "start-xs TrelloContainer" }, [
-        _c("a", { attrs: { href: _vm.board.shortUrl, target: "_blank" } }, [
-          _c("h1", { staticClass: "textSpecial" }, [
-            _vm._v(" " + _vm._s(_vm.board.name) + " ")
-          ])
-        ]),
-        _vm._v(" "),
-        _vm.comingUp
-          ? _c("div", { staticClass: "Container textBody" }, [
-              _c(
-                "div",
-                {
-                  staticClass: "middle-xs",
-                  on: {
-                    click: function($event) {
-                      _vm.showComingUp = !_vm.showComingUp
-                    }
-                  }
-                },
-                [
-                  _c("span", {
-                    staticClass: "uk-icon",
-                    attrs: {
-                      "uk-icon":
-                        "icon: " +
-                        (_vm.showComingUp ? "chevron-down" : "chevron-right") +
-                        "; ratio: 1.5;"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "listLabel textTitle" }, [
-                    _vm._v(
-                      "Coming Up (" + _vm._s(_vm.countList(_vm.comingUp)) + ")"
-                    )
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _vm.showComingUp
-                ? _c(
-                    "div",
-                    { staticClass: "ListContainer" },
-                    _vm._l(_vm.comingUp, function(day) {
-                      return _c("div", [
-                        _c("b", [
-                          _vm._v(" " + _vm._s(_vm.readableDay(day[0])) + " ")
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "row fullWidth dayContainer" },
-                          _vm._l(day, function(card) {
-                            return _c("div", { staticClass: "col-xs-3 card" }, [
-                              _vm._v(
-                                "\n                        " +
-                                  _vm._s(card.name) +
-                                  "\n                    "
-                              )
-                            ])
-                          }),
-                          0
-                        )
-                      ])
-                    }),
-                    0
-                  )
-                : _vm._e()
+    ? _c(
+        "div",
+        { staticClass: "start-xs TrelloContainer" },
+        [
+          _c("a", { attrs: { href: _vm.board.shortUrl, target: "_blank" } }, [
+            _c("h1", { staticClass: "textSpecial" }, [
+              _vm._v(" " + _vm._s(_vm.board.name) + " ")
             ])
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.noDue
-          ? _c("div", { staticClass: "Container textBody" }, [
-              _c(
-                "div",
-                {
-                  staticClass: "middle-xs",
-                  on: {
-                    click: function($event) {
-                      _vm.showNoDue = !_vm.showNoDue
-                    }
+          ]),
+          _vm._v(" "),
+          _c("CardBuilder", {
+            attrs: { list: _vm.comingUp, title: "Coming Up" }
+          }),
+          _vm._v(" "),
+          _c("CardBuilder", {
+            attrs: { list: _vm.noDue, title: "No Due Date" }
+          }),
+          _vm._v(" "),
+          _c("CardBuilder", { attrs: { list: _vm.done, title: "Done" } }),
+          _vm._v(" "),
+          _c("CardBuilder", { attrs: { list: _vm.past, title: "Past Cards" } }),
+          _vm._v(" "),
+          _vm.board.actions && _vm.board.actions.length
+            ? _c("div", [
+                _c("button", {
+                  staticClass: "uk-icon-button",
+                  attrs: {
+                    "uk-icon": "list",
+                    "uk-toggle": "target: #offcanvas-flip"
                   }
-                },
-                [
-                  _c("span", {
-                    staticClass: "uk-icon",
+                }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
                     attrs: {
-                      "uk-icon":
-                        "icon: " +
-                        (_vm.showNoDue ? "chevron-down" : "chevron-right") +
-                        "; ratio: 1.5;"
+                      id: "offcanvas-flip",
+                      "uk-offcanvas": "flip: true; overlay: true"
                     }
-                  }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "listLabel textTitle" }, [
-                    _vm._v(
-                      "No Due Date (" + _vm._s(_vm.countList(_vm.noDue)) + ")"
-                    )
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _vm.showNoDue
-                ? _c("div", { staticClass: "ListContainer" }, [
+                  },
+                  [
                     _c(
                       "div",
-                      { staticClass: "row fullWidth dayContainer" },
-                      _vm._l(_vm.noDue, function(card) {
-                        return _c("div", { staticClass: "col-xs-3 card" }, [
-                          _vm._v(
-                            "\n                    " +
-                              _vm._s(card.name) +
-                              "\n                "
-                          )
-                        ])
-                      }),
-                      0
-                    )
-                  ])
-                : _vm._e()
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.past
-          ? _c("div", { staticClass: "Container textBody" }, [
-              _c(
-                "div",
-                {
-                  staticClass: "middle-xs",
-                  on: {
-                    click: function($event) {
-                      _vm.showPast = !_vm.showPast
-                    }
-                  }
-                },
-                [
-                  _c("span", {
-                    staticClass: "uk-icon",
-                    attrs: {
-                      "uk-icon":
-                        "icon: " +
-                        (_vm.showPast ? "chevron-down" : "chevron-right") +
-                        "; ratio: 1.5;"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "listLabel textTitle" }, [
-                    _vm._v(
-                      "Past Cards (" + _vm._s(_vm.countList(_vm.past)) + ")"
-                    )
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _vm.showPast
-                ? _c(
-                    "div",
-                    { staticClass: "ListContainer" },
-                    _vm._l(_vm.past, function(day) {
-                      return _c("div", [
-                        _c("b", [
-                          _vm._v(" " + _vm._s(_vm.readableDay(day[0])) + " ")
+                      { staticClass: "uk-offcanvas-bar" },
+                      [
+                        _c("h1", { staticClass: "textSpecial" }, [
+                          _vm._v(" Actions ")
                         ]),
                         _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "row fullWidth dayContainer" },
-                          _vm._l(day, function(card) {
-                            return _c("div", { staticClass: "col-xs-3 card" }, [
-                              _vm._v(
-                                "\n                        " +
-                                  _vm._s(card.name) +
-                                  "\n                    "
-                              )
-                            ])
-                          }),
-                          0
-                        )
-                      ])
-                    }),
-                    0
-                  )
-                : _vm._e()
-            ])
-          : _vm._e()
-      ])
+                        _vm._l(_vm.board.actions, function(action) {
+                          return _c("div", { staticClass: "card" }, [
+                            _c(
+                              "div",
+                              { staticStyle: { "font-size": "18px" } },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(action.data.card.name) +
+                                    "\n                    "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticStyle: { "font-size": "14px" } },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(_vm.readableDay(action.date)) +
+                                    " - " +
+                                    _vm._s(action.type) +
+                                    "\n                    "
+                                )
+                              ]
+                            )
+                          ])
+                        })
+                      ],
+                      2
+                    )
+                  ]
+                )
+              ])
+            : _vm._e()
+        ],
+        1
+      )
     : _vm._e()
 }
 var staticRenderFns = []
@@ -29850,12 +30534,15 @@ Vue.component('MapsSettings', __webpack_require__(/*! ./widgets/maps/MapsSetting
 Vue.component('Favourites', __webpack_require__(/*! ./widgets/favourites/FavsDisplay.vue */ "./resources/js/widgets/favourites/FavsDisplay.vue")["default"]);
 Vue.component('FavSettings', __webpack_require__(/*! ./widgets/favourites/FavsSettings.vue */ "./resources/js/widgets/favourites/FavsSettings.vue")["default"]);
 Vue.component('QOTD', __webpack_require__(/*! ./widgets/QOTD/QotdDisplay.vue */ "./resources/js/widgets/QOTD/QotdDisplay.vue")["default"]);
-Vue.component('TrelloDisplay', __webpack_require__(/*! ./widgets/trello/TrelloDisplay.vue */ "./resources/js/widgets/trello/TrelloDisplay.vue")["default"]); // Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.vue').default);
+Vue.component('TrelloDisplay', __webpack_require__(/*! ./widgets/trello/TrelloDisplay.vue */ "./resources/js/widgets/trello/TrelloDisplay.vue")["default"]);
+Vue.component('CardBuilder', __webpack_require__(/*! ./widgets/trello/CardBuilder.vue */ "./resources/js/widgets/trello/CardBuilder.vue")["default"]);
+Vue.component('Card', __webpack_require__(/*! ./widgets/trello/Card.vue */ "./resources/js/widgets/trello/Card.vue")["default"]); // Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.vue').default);
 
 Vue.component('WidgetsSettings', __webpack_require__(/*! ./components/WidgetsSettings.vue */ "./resources/js/components/WidgetsSettings.vue")["default"]);
 Vue.component('LoginSettings', __webpack_require__(/*! ./components/LoginSettings.vue */ "./resources/js/components/LoginSettings.vue")["default"]);
 Vue.component('DateTime', __webpack_require__(/*! ./components/DateTime.vue */ "./resources/js/components/DateTime.vue")["default"]);
-Vue.component('ControlBar', __webpack_require__(/*! ./components/ControlBar.vue */ "./resources/js/components/ControlBar.vue")["default"]); // Packages
+Vue.component('ControlBar', __webpack_require__(/*! ./components/ControlBar.vue */ "./resources/js/components/ControlBar.vue")["default"]);
+Vue.component('FilePreviewer', __webpack_require__(/*! ./components/FilePreviewer.vue */ "./resources/js/components/FilePreviewer.vue")["default"]); // Packages
 
 Vue.component('vueCustomScrollbar', __webpack_require__(/*! vue-custom-scrollbar */ "./node_modules/vue-custom-scrollbar/dist/vueScrollbar.umd.min.js"));
 
@@ -30030,6 +30717,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DateTime_vue_vue_type_template_id_3e8aff86_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DateTime_vue_vue_type_template_id_3e8aff86_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/FilePreviewer.vue":
+/*!***************************************************!*\
+  !*** ./resources/js/components/FilePreviewer.vue ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _FilePreviewer_vue_vue_type_template_id_0215fb7e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FilePreviewer.vue?vue&type=template&id=0215fb7e&scoped=true& */ "./resources/js/components/FilePreviewer.vue?vue&type=template&id=0215fb7e&scoped=true&");
+/* harmony import */ var _FilePreviewer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FilePreviewer.vue?vue&type=script&lang=js& */ "./resources/js/components/FilePreviewer.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _FilePreviewer_vue_vue_type_style_index_0_id_0215fb7e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FilePreviewer.vue?vue&type=style&index=0&id=0215fb7e&scoped=true&lang=css& */ "./resources/js/components/FilePreviewer.vue?vue&type=style&index=0&id=0215fb7e&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _FilePreviewer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _FilePreviewer_vue_vue_type_template_id_0215fb7e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _FilePreviewer_vue_vue_type_template_id_0215fb7e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "0215fb7e",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/FilePreviewer.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/FilePreviewer.vue?vue&type=script&lang=js&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/FilePreviewer.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FilePreviewer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./FilePreviewer.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FilePreviewer.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FilePreviewer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/FilePreviewer.vue?vue&type=style&index=0&id=0215fb7e&scoped=true&lang=css&":
+/*!************************************************************************************************************!*\
+  !*** ./resources/js/components/FilePreviewer.vue?vue&type=style&index=0&id=0215fb7e&scoped=true&lang=css& ***!
+  \************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FilePreviewer_vue_vue_type_style_index_0_id_0215fb7e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./FilePreviewer.vue?vue&type=style&index=0&id=0215fb7e&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FilePreviewer.vue?vue&type=style&index=0&id=0215fb7e&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FilePreviewer_vue_vue_type_style_index_0_id_0215fb7e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FilePreviewer_vue_vue_type_style_index_0_id_0215fb7e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FilePreviewer_vue_vue_type_style_index_0_id_0215fb7e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FilePreviewer_vue_vue_type_style_index_0_id_0215fb7e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FilePreviewer_vue_vue_type_style_index_0_id_0215fb7e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/FilePreviewer.vue?vue&type=template&id=0215fb7e&scoped=true&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/FilePreviewer.vue?vue&type=template&id=0215fb7e&scoped=true& ***!
+  \**********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FilePreviewer_vue_vue_type_template_id_0215fb7e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./FilePreviewer.vue?vue&type=template&id=0215fb7e&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FilePreviewer.vue?vue&type=template&id=0215fb7e&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FilePreviewer_vue_vue_type_template_id_0215fb7e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FilePreviewer_vue_vue_type_template_id_0215fb7e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -30814,10 +31588,13 @@ var actions = {
   // Trello Controllers
   fetchBoard: function fetchBoard(_ref21) {
     var commit = _ref21.commit;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://api.trello.com/1/boards/5e0b302d93a3935125fd3503?key=".concat("2625f163643b9956e21a7b966f9714ba", "&token=").concat("57382570d1c035d17da5bad54834c7c89beecc548c31bab25f19a95abad08ca3")).then(function (response) {
-      console.log('%c Board ', 'background: #222; color: #bada55');
-      console.log(response.data);
-      commit('setBoard', response.data);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://api.trello.com/1/boards/5e0b302d93a3935125fd3503?key=".concat("2625f163643b9956e21a7b966f9714ba", "&token=").concat("57382570d1c035d17da5bad54834c7c89beecc548c31bab25f19a95abad08ca3")).then(function (board) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/actions?key=".concat("2625f163643b9956e21a7b966f9714ba", "&token=").concat("57382570d1c035d17da5bad54834c7c89beecc548c31bab25f19a95abad08ca3")).then(function (actions) {
+        board.data['actions'] = actions.data;
+        console.log('%c Board ', 'background: #222; color: #bada55');
+        console.log(board.data);
+        commit('setBoard', board.data);
+      });
     });
   },
   fetchTrelloCards: function fetchTrelloCards(_ref22) {
@@ -31556,6 +32333,180 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NotesDisplay_vue_vue_type_template_id_42e60c4d___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NotesDisplay_vue_vue_type_template_id_42e60c4d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/Card.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/widgets/trello/Card.vue ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Card_vue_vue_type_template_id_3d303d09_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Card.vue?vue&type=template&id=3d303d09&scoped=true& */ "./resources/js/widgets/trello/Card.vue?vue&type=template&id=3d303d09&scoped=true&");
+/* harmony import */ var _Card_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Card.vue?vue&type=script&lang=js& */ "./resources/js/widgets/trello/Card.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Card_vue_vue_type_style_index_0_id_3d303d09_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Card.vue?vue&type=style&index=0&id=3d303d09&scoped=true&lang=css& */ "./resources/js/widgets/trello/Card.vue?vue&type=style&index=0&id=3d303d09&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _Card_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Card_vue_vue_type_template_id_3d303d09_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Card_vue_vue_type_template_id_3d303d09_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "3d303d09",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/widgets/trello/Card.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/Card.vue?vue&type=script&lang=js&":
+/*!***********************************************************************!*\
+  !*** ./resources/js/widgets/trello/Card.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Card_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Card.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/Card.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Card_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/Card.vue?vue&type=style&index=0&id=3d303d09&scoped=true&lang=css&":
+/*!*******************************************************************************************************!*\
+  !*** ./resources/js/widgets/trello/Card.vue?vue&type=style&index=0&id=3d303d09&scoped=true&lang=css& ***!
+  \*******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Card_vue_vue_type_style_index_0_id_3d303d09_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Card.vue?vue&type=style&index=0&id=3d303d09&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/Card.vue?vue&type=style&index=0&id=3d303d09&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Card_vue_vue_type_style_index_0_id_3d303d09_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Card_vue_vue_type_style_index_0_id_3d303d09_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Card_vue_vue_type_style_index_0_id_3d303d09_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Card_vue_vue_type_style_index_0_id_3d303d09_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Card_vue_vue_type_style_index_0_id_3d303d09_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/Card.vue?vue&type=template&id=3d303d09&scoped=true&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/widgets/trello/Card.vue?vue&type=template&id=3d303d09&scoped=true& ***!
+  \*****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Card_vue_vue_type_template_id_3d303d09_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Card.vue?vue&type=template&id=3d303d09&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/Card.vue?vue&type=template&id=3d303d09&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Card_vue_vue_type_template_id_3d303d09_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Card_vue_vue_type_template_id_3d303d09_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/CardBuilder.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/widgets/trello/CardBuilder.vue ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CardBuilder_vue_vue_type_template_id_6ccdedfc_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CardBuilder.vue?vue&type=template&id=6ccdedfc&scoped=true& */ "./resources/js/widgets/trello/CardBuilder.vue?vue&type=template&id=6ccdedfc&scoped=true&");
+/* harmony import */ var _CardBuilder_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CardBuilder.vue?vue&type=script&lang=js& */ "./resources/js/widgets/trello/CardBuilder.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _CardBuilder_vue_vue_type_style_index_0_id_6ccdedfc_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CardBuilder.vue?vue&type=style&index=0&id=6ccdedfc&scoped=true&lang=css& */ "./resources/js/widgets/trello/CardBuilder.vue?vue&type=style&index=0&id=6ccdedfc&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _CardBuilder_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CardBuilder_vue_vue_type_template_id_6ccdedfc_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CardBuilder_vue_vue_type_template_id_6ccdedfc_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "6ccdedfc",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/widgets/trello/CardBuilder.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/CardBuilder.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/widgets/trello/CardBuilder.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CardBuilder_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./CardBuilder.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/CardBuilder.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CardBuilder_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/CardBuilder.vue?vue&type=style&index=0&id=6ccdedfc&scoped=true&lang=css&":
+/*!**************************************************************************************************************!*\
+  !*** ./resources/js/widgets/trello/CardBuilder.vue?vue&type=style&index=0&id=6ccdedfc&scoped=true&lang=css& ***!
+  \**************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CardBuilder_vue_vue_type_style_index_0_id_6ccdedfc_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./CardBuilder.vue?vue&type=style&index=0&id=6ccdedfc&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/CardBuilder.vue?vue&type=style&index=0&id=6ccdedfc&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CardBuilder_vue_vue_type_style_index_0_id_6ccdedfc_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CardBuilder_vue_vue_type_style_index_0_id_6ccdedfc_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CardBuilder_vue_vue_type_style_index_0_id_6ccdedfc_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CardBuilder_vue_vue_type_style_index_0_id_6ccdedfc_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CardBuilder_vue_vue_type_style_index_0_id_6ccdedfc_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/CardBuilder.vue?vue&type=template&id=6ccdedfc&scoped=true&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/widgets/trello/CardBuilder.vue?vue&type=template&id=6ccdedfc&scoped=true& ***!
+  \************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CardBuilder_vue_vue_type_template_id_6ccdedfc_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./CardBuilder.vue?vue&type=template&id=6ccdedfc&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/CardBuilder.vue?vue&type=template&id=6ccdedfc&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CardBuilder_vue_vue_type_template_id_6ccdedfc_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CardBuilder_vue_vue_type_template_id_6ccdedfc_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

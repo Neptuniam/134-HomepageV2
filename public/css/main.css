@@ -10,6 +10,9 @@ div {
 	cursor: default;
 }
 
+.limitReadable {
+	max-width: 1000px;
+}
 .fullWidth {
 	width: 100% !important;
 }
@@ -62,9 +65,6 @@ div {
 	margin: 10px;
 	padding: 5px 10px;
 }
-.card:hover {
-	/* box-shadow: 5px 5px 10px; */
-}
 
 .uk-button-success {
 	background-color: #228B22;
@@ -80,6 +80,10 @@ div {
 			user-select: none; /* Non-prefixed version,(Chrome and Opera) */
 }
 
-.limitReadable {
-	max-width: 1000px;
+.invertedText {
+	color: silver !important;
+}
+
+.blueText {
+	color: blue !important;
 }

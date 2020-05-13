@@ -16,6 +16,8 @@ Vue.component('FavSettings',        require('./widgets/favourites/FavsSettings.v
 Vue.component('QOTD',               require('./widgets/QOTD/QotdDisplay.vue').default);
 
 Vue.component('TrelloDisplay',      require('./widgets/trello/TrelloDisplay.vue').default);
+Vue.component('CardBuilder',      	require('./widgets/trello/CardBuilder.vue').default);
+Vue.component('Card',      			require('./widgets/trello/Card.vue').default);
 
 
 // Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.vue').default);
@@ -26,6 +28,7 @@ Vue.component('LoginSettings',      require('./components/LoginSettings.vue').de
 
 Vue.component('DateTime',           require('./components/DateTime.vue').default);
 Vue.component('ControlBar',         require('./components/ControlBar.vue').default);
+Vue.component('FilePreviewer',      require('./components/FilePreviewer.vue').default);
 
 
 // Packages
