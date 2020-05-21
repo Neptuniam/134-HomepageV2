@@ -2003,6 +2003,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2147,11 +2148,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2386,6 +2382,9 @@ __webpack_require__.r(__webpack_exports__);
       }, {
         title: 'Favourites',
         src: 'FavSettings'
+      }, {
+        title: 'Trello',
+        src: 'TrelloSettings'
       }]
     };
   }
@@ -3927,6 +3926,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloSettings.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/TrelloSettings.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/weather/WeatherDisplay.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/weather/WeatherDisplay.vue?vue&type=script&lang=js& ***!
@@ -4405,7 +4423,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Home {\n    width: 100vw !important;\n\n    position: fixed;\n    top: 10vh;\n}\n.Widget {\n    padding: 5px 20px;\n}\n.Widget:hover {\n    /* border: 1.5px solid grey; */\n    border-radius: 5px;\n    background: rgba(230, 230, 250, 0.85);\n}\n", ""]);
+exports.push([module.i, "\n.Home {\n    width: 100vw !important;\n\n    position: fixed;\n    top: 10vh;\n}\n.Widget {\n    padding: 5px 20px;\n}\n.Widget:hover {\n    /* border: 1.5px solid grey; */\n    border-radius: 5px;\n    background: rgba(230, 230, 250, 0.85);\n}\n.Home>.col-xs-10>hr {\n    width: 600px;\n    margin: 5px auto;\n}\n", ""]);
 
 // exports
 
@@ -4443,7 +4461,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Settings {\n    height: 100vh;\n    width: 100vw;\n}\n.footer {\n    position: absolute;\n    bottom: 0;\n}\n.scrollSpace {\n    height: 80vh;\n    width: 100%;\n}\n.uk-tab>*>a {\n    font-weight: 600;\n    font-size: 4vh !important;\n    color: rgb(100, 100, 100);\n}\n.textColor, .Settings h1, h2, h4, h5, .uk-tab > .uk-active > a {\n    color: black !important;\n}\ninput, select, .uk-input, .uk-select, textarea {\n    border-radius: 10px !important;\n    background: rgba(60,60,60,0.7) !important;\n    color: rgb(240, 240, 240) !important;\n    outline: none !important;\n}\ninput:focus, select:focus, .uk-input:focus, .uk-select:focus, textarea:focus {\n    border-radius: 30px;\n    background: rgba(50,50,50,0.7);\n    color: white;\n    outline: none;\n}\ninput:-webkit-autofill,\ninput:-webkit-autofill:hover,\ninput:-webkit-autofill:focus,\ninput:-webkit-autofill:active  {\n    -webkit-box-shadow: 0 0 0 30px rgba(50,50,50,0.7) inset !important;\n    -webkit-text-fill-color: white !important;\n}\n.uk-table th {\n    color: black;\n}\n.uk-table td {\n    padding: 10px 5px;\n}\nh1 {\n    font-size: 6.5vh;\n    margin: 0.5% 0 0 0;\n}\nh5 a {\n    color: #333;\n}\n", ""]);
+exports.push([module.i, "\n.Settings {\n    height: 100vh;\n    width: 100vw;\n}\n.footer {\n    position: absolute;\n    bottom: 0;\n}\n.scrollSpace {\n    height: 80vh;\n    width: 100%;\n}\n.uk-tab>*>a {\n    font-weight: 600;\n    font-size: 4vh !important;\n    color: rgb(100, 100, 100) !important;\n}\n.uk-tab>*>a:hover {\n    color: rgb(50, 50, 50) !important;\n}\n.textColor, .Settings h1, h2, h4, h5, .uk-tab > .uk-active > a {\n    color: black !important;\n}\ninput, select, .uk-input, .uk-select, textarea {\n    border-radius: 10px !important;\n    background: rgba(60,60,60,0.7) !important;\n    color: rgb(240, 240, 240) !important;\n    outline: none !important;\n}\ninput:focus, select:focus, .uk-input:focus, .uk-select:focus, textarea:focus {\n    border-radius: 30px;\n    background: rgba(50,50,50,0.7);\n    color: white;\n    outline: none;\n}\ninput:-webkit-autofill,\ninput:-webkit-autofill:hover,\ninput:-webkit-autofill:focus,\ninput:-webkit-autofill:active  {\n    -webkit-box-shadow: 0 0 0 30px rgba(50,50,50,0.7) inset !important;\n    -webkit-text-fill-color: white !important;\n}\n.uk-table th {\n    color: black;\n}\n.uk-table td {\n    padding: 10px 5px;\n}\nh1 {\n    font-size: 6.5vh;\n    margin: 0.5% 0 0 0;\n}\nh5 a {\n    color: #333;\n}\n", ""]);
 
 // exports
 
@@ -9638,21 +9656,6 @@ var render = function() {
                   "\n            "
               )
             ]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass:
-                "col-xs-5 uk-button uk-button-secondary roundedButton uk-text-capitalize",
-              attrs: { type: "button" },
-              on: {
-                click: function($event) {
-                  return _vm.create()
-                }
-              }
-            },
-            [_vm._v("\n                Create Profile\n            ")]
           )
         ])
       ])
@@ -9815,19 +9818,14 @@ var render = function() {
             _vm._v(" "),
             _vm.isActive("Maps") ? _c("Maps") : _vm._e(),
             _vm._v(" "),
-            _vm.isActive("Maps")
-              ? _c("hr", {
-                  staticStyle: { width: "600px", margin: "10px auto" }
-                })
+            _vm.isActive("Maps") &&
+            (_vm.isActive("News") || _vm.isActive("QOTD"))
+              ? _c("hr")
               : _vm._e(),
             _vm._v(" "),
             _vm.isActive("News") ? _c("News") : _vm._e(),
             _vm._v(" "),
-            _vm.isActive("News")
-              ? _c("hr", {
-                  staticStyle: { width: "600px", margin: "10px auto" }
-                })
-              : _vm._e(),
+            _vm.isActive("News") && _vm.isActive("QOTD") ? _c("hr") : _vm._e(),
             _vm._v(" "),
             _vm.isActive("QOTD") ? _c("QOTD", {}) : _vm._e(),
             _vm._v(" "),
@@ -11581,6 +11579,32 @@ var render = function() {
         1
       )
     : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloSettings.vue?vue&type=template&id=14879b64&scoped=true&":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/widgets/trello/TrelloSettings.vue?vue&type=template&id=14879b64&scoped=true& ***!
+  \*********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "TrelloSettings" }, [
+    _vm._v('\r\n\t"Coming Soon" -Mark Sansome\r\n')
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -30481,6 +30505,7 @@ Vue.component('Favourites', __webpack_require__(/*! ./widgets/favourites/FavsDis
 Vue.component('FavSettings', __webpack_require__(/*! ./widgets/favourites/FavsSettings.vue */ "./resources/js/widgets/favourites/FavsSettings.vue")["default"]);
 Vue.component('QOTD', __webpack_require__(/*! ./widgets/QOTD/QotdDisplay.vue */ "./resources/js/widgets/QOTD/QotdDisplay.vue")["default"]);
 Vue.component('TrelloDisplay', __webpack_require__(/*! ./widgets/trello/TrelloDisplay.vue */ "./resources/js/widgets/trello/TrelloDisplay.vue")["default"]);
+Vue.component('TrelloSettings', __webpack_require__(/*! ./widgets/trello/TrelloSettings.vue */ "./resources/js/widgets/trello/TrelloSettings.vue")["default"]);
 Vue.component('CardBuilder', __webpack_require__(/*! ./widgets/trello/CardBuilder.vue */ "./resources/js/widgets/trello/CardBuilder.vue")["default"]);
 Vue.component('Card', __webpack_require__(/*! ./widgets/trello/Card.vue */ "./resources/js/widgets/trello/Card.vue")["default"]); // Vue.component('Calendar',           require('./widgets/calendar/CalendarDisplay.vue').default);
 
@@ -31374,7 +31399,8 @@ var actions = {
     console.log('found: ', user);
 
     if (!user || !(user = JSON.parse(user))) {
-      UIkit.notification("Failed to find active user from local storage", {
+      UIkit.notification({
+        message: "Failed to find active user from local storage",
         status: 'danger'
       });
       return Promise.reject('user_not_found');
@@ -32681,6 +32707,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_template_id_6523a850_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloPage_vue_vue_type_template_id_6523a850_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/TrelloSettings.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/widgets/trello/TrelloSettings.vue ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TrelloSettings_vue_vue_type_template_id_14879b64_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TrelloSettings.vue?vue&type=template&id=14879b64&scoped=true& */ "./resources/js/widgets/trello/TrelloSettings.vue?vue&type=template&id=14879b64&scoped=true&");
+/* harmony import */ var _TrelloSettings_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TrelloSettings.vue?vue&type=script&lang=js& */ "./resources/js/widgets/trello/TrelloSettings.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TrelloSettings_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TrelloSettings_vue_vue_type_template_id_14879b64_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TrelloSettings_vue_vue_type_template_id_14879b64_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "14879b64",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/widgets/trello/TrelloSettings.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/TrelloSettings.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/widgets/trello/TrelloSettings.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloSettings_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TrelloSettings.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloSettings.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloSettings_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/widgets/trello/TrelloSettings.vue?vue&type=template&id=14879b64&scoped=true&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/widgets/trello/TrelloSettings.vue?vue&type=template&id=14879b64&scoped=true& ***!
+  \***************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloSettings_vue_vue_type_template_id_14879b64_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TrelloSettings.vue?vue&type=template&id=14879b64&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/widgets/trello/TrelloSettings.vue?vue&type=template&id=14879b64&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloSettings_vue_vue_type_template_id_14879b64_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrelloSettings_vue_vue_type_template_id_14879b64_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

@@ -1,19 +1,14 @@
 <template>
-<!-- <div v-if="activeWidgets" class="row center-xs middle-xs nomargin Home">
-    <div class="col-xs-8">
-        <div v-for="widget in activeWidgets">
-            <component :is="widget.title" :widget="widget" />
-        </div>
-    </div>
-</div> -->
 <div v-if="activeUser && location && widgets" class="row center-xs middle-xs nomargin Home">
     <div class="col-xs-10">
         <Weather v-if="isActive('Weather')" />
 
         <Maps v-if="isActive('Maps')" />
-        <hr v-if="isActive('Maps')" style="width: 600px; margin: 10px auto;">
+        <hr v-if="isActive('Maps') && (isActive('News') || isActive('QOTD')) ">
+
         <News v-if="isActive('News')" />
-        <hr v-if="isActive('News')" style="width: 600px; margin: 10px auto;">
+        <hr v-if="isActive('News') && isActive('QOTD')">
+
         <QOTD v-if="isActive('QOTD')" class="" />
 
         <Favourites v-if="isActive('Favourites')" />
@@ -60,5 +55,10 @@ export default {
         /* border: 1.5px solid grey; */
         border-radius: 5px;
         background: rgba(230, 230, 250, 0.85);
+    }
+
+    .Home>.col-xs-10>hr {
+        width: 600px;
+        margin: 5px auto;
     }
 </style>

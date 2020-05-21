@@ -17,9 +17,10 @@
             <button type="button" class="col-xs-5 uk-button uk-button-primary roundedButton uk-text-capitalize" @click="login()">
                 {{ activeUser ? "Switch Profiles" : "Log in" }}
             </button>
-            <button type="button" class="col-xs-5 uk-button uk-button-secondary roundedButton uk-text-capitalize" @click="create()">
+
+            <!-- <button v-if="activeUser.id == 1" type="button" class="col-xs-5 uk-button uk-button-secondary roundedButton uk-text-capitalize" @click="create()">
                 Create Profile
-            </button>
+            </button> -->
         </div>
     </div>
 </div>

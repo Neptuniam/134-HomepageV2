@@ -88,7 +88,7 @@ const actions = {
         console.log('found: ', user);
 
         if (!user || !(user = JSON.parse(user))) {
-            UIkit.notification("Failed to find active user from local storage", {status:'danger'})
+            UIkit.notification({message: "Failed to find active user from local storage", status:'danger'})
             return Promise.reject('user_not_found')
         } else {
             dispatch('setActiveUser', user)

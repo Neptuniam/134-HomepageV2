@@ -16,6 +16,7 @@ Vue.component('FavSettings',        require('./widgets/favourites/FavsSettings.v
 Vue.component('QOTD',               require('./widgets/QOTD/QotdDisplay.vue').default);
 
 Vue.component('TrelloDisplay',      require('./widgets/trello/TrelloDisplay.vue').default);
+Vue.component('TrelloSettings',    	require('./widgets/trello/TrelloSettings.vue').default);
 Vue.component('CardBuilder',      	require('./widgets/trello/CardBuilder.vue').default);
 Vue.component('Card',      			require('./widgets/trello/Card.vue').default);
 

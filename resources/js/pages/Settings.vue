@@ -42,6 +42,9 @@ export default {
                 }, {
                     title: 'Favourites',
                     src: 'FavSettings'
+                }, {
+                    title: 'Trello',
+                    src: 'TrelloSettings'
                 },
             ]
         }
@@ -68,7 +71,10 @@ export default {
     .uk-tab>*>a {
         font-weight: 600;
         font-size: 4vh !important;
-        color: rgb(100, 100, 100);
+        color: rgb(100, 100, 100) !important;
+    }
+    .uk-tab>*>a:hover {
+        color: rgb(50, 50, 50) !important;
     }
 
     .textColor, .Settings h1, h2, h4, h5, .uk-tab > .uk-active > a {
