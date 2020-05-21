@@ -1,14 +1,15 @@
-<template>
-	<div class="card" @click="openPreview(card)"
+zz<template>
+	<div class="card uk-box-shadow-hover-large" @click="openPreview(card)"
 		:class="{
 			'clickable': hasDesc(card),
-			'uk-box-shadow-hover-large': hasDesc(card)
+			/* 'uk-box-shadow-hover-large': hasDesc(card) */
 		}" >
 
 		<div class="row middle-xs">
 			<span v-if="hasDesc(card)" class="uk-icon" uk-icon="icon: info; ratio:1" />
 
-			<span v-if="members" v-for="member in members" class="uk-badge" :style="`background-color: #${numberFromText(member.fullName)}`">
+			<span v-if="members" v-for="member in members" class="uk-badge"
+				 :style="`background-color: ${util.avatar_color(member.fullName)}`">
 			    {{member.initials}}
 			</span>
 
@@ -36,62 +37,16 @@ export default {
 			return card && (card.desc || card.idChecklists && card.idChecklists.length)
 		},
 
-		hashCode(str) { // java String#hashCode
-		    var hash = 0;
-		    for (var i = 0; i < str.length; i++) {
-		       hash = str.charCodeAt(i) + ((hash << 5) - hash);
-		    }
-		    return hash;
-		},
-		numberFromText(text) {
-			let hashed = this.hashCode(text)
-		    let RGB = (hashed & 0x00FFFFFF)
-		        .toString(16)
-		        .toUpperCase();
-
-		    return "00000".substring(0, 6 - RGB.length) + RGB;
-		},
-
-		numDaysAgo(due) {
-			return Math.round((new Date(due) - this.today) / (86400000))
-		},
-		readableDay(date) {
-			if (!date)
-				return "N/A"
-
-			let daysTill = this.numDaysAgo(date)
-
-			// Have more fitting text for FE
-			if (daysTill >= 0) {
-				switch(daysTill) {
-					case 0:
-						return "Today"
-					case 1:
-						return "Tomorrow"
-					default:
-						return `In ${daysTill} Days`
-				}
-			} else {
-				daysTill = Math.abs(daysTill)
-				switch(daysTill) {
-					case 1:
-						return "Yesterday"
-					default:
-						return `${daysTill} Days ago`
-				}
-			}
-		},
 		async openPreview(card) {
 			console.log(card);
 
 			let desc = card.desc.replace('↵', '<br>')
 
-			if (this.hasDesc(card)) {
+			if (card.idChecklists && card.idChecklists.length) {
 				let response = await this.axios.get(`https://api.trello.com/1/cards/${card.id}/checklists?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`)
 
-				for (let checklist in response.data) {
-					for (let index in response.data[checklist].checkItems) {
-						let checkItem = response.data[checklist].checkItems[index]
+				for (let checklist of response.data) {
+					for (let checkItem of checklist.checkItems) {
 						desc += `<input type="checkbox" disabled="true" ${checkItem.state == 'complete' ? 'checked' : ''}> ${checkItem.name} <br>`
 					}
 				}
@@ -111,8 +66,8 @@ export default {
 					<br>
 					<br>
 
-					<p class="start-xs"> Due: ${this.readableDay(card.due)}
-					<p class="start-xs"> Last Updated: ${this.readableDay(card.dateLastActivity)}
+					<p class="start-xs"> Due: ${util.readableDay(card.due)}
+					<p class="start-xs"> Last Updated: ${util.readableDay(card.dateLastActivity)}
 				</div>
 			`)
 		},
@@ -132,10 +87,8 @@ export default {
 </script>
 
 <style scoped>
-	.uk-icon {
-	}
 	span {
 		font-size: 14px;
-		margin: 0px 0px 0px 5px;
+		margin: 0px 0px 10px 5px;
 	}
 </style>

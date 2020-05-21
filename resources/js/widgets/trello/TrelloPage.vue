@@ -1,17 +1,19 @@
 <template>
 <div v-if="board && cards" class="start-xs TrelloContainer">
-    <a :href="board.shortUrl" target="_blank"><h1 class="textSpecial"> {{board.name}} </h1></a>
+    <a :href="board.shortUrl" target="_blank">
+        <h1 class="textSpecial"> {{board.name}} </h1>
+    </a>
 
     <CardBuilder :list="comingUp" title='Coming Up' />
     <CardBuilder :list="noDue" title='No Due Date' />
-    <CardBuilder :list="done" title='Done' />
-    <CardBuilder :list="past" title='Past Cards' />
+    <!-- <CardBuilder :list="done" title='Done' /> -->
+    <!-- <CardBuilder :list="past" title='Past Cards' /> -->
 
 
-    <div v-if="board.actions && board.actions.length">
+    <off-canvas-container v-if="board.actions && board.actions.length">
         <button class="uk-icon-button" uk-icon="list" uk-toggle="target: #offcanvas-flip" />
 
-        <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
+        <off-canvas id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
             <div class="uk-offcanvas-bar">
                 <h1 class="textSpecial"> Actions </h1>
 
@@ -21,12 +23,12 @@
                     </div>
 
                     <div style="font-size: 14px;">
-                        {{readableDay(action.date)}} - {{action.type}}
+                        {{util.readableDay(action.date)}} - {{action.type}}
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </off-canvas>
+    </off-canvas-container>
 </div>
 </template>
 
@@ -39,9 +41,9 @@ export default {
             DoneID: "5e0b302d93a3935125fd3506",
 
             comingUp: null,
-            noDue: null,
             done: null,
             past: null,
+            noDue: null,
         }
     },
 
@@ -61,51 +63,25 @@ export default {
                 list[dayIndex].push(card)
             }
         },
-        numDaysAgo(due) {
-			return Math.round((new Date(due) - this.today) / (86400000))
-		},
-		readableDay(date) {
-			if (!date)
-				return "N/A"
-
-			let daysTill = this.numDaysAgo(date)
-
-			// Have more fitting text for FE
-			if (daysTill >= 0) {
-				switch(daysTill) {
-					case 0:
-						return "Today"
-					case 1:
-						return "Tomorrow"
-					default:
-						return `In ${daysTill} Days`
-				}
-			} else {
-				daysTill = Math.abs(daysTill)
-				switch(daysTill) {
-					case 1:
-						return "Yesterday"
-					default:
-						return `${daysTill} Days ago`
-				}
-			}
-		},
-
         processCards() {
             this.comingUp = {}
             this.past = {}
             this.done = {}
             this.noDue = []
 
+            // Seperate cards into lists by due date
             for (let card of this.cards) {
                 if (card.due) {
-                    let dayIndex = this.numDaysAgo(card.due)
+                    let dayIndex = util.numDaysAgo(card.due)
 
-                    if (card.idList == this.DoneID)
+                    if (card.idList == this.DoneID) {
+                        // Done cards are in their own list regardless of due date
                         this.addToList(this.done, Math.abs(dayIndex), card)
-                    else if (dayIndex >= 0) {
+                    } else if (dayIndex >= 0) {
+                        // Future cards
                         this.addToList(this.comingUp, dayIndex, card)
                     } else {
+                        // Past cards
                         this.addToList(this.past, Math.abs(dayIndex), card)
                     }
                 } else {
@@ -113,10 +89,6 @@ export default {
                     this.noDue.push(card)
                 }
             }
-
-            console.log('By Due date', this.comingUp);
-            console.log('past', this.past);
-            console.log('no due date', this.noDue);
         },
 
         ...mapActions('settings', {

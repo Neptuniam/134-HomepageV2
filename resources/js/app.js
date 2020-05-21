@@ -10,8 +10,8 @@ require('./components.js');
 
 // Import the Vue router and vuex store with its modules for managing state
 import VueRouter from 'vue-router'
-import routes from './routes'
 import store from './store/store'
+import routes from './routes'
 
 // Third party dependencies
 import axios from 'axios'
@@ -63,3 +63,9 @@ const app = new Vue({
     router,
     el: '#app',
 });
+
+// Include our utility function file
+require('./utilFunctions.js')
+Vue.prototype.util = window.util;
+
+Vue.config.ignoredElements = ['off-canvas-container', 'off-canvas', 'builder-title', 'builder-container']

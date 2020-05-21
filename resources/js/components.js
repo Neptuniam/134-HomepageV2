@@ -3,9 +3,9 @@ Vue.component('maindisplay',        require('./pages/MainDisplay.vue').default);
 
 
 // Widgets
-Vue.component('Weather',            require('./widgets/weather/weatherdisplay.vue').default);
+Vue.component('Weather',            require('./widgets/weather/WeatherDisplay.vue').default);
 
-Vue.component('News',               require('./widgets/news/newsdisplay.vue').default);
+Vue.component('News',               require('./widgets/news/NewsDisplay.vue').default);
 
 Vue.component('Maps',               require('./widgets/maps/MapsDisplay.vue').default);
 Vue.component('MapsSettings',       require('./widgets/maps/MapsSettings.vue').default);

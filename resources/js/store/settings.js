@@ -85,11 +85,11 @@ const actions = {
 
     fetchUser: ({commit, dispatch}) => {
         let user = window.localStorage.getItem('activeUser')
-        console.log(user);
+        console.log('found: ', user);
 
         if (!user || !(user = JSON.parse(user))) {
             UIkit.notification("Failed to find active user from local storage", {status:'danger'})
-            commit('setActivePage', 'settings')
+            return Promise.reject('user_not_found')
         } else {
             dispatch('setActiveUser', user)
             return axios.put('/settings/users', user)

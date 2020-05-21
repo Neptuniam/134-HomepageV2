@@ -1,12 +1,12 @@
 <template>
 <div v-if="list" class="Container textBody">
-    <div @click="showBuilder = !showBuilder" class="middle-xs clickable">
+    <builder-title @click="showBuilder = !showBuilder" class="middle-xs clickable">
         <span class="uk-icon" :uk-icon="`icon: ${showBuilder ? 'chevron-down' : 'chevron-right'}; ratio: 1.5;`" />
 
         <span class="listLabel textTitle">
 			{{title}} ({{countList(list)}})
 		</span>
-    </div>
+    </builder-title>
 
 	<hr>
 
@@ -16,7 +16,7 @@
         </div>
 
         <div v-for="day in list" v-else>
-            <b> {{readableDay(day[0].due)}} </b>
+            <b> {{util.readableDay(day[0].due)}} </b>
 
             <div class="row fullWidth dayContainer">
                 <Card v-for="card in day" :key="card.id" class="col-xs-3" :card="card" />
@@ -44,36 +44,6 @@ export default {
             return card && (card.desc || card.idChecklists && card.idChecklists.length)
         },
 
-		numDaysAgo(due) {
-			return Math.round((new Date(due) - this.today) / (86400000))
-		},
-		readableDay(date) {
-			if (!date)
-				return "N/A"
-
-			let daysTill = this.numDaysAgo(date)
-
-			// Have more fitting text for FE
-			if (daysTill >= 0) {
-				switch(daysTill) {
-					case 0:
-						return "Today"
-					case 1:
-						return "Tomorrow"
-					default:
-						return `In ${daysTill} Days`
-				}
-			} else {
-				daysTill = Math.abs(daysTill)
-				switch(daysTill) {
-					case 1:
-						return "Yesterday"
-					default:
-						return `${daysTill} Days ago`
-				}
-			}
-		},
-
 		countList(list) {
 			// No due is just a standard array
 			if ('length' in list)
@@ -97,7 +67,7 @@ export default {
 
 <style scoped>
     .listLabel {
-    	font-size: 25px;
+    	font-size: 22px;
     	font-weight: 600;
     }
     hr {

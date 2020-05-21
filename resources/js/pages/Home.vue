@@ -6,7 +6,7 @@
         </div>
     </div>
 </div> -->
-<div v-if="widgets" class="row center-xs middle-xs nomargin Home">
+<div v-if="activeUser && location && widgets" class="row center-xs middle-xs nomargin Home">
     <div class="col-xs-10">
         <Weather v-if="isActive('Weather')" />
 
@@ -31,6 +31,8 @@ export default {
         // },
 
         ...mapGetters('settings', {
+            activeUser: 'getUser',
+            location:   'getLocation',
             widgets: 'getWidgets'
         })
     },

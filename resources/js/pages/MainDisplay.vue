@@ -6,7 +6,7 @@
 
     <FilePreviewer />
 
-    <router-view v-if="activeUser && location" />
+    <router-view />
 </div>
 </template>
 
@@ -83,6 +83,10 @@ export default {
                 if (backgroundStatus && backgroundStatus.interval)
                     setInterval(this.getBackground, backgroundStatus.interval * 60000)
             })
+        }).catch(error => {
+            // If noone is logged in, send the user to the settings screen to login
+            if (error == 'user_not_found')
+                this.$router.replace({ name: 'Settings' })
         })
 
         this.fetchUsers()
@@ -172,6 +176,9 @@ export default {
 
     	margin: 10px;
     	padding: 5px 10px;
+    }
+    .card:hover {
+        background: rgba(230, 230, 250, 0.75);
     }
 
     .uk-button-success {

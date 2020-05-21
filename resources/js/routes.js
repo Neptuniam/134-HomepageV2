@@ -1,8 +1,8 @@
 import Home from './pages/Home.vue';
 import Settings from './pages/Settings.vue';
 
-import News from './widgets/news/Newspage.vue';
-import Trello from './widgets/trello/Trellopage.vue';
+import News from './widgets/news/NewsPage.vue';
+import Trello from './widgets/trello/TrelloPage.vue';
 import Notes from './widgets/notes/NotesDisplay.vue';
 
 const routes = [

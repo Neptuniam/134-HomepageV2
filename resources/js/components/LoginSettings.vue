@@ -49,6 +49,7 @@ export default {
             if (newUser) {
                 UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> Valid Login Provided!', status: 'success'})
                 this.setActiveUser(newUser)
+                this.fetchWidgets()
             } else {
                 UIkit.notification({message: '<span uk-icon=\'icon: close\'></span> Invalid Login Provided!', status: 'danger'})
             }
@@ -61,6 +62,7 @@ export default {
         ...mapActions('settings', {
             createUser: 'createUser',
             setActiveUser: 'setActiveUser',
+            fetchWidgets: 'fetchWidgets',
         })
     },
 }
