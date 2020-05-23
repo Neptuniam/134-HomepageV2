@@ -68,4 +68,6 @@ const app = new Vue({
 require('./utilFunctions.js')
 Vue.prototype.util = window.util;
 
-Vue.config.ignoredElements = ['off-canvas-container', 'off-canvas', 'builder-title', 'builder-container']
+window.Swal = require('sweetalert2');
+
+// Vue.config.ignoredElements = ['off-canvas-container', 'off-canvas', 'builder-title', 'builder-container']

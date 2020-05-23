@@ -20,7 +20,8 @@ class LocationController extends Controller {
 
     public function updateLocation(Request $request) {
         $location = $request->all();
-        return Location::find($location['id'])->update($location);
+        Location::find($location['id'])->update($location);
+        return Location::find($location['id']);
     }
 
     public function deleteLocation(Request $request) {
@@ -37,7 +38,8 @@ class LocationController extends Controller {
 
     public function updateMapSettings(Request $request) {
         $mapSettings = $request->all();
-        return MapsUserSettings::find($mapSettings['id'])->update($mapSettings);
+        MapsUserSettings::find($mapSettings['id'])->update($mapSettings);
+        return MapsUserSettings::find($mapSettings['id']);
     }
 
     public function createMapSetting(Request $request) {

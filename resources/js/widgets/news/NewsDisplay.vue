@@ -1,7 +1,7 @@
 <template>
-<a v-if="news && news.length" class="Widget limitReadable News" :href="news[0].url" target="_blank">
-    {{news[0].title}}
-</a>
+    <a v-if="news && news.length" class="Widget limitReadable News" :href="news[0].url" target="_blank">
+        {{news[0].title}}
+    </a>
 </template>
 
 <script>

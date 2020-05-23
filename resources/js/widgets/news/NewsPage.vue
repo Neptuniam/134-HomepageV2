@@ -1,5 +1,5 @@
 <template>
-<div v-if="news" class="NewsDisplay limitReadable">
+<div v-if="news" class="NewsDisplay">
     <div class="row middle-xs fullWidth">
         <div class="col-xs">
             <a v-if="index > 0" @click="index--" class="uk-icon previousIcon"
@@ -92,8 +92,10 @@ export default {
 <style scoped>
     .NewsDisplay {
         margin-top: 30px;
-        height: 650px;
-        width: 80vw;
+        min-height: 650px;
+
+        min-width: 1050px;
+        max-width: 60vw;
 
         text-align: center;
     }

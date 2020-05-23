@@ -9,9 +9,12 @@ Vue.component('News',               require('./widgets/news/NewsDisplay.vue').de
 
 Vue.component('Maps',               require('./widgets/maps/MapsDisplay.vue').default);
 Vue.component('MapsSettings',       require('./widgets/maps/MapsSettings.vue').default);
+Vue.component('MapsUserSettings', 	require('./widgets/maps/MapsUserSettings.vue').default);
+Vue.component('MapsRow',       		require('./widgets/maps/MapsRow.vue').default);
 
 Vue.component('Favourites',         require('./widgets/favourites/FavsDisplay.vue').default);
 Vue.component('FavSettings',        require('./widgets/favourites/FavsSettings.vue').default);
+Vue.component('FavsRow',        	require('./widgets/favourites/FavsRow.vue').default);
 
 Vue.component('QOTD',               require('./widgets/QOTD/QotdDisplay.vue').default);
 

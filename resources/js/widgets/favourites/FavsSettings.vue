@@ -1,53 +1,32 @@
 <template>
-<div class="MapsSettings">
+<table class="FavsSettings uk-table uk-table-striped">
     <div class="row start-xs middle-xs textBody HeaderRow">
         <div class="col-xs-1">
             Sort
         </div>
 
-        <div class="col-xs uk-text-capitalize">
+        <div class="col-xs-2 uk-text-capitalize">
             title
         </div>
-        <div class="col-xs uk-text-capitalize">
+        <div class="col-xs uk-text-capitalize nopadding">
             url
         </div>
-        <div class="col-xs uk-text-capitalize">
+        <div class="col-xs uk-text-capitalize nopadding">
             src
         </div>
 
-        <div class="col-xs-2 center-xs">
-            Actions
+        <div class="col-xs-2 center-xs nopadding">
         </div>
     </div>
 
-    <div uk-sortable="handle: .uk-sortable-handle">
-        <div v-for="(favourite, index) in favourites" class="row middle-xs textBody SettingsRow" :id="favourite.id">
-            <div class="uk-sortable-handle col-xs-1 start-xs" uk-icon="icon: grid; ratio: 1.5"></div>
+    <tbody>
+        <span uk-sortable="handle: .uk-sortable-handle">
+            <FavsRow v-for="fav in favourites" :key="fav.id" :id="fav.id" :favourite="fav" />
+        </span>
 
-            <input type="text" class="col-xs uk-input" v-model="favourite.title">
-            <input type="text" class="col-xs uk-input" v-model="favourite.url">
-            <input type="text" class="col-xs uk-input" v-model="favourite.src">
-
-            <div class="col-xs-2 end-xs uk-button-group">
-                <a class="uk-icon-button uk-button-primary roundedButton uk-box-shadow-hover-xlarge" @click="saveChange(favourite)" uk-icon="pencil" />
-                <a class="uk-icon-button uk-button-danger roundedButton uk-box-shadow-hover-xlarge" @click="deleteFavourite(favourite)" uk-icon="trash" />
-            </div>
-        </div>
-    </div>
-
-    <div class="row middle-xs textBody SettingsRow" :id="newFavourite.id">
-        <div class="col-xs-1">
-        </div>
-
-        <input type="text" class="col-xs uk-input" v-model="newFavourite.title">
-        <input type="text" class="col-xs uk-input" v-model="newFavourite.url">
-        <input type="text" class="col-xs uk-input" v-model="newFavourite.src">
-
-        <div class="col-xs-2 center-xs uk-button-group">
-            <a class="uk-icon-button uk-button-primary roundedButton uk-box-shadow-hover-xlarge" @click="addFav()" uk-icon="pencil" />
-        </div>
-    </div>
-</div>
+        <FavsRow :favourite="{...blankObject}" />
+    </tbody>
+</table>
 </template>
 
 <script>
@@ -56,7 +35,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
     data() {
         return {
-            newFavourite: {id: null, user_id: null, title: '', url: '', src: ''},
+            blankObject: {id: null, user_id: null, title: '', url: '', src: ''},
             updatedOrder: null
         }
     },
@@ -67,40 +46,7 @@ export default {
         })
     },
     methods: {
-        saveChange(favourite) {
-            this.updateFavourite(favourite).then(() => {
-                UIkit.notification({
-                    message: '<span uk-icon=\'icon: check\'></span> Changes Saved!',
-                    status: 'success'
-                })
-            }).catch(error => {
-                console.log('Error:', error);
-
-                UIkit.notification({
-                    message: '<span uk-icon=\'icon: check\'></span> Error: '+error,
-                    status: 'danger'
-                })
-            })
-        },
-
-        addFav() {
-            // Only create a favourite if we know the user
-            if (this.activeUser) {
-                // Add the user id
-                this.newFavourite.user_id = this.activeUser.id
-                this.newFavourite.pos = this.favourites.length
-
-                // Add the fav to the db
-                this.saveChange(this.newFavourite)
-
-                // Clear the new object so another can be created
-                this.newFavourite = {id: null, user_id: this.activeUser.id, title: '', url: '', src: ''}
-            }
-        },
-
         ...mapActions('settings', {
-            updateFavourite: 'updateFavourite',
-            deleteFavourite: 'deleteFavourite',
             fetchFavourites: 'fetchFavourites'
         })
     },
@@ -134,35 +80,5 @@ export default {
 }
 </script>
 
-<style scoped>
-    .MapsSettings {
-        padding: 0px 20px;
-    }
-
-    .HeaderRow {
-        font-weight: 500px;
-        font-size: 22px;
-
-        padding: 0;
-    }
-
-
-    .SettingsRow {
-        /* margin: 10px 0px; */
-    }
-    .SettingsRow input, .SettingsRow div {
-        margin: 10px 5px;
-    }
-
-    .col-xs-1 {
-        max-width: 60px;
-    }
-    .col-xs-2 {
-        max-width: 120px;
-    }
-
-    .uk-icon-button {
-        height: 40px;
-        width:  40px;
-    }
+<style>
 </style>

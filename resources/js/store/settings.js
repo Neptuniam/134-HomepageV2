@@ -212,7 +212,7 @@ const actions = {
 
     // News Controllers
     fetchNews: ({commit}, payload) => {
-        return axios.get(`https://cors-anywhere.herokuapp.com/http://newsapi.org/v2/top-headlines?country=ca&category=${payload}&apiKey=2b056b1596eb4356a56510c4e19da2b7`).then(response => {
+        return axios.get(`https://cors-anywhere.herokuapp.com/http://newsapi.org/v2/top-headlines?country=ca&category=${payload}&apiKey=${process.env.MIX_NEWS_KEY}`).then(response => {
             console.log('%c News ', 'background: #222; color: #bada55');
             console.log(response.data.articles);
 

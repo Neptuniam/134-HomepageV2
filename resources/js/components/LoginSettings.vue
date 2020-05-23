@@ -15,12 +15,12 @@
 
         <div class="row center-xs buttonsRow">
             <button type="button" class="col-xs-5 uk-button uk-button-primary roundedButton uk-text-capitalize" @click="login()">
-                {{ activeUser ? "Switch Profiles" : "Log in" }}
+                Log in
             </button>
 
-            <!-- <button v-if="activeUser.id == 1" type="button" class="col-xs-5 uk-button uk-button-secondary roundedButton uk-text-capitalize" @click="create()">
+            <button v-if="activeUser && activeUser.id == 1" type="button" class="col-xs-5 uk-button uk-button-secondary roundedButton uk-text-capitalize" @click="create()">
                 Create Profile
-            </button> -->
+            </button>
         </div>
     </div>
 </div>
@@ -48,16 +48,28 @@ export default {
 
             // If a user was found with matching credentials allow the login
             if (newUser) {
-                UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> Valid Login Provided!', status: 'success'})
+                UIkit.notification({
+                    message: '<span uk-icon=\'icon: check\'></span> Valid Login Provided!',
+                    status: 'success'
+                })
+
                 this.setActiveUser(newUser)
                 this.fetchWidgets()
             } else {
-                UIkit.notification({message: '<span uk-icon=\'icon: close\'></span> Invalid Login Provided!', status: 'danger'})
+                UIkit.notification({
+                    message: '<span uk-icon=\'icon: close\'></span> Invalid Login Provided!',
+                    status: 'danger'
+                })
             }
         },
 
         create() {
-            this.createUser({id:null, name: this.name, pass: this.pass, active: 0})
+            this.createUser({id:null, name: this.name, pass: this.pass}).then(() => {
+                UIkit.notification({
+                    message: '<span uk-icon=\'icon: check\'></span> New User Created!',
+                    status: 'success'
+                })
+            })
         },
 
         ...mapActions('settings', {
@@ -87,7 +99,7 @@ export default {
         width: 100%;
 
         margin-top: 25px;
-        padding-left: 25px;
+        padding-left: 15px;
     }
 
     .buttonsRow {

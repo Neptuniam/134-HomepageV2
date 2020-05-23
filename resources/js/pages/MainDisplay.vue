@@ -78,7 +78,9 @@ export default {
     },
     created() {
         this.fetchUser().then(() => {
+            // Fetch the users widget data
             this.fetchWidgets().then(() => {
+                // Background doesn't have it's own component (cause that's unnecessary) so we just manage it's update interval here
                 let backgroundStatus = this.widgets.find(widget => widget.title === 'Background')
                 if (backgroundStatus && backgroundStatus.interval)
                     setInterval(this.getBackground, backgroundStatus.interval * 60000)
@@ -203,16 +205,7 @@ export default {
     	color: blue !important;
     }
 
+    .swal2-content {
+        /* font-size: 30px !important; */
+    }
 </style>
-
-
-<!-- Pulling the Homepage:
-    git clone https://github.com/Neptuniam/134-HomepageV2
-    npm install
-    composer update/install
-    cp .env.example .env
-    php artisan key:generate
-    Configure Database settings in .env
-
-
- -->
