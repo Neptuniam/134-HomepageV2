@@ -12,6 +12,8 @@ const state = {
     favourites: null,
     mapsSettings: null,
 
+    news: null,
+
     notes: null,
 
     board: null,
@@ -35,6 +37,8 @@ const getters = {
     getFavourites: (state) => state.favourites,
     getMapsSettings: (state) => state.mapsSettings,
 
+    getNews: (state) => state.news,
+
     getNotes: (state) => state.notes,
 
     getBoard: (state) => state.board,
@@ -56,6 +60,8 @@ const mutations = {
     setLocations: (state, payload) => { state.locations = payload },
     setFavourites: (state, payload) => { state.favourites = payload },
     setMapsSettings: (state, payload) => { state.mapsSettings = payload },
+
+    setNews: (state, payload) => { state.news = payload },
 
     setNotes: (state, payload) => { state.notes = payload },
 
@@ -85,7 +91,6 @@ const actions = {
 
     fetchUser: ({commit, dispatch}) => {
         let user = window.localStorage.getItem('activeUser')
-        console.log('found: ', user);
 
         if (!user || !(user = JSON.parse(user))) {
             UIkit.notification({message: "Failed to find active user from local storage", status:'danger'})
@@ -105,8 +110,8 @@ const actions = {
 
     fetchUsers: ({commit}) => {
         return axios.get('/settings/users').then(response => {
-            console.log('%c Users', 'background: #222; color: #bada55');
-            console.log(response.data);
+            // console.log('%c Users', 'background: #222; color: #bada55');
+            // console.log(response.data);
             commit('setUsers', response.data)
         })
     },
@@ -205,6 +210,15 @@ const actions = {
         })
     },
 
+    // News Controllers
+    fetchNews: ({commit}, payload) => {
+        return axios.get(`https://cors-anywhere.herokuapp.com/http://newsapi.org/v2/top-headlines?country=ca&category=${payload}&apiKey=2b056b1596eb4356a56510c4e19da2b7`).then(response => {
+            console.log('%c News ', 'background: #222; color: #bada55');
+            console.log(response.data.articles);
+
+            commit('setNews', response.data.articles)
+        })
+    },
 
     // Notes Controllers
     fetchNotes: ({commit}) => {

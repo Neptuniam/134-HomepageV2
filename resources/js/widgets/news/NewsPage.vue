@@ -1,5 +1,5 @@
 <template>
-<div v-if="news" class="row center-xs NewsDisplay">
+<div v-if="news" class="NewsDisplay limitReadable">
     <div class="row middle-xs fullWidth">
         <div class="col-xs">
             <a v-if="index > 0" @click="index--" class="uk-icon previousIcon"
@@ -24,25 +24,20 @@
         Article {{index+1}} / {{news.length}}
     </div>
 
-    <div v-if="news[index].title" class="textSpecial headlineTitle" v-html="news[index].title.split(' -')[0]">
-        <!-- {{news[index].title.split(' -')[0]}} -->
-    </div>
+    <div v-if="news[index].title" class="textSpecial headlineTitle" v-html="news[index].title.split(' -')[0]" />
 
     <hr class="fullWidth">
 
-    <div v-if="news[index].content" class="row center-xs fullWidth textBody headlineContent" v-html="news[index].content.split('[+')[0]">
-        <!-- {{news[index].content.split('[+')[0]}} -->
-    </div>
+    <div v-if="news[index].content" class="textBody headlineContent" v-html="news[index].content.split('[+')[0]" />
 
 
     <div class="fullWidth textBody headlineSrc">
-        <p>
-            <a :href="news[index].url" target="_blank" class="headlineUrl">{{news[index].url}}</a>
-        </p>
+        <a :href="news[index].url" target="_blank" class="headlineUrl">
+            {{news[index].url}}
+        </a>
 
-        <p>
-            - {{news[index].source.name}}
-        </p>
+        <br>
+        - {{news[index].source.name}}
     </div>
 </div>
 </template>
@@ -51,40 +46,27 @@
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-    data: function() {
+    data() {
         return {
-            news: null,
             index: 0,
             categorys: ['general', 'technology', 'sports', 'science', 'entertainment'],
             activeCat: 'general'
         }
     },
     computed: {
-        widget: function() {
+        widget() {
             if (this.widgets)
                 return this.widgets.find(widget => widget.title === 'News')
         },
 
         ...mapGetters('settings', {
-            activePage: 'getActivePage',
+            news: 'getNews'
         })
     },
     methods: {
         changeCat(category) {
             this.activeCat = category
-            this.getNews()
-        },
-
-        getNews() {
-            let query = "https://newsapi.org/v2/top-headlines?country=ca&category="+this.activeCat+"&apiKey=2b056b1596eb4356a56510c4e19da2b7"
-            this.axios.get(query).then(news => {
-                // Reset index to the first article everytime we switch categories
-                this.index = 0
-                this.news = news.data.articles
-
-                console.log('%c News ', 'background: #222; color: #bada55');
-                console.log(news.data.articles);
-            })
+            this.fetchNews()
         },
 
         onKeyPress () {
@@ -96,19 +78,13 @@ export default {
         },
 
         ...mapActions('settings', {
+            fetchNews: 'fetchNews',
             setShowHome: 'setShowHome',
             setActivePage: 'setActivePage',
         })
     },
-    mounted: function() {
+    mounted() {
         document.addEventListener("keyup", this.onKeyPress);
-
-        this.getNews()
-        if (this.widget && this.widget.interval) {
-            setInterval(() => {
-                this.getNews()
-            }, this.widget.interval * 60000)
-        }
     },
 }
 </script>
@@ -118,24 +94,8 @@ export default {
         margin-top: 30px;
         height: 650px;
         width: 80vw;
-    }
 
-    .NewsRow {
-        font-weight: 600px;
-        font-size: 4vh;
-    }
-    .NewsRow a {
-        color: black;
-    }
-
-    .newsIcon {
-        position: absolute;
-        left: 60px;
-        top: 10px;
-    }
-
-    .newsIcon:hover {
-        color: white;
+        text-align: center;
     }
 
     .articleNum {
@@ -143,23 +103,24 @@ export default {
     }
 
 
+    /* Golen Ratio (Increase by 1.6 each step) */
     .headlineTitle {
         font-weight: 800px;
-        font-size: 30px;
+        font-size: 41px;
 
         min-height: 110px;
     }
 
     .headlineContent {
         font-weight: 400px;
-        font-size: 25px;
+        font-size: 26px;
 
         min-height: 200px;
     }
 
     .headlineSrc {
         font-weight: 300px;
-        font-size: 20px;
+        font-size: 16px;
 
         min-height: 150px;
     }

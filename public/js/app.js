@@ -3100,36 +3100,31 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
 //
 //
 //
-//
-//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['widget'],
-  data: function data() {
-    return {
-      news: null
-    };
-  },
-  methods: {
-    getNews: function getNews() {
-      var _this = this;
-
-      var query = "https://newsapi.org/v2/top-headlines?country=ca&category=general&apiKey=2b056b1596eb4356a56510c4e19da2b7";
-      this.axios.get(query).then(function (news) {
-        _this.news = news.data.articles[0];
-        console.log('%c News ', 'background: #222; color: #bada55');
-        console.log(news.data.articles);
-      });
-    }
-  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
+    news: 'getNews'
+  })),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
+    fetchNews: 'fetchNews'
+  })),
   mounted: function mounted() {
-    this.getNews();
-    if (this.widget && this.widget.interval) setInterval(this.getNews(), this.widget.interval * 60000);
+    this.fetchNews('technology');
+    if (this.widget && this.widget.interval) setInterval(this.fetchNews('technology'), this.widget.interval * 60000);
   }
 });
 
@@ -3195,16 +3190,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      news: null,
       index: 0,
       categorys: ['general', 'technology', 'sports', 'science', 'entertainment'],
       activeCat: 'general'
@@ -3217,24 +3206,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
-    activePage: 'getActivePage'
+    news: 'getNews'
   })),
   methods: _objectSpread({
     changeCat: function changeCat(category) {
       this.activeCat = category;
-      this.getNews();
-    },
-    getNews: function getNews() {
-      var _this = this;
-
-      var query = "https://newsapi.org/v2/top-headlines?country=ca&category=" + this.activeCat + "&apiKey=2b056b1596eb4356a56510c4e19da2b7";
-      this.axios.get(query).then(function (news) {
-        // Reset index to the first article everytime we switch categories
-        _this.index = 0;
-        _this.news = news.data.articles;
-        console.log('%c News ', 'background: #222; color: #bada55');
-        console.log(news.data.articles);
-      });
+      this.fetchNews();
     },
     onKeyPress: function onKeyPress() {
       if (event.keyCode == 37 && this.index > 0) {
@@ -3244,20 +3221,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
+    fetchNews: 'fetchNews',
     setShowHome: 'setShowHome',
     setActivePage: 'setActivePage'
   })),
   mounted: function mounted() {
-    var _this2 = this;
-
     document.addEventListener("keyup", this.onKeyPress);
-    this.getNews();
-
-    if (this.widget && this.widget.interval) {
-      setInterval(function () {
-        _this2.getNews();
-      }, this.widget.interval * 60000);
-    }
   }
 });
 
@@ -4423,7 +4392,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Home {\n    width: 100vw !important;\n\n    position: fixed;\n    top: 10vh;\n}\n.Widget {\n    padding: 5px 20px;\n}\n.Widget:hover {\n    /* border: 1.5px solid grey; */\n    border-radius: 5px;\n    background: rgba(230, 230, 250, 0.85);\n}\n.Home>.col-xs-10>hr {\n    width: 600px;\n    margin: 5px auto;\n}\n", ""]);
+exports.push([module.i, "\n.Home {\n    position: fixed;\n    top: 10vh;\n\n    width: 100vw !important;\n}\n.Widget {\n    padding: 5px 20px;\n}\n.Widget:hover {\n    /* border: 1.5px solid grey; */\n    border-radius: 5px;\n    background: rgba(230, 230, 250, 0.85);\n}\n.Home>.col-xs-10>hr {\n    width: 600px;\n    margin: 10px auto;\n}\n", ""]);
 
 // exports
 
@@ -4575,7 +4544,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.News[data-v-69249d1e] {\n    font-weight: 600px;\n    font-size: 3.5vh;\n\n    /* padding: 5px 20px; */\n}\na[data-v-69249d1e] {\n    color: black;\n}\n.limitReadable[data-v-69249d1e] {\n    max-width: 1000px;\n}\n", ""]);
+exports.push([module.i, "\n.News[data-v-69249d1e] {\n    font-weight: 600px;\n    font-size: 3.5vh;\n    text-align: center;\n}\na[data-v-69249d1e] {\n    color: black;\n}\n.limitReadable[data-v-69249d1e] {\n    max-width: 1000px;\n}\n", ""]);
 
 // exports
 
@@ -4594,7 +4563,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.NewsDisplay[data-v-6ea34df0] {\n    margin-top: 30px;\n    height: 650px;\n    width: 80vw;\n}\n.NewsRow[data-v-6ea34df0] {\n    font-weight: 600px;\n    font-size: 4vh;\n}\n.NewsRow a[data-v-6ea34df0] {\n    color: black;\n}\n.newsIcon[data-v-6ea34df0] {\n    position: absolute;\n    left: 60px;\n    top: 10px;\n}\n.newsIcon[data-v-6ea34df0]:hover {\n    color: white;\n}\n.articleNum[data-v-6ea34df0] {\n    margin: 10px 400px 40px 400px;\n}\n.headlineTitle[data-v-6ea34df0] {\n    font-weight: 800px;\n    font-size: 30px;\n\n    min-height: 110px;\n}\n.headlineContent[data-v-6ea34df0] {\n    font-weight: 400px;\n    font-size: 25px;\n\n    min-height: 200px;\n}\n.headlineSrc[data-v-6ea34df0] {\n    font-weight: 300px;\n    font-size: 20px;\n\n    min-height: 150px;\n}\n.headlineUrl[data-v-6ea34df0] {\n    font-weight: 200px;\n    font-size: 20px;\n\n    color: blue;\n}\n", ""]);
+exports.push([module.i, "\n.NewsDisplay[data-v-6ea34df0] {\n    margin-top: 30px;\n    height: 650px;\n    width: 80vw;\n\n    text-align: center;\n}\n.articleNum[data-v-6ea34df0] {\n    margin: 10px 400px 40px 400px;\n}\n\n\n/* Golen Ratio (Increase by 1.6 each step) */\n.headlineTitle[data-v-6ea34df0] {\n    font-weight: 800px;\n    font-size: 41px;\n\n    min-height: 110px;\n}\n.headlineContent[data-v-6ea34df0] {\n    font-weight: 400px;\n    font-size: 26px;\n\n    min-height: 200px;\n}\n.headlineSrc[data-v-6ea34df0] {\n    font-weight: 300px;\n    font-size: 16px;\n\n    min-height: 150px;\n}\n.headlineUrl[data-v-6ea34df0] {\n    font-weight: 200px;\n    font-size: 20px;\n\n    color: blue;\n}\n", ""]);
 
 // exports
 
@@ -10916,18 +10885,16 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row center-xs News" }, [
-    _vm.news
-      ? _c(
-          "a",
-          {
-            staticClass: "Widget limitReadable",
-            attrs: { href: _vm.news.url, target: "_blank" }
-          },
-          [_vm._v("\n        " + _vm._s(_vm.news.title) + "\n    ")]
-        )
-      : _vm._e()
-  ])
+  return _vm.news && _vm.news.length
+    ? _c(
+        "a",
+        {
+          staticClass: "Widget limitReadable News",
+          attrs: { href: _vm.news[0].url, target: "_blank" }
+        },
+        [_vm._v("\n    " + _vm._s(_vm.news[0].title) + "\n")]
+      )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -10952,7 +10919,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.news
-    ? _c("div", { staticClass: "row center-xs NewsDisplay" }, [
+    ? _c("div", { staticClass: "NewsDisplay limitReadable" }, [
         _c("div", { staticClass: "row middle-xs fullWidth" }, [
           _c("div", { staticClass: "col-xs" }, [
             _vm.index > 0
@@ -11044,7 +11011,7 @@ var render = function() {
         _vm._v(" "),
         _vm.news[_vm.index].content
           ? _c("div", {
-              staticClass: "row center-xs fullWidth textBody headlineContent",
+              staticClass: "textBody headlineContent",
               domProps: {
                 innerHTML: _vm._s(_vm.news[_vm.index].content.split("[+")[0])
               }
@@ -11052,24 +11019,25 @@ var render = function() {
           : _vm._e(),
         _vm._v(" "),
         _c("div", { staticClass: "fullWidth textBody headlineSrc" }, [
-          _c("p", [
-            _c(
-              "a",
-              {
-                staticClass: "headlineUrl",
-                attrs: { href: _vm.news[_vm.index].url, target: "_blank" }
-              },
-              [_vm._v(_vm._s(_vm.news[_vm.index].url))]
-            )
-          ]),
+          _c(
+            "a",
+            {
+              staticClass: "headlineUrl",
+              attrs: { href: _vm.news[_vm.index].url, target: "_blank" }
+            },
+            [
+              _vm._v(
+                "\n            " +
+                  _vm._s(_vm.news[_vm.index].url) +
+                  "\n        "
+              )
+            ]
+          ),
           _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              "\n            - " +
-                _vm._s(_vm.news[_vm.index].source.name) +
-                "\n        "
-            )
-          ])
+          _c("br"),
+          _vm._v(
+            "\n        - " + _vm._s(_vm.news[_vm.index].source.name) + "\n    "
+          )
         ])
       ])
     : _vm._e()
@@ -11376,11 +11344,11 @@ var render = function() {
               _vm._v(" "),
               _c("span", { staticClass: "listLabel textTitle" }, [
                 _vm._v(
-                  "\r\n\t\t\t" +
+                  "\n\t\t\t" +
                     _vm._s(_vm.title) +
                     " (" +
                     _vm._s(_vm.countList(_vm.list)) +
-                    ")\r\n\t\t"
+                    ")\n\t\t"
                 )
               ])
             ]
@@ -11603,7 +11571,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "TrelloSettings" }, [
-    _vm._v('\r\n\t"Coming Soon" -Mark Sansome\r\n')
+    _vm._v('\n\t"Coming Soon" -Mark Sansome\n')
   ])
 }
 var staticRenderFns = []
@@ -31281,6 +31249,7 @@ var state = {
   locations: null,
   favourites: null,
   mapsSettings: null,
+  news: null,
   notes: null,
   board: null,
   cards: null,
@@ -31316,6 +31285,9 @@ var getters = {
   },
   getMapsSettings: function getMapsSettings(state) {
     return state.mapsSettings;
+  },
+  getNews: function getNews(state) {
+    return state.news;
   },
   getNotes: function getNotes(state) {
     return state.notes;
@@ -31360,6 +31332,9 @@ var mutations = {
   setMapsSettings: function setMapsSettings(state, payload) {
     state.mapsSettings = payload;
   },
+  setNews: function setNews(state, payload) {
+    state.news = payload;
+  },
   setNotes: function setNotes(state, payload) {
     state.notes = payload;
   },
@@ -31396,7 +31371,6 @@ var actions = {
     var commit = _ref4.commit,
         dispatch = _ref4.dispatch;
     var user = window.localStorage.getItem('activeUser');
-    console.log('found: ', user);
 
     if (!user || !(user = JSON.parse(user))) {
       UIkit.notification({
@@ -31420,8 +31394,8 @@ var actions = {
   fetchUsers: function fetchUsers(_ref6) {
     var commit = _ref6.commit;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/users').then(function (response) {
-      console.log('%c Users', 'background: #222; color: #bada55');
-      console.log(response.data);
+      // console.log('%c Users', 'background: #222; color: #bada55');
+      // console.log(response.data);
       commit('setUsers', response.data);
     });
   },
@@ -31528,18 +31502,27 @@ var actions = {
       dispatch('fetchFavourites');
     });
   },
-  // Notes Controllers
-  fetchNotes: function fetchNotes(_ref18) {
+  // News Controllers
+  fetchNews: function fetchNews(_ref18, payload) {
     var commit = _ref18.commit;
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://cors-anywhere.herokuapp.com/http://newsapi.org/v2/top-headlines?country=ca&category=".concat(payload, "&apiKey=2b056b1596eb4356a56510c4e19da2b7")).then(function (response) {
+      console.log('%c News ', 'background: #222; color: #bada55');
+      console.log(response.data.articles);
+      commit('setNews', response.data.articles);
+    });
+  },
+  // Notes Controllers
+  fetchNotes: function fetchNotes(_ref19) {
+    var commit = _ref19.commit;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/notes/').then(function (response) {
       console.log('%c Notes ', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setNotes', response.data);
     });
   },
-  updateNote: function updateNote(_ref19, payload) {
-    var commit = _ref19.commit,
-        dispatch = _ref19.dispatch;
+  updateNote: function updateNote(_ref20, payload) {
+    var commit = _ref20.commit,
+        dispatch = _ref20.dispatch;
     // If id is 0, we are creating a new location
     // if (payload.id == null) {
     //     return axios.post('/notes/',payload).then(response => {
@@ -31550,16 +31533,16 @@ var actions = {
       dispatch('fetchNotes');
     }); // }
   },
-  deleteNote: function deleteNote(_ref20, payload) {
-    var commit = _ref20.commit,
-        dispatch = _ref20.dispatch;
+  deleteNote: function deleteNote(_ref21, payload) {
+    var commit = _ref21.commit,
+        dispatch = _ref21.dispatch;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/notes/delete', payload).then(function (response) {
       dispatch('fetchNotes');
     });
   },
   // Trello Controllers
-  fetchBoard: function fetchBoard(_ref21) {
-    var commit = _ref21.commit;
+  fetchBoard: function fetchBoard(_ref22) {
+    var commit = _ref22.commit;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://api.trello.com/1/boards/5e0b302d93a3935125fd3503?key=".concat("2625f163643b9956e21a7b966f9714ba", "&token=").concat("57382570d1c035d17da5bad54834c7c89beecc548c31bab25f19a95abad08ca3")).then(function (board) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/actions?key=".concat("2625f163643b9956e21a7b966f9714ba", "&token=").concat("57382570d1c035d17da5bad54834c7c89beecc548c31bab25f19a95abad08ca3")).then(function (actions) {
         board.data['actions'] = actions.data;
@@ -31569,8 +31552,8 @@ var actions = {
       });
     });
   },
-  fetchTrelloCards: function fetchTrelloCards(_ref22) {
-    var commit = _ref22.commit;
+  fetchTrelloCards: function fetchTrelloCards(_ref23) {
+    var commit = _ref23.commit;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/cards?key=".concat("2625f163643b9956e21a7b966f9714ba", "&token=").concat("57382570d1c035d17da5bad54834c7c89beecc548c31bab25f19a95abad08ca3")).then(function (response) {
       console.log('%c Cards ', 'background: #222; color: #bada55');
       console.log(response.data);

@@ -1,34 +1,30 @@
 <template>
-<div class="row center-xs News">
-    <a v-if="news" class="Widget limitReadable" :href="news.url" target="_blank">
-        {{news.title}}
-    </a>
-</div>
+<a v-if="news && news.length" class="Widget limitReadable News" :href="news[0].url" target="_blank">
+    {{news[0].title}}
+</a>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
     props: ['widget'],
-    data() {
-        return {
-            news: null,
-        }
+    computed: {
+        ...mapGetters('settings', {
+            news: 'getNews'
+        })
     },
-    methods: {
-        getNews() {
-            let query = "https://newsapi.org/v2/top-headlines?country=ca&category=general&apiKey=2b056b1596eb4356a56510c4e19da2b7"
-            this.axios.get(query).then(news => {
-                this.news = news.data.articles[0]
 
-                console.log('%c News ', 'background: #222; color: #bada55');
-                console.log(news.data.articles);
-            })
-        },
+    methods: {
+        ...mapActions('settings', {
+            fetchNews: 'fetchNews',
+        })
     },
+
     mounted() {
-        this.getNews()
+        this.fetchNews('technology')
         if (this.widget && this.widget.interval)
-            setInterval(this.getNews(), this.widget.interval * 60000)
+            setInterval(this.fetchNews('technology'), this.widget.interval * 60000)
     },
 }
 </script>
@@ -37,8 +33,7 @@ export default {
     .News {
         font-weight: 600px;
         font-size: 3.5vh;
-
-        /* padding: 5px 20px; */
+        text-align: center;
     }
     a {
         color: black;

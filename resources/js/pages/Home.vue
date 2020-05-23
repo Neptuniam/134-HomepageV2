@@ -20,15 +20,10 @@
 import { mapGetters } from 'vuex'
 export default {
     computed: {
-        // activeWidgets() {
-        //     if (this.widgets)
-        //         return this.widgets.filter(widget => widget.status == 1 && !(widget.title === 'Notes' || widget.title === 'Trello' || widget.title === 'Background'))
-        // },
-
         ...mapGetters('settings', {
             activeUser: 'getUser',
             location:   'getLocation',
-            widgets: 'getWidgets'
+            widgets:    'getWidgets'
         })
     },
     methods: {
@@ -42,10 +37,10 @@ export default {
 
 <style>
     .Home {
-        width: 100vw !important;
-
         position: fixed;
         top: 10vh;
+
+        width: 100vw !important;
     }
 
     .Widget {
@@ -59,6 +54,6 @@ export default {
 
     .Home>.col-xs-10>hr {
         width: 600px;
-        margin: 5px auto;
+        margin: 10px auto;
     }
 </style>
