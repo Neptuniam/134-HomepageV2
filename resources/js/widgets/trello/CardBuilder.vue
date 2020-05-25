@@ -1,16 +1,16 @@
 <template>
 <div v-if="list" class="Container textBody">
-    <builder-title @click="showBuilder = !showBuilder" class="middle-xs clickable">
+    <div @click="showBuilder = !showBuilder" class="listLabel color-overlay clickable">
         <span class="uk-icon" :uk-icon="`icon: ${showBuilder ? 'chevron-down' : 'chevron-right'}; ratio: 1.5;`" />
 
-        <span class="listLabel textTitle">
+        <span class="textTitle">
 			{{title}} ({{countList(list)}})
 		</span>
-    </builder-title>
+    </div>
 
-	<hr>
+	<!-- <hr> -->
 
-    <div v-if="showBuilder" class="ListContainer">
+    <div v-if="showBuilder" class="listContainer color-overlay">
 		<div v-if="title == 'No Due Date'" class="row fullWidth dayContainer">
             <Card v-for="card in list" :key="card.id" class="col-xs-3" :card="card" />
         </div>
@@ -66,20 +66,38 @@ export default {
 </script>
 
 <style scoped>
+    .Container {
+        background-color: #121212;
+        color: grey;
+    }
+
     .listLabel {
-    	font-size: 22px;
-    	font-weight: 600;
+        font-size: 22px;
+        font-weight: 600;
+        color: rgb(255, 255, 255);
+
+        padding: 10px 15px;
+    }
+    .listLabel::before {
+        background: #4BB2F9;
+        opacity: 17%;
+        width: 100vw;
     }
     hr {
-    	margin: 5px 0px 20px 0px;
+        margin: 0px 0px 0px 0px;
+    	/* margin: 5px 0px 20px 0px; */
     }
 
-    .ListContainer {
-    	margin: 10px;
+    .listContainer {
+    	padding: 5px 10px;
 
-    	max-height: 50vh;
+    	max-height: 60vh;
     	overflow-y: auto;
     	overflow-x: hidden;
+    }
+    .listContainer:before {
+        background: #4BB2F9;
+        opacity: 8%;
     }
 
     .dayContainer {

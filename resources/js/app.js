@@ -70,4 +70,4 @@ Vue.prototype.util = window.util;
 
 window.Swal = require('sweetalert2');
 
-// Vue.config.ignoredElements = ['off-canvas-container', 'off-canvas', 'builder-title', 'builder-container']
+Vue.config.ignoredElements = ['off-canvas-container', 'off-canvas', 'builder-title', 'builder-container']

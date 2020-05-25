@@ -30,7 +30,8 @@
 
 		<td class="uk-button-group">
 			<div v-if="!location.id">
-				<a class="uk-icon-button uk-button-success roundedButton" @click="addLoc(location)" uk-icon="plus" uk-tooltip="Create Location" />
+				<a class="uk-icon-button uk-button-success roundedButton"
+					@click="addLoc(location)" uk-icon="plus" uk-tooltip="Create Location" />
 			</div>
 			<div v-else-if="!editMode">
 				<button class="uk-icon-button uk-button-primary roundedButton"

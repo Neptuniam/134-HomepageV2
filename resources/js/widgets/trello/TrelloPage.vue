@@ -1,7 +1,7 @@
 <template>
 <div v-if="board && cards" class="start-xs TrelloContainer">
     <a :href="board.shortUrl" target="_blank">
-        <h1 class="textSpecial"> {{board.name}} </h1>
+        <h1 class="textSpecial nospacing"> {{board.name}} </h1>
     </a>
 
     <CardBuilder :list="comingUp" title='Coming Up' />
@@ -106,13 +106,15 @@ export default {
 
 <style scoped>
     .TrelloContainer {
-        height: 85vh;
-        width: 90vw;
+        position: relative;
+
+        height: 100%;
+        width: 100vw;
 
         overflow-y: auto;
         overflow-x: hidden;
 
-        padding: 0px 50px;
+        margin: 60px 0px 0px 0px;
     }
 
     button {

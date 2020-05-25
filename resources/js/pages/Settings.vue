@@ -45,7 +45,7 @@ export default {
                     src: 'FavSettings'
                 }, {
                     title: 'Background',
-                    src: 'TrelloSettings'
+                    src: 'BackgroundSettings'
                 }, {
                     title: 'Trello',
                     src: 'TrelloSettings'

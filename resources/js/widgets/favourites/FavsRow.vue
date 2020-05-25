@@ -28,7 +28,8 @@
 
 	<div class="col-xs-2 center-xs uk-button-group">
 		<div v-if="!favourite.id">
-		    <a class="uk-icon-button uk-button-success roundedButton uk-box-shadow-hover-xlarge" @click="addFav(favourite)" uk-icon="plus" />
+		    <a class="uk-icon-button uk-button-success roundedButton uk-box-shadow-hover-xlarge"
+			   @click="addFav(favourite)" uk-icon="plus" uk-tooltip="Create Favourite" />
 		</div>
 		<div v-else-if="!editMode">
 			<button class="uk-icon-button uk-button-primary roundedButton"

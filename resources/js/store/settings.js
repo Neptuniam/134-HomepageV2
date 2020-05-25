@@ -251,13 +251,13 @@ const actions = {
     // Trello Controllers
     fetchBoard: ({commit}) => {
         return axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`).then(board => {
-            axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/actions?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`).then(actions => {
-                board.data['actions'] = actions.data
+            // axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/actions?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`).then(actions => {
+                // board.data['actions'] = actions.data
                 console.log('%c Board ', 'background: #222; color: #bada55');
                 console.log(board.data);
 
                 commit('setBoard', board.data)
-            })
+            // })
         })
     },
     fetchTrelloCards: ({commit}) => {

@@ -2398,7 +2398,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         src: 'FavSettings'
       }, {
         title: 'Background',
-        src: 'TrelloSettings'
+        src: 'BackgroundSettings'
       }, {
         title: 'Trello',
         src: 'TrelloSettings'
@@ -2528,6 +2528,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
 //
 //
 //
@@ -3147,6 +3148,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
 //
 //
 //
@@ -4816,7 +4818,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.Homepage {\n    overflow-y:hidden;\n    overflow-x:hidden;\n    overflow: hidden !important;\n\n    color: black;\n\n    height: 100vh;\n    width: 100vw;\n\n    background: rgba(200,200,200,0.7);\n}\n.uk-tooltip {\n\tfont-family: 'Roboto' !important;\n\tfont-weight: 300px;\n\tfont-size: 16px;\n\n\tmax-width: 400px;\n}\ndiv {\n\tcursor: default;\n}\n.limitReadable {\n\tmax-width: 1000px;\n}\n.fullWidth {\n\twidth: 100% !important;\n}\n.fullHeight {\n\theight: 100% !important;\n}\n.nopadding {\n\tpadding: 0 !important;\n}\n.nomargin {\n\tmargin: 0 !important;\n}\n.nospacing {\n\tmargin: 0 !important;\n\tpadding: 0 !important;\n}\n.clickable {\n\tcursor: pointer !important;\n}\n.textSpecial {\n\tfont-family: 'Arima Madurai', cursive !important;\n}\n.textTitle {\n\tfont-family: 'Poiret One', cursive !important;\n}\n.textBody {\n\tfont-family: 'Roboto' !important;\n}\n.roundedButton {\n\tcolor: white;\n\tborder-radius: 10px;\n\tpadding: auto 10px;\n\tmargin: 0 5px;\n\toutline: none;\n}\n.card {\n\tborder: 1.5px solid grey;\n\tborder-radius: 5px;\n\tbackground: rgba(230, 230, 250, 0.5);\n\n\tmargin: 10px;\n\tpadding: 5px 10px;\n}\n.card:hover {\n    background: rgba(230, 230, 250, 0.75);\n}\n.uk-button-success {\n\tbackground-color: #228B22;\n\tcolor: white;\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n\t-webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n\t   -moz-user-select: none; /* Firefox */\n\t\t-ms-user-select: none; /* Internet Explorer/Edge */\n\t\t\tuser-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n.invertedText {\n\tcolor: silver !important;\n}\n.blueText {\n\tcolor: blue !important;\n}\n.swal2-content {\n    /* font-size: 30px !important; */\n}\n", ""]);
+exports.push([module.i, "\n.Homepage {\n    overflow-y:hidden;\n    overflow-x:hidden;\n    overflow: hidden !important;\n\n    color: black;\n\n    height: 100vh;\n    width: 100vw;\n\n    background: rgba(200,200,200,0.7);\n}\n.uk-tooltip {\n\tfont-family: 'Roboto' !important;\n\tfont-weight: 300px;\n\tfont-size: 16px;\n\n\tmax-width: 400px;\n}\ndiv {\n\tcursor: default;\n}\n.limitReadable {\n\tmax-width: 1000px;\n}\n.fullWidth {\n\twidth: 100% !important;\n}\n.fullHeight {\n\theight: 100% !important;\n}\n.nopadding {\n\tpadding: 0 !important;\n}\n.nomargin {\n\tmargin: 0 !important;\n}\n.nospacing {\n\tmargin: 0 !important;\n\tpadding: 0 !important;\n}\n.clickable {\n\tcursor: pointer !important;\n}\n.textSpecial {\n\tfont-family: 'Arima Madurai', cursive !important;\n}\n.textTitle {\n\tfont-family: 'Poiret One', cursive !important;\n}\n.textBody {\n\tfont-family: 'Roboto' !important;\n}\n.roundedButton {\n\tcolor: white;\n\tborder-radius: 10px;\n\tpadding: auto 10px;\n\tmargin: 0 5px;\n\toutline: none;\n}\n.card {\n\tborder: 1.5px solid grey;\n\tborder-radius: 5px;\n\tbackground: rgba(230, 230, 250, 0.5);\n\n\tmargin: 10px;\n\tpadding: 5px 10px;\n}\n.card:hover {\n    background: rgba(230, 230, 250, 0.75);\n}\n.uk-button-success {\n\tbackground-color: #228B22;\n\tcolor: white;\n}\n.noselect {\n  -webkit-touch-callout: none; /* iOS Safari */\n\t-webkit-user-select: none; /* Safari */ /* Konqueror HTML */\n\t   -moz-user-select: none; /* Firefox */\n\t\t-ms-user-select: none; /* Internet Explorer/Edge */\n\t\t\tuser-select: none; /* Non-prefixed version,(Chrome and Opera) */\n}\n.invertedText {\n\tcolor: silver !important;\n}\n.blueText {\n\tcolor: blue !important;\n}\n.swal2-content {\n    /* font-size: 30px !important; */\n}\n.color-overlay {\n    position: relative;\n}\n.color-overlay:before {\n    content: \"\";\n    position: absolute;\n    left: 0; right: 0;\n    top: 0; bottom: 0;\n    height: 100%;\n}\n", ""]);
 
 // exports
 
@@ -5025,7 +5027,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\nspan[data-v-3d303d09] {\n\tfont-size: 14px;\n\tmargin: 0px 0px 10px 5px;\n}\n", ""]);
+exports.push([module.i, "\nspan[data-v-3d303d09] {\n\tfont-size: 14px;\n\tmargin: 0px 0px 10px 5px;\n}\n.card[data-v-3d303d09] {\n\tcolor: rgb(245, 245, 245);\n\tbackground-color: #121212;\n}\n.card[data-v-3d303d09]:before {\n\tbackground: #4BB2F9;\n\topacity: 23%;\n}\n", ""]);
 
 // exports
 
@@ -5044,7 +5046,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.listLabel[data-v-6ccdedfc] {\n\tfont-size: 22px;\n\tfont-weight: 600;\n}\nhr[data-v-6ccdedfc] {\n\tmargin: 5px 0px 20px 0px;\n}\n.ListContainer[data-v-6ccdedfc] {\n\tmargin: 10px;\n\n\tmax-height: 50vh;\n\toverflow-y: auto;\n\toverflow-x: hidden;\n}\n.dayContainer[data-v-6ccdedfc] {\n\tmargin: 10px 10px 50px 10px;\n}\n.dayContainer .col-xs-3[data-v-6ccdedfc] {\n\tmin-width: 300px;\n\tmax-width: 19%;\n\n\tmax-height: 200px;\n\n\tfont-size: 2.5vh;\n\n\tmargin: 0.5% !important;\n}\n", ""]);
+exports.push([module.i, "\n.Container[data-v-6ccdedfc] {\n    background-color: #121212;\n    color: grey;\n}\n.listLabel[data-v-6ccdedfc] {\n    font-size: 22px;\n    font-weight: 600;\n    color: rgb(255, 255, 255);\n\n    padding: 10px 15px;\n}\n.listLabel[data-v-6ccdedfc]::before {\n    background: #4BB2F9;\n    opacity: 17%;\n    width: 100vw;\n}\nhr[data-v-6ccdedfc] {\n    margin: 0px 0px 0px 0px;\n\t/* margin: 5px 0px 20px 0px; */\n}\n.listContainer[data-v-6ccdedfc] {\n\tpadding: 5px 10px;\n\n\tmax-height: 60vh;\n\toverflow-y: auto;\n\toverflow-x: hidden;\n}\n.listContainer[data-v-6ccdedfc]:before {\n    background: #4BB2F9;\n    opacity: 8%;\n}\n.dayContainer[data-v-6ccdedfc] {\n\tmargin: 10px 10px 50px 10px;\n}\n.dayContainer .col-xs-3[data-v-6ccdedfc] {\n\tmin-width: 300px;\n\tmax-width: 19%;\n\n\tmax-height: 200px;\n\n\tfont-size: 2.5vh;\n\n\tmargin: 0.5% !important;\n}\n", ""]);
 
 // exports
 
@@ -5082,7 +5084,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.TrelloContainer[data-v-6523a850] {\n    height: 85vh;\n    width: 90vw;\n\n    overflow-y: auto;\n    overflow-x: hidden;\n\n    padding: 0px 50px;\n}\nbutton[data-v-6523a850] {\n    position: fixed;\n    top: 20px;\n    right: 200px;\n}\n", ""]);
+exports.push([module.i, "\n.TrelloContainer[data-v-6523a850] {\n    position: relative;\n\n    height: 100%;\n    width: 100vw;\n\n    overflow-y: auto;\n    overflow-x: hidden;\n\n    margin: 60px 0px 0px 0px;\n}\nbutton[data-v-6523a850] {\n    position: fixed;\n    top: 20px;\n    right: 200px;\n}\n", ""]);
 
 // exports
 
@@ -13658,7 +13660,7 @@ var render = function() {
             }
           })
         : _c("div", [
-            _vm._v("\r\n\t\t    " + _vm._s(_vm.favourite.title) + "\r\n\t\t")
+            _vm._v("\n\t\t    " + _vm._s(_vm.favourite.title) + "\n\t\t")
           ])
     ]),
     _vm._v(" "),
@@ -13686,7 +13688,7 @@ var render = function() {
             }
           })
         : _c("div", [
-            _vm._v("\r\n\t\t    " + _vm._s(_vm.favourite.url) + "\r\n\t\t")
+            _vm._v("\n\t\t    " + _vm._s(_vm.favourite.url) + "\n\t\t")
           ])
     ]),
     _vm._v(" "),
@@ -13717,7 +13719,7 @@ var render = function() {
             ]
           )
         : _c("span", [
-            _vm._v("\r\n\t\t    " + _vm._s(_vm.favourite.src) + "\r\n\t\t")
+            _vm._v("\n\t\t    " + _vm._s(_vm.favourite.src) + "\n\t\t")
           ])
     ]),
     _vm._v(" "),
@@ -13727,7 +13729,7 @@ var render = function() {
             _c("a", {
               staticClass:
                 "uk-icon-button uk-button-success roundedButton uk-box-shadow-hover-xlarge",
-              attrs: { "uk-icon": "plus" },
+              attrs: { "uk-icon": "plus", "uk-tooltip": "Create Favourite" },
               on: {
                 click: function($event) {
                   return _vm.addFav(_vm.favourite)
@@ -14296,7 +14298,7 @@ var render = function() {
           _c(
             "span",
             { staticClass: "row uk-form-label fullWidth textColor textBody" },
-            [_vm._v("\r\n\t\t\tHome Location\r\n\t\t")]
+            [_vm._v("\n\t\t\tHome Location\n\t\t")]
           ),
           _vm._v(" "),
           _c("div", { staticClass: "uk-form-controls fullWidth" }, [
@@ -14343,7 +14345,7 @@ var render = function() {
                 _vm._l(_vm.remainingLocations, function(location) {
                   return _c("option", { domProps: { value: location.id } }, [
                     _vm._v(
-                      "\r\n\t\t\t\t\t" + _vm._s(location.title) + "\r\n\t\t\t\t"
+                      "\n\t\t\t\t\t" + _vm._s(location.title) + "\n\t\t\t\t"
                     )
                   ])
                 })
@@ -14357,7 +14359,7 @@ var render = function() {
           _c(
             "span",
             { staticClass: "row uk-form-label fullWidth textColor textBody" },
-            [_vm._v("\r\n\t\t\tFavourite Location\r\n\t\t")]
+            [_vm._v("\n\t\t\tFavourite Location\n\t\t")]
           ),
           _vm._v(" "),
           _c("div", { staticClass: "uk-form-controls fullWidth" }, [
@@ -14404,7 +14406,7 @@ var render = function() {
                 _vm._l(_vm.remainingLocations, function(location) {
                   return _c("option", { domProps: { value: location.id } }, [
                     _vm._v(
-                      "\r\n\t\t\t\t\t" + _vm._s(location.title) + "\r\n\t\t\t\t"
+                      "\n\t\t\t\t\t" + _vm._s(location.title) + "\n\t\t\t\t"
                     )
                   ])
                 })
@@ -14418,7 +14420,7 @@ var render = function() {
           _c(
             "span",
             { staticClass: "row uk-form-label fullWidth textColor textBody" },
-            [_vm._v("\r\n\t\t\tTransportation Method\r\n\t\t")]
+            [_vm._v("\n\t\t\tTransportation Method\n\t\t")]
           ),
           _vm._v(" "),
           _c("div", { staticClass: "uk-form-controls fullWidth" }, [
@@ -14852,7 +14854,7 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "card uk-box-shadow-hover-large",
+      staticClass: "card color-overlay uk-box-shadow-hover-large",
       class: {
         clickable: _vm.hasDesc(_vm.card)
         /* 'uk-box-shadow-hover-large': hasDesc(card) */
@@ -14932,94 +14934,85 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.list
-    ? _c(
-        "div",
-        { staticClass: "Container textBody" },
-        [
-          _c(
-            "builder-title",
-            {
-              staticClass: "middle-xs clickable",
-              on: {
-                click: function($event) {
-                  _vm.showBuilder = !_vm.showBuilder
-                }
+    ? _c("div", { staticClass: "Container textBody" }, [
+        _c(
+          "div",
+          {
+            staticClass: "listLabel color-overlay clickable",
+            on: {
+              click: function($event) {
+                _vm.showBuilder = !_vm.showBuilder
               }
-            },
-            [
-              _c("span", {
-                staticClass: "uk-icon",
-                attrs: {
-                  "uk-icon":
-                    "icon: " +
-                    (_vm.showBuilder ? "chevron-down" : "chevron-right") +
-                    "; ratio: 1.5;"
-                }
-              }),
-              _vm._v(" "),
-              _c("span", { staticClass: "listLabel textTitle" }, [
-                _vm._v(
-                  "\n\t\t\t" +
-                    _vm._s(_vm.title) +
-                    " (" +
-                    _vm._s(_vm.countList(_vm.list)) +
-                    ")\n\t\t"
-                )
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c("hr"),
-          _vm._v(" "),
-          _vm.showBuilder
-            ? _c(
-                "div",
-                { staticClass: "ListContainer" },
-                [
-                  _vm.title == "No Due Date"
-                    ? _c(
-                        "div",
-                        { staticClass: "row fullWidth dayContainer" },
-                        _vm._l(_vm.list, function(card) {
-                          return _c("Card", {
-                            key: card.id,
-                            staticClass: "col-xs-3",
-                            attrs: { card: card }
-                          })
-                        }),
-                        1
-                      )
-                    : _vm._l(_vm.list, function(day) {
-                        return _c("div", [
-                          _c("b", [
-                            _vm._v(
-                              " " +
-                                _vm._s(_vm.util.readableDay(day[0].due)) +
-                                " "
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "row fullWidth dayContainer" },
-                            _vm._l(day, function(card) {
-                              return _c("Card", {
-                                key: card.id,
-                                staticClass: "col-xs-3",
-                                attrs: { card: card }
-                              })
-                            }),
-                            1
-                          )
-                        ])
-                      })
-                ],
-                2
+            }
+          },
+          [
+            _c("span", {
+              staticClass: "uk-icon",
+              attrs: {
+                "uk-icon":
+                  "icon: " +
+                  (_vm.showBuilder ? "chevron-down" : "chevron-right") +
+                  "; ratio: 1.5;"
+              }
+            }),
+            _vm._v(" "),
+            _c("span", { staticClass: "textTitle" }, [
+              _vm._v(
+                "\n\t\t\t" +
+                  _vm._s(_vm.title) +
+                  " (" +
+                  _vm._s(_vm.countList(_vm.list)) +
+                  ")\n\t\t"
               )
-            : _vm._e()
-        ],
-        1
-      )
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _vm.showBuilder
+          ? _c(
+              "div",
+              { staticClass: "listContainer color-overlay" },
+              [
+                _vm.title == "No Due Date"
+                  ? _c(
+                      "div",
+                      { staticClass: "row fullWidth dayContainer" },
+                      _vm._l(_vm.list, function(card) {
+                        return _c("Card", {
+                          key: card.id,
+                          staticClass: "col-xs-3",
+                          attrs: { card: card }
+                        })
+                      }),
+                      1
+                    )
+                  : _vm._l(_vm.list, function(day) {
+                      return _c("div", [
+                        _c("b", [
+                          _vm._v(
+                            " " + _vm._s(_vm.util.readableDay(day[0].due)) + " "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "row fullWidth dayContainer" },
+                          _vm._l(day, function(card) {
+                            return _c("Card", {
+                              key: card.id,
+                              staticClass: "col-xs-3",
+                              attrs: { card: card }
+                            })
+                          }),
+                          1
+                        )
+                      ])
+                    })
+              ],
+              2
+            )
+          : _vm._e()
+      ])
     : _vm._e()
 }
 var staticRenderFns = []
@@ -15076,7 +15069,7 @@ var render = function() {
         { staticClass: "start-xs TrelloContainer" },
         [
           _c("a", { attrs: { href: _vm.board.shortUrl, target: "_blank" } }, [
-            _c("h1", { staticClass: "textSpecial" }, [
+            _c("h1", { staticClass: "textSpecial nospacing" }, [
               _vm._v(" " + _vm._s(_vm.board.name) + " ")
             ])
           ]),
@@ -34066,7 +34059,8 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 __webpack_require__(/*! ./utilFunctions.js */ "./resources/js/utilFunctions.js");
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.prototype.util = window.util;
-window.Swal = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js"); // Vue.config.ignoredElements = ['off-canvas-container', 'off-canvas', 'builder-title', 'builder-container']
+window.Swal = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.ignoredElements = ['off-canvas-container', 'off-canvas', 'builder-title', 'builder-container'];
 
 /***/ }),
 
@@ -35162,12 +35156,11 @@ var actions = {
   fetchBoard: function fetchBoard(_ref22) {
     var commit = _ref22.commit;
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://api.trello.com/1/boards/5e0b302d93a3935125fd3503?key=".concat("2625f163643b9956e21a7b966f9714ba", "&token=").concat("57382570d1c035d17da5bad54834c7c89beecc548c31bab25f19a95abad08ca3")).then(function (board) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/actions?key=".concat("2625f163643b9956e21a7b966f9714ba", "&token=").concat("57382570d1c035d17da5bad54834c7c89beecc548c31bab25f19a95abad08ca3")).then(function (actions) {
-        board.data['actions'] = actions.data;
-        console.log('%c Board ', 'background: #222; color: #bada55');
-        console.log(board.data);
-        commit('setBoard', board.data);
-      });
+      // axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/actions?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`).then(actions => {
+      // board.data['actions'] = actions.data
+      console.log('%c Board ', 'background: #222; color: #bada55');
+      console.log(board.data);
+      commit('setBoard', board.data); // })
     });
   },
   fetchTrelloCards: function fetchTrelloCards(_ref23) {

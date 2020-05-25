@@ -1,5 +1,5 @@
 zz<template>
-	<div class="card uk-box-shadow-hover-large" @click="openPreview(card)"
+	<div class="card color-overlay uk-box-shadow-hover-large" @click="openPreview(card)"
 		:class="{
 			'clickable': hasDesc(card),
 			/* 'uk-box-shadow-hover-large': hasDesc(card) */
@@ -90,5 +90,14 @@ export default {
 	span {
 		font-size: 14px;
 		margin: 0px 0px 10px 5px;
+	}
+
+	.card {
+		color: rgb(245, 245, 245);
+		background-color: #121212;
+	}
+	.card:before {
+		background: #4BB2F9;
+		opacity: 23%;
 	}
 </style>
