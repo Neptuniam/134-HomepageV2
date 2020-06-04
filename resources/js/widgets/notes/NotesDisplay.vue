@@ -236,7 +236,7 @@ export default {
     font-weight: 350px;
     font-size: 20px;
     text-align: left;
-    color: rgb(225, 225, 225) !important;
+    /* color: rgb(225, 225, 225) !important; */
 
     background-color: rgba(0, 0, 0, 0);
     border-width: 0px;
@@ -246,7 +246,7 @@ export default {
 }
 
 textarea:focus {
-    background-color: rgba(0,0,0,0);
+    /* background-color: rgba(0,0,0,0); */
 }
 
 .noteBody h1, .noteBody h2, .noteBody h3, .noteBody h4, .noteBody h5, .noteBody h6, .noteBody ul {

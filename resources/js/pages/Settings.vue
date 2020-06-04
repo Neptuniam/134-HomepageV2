@@ -38,14 +38,14 @@ export default {
                     title: 'Widgets',
                     src: 'WidgetsSettings'
                 }, {
+                    title: 'Background',
+                    src: 'BackgroundSettings'
+                }, {
                     title: 'Maps',
                     src: 'MapsSettings'
                 }, {
                     title: 'Favourites',
                     src: 'FavSettings'
-                }, {
-                    title: 'Background',
-                    src: 'BackgroundSettings'
                 }, {
                     title: 'Trello',
                     src: 'TrelloSettings'

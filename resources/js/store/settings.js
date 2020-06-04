@@ -12,6 +12,8 @@ const state = {
     favourites: null,
     mapsSettings: null,
 
+    backgrounds: null,
+
     news: null,
 
     notes: null,
@@ -37,6 +39,8 @@ const getters = {
     getFavourites: (state) => state.favourites,
     getMapsSettings: (state) => state.mapsSettings,
 
+    getBackgrounds: (state) => state.backgrounds,
+
     getNews: (state) => state.news,
 
     getNotes: (state) => state.notes,
@@ -60,6 +64,8 @@ const mutations = {
     setLocations: (state, payload) => { state.locations = payload },
     setFavourites: (state, payload) => { state.favourites = payload },
     setMapsSettings: (state, payload) => { state.mapsSettings = payload },
+
+    setBackgrounds: (state, payload) => { state.backgrounds = payload },
 
     setNews: (state, payload) => { state.news = payload },
 
@@ -212,7 +218,7 @@ const actions = {
 
     // News Controllers
     fetchNews: ({commit}, payload) => {
-        return axios.get(`https://cors-anywhere.herokuapp.com/http://newsapi.org/v2/top-headlines?country=ca&category=${payload}&apiKey=${process.env.MIX_NEWS_KEY}`).then(response => {
+        return axios.get(`http://newsapi.org/v2/top-headlines?country=ca&category=${payload}&apiKey=${process.env.MIX_NEWS_KEY}`).then(response => {
             console.log('%c News ', 'background: #222; color: #bada55');
             console.log(response.data.articles);
 
@@ -268,6 +274,15 @@ const actions = {
             commit('setCards', response.data)
         })
     },
+
+    fetchBackgrounds: ({commit}) => {
+        return axios.get('/background/all').then(response => {
+            console.log('%c Backgrounds ', 'background: #222; color: #bada55');
+            console.log(response.data);
+
+            commit('setBackgrounds', response.data)
+        })
+    }
 }
 
 export default {

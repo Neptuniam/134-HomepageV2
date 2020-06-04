@@ -5,6 +5,9 @@ Vue.component('maindisplay',        require('./pages/MainDisplay.vue').default);
 // Widgets
 Vue.component('Weather',            require('./widgets/weather/WeatherDisplay.vue').default);
 
+Vue.component('BackgroundSettings',	require('./widgets/background/BackgroundSettings.vue').default);
+Vue.component('BackgroundCard',		require('./widgets/background/BackgroundCard.vue').default);
+
 Vue.component('News',               require('./widgets/news/NewsDisplay.vue').default);
 
 Vue.component('Maps',               require('./widgets/maps/MapsDisplay.vue').default);
@@ -20,6 +23,7 @@ Vue.component('QOTD',               require('./widgets/QOTD/QotdDisplay.vue').de
 
 Vue.component('TrelloDisplay',      require('./widgets/trello/TrelloDisplay.vue').default);
 Vue.component('TrelloSettings',    	require('./widgets/trello/TrelloSettings.vue').default);
+Vue.component('TrelloRow',    		require('./widgets/trello/TrelloRow.vue').default);
 Vue.component('CardBuilder',      	require('./widgets/trello/CardBuilder.vue').default);
 Vue.component('Card',      			require('./widgets/trello/Card.vue').default);
 
