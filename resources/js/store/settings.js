@@ -215,7 +215,7 @@ const actions = {
             dispatch('fetchFavourites')
         })
     },
-
+    
     // News Controllers
     fetchNews: ({commit}, payload) => {
         return axios.get(`http://newsapi.org/v2/top-headlines?country=ca&category=${payload}&apiKey=${process.env.MIX_NEWS_KEY}`).then(response => {
