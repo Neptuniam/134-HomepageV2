@@ -1,8 +1,9 @@
 <template>
 <div class="BackgroundSettings start-xs">
-	<button class="uk-button uk-button-muted uk-text-capitalize roundedButton" @click="action">
-		Upload +
-	</button>
+	<span uk-form-custom="target: true">
+        <input type="file" class="uk-input" @change="upload">
+        <input class="uk-button uk-button-muted uk-text-capitalize roundedButton" type="text" placeholder="Upload +">
+    </span>
 
 	<div class="row fullWidth">
 		<BackgroundCard v-for="background in backgrounds" :key="background" :background="background" class="col-xs-3 CardContainer" />
@@ -13,6 +14,12 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 export default {
+	data() {
+	    return {
+	        file: null
+	    }
+	},
+
 	computed: {
 		...mapGetters('settings', {
 		    backgrounds: 'getBackgrounds',
@@ -20,11 +27,53 @@ export default {
 	},
 
 	methods: {
-		action() {
-			UIkit.notification({message: "Coming Soon -Mark Sansome", status:'primary'})
-		},
+		upload(event) {
+			this.uploadFile({
+				path: '/background/upload',
+				file: event.target.files[0]
+			}).then(upload => {
+				UIkit.notification({
+					message: "File Uploaded",
+					status: 'success'
+				})
+
+				this.file = null
+				this.fetchBackgrounds()
+			}).catch(error => {
+				UIkit.notification({
+					message: "Error: " + error.response,
+					status: 'danger'
+				})
+			})
+
+            // if (event && event.target.files[0] !== undefined ) {
+			// 	const payload = event.target.files[0]
+			// 	var fileReader = new FileReader()
+			// 	var name = payload['name']
+			// 	var type = payload['type']
+			// 	var size = payload['size']
+			//
+			// 	fileReader.readAsDataURL(payload)
+			//
+			// 	fileReader.onload = (e) => {
+			// 		let data = {
+			// 			'src':  e.target.result,
+			// 			'name': name,
+			// 			'type': type,
+			// 			'size': size
+			// 		}
+			//
+			// 		this.axios.post('/background/upload', data).then(upload => {
+			// 			this.file = null
+			// 			this.fetchBackgrounds()
+			// 		})
+			// 	}
+            // }
+        },
+
 		...mapActions('settings', {
 		    fetchBackgrounds: 'fetchBackgrounds',
+			uploadFile: 'uploadFile'
 		})
 	},
 
@@ -39,9 +88,9 @@ export default {
 		/* position: relative; */
 	}
 
-	button {
+	span {
 		position: fixed;
-		top: 60px;
+		top: 110px;
 		left: 10px;
 
 		color: black;

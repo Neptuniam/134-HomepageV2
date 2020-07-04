@@ -215,7 +215,7 @@ const actions = {
             dispatch('fetchFavourites')
         })
     },
-    
+
     // News Controllers
     fetchNews: ({commit}, payload) => {
         return axios.get(`http://newsapi.org/v2/top-headlines?country=ca&category=${payload}&apiKey=${process.env.MIX_NEWS_KEY}`).then(response => {
@@ -282,6 +282,24 @@ const actions = {
 
             commit('setBackgrounds', response.data)
         })
+    },
+
+    uploadFile: ({commit}, payload) => {
+        if (payload.file !== undefined ) {
+            var fileReader = new FileReader()
+            fileReader.readAsDataURL(payload.file)
+
+            fileReader.onload = (e) => {
+                let data = {
+                    'src':  e.target.result,
+                    'name': payload.file.name,
+                    'type': payload.file.type,
+                    'size': payload.file.size
+                }
+
+                return axios.post(payload.path, data)
+            }
+        }
     }
 }
 

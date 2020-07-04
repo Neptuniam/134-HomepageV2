@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
 class Background extends Controller {
     private function scanDirectory() {
         header("Access-Control-Allow-Origin: *");
@@ -23,7 +26,17 @@ class Background extends Controller {
     }
 
     public function getList() {
-        return $this->scanDirectory();
+        $list = $this->scanDirectory();
+        $spliced = array_splice($list, 2);
+        return $spliced;
+    }
+
+    public function upload(Request $request) {
+        return $this->UploadFile('images/backgrounds/', $request);
+    }
+
+    public function delete(Request $request) {
+        return $this->DeleteFile('images/backgrounds/'.$request['name']);
     }
 }
 ?>

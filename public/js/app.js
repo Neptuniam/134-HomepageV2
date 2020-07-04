@@ -2381,8 +2381,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         suppressScrollX: true
       },
       activeTab: {
-        title: 'Profile',
-        src: 'LoginSettings'
+        title: 'Background',
+        src: 'BackgroundSettings'
       },
       tabs: [{
         title: 'Profile',
@@ -2457,6 +2457,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2478,6 +2485,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['background'],
   data: function data() {
@@ -2485,14 +2500,34 @@ __webpack_require__.r(__webpack_exports__);
       hover: false
     };
   },
-  methods: {
+  methods: _objectSpread({
+    setBackground: function setBackground() {
+      document.body.style.background = "url('images/backgrounds/" + this.background + "')";
+      document.body.style.backgroundSize = "cover";
+    },
+    deleteBackground: function deleteBackground() {
+      var _this = this;
+
+      this.axios.post('/background/delete', {
+        name: this.background
+      }).then(function () {
+        UIkit.notification({
+          message: "File Deleted",
+          status: 'success'
+        });
+
+        _this.fetchBackgrounds();
+      });
+    },
     action: function action() {
       UIkit.notification({
         message: "Coming Soon -Mark Sansome",
         status: 'primary'
       });
     }
-  }
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
+    fetchBackgrounds: 'fetchBackgrounds'
+  }))
 });
 
 /***/ }),
@@ -2525,20 +2560,64 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      file: null
+    };
+  },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('settings', {
     backgrounds: 'getBackgrounds'
   })),
   methods: _objectSpread({
-    action: function action() {
-      UIkit.notification({
-        message: "Coming Soon -Mark Sansome",
-        status: 'primary'
-      });
+    upload: function upload(event) {
+      var _this = this;
+
+      this.uploadFile({
+        path: '/background/upload',
+        file: event.target.files[0]
+      }).then(function (upload) {
+        UIkit.notification({
+          message: "File Uploaded",
+          status: 'success'
+        });
+        _this.file = null;
+
+        _this.fetchBackgrounds();
+      })["catch"](function (error) {
+        UIkit.notification({
+          message: "Error: " + error.response,
+          status: 'danger'
+        });
+      }); // if (event && event.target.files[0] !== undefined ) {
+      // 	const payload = event.target.files[0]
+      // 	var fileReader = new FileReader()
+      // 	var name = payload['name']
+      // 	var type = payload['type']
+      // 	var size = payload['size']
+      //
+      // 	fileReader.readAsDataURL(payload)
+      //
+      // 	fileReader.onload = (e) => {
+      // 		let data = {
+      // 			'src':  e.target.result,
+      // 			'name': name,
+      // 			'type': type,
+      // 			'size': size
+      // 		}
+      //
+      // 		this.axios.post('/background/upload', data).then(upload => {
+      // 			this.file = null
+      // 			this.fetchBackgrounds()
+      // 		})
+      // 	}
+      // }
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
-    fetchBackgrounds: 'fetchBackgrounds'
+    fetchBackgrounds: 'fetchBackgrounds',
+    uploadFile: 'uploadFile'
   })),
   mounted: function mounted() {
     this.fetchBackgrounds();
@@ -5191,7 +5270,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.card[data-v-7189eb11] {\n\theight: 100%;\n\twidth: 100%;\n\n\t-o-object-fit: cover;\n\n\t   object-fit: cover;\n}\n.blur .card[data-v-7189eb11] {\n\topacity: 50%;\n}\n.BackgroundCard[data-v-7189eb11] {\n\tposition: relative;\n}\n.hoverAffect[data-v-7189eb11] {\n\tposition: absolute;\n\ttop: 50%;\n\t/* left: 50%; */\n\tmargin: auto;\n}\n", ""]);
+exports.push([module.i, "\n.card[data-v-7189eb11] {\n\theight: 100%;\n\twidth: 100%;\n\n\t-o-object-fit: cover;\n\n\t   object-fit: cover;\n}\n.blur .card[data-v-7189eb11] {\n\topacity: 50%;\n}\n.BackgroundCard[data-v-7189eb11] {\n\tposition: relative;\n}\n.hoverAffect[data-v-7189eb11] {\n\tposition: absolute;\n\ttop: 50%;\n\t/* left: 50%; */\n\tmargin: auto;\n}\n.setBackground[data-v-7189eb11] {\n\tcolor: blue;\n}\n.downloadBackground[data-v-7189eb11] {\n\tcolor: blue;\n}\n.deleteBackground[data-v-7189eb11] {\n\tcolor: red;\n}\n", ""]);
 
 // exports
 
@@ -5210,7 +5289,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.BackgroundSettings[data-v-b882e3b8] {\n\t/* position: relative; */\n}\nbutton[data-v-b882e3b8] {\n\tposition: fixed;\n\ttop: 60px;\n\tleft: 10px;\n\n\tcolor: black;\n}\n.col-xs-3[data-v-b882e3b8] {\n\theight: 30vh;\n\tmargin: 10px 0px;\n}\n", ""]);
+exports.push([module.i, "\n.BackgroundSettings[data-v-b882e3b8] {\n\t/* position: relative; */\n}\nspan[data-v-b882e3b8] {\n\tposition: fixed;\n\ttop: 110px;\n\tleft: 10px;\n\n\tcolor: black;\n}\n.col-xs-3[data-v-b882e3b8] {\n\theight: 30vh;\n\tmargin: 10px 0px;\n}\n", ""]);
 
 // exports
 
@@ -14029,17 +14108,32 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "col-xs" }, [
               _c("span", {
-                staticClass: "uk-icon-button clickable",
-                attrs: { "uk-icon": "download" },
-                on: { click: _vm.action }
+                staticClass: "uk-icon-button clickable setBackground",
+                attrs: {
+                  "uk-icon": "image",
+                  "uk-tooltip": "Set as background"
+                },
+                on: { click: _vm.setBackground }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-xs" }, [
+              _c("a", {
+                staticClass: "uk-icon-button clickable downloadBackground",
+                attrs: {
+                  "uk-icon": "download",
+                  "uk-tooltip": "Download",
+                  href: "images/backgrounds/" + this.background,
+                  download: ""
+                }
               })
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-xs" }, [
               _c("span", {
-                staticClass: "uk-icon-button clickable",
-                attrs: { "uk-icon": "trash" },
-                on: { click: _vm.action }
+                staticClass: "uk-icon-button clickable deleteBackground",
+                attrs: { "uk-icon": "trash", "uk-tooltip": "Delete" },
+                on: { click: _vm.deleteBackground }
               })
             ]),
             _vm._v(" "),
@@ -14072,15 +14166,19 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "BackgroundSettings start-xs" }, [
-    _c(
-      "button",
-      {
+    _c("span", { attrs: { "uk-form-custom": "target: true" } }, [
+      _c("input", {
+        staticClass: "uk-input",
+        attrs: { type: "file" },
+        on: { change: _vm.upload }
+      }),
+      _vm._v(" "),
+      _c("input", {
         staticClass:
           "uk-button uk-button-muted uk-text-capitalize roundedButton",
-        on: { click: _vm.action }
-      },
-      [_vm._v("\r\n\t\tUpload +\r\n\t")]
-    ),
+        attrs: { type: "text", placeholder: "Upload +" }
+      })
+    ]),
     _vm._v(" "),
     _c(
       "div",
@@ -35865,6 +35963,24 @@ var actions = {
       console.log(response.data);
       commit('setBackgrounds', response.data);
     });
+  },
+  uploadFile: function uploadFile(_ref25, payload) {
+    var commit = _ref25.commit;
+
+    if (payload.file !== undefined) {
+      var fileReader = new FileReader();
+      fileReader.readAsDataURL(payload.file);
+
+      fileReader.onload = function (e) {
+        var data = {
+          'src': e.target.result,
+          'name': payload.file.name,
+          'type': payload.file.type,
+          'size': payload.file.size
+        };
+        return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(payload.path, data);
+      };
+    }
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({

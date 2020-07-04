@@ -17,6 +17,8 @@ Route::get('/', function () {
 Route::group(['prefix'=>'background'], function(){
     Route::get('/','Background@getBackground');
     Route::get('/all','Background@getList');
+    Route::post('/upload', 'Background@upload');
+    Route::post('/delete', 'Background@delete');
 });
 
 
