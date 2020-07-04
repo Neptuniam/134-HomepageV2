@@ -28,8 +28,8 @@ export default {
                 suppressScrollX: true
             },
             activeTab: {
-                title: 'Background',
-                src: 'BackgroundSettings'
+                title: 'Profile',
+                src: 'LoginSettings'
             },
             tabs: [{
                     title: 'Profile',

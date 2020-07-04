@@ -38,6 +38,9 @@ Vue.component('DateTime',           require('./components/DateTime.vue').default
 Vue.component('ControlBar',         require('./components/ControlBar.vue').default);
 Vue.component('FilePreviewer',      require('./components/FilePreviewer.vue').default);
 
+Vue.component('CustomInput',        require('./components/CustomInput.vue').default);
+Vue.component('CustomButton',       require('./components/CustomButton.vue').default);
+
 
 // Packages
 Vue.component('vueCustomScrollbar', require('vue-custom-scrollbar'));

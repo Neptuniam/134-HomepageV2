@@ -18,9 +18,7 @@
                 {{widget.title}}
             </div>
             <div class="col-xs-3">
-                <button type="button" :class="['uk-button-default uk-button-small clickable', color(widget)]" @click="toggleStatus(widget)">
-                    {{readable[widget.status]}}
-                </button>
+                <CustomButton :title="readable[widget.status]" :color="color(widget)" :click="() => toggleStatus(widget)" />
             </div>
             <div class="col-xs-3">
                 <div class="row center-xs middle-xs">
@@ -50,7 +48,7 @@ export default {
 
     methods: {
         color(widget) {
-            return widget.status ? 'uk-button-default' : 'uk-button-danger'
+            return widget.status ? 'default' : 'danger'
         },
 
         toggleStatus(widget) {
@@ -71,7 +69,8 @@ export default {
     }
 
     .rowHeight {
-        height: 2.5rem;
+        height: 3rem;
+        /* padding: 10px 0px; */
     }
 
     .widgetTitle {
@@ -92,5 +91,11 @@ export default {
     .uk-button-default:hover {
         /* background-color: #e5e5e5 !important; */
         border-color: rgb(150, 150, 150) !important;
+    }
+</style>
+
+<style>
+    .WidgetSettings .uk-button {
+        width: 85px !important;
     }
 </style>

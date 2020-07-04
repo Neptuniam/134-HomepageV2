@@ -6,21 +6,15 @@
         </div>
 
         <div class="inputRow">
-            <span class="row uk-form-label">Username</span>
-            <input type="name"      v-model="name" onClick="this.select();" class="uk-input">
+            <CustomInput placeholder="Username" :inputData.sync="name" />
 
-            <span class="row uk-form-label">Password</span>
-            <input type="password"  v-model="pass" onClick="this.select();" class="uk-input">
+            <CustomInput placeholder="Password" :inputData.sync="pass" />
         </div>
 
         <div class="row center-xs buttonsRow">
-            <button type="button" class="col-xs-5 uk-button uk-button-primary roundedButton uk-text-capitalize" @click="login()">
-                Log in
-            </button>
+            <CustomButton title="Log in" color="primary" class="col-xs-5 uk-text-capitalize" :click="login" />
 
-            <button v-if="activeUser && activeUser.id == 1" type="button" class="col-xs-5 uk-button uk-button-secondary roundedButton uk-text-capitalize" @click="create()">
-                Create Profile
-            </button>
+            <CustomButton v-if="activeUser && activeUser.id == 1" title="Create Profile" color="secondary" class="col-xs-5 uk-text-capitalize" :click="create" />
         </div>
     </div>
 </div>
@@ -68,6 +62,11 @@ export default {
                 UIkit.notification({
                     message: '<span uk-icon=\'icon: check\'></span> New User Created!',
                     status: 'success'
+                })
+            }).catch(() => {
+                UIkit.notification({
+                    message: '<span uk-icon=\'icon: close\'></span> Failed to create user!',
+                    status: 'danger'
                 })
             })
         },
