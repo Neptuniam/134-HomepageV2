@@ -39,4 +39,22 @@ class FavouriteController extends Controller {
             Favourite::find($favourite['id'])->update($favourite);
         }
     }
+
+    public function upload(Request $request) {
+        $favourite = Favourite::find($request['object']['id']);
+
+        if ($favourite) {
+            // Delete existing image srcs before overwriting it
+            if ($favourite['src'])
+                $this->DeleteFile('images/favouritesIcons/'.$favourite['src']);
+
+            $this->UploadFile('images/favouritesIcons/', $request['file']);
+            $favourite->src = $request['file']['name'];
+            $favourite->save();
+        }
+    }
+
+    public function delete(Request $request) {
+        return $this->DeleteFile('images/favouritesIcons/'.$request['name']);
+    }
 }

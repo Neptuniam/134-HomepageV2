@@ -65,6 +65,7 @@ export default {
                 'flurries': "showers",
                 'drizzle': "showers",
                 'thunder': "storm-showers",
+                'thunderstorms': "storm-showers",
                 'thundery': "storm-showers",
                 'snow': "snow",
                 'ice': 'sleet-storm',
@@ -197,49 +198,6 @@ export default {
     },
     mounted() {
         this.getWeather(this.location)
-
-
-        // console.log('Sunny', '=>', this.getIcon('Sunny'));
-        // console.log('Mostly Sunny', '=>', this.getIcon('Mostly Sunny'))
-        // console.log('Partly Sunny', '=>', this.getIcon('Partly Sunny'))
-        // console.log('Intermittent Clouds', '=>', this.getIcon('Intermittent Clouds'))
-        // console.log('Hazy Sunshine', '=>', this.getIcon('Hazy Sunshine'))
-        // console.log('Mostly Cloudy', '=>', this.getIcon('Mostly Cloudy'))
-        // console.log('Cloudy', '=>', this.getIcon('Cloudy'))
-        // console.log('Dreary (Overcast)', '=>', this.getIcon('Dreary (Overcast)'))
-        // console.log('Fog', '=>', this.getIcon('Fog'))
-        // console.log('Showers', '=>', this.getIcon('Showers'))
-        // console.log('Mostly Cloudy w/ Showers', '=>', this.getIcon('Mostly Cloudy w/ Showers'))
-        // console.log('Partly Sunny w/ Showers', '=>', this.getIcon('Partly Sunny w/ Showers'))
-        // console.log('T-Storms', '=>', this.getIcon('T-Storms'))
-        // console.log('Mostly Cloudy w/ T-Storms', '=>', this.getIcon('Mostly Cloudy w/ T-Storms'))
-        // console.log('Partly Sunny w/ T-Storms', '=>', this.getIcon('Partly Sunny w/ T-Storms'))
-        // console.log('Rain', '=>', this.getIcon('Rain'))
-        // console.log('Flurries', '=>', this.getIcon('Flurries'))
-        // console.log('Mostly Cloudy w/ Flurries', '=>', this.getIcon('Mostly Cloudy w/ Flurries'))
-        // console.log('Partly Sunny w/ Flurries', '=>', this.getIcon('Partly Sunny w/ Flurries'))
-        // console.log('Snow', '=>', this.getIcon('Snow'))
-        // console.log('Mostly Cloudy w/ Snow', '=>', this.getIcon('Mostly Cloudy w/ Snow'))
-        // console.log('Ice', '=>', this.getIcon('Ice'))
-        // console.log('Sleet', '=>', this.getIcon('Sleet'))
-        // console.log('Freezing Rain', '=>', this.getIcon('Freezing Rain'))
-        // console.log('Rain and Snow', '=>', this.getIcon('Rain and Snow'))
-        // console.log('Hot', '=>', this.getIcon('Hot'))
-        // console.log('Cold', '=>', this.getIcon('Cold'))
-        // console.log('Windy', '=>', this.getIcon('Windy'))
-        // console.log('Clear', '=>', this.getIcon('Clear'))
-        // console.log('Mostly Clear', '=>', this.getIcon('Mostly Clear'))
-        // console.log('Partly Cloudy', '=>', this.getIcon('Partly Cloudy'))
-        // console.log('Intermittent Clouds', '=>', this.getIcon('Intermittent Clouds'))
-        // console.log('Hazy Moonlight', '=>', this.getIcon('Hazy Moonlight'))
-        // console.log('Mostly Cloudy', '=>', this.getIcon('Mostly Cloudy'))
-        // console.log('Partly Cloudy w/ Showers', '=>', this.getIcon('Partly Cloudy w/ Showers'))
-        // console.log('Mostly Cloudy w/ Showers', '=>', this.getIcon('Mostly Cloudy w/ Showers'))
-        // console.log('Partly Cloudy w/ T-Storms', '=>', this.getIcon('Partly Cloudy w/ T-Storms'))
-        // console.log('Mostly Cloudy w/ T-Storms', '=>', this.getIcon('Mostly Cloudy w/ T-Storms'))
-        // console.log('Mostly Cloudy w/ Flurries', '=>', this.getIcon('Mostly Cloudy w/ Flurries'))
-        // console.log('Mostly Cloudy w/ Snow', '=>', this.getIcon('Mostly Cloudy w/ Snow'))
-
 
         if (this.widget && this.widget.interval)
             setInterval(this.getWeather(this.location), this.widget.interval * 60000)

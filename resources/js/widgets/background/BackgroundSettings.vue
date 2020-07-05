@@ -29,7 +29,7 @@ export default {
 	methods: {
 		upload(event) {
 			this.uploadFile({
-				path: '/background/upload',
+				route: '/background/upload',
 				file: event.target.files[0]
 			}).then(upload => {
 				UIkit.notification({
@@ -45,30 +45,6 @@ export default {
 					status: 'danger'
 				})
 			})
-
-            // if (event && event.target.files[0] !== undefined ) {
-			// 	const payload = event.target.files[0]
-			// 	var fileReader = new FileReader()
-			// 	var name = payload['name']
-			// 	var type = payload['type']
-			// 	var size = payload['size']
-			//
-			// 	fileReader.readAsDataURL(payload)
-			//
-			// 	fileReader.onload = (e) => {
-			// 		let data = {
-			// 			'src':  e.target.result,
-			// 			'name': name,
-			// 			'type': type,
-			// 			'size': size
-			// 		}
-			//
-			// 		this.axios.post('/background/upload', data).then(upload => {
-			// 			this.file = null
-			// 			this.fetchBackgrounds()
-			// 		})
-			// 	}
-            // }
         },
 
 		...mapActions('settings', {

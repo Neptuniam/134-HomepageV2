@@ -18,7 +18,7 @@
 
 	<div class="col-xs ">
 		<span v-if="editMode" uk-form-custom="target: true" class="fullWidth">
-			<input type="file" class="uk-input" @change="uploadFile">
+			<input type="file" class="uk-input" @change="upload">
 			<input class="uk-input" type="text" :placeholder="favourite.src ? favourite.src : 'Click here to upload a file'">
 		</span>
 		<span v-else>
@@ -171,9 +171,26 @@ export default {
 			}
 		},
 
-		uploadFile($event) {
-			console.log('setting');
-			this.favourite.src = 'test'
+		upload(event) {
+			this.uploadFile({
+				route: '/favourites/upload',
+				object: this.favourite,
+				file: event.target.files[0]
+			}).then(upload => {
+				console.log('upload', upload);
+				UIkit.notification({
+					message: "File Uploaded",
+					status: 'success'
+				})
+
+				console.log('event', event.target.files[0].name);
+				this.favourite.src = event.target.files[0].name
+			}).catch(error => {
+				UIkit.notification({
+					message: "Error: " + error.response,
+					status: 'danger'
+				})
+			})
 		},
 
 		restore() {
@@ -184,6 +201,7 @@ export default {
 		...mapActions('settings', {
 			updateFavourite: 'updateFavourite',
 			deleteFavourite: 'deleteFavourite',
+			uploadFile: 'uploadFile'
 		})
 	},
 

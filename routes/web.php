@@ -22,7 +22,7 @@ Route::group(['prefix'=>'background'], function(){
 });
 
 
-Route::group(['prefix'=>'settings'], function(){
+// Route::group(['prefix'=>'settings'], function(){
     Route::group(['prefix'=>'users'], function(){
         Route::get('/','UserController@fetchUsers');
         Route::put('/','UserController@setUser');
@@ -51,8 +51,9 @@ Route::group(['prefix'=>'settings'], function(){
         Route::put('/delete', 'FavouriteController@deleteFavourite');
 
         Route::put('/updatePositions', 'FavouriteController@updatePositions');
+        Route::post('/upload', 'FavouriteController@upload');
     });
-});
+// });
 
 Route::group(['prefix'=>'notes'], function(){
     Route::get('/', 'NotesController@fetchNotes');

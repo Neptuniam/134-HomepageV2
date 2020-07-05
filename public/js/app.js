@@ -2747,7 +2747,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       this.uploadFile({
-        path: '/background/upload',
+        route: '/background/upload',
         file: event.target.files[0]
       }).then(function (upload) {
         UIkit.notification({
@@ -2762,29 +2762,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           message: "Error: " + error.response,
           status: 'danger'
         });
-      }); // if (event && event.target.files[0] !== undefined ) {
-      // 	const payload = event.target.files[0]
-      // 	var fileReader = new FileReader()
-      // 	var name = payload['name']
-      // 	var type = payload['type']
-      // 	var size = payload['size']
-      //
-      // 	fileReader.readAsDataURL(payload)
-      //
-      // 	fileReader.onload = (e) => {
-      // 		let data = {
-      // 			'src':  e.target.result,
-      // 			'name': name,
-      // 			'type': type,
-      // 			'size': size
-      // 		}
-      //
-      // 		this.axios.post('/background/upload', data).then(upload => {
-      // 			this.file = null
-      // 			this.fetchBackgrounds()
-      // 		})
-      // 	}
-      // }
+      });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settings', {
     fetchBackgrounds: 'fetchBackgrounds',
@@ -3055,9 +3033,27 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }, _callee);
       }))();
     },
-    uploadFile: function uploadFile($event) {
-      console.log('setting');
-      this.favourite.src = 'test';
+    upload: function upload(event) {
+      var _this3 = this;
+
+      this.uploadFile({
+        route: '/favourites/upload',
+        object: this.favourite,
+        file: event.target.files[0]
+      }).then(function (upload) {
+        console.log('upload', upload);
+        UIkit.notification({
+          message: "File Uploaded",
+          status: 'success'
+        });
+        console.log('event', event.target.files[0].name);
+        _this3.favourite.src = event.target.files[0].name;
+      })["catch"](function (error) {
+        UIkit.notification({
+          message: "Error: " + error.response,
+          status: 'danger'
+        });
+      });
     },
     restore: function restore() {
       this.favourite = _objectSpread({}, this.og);
@@ -3065,7 +3061,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('settings', {
     updateFavourite: 'updateFavourite',
-    deleteFavourite: 'deleteFavourite'
+    deleteFavourite: 'deleteFavourite',
+    uploadFile: 'uploadFile'
   })),
   mounted: function mounted() {
     this.og = _objectSpread({}, this.favourite);
@@ -4983,6 +4980,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'flurries': "showers",
         'drizzle': "showers",
         'thunder': "storm-showers",
+        'thunderstorms': "storm-showers",
         'thundery': "storm-showers",
         'snow': "snow",
         'ice': 'sleet-storm',
@@ -5135,47 +5133,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   mounted: function mounted() {
-    this.getWeather(this.location); // console.log('Sunny', '=>', this.getIcon('Sunny'));
-    // console.log('Mostly Sunny', '=>', this.getIcon('Mostly Sunny'))
-    // console.log('Partly Sunny', '=>', this.getIcon('Partly Sunny'))
-    // console.log('Intermittent Clouds', '=>', this.getIcon('Intermittent Clouds'))
-    // console.log('Hazy Sunshine', '=>', this.getIcon('Hazy Sunshine'))
-    // console.log('Mostly Cloudy', '=>', this.getIcon('Mostly Cloudy'))
-    // console.log('Cloudy', '=>', this.getIcon('Cloudy'))
-    // console.log('Dreary (Overcast)', '=>', this.getIcon('Dreary (Overcast)'))
-    // console.log('Fog', '=>', this.getIcon('Fog'))
-    // console.log('Showers', '=>', this.getIcon('Showers'))
-    // console.log('Mostly Cloudy w/ Showers', '=>', this.getIcon('Mostly Cloudy w/ Showers'))
-    // console.log('Partly Sunny w/ Showers', '=>', this.getIcon('Partly Sunny w/ Showers'))
-    // console.log('T-Storms', '=>', this.getIcon('T-Storms'))
-    // console.log('Mostly Cloudy w/ T-Storms', '=>', this.getIcon('Mostly Cloudy w/ T-Storms'))
-    // console.log('Partly Sunny w/ T-Storms', '=>', this.getIcon('Partly Sunny w/ T-Storms'))
-    // console.log('Rain', '=>', this.getIcon('Rain'))
-    // console.log('Flurries', '=>', this.getIcon('Flurries'))
-    // console.log('Mostly Cloudy w/ Flurries', '=>', this.getIcon('Mostly Cloudy w/ Flurries'))
-    // console.log('Partly Sunny w/ Flurries', '=>', this.getIcon('Partly Sunny w/ Flurries'))
-    // console.log('Snow', '=>', this.getIcon('Snow'))
-    // console.log('Mostly Cloudy w/ Snow', '=>', this.getIcon('Mostly Cloudy w/ Snow'))
-    // console.log('Ice', '=>', this.getIcon('Ice'))
-    // console.log('Sleet', '=>', this.getIcon('Sleet'))
-    // console.log('Freezing Rain', '=>', this.getIcon('Freezing Rain'))
-    // console.log('Rain and Snow', '=>', this.getIcon('Rain and Snow'))
-    // console.log('Hot', '=>', this.getIcon('Hot'))
-    // console.log('Cold', '=>', this.getIcon('Cold'))
-    // console.log('Windy', '=>', this.getIcon('Windy'))
-    // console.log('Clear', '=>', this.getIcon('Clear'))
-    // console.log('Mostly Clear', '=>', this.getIcon('Mostly Clear'))
-    // console.log('Partly Cloudy', '=>', this.getIcon('Partly Cloudy'))
-    // console.log('Intermittent Clouds', '=>', this.getIcon('Intermittent Clouds'))
-    // console.log('Hazy Moonlight', '=>', this.getIcon('Hazy Moonlight'))
-    // console.log('Mostly Cloudy', '=>', this.getIcon('Mostly Cloudy'))
-    // console.log('Partly Cloudy w/ Showers', '=>', this.getIcon('Partly Cloudy w/ Showers'))
-    // console.log('Mostly Cloudy w/ Showers', '=>', this.getIcon('Mostly Cloudy w/ Showers'))
-    // console.log('Partly Cloudy w/ T-Storms', '=>', this.getIcon('Partly Cloudy w/ T-Storms'))
-    // console.log('Mostly Cloudy w/ T-Storms', '=>', this.getIcon('Mostly Cloudy w/ T-Storms'))
-    // console.log('Mostly Cloudy w/ Flurries', '=>', this.getIcon('Mostly Cloudy w/ Flurries'))
-    // console.log('Mostly Cloudy w/ Snow', '=>', this.getIcon('Mostly Cloudy w/ Snow'))
-
+    this.getWeather(this.location);
     if (this.widget && this.widget.interval) setInterval(this.getWeather(this.location), this.widget.interval * 60000);
   }
 });
@@ -14739,7 +14697,7 @@ var render = function() {
               _c("input", {
                 staticClass: "uk-input",
                 attrs: { type: "file" },
-                on: { change: _vm.uploadFile }
+                on: { change: _vm.upload }
               }),
               _vm._v(" "),
               _c("input", {
@@ -36393,20 +36351,20 @@ var actions = {
       return Promise.reject('user_not_found');
     } else {
       dispatch('setActiveUser', user);
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users', user);
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/users', user);
     }
   },
   setActiveUser: function setActiveUser(_ref5, payload) {
     var commit = _ref5.commit,
         dispatch = _ref5.dispatch;
     window.localStorage.setItem('activeUser', JSON.stringify(payload));
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/users', payload).then(function () {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/users', payload).then(function () {
       commit('setUser', payload);
     });
   },
   fetchUsers: function fetchUsers(_ref6) {
     var commit = _ref6.commit;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/users').then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/users').then(function (response) {
       // console.log('%c Users', 'background: #222; color: #bada55');
       // console.log(response.data);
       commit('setUsers', response.data);
@@ -36415,7 +36373,7 @@ var actions = {
   createUser: function createUser(_ref7, payload) {
     var commit = _ref7.commit,
         dispatch = _ref7.dispatch;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/settings/users', payload).then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/users', payload).then(function (response) {
       console.log(response);
       payload.id = response.data;
       dispatch('fetchUsers');
@@ -36425,7 +36383,7 @@ var actions = {
   // Settings
   fetchWidgets: function fetchWidgets(_ref8) {
     var commit = _ref8.commit;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/widgets/').then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/widgets/').then(function (response) {
       console.log('%c Widgets ', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setWidgets', response.data);
@@ -36433,12 +36391,12 @@ var actions = {
   },
   updateWidget: function updateWidget(_ref9, payload) {
     var commit = _ref9.commit;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/widgets/', payload);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/widgets/', payload);
   },
   // Location Controllers
   fetchLocations: function fetchLocations(_ref10) {
     var commit = _ref10.commit;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/locations/').then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/locations/').then(function (response) {
       console.log('%c Locations ', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setLocations', response.data);
@@ -36450,11 +36408,11 @@ var actions = {
 
     // If id is 0, we are creating a new location
     if (payload.id == null) {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/settings/locations/', payload).then(function (response) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/locations/', payload).then(function (response) {
         dispatch('fetchLocations');
       });
     } else {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/locations/', payload).then(function (response) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/locations/', payload).then(function (response) {
         dispatch('fetchLocations');
       });
     }
@@ -36462,7 +36420,7 @@ var actions = {
   deleteLocation: function deleteLocation(_ref12, payload) {
     var commit = _ref12.commit,
         dispatch = _ref12.dispatch;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/locations/delete', payload).then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/locations/delete', payload).then(function (response) {
       dispatch('fetchLocations');
     });
   },
@@ -36470,7 +36428,7 @@ var actions = {
   fetchMapsSettings: function fetchMapsSettings(_ref13) {
     var commit = _ref13.commit,
         dispatch = _ref13.dispatch;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/locations/settings').then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/locations/settings').then(function (response) {
       console.log('%c Maps Settings ', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setMapsSettings', response.data[0]); // dispatch('fetchLocations')
@@ -36480,14 +36438,14 @@ var actions = {
     var commit = _ref14.commit,
         dispatch = _ref14.dispatch;
     console.log(payload);
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/locations/settings', payload).then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/locations/settings', payload).then(function (response) {
       dispatch('fetchMapsSettings');
     });
   },
   // Favourites Controllers
   fetchFavourites: function fetchFavourites(_ref15) {
     var commit = _ref15.commit;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/settings/favourites/').then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/favourites/').then(function (response) {
       console.log('%c Favourites ', 'background: #222; color: #bada55');
       console.log(response.data);
       commit('setFavourites', response.data);
@@ -36499,11 +36457,11 @@ var actions = {
 
     // If id is 0, we are creating a new location
     if (payload.id == null) {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/settings/favourites/', payload).then(function (response) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/favourites/', payload).then(function (response) {
         dispatch('fetchFavourites');
       });
     } else {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/favourites/', payload).then(function (response) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/favourites/', payload).then(function (response) {
         dispatch('fetchFavourites');
       });
     }
@@ -36511,7 +36469,7 @@ var actions = {
   deleteFavourite: function deleteFavourite(_ref17, payload) {
     var commit = _ref17.commit,
         dispatch = _ref17.dispatch;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/settings/favourites/delete', payload).then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/favourites/delete', payload).then(function (response) {
       dispatch('fetchFavourites');
     });
   },
@@ -36583,18 +36541,21 @@ var actions = {
   uploadFile: function uploadFile(_ref25, payload) {
     var commit = _ref25.commit;
 
-    if (payload.file !== undefined) {
+    if (payload.route && payload.file) {
       var fileReader = new FileReader();
       fileReader.readAsDataURL(payload.file);
 
       fileReader.onload = function (e) {
         var data = {
-          'src': e.target.result,
-          'name': payload.file.name,
-          'type': payload.file.type,
-          'size': payload.file.size
+          object: payload.object,
+          file: {
+            'src': e.target.result,
+            'name': payload.file.name,
+            'type': payload.file.type,
+            'size': payload.file.size
+          }
         };
-        return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(payload.path, data);
+        return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(payload.route, data);
       };
     }
   }

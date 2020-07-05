@@ -32,7 +32,7 @@ class Background extends Controller {
     }
 
     public function upload(Request $request) {
-        return $this->UploadFile('images/backgrounds/', $request);
+        return $this->UploadFile('images/backgrounds/', $request['file']);
     }
 
     public function delete(Request $request) {
