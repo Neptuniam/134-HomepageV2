@@ -1,7 +1,7 @@
 <template>
 <div class="BackgroundSettings start-xs">
 	<span uk-form-custom="target: true">
-        <input type="file" class="uk-input" @change="upload">
+        <input type="file" class="uk-input" @change="upload" multiple>
         <input class="uk-button uk-button-muted uk-text-capitalize roundedButton" type="text" placeholder="Upload +">
     </span>
 
@@ -28,23 +28,26 @@ export default {
 
 	methods: {
 		upload(event) {
-			this.uploadFile({
-				route: '/background/upload',
-				file: event.target.files[0]
-			}).then(upload => {
-				UIkit.notification({
-					message: "File Uploaded",
-					status: 'success'
-				})
+			for (const file of event.target.files) {
+				this.uploadFile({
+					route: '/background/upload',
+					file: file
+				}).then(upload => {
+					UIkit.notification({
+						message: "File Uploaded",
+						status: 'success'
+					})
 
-				this.file = null
-				this.fetchBackgrounds()
-			}).catch(error => {
-				UIkit.notification({
-					message: "Error: " + error.response,
-					status: 'danger'
+					this.file = null
+					this.fetchBackgrounds()
+				}).catch(error => {
+					UIkit.notification({
+						message: "Error: " + error.response,
+						status: 'danger'
+					})
 				})
-			})
+			}
+
         },
 
 		...mapActions('settings', {
