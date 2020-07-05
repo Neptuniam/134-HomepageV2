@@ -1,13 +1,24 @@
 <template>
 <div v-if="board && cards" class="start-xs TrelloContainer">
-    <a :href="board.shortUrl" target="_blank">
-        <h1 class="textSpecial nospacing"> {{board.name}} </h1>
-    </a>
+    <div class="headerContainer">
+        <a :href="board.shortUrl" target="_blank" class="center-xs">
+            <h1 class="textTitle"> {{board.name}} </h1>
+        </a>
 
-    <CardBuilder :list="comingUp" title='Coming Up' />
-    <CardBuilder :list="noDue" title='No Due Date' />
-    <!-- <CardBuilder :list="done" title='Done' /> -->
-    <!-- <CardBuilder :list="past" title='Past Cards' /> -->
+        <ul uk-tab class="center-xs">
+            <li v-for="tab in tabs" :class="{'uk-active': activeTab.title === tab.title}" @click="activeTab = tab">
+                <a class="uk-text-capitalize">
+                    {{ tab.title }}
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- {{activeTab}} -->
+
+    <div v-if="activeTab && 'list' in activeTab && 'title' in activeTab" class="BuilderContainer">
+        <CardBuilder :list="activeTab.list" :title="activeTab.title" />
+    </div>
 
 
     <off-canvas-container v-if="board.actions && board.actions.length">
@@ -35,23 +46,33 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 export default {
-    data() {
-        return {
-            today: new Date(),
-            DoneID: "5e0b302d93a3935125fd3506",
-
-            comingUp: null,
-            done: null,
-            past: null,
-            noDue: null,
-        }
-    },
-
     computed: {
+        tabs() {
+            return [
+                {title: 'Coming Up', list: this.comingUp},
+                {title: 'No Due Date', list: this.noDue},
+                {title: 'Past Cards', list: this.past},
+                {title: 'Done', list: this.done}
+            ]
+        },
         ...mapGetters('settings', {
             board:  'getBoard',
             cards:  'getCards',
         })
+    },
+
+    data() {
+        return {
+            comingUp: null,
+            done: null,
+            past: null,
+            noDue: null,
+
+            activeTab: {},
+
+            today: new Date(),
+            DoneID: "5e0b302d93a3935125fd3506",
+        }
     },
 
     methods: {
@@ -63,11 +84,14 @@ export default {
                 list[dayIndex].push(card)
             }
         },
-        processCards() {
+        async processCards() {
             this.comingUp = {}
             this.past = {}
             this.done = {}
             this.noDue = []
+
+            if (!this.cards)
+                await this.fetchCards()
 
             // Seperate cards into lists by due date
             for (let card of this.cards) {
@@ -89,6 +113,8 @@ export default {
                     this.noDue.push(card)
                 }
             }
+
+            this.activeTab = this.tabs[0]
         },
 
         ...mapActions('settings', {
@@ -110,16 +136,36 @@ export default {
 
         height: 100%;
         width: 100vw;
-
-        overflow-y: auto;
-        overflow-x: hidden;
-
-        margin: 60px 0px 0px 0px;
     }
 
-    button {
+    .headerContainer {
+        height: 17vh;
+    }
+    .BuilderContainer {
+        height: 83vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .headerContainer a h1 {
+        font-size: 5.5vh;
+        font-weight: 600 !important;
+    }
+
+    .TrelloContainer button {
         position: fixed;
         top: 20px;
         right: 200px;
+    }
+
+    .uk-tab {
+        margin-top: 0px;
+    }
+    .uk-tab>*>a {
+        font-weight: 600;
+        font-size: 3vh !important;
+    }
+    .uk-tab>*>a:hover {
+        color: rgb(50, 50, 50) !important;
     }
 </style>

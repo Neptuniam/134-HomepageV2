@@ -1,12 +1,13 @@
 <template>
 <div class="row center-xs middle-xs Homepage nomargin uk-animation-fade">
+    <router-view />
+
     <ControlBar />
 
     <DateTime />
 
     <FilePreviewer />
 
-    <router-view />
 </div>
 </template>
 
@@ -105,6 +106,7 @@ export default {
         overflow: hidden !important;
 
         color: black;
+        /* color: #001a33 !important; */
 
         height: 100vh;
         width: 100vw;

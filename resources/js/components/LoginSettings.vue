@@ -89,7 +89,7 @@ export default {
         font-weight: 550px !important;
     }
 
-    .inputRow {
+    /* .inputRow {
         margin: 50px 0;
     }
 
@@ -101,11 +101,7 @@ export default {
         padding-left: 15px;
     }
 
-    .buttonsRow {
-        /* margin-top: 40px; */
-    }
-
     .uk-button {
         font-size: 18px;
-    }
+    } */
 </style>

@@ -1,12 +1,12 @@
 zz<template>
 	<div class="card color-overlay uk-box-shadow-hover-large" @click="openPreview(card)"
 		:class="{
-			'clickable': hasDesc(card),
-			/* 'uk-box-shadow-hover-large': hasDesc(card) */
+			'clickable': hasDesc,
+			/* 'uk-box-shadow-hover-large': hasDesc */
 		}" >
 
 		<div class="row middle-xs">
-			<span v-if="hasDesc(card)" class="uk-icon" uk-icon="icon: info; ratio:1" />
+			<span v-if="hasDesc" class="uk-icon" uk-icon="icon: info; ratio:1" />
 
 			<span v-if="members" v-for="member in members" class="uk-badge"
 				 :style="`background-color: ${util.avatar_color(member.fullName)}`">
@@ -32,11 +32,13 @@ export default {
 	    }
 	},
 
-	methods: {
-		hasDesc(card) {
-			return card && (card.desc || card.idChecklists && card.idChecklists.length)
-		},
+	computed: {
+	    hasDesc() {
+	        return this.card && (this.card.desc || this.card.idChecklists && this.card.idChecklists.length)
+	    }
+	},
 
+	methods: {
 		async openPreview(card) {
 			console.log(card);
 
@@ -90,14 +92,5 @@ export default {
 	span {
 		font-size: 14px;
 		margin: 0px 0px 10px 5px;
-	}
-
-	.card {
-		color: rgb(245, 245, 245);
-		background-color: #121212;
-	}
-	.card:before {
-		background: #4BB2F9;
-		opacity: 23%;
 	}
 </style>

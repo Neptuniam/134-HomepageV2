@@ -74,7 +74,7 @@ export default {
 <style scoped>
 	.fieldRow {
 		position: relative;
-		margin: 30px 0px !important;
+		margin: 40px 0px !important;
 
 		width: 100%;
 	}
@@ -84,6 +84,7 @@ export default {
 		z-index: 0;
 
 		margin: auto !important;
+		text-align: center;
 	}
 
 	label {

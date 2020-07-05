@@ -56,6 +56,8 @@ export default {
 		top: 10px;
 		left: 10px;
 		width: 220px;
+
+		z-index: 0;
 	}
 
 	.pageControl .uk-icon {
