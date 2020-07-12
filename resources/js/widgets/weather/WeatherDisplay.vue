@@ -120,6 +120,14 @@ export default {
         },
 
         async requestWeather(location) {
+            const getExipery = (expires) => {
+                var dt = new Date();
+                dt.setHours( dt.getHours() + 2 );
+
+                // Dont let the weather info be older than two hours
+                return new Date(expires) < dt ? expires : dt.toString()
+            }
+
             if (location === 'loc')
                 location = this.location
 
@@ -139,14 +147,12 @@ export default {
             this.$set(this.weather, 'current', current)
             this.$set(this.weather, 'forecast', forecastResponse.data.DailyForecasts)
             this.$set(this.weather, 'requestLoc', location)
-            this.$set(this.weather, 'expires', locResponse.headers.expires)
+            this.$set(this.weather, 'expires', getExipery(locResponse.headers.expires))
 
 
             console.log('%c Retrieved Weather ', 'background: #222; color: #bada55');
             console.log(this.weather);
             localStorage.setItem('LastWeatherDetails', JSON.stringify(this.weather))
-
-            // this.curLoc = this.parseAddress()
         },
 
         distanceBetween(cachedLoc, curLoc) {
