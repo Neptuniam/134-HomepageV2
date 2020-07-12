@@ -46,7 +46,7 @@ Route::group(['prefix'=>'background'], function(){
 
     Route::group(['prefix'=>'favourites'], function(){
         Route::get('/', 'FavouriteController@fetchFavourites');
-        Route::post('/create','FavouriteController@createFavourite');
+        Route::post('/','FavouriteController@createFavourite');
         Route::put('/', 'FavouriteController@updateFavourite');
         Route::put('/delete', 'FavouriteController@deleteFavourite');
 
@@ -57,7 +57,7 @@ Route::group(['prefix'=>'background'], function(){
     Route::group(['prefix'=>'news'], function(){
         Route::group(['prefix'=>'categorys'], function() {
             Route::get('/', 'CategoryController@fetchCategorys');
-            Route::post('/','CategoryController@createCategory');
+            Route::post('/create','CategoryController@createCategory');
             Route::put('/', 'CategoryController@updateCategory');
             Route::put('/delete', 'CategoryController@deleteCategory');
 
