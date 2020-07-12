@@ -73,7 +73,7 @@ export default {
 
     async destroyed() {
         if (this.updatedOrder) {
-            await this.axios.put('/settings/favourites/updatePositions', this.updatedOrder)
+            await this.axios.put('/favourites/updatePositions', this.updatedOrder)
             this.fetchFavourites()
         }
     },

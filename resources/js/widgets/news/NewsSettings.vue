@@ -67,7 +67,7 @@ export default {
 
     async destroyed() {
         if (this.updatedOrder) {
-            await this.axios.put('/settings/categorys/updatePositions', this.updatedOrder)
+            await this.axios.put('/news/categorys/updatePositions', this.updatedOrder)
             this.fetchCategorys()
         }
     },

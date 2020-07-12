@@ -46,7 +46,7 @@ Route::group(['prefix'=>'background'], function(){
 
     Route::group(['prefix'=>'favourites'], function(){
         Route::get('/', 'FavouriteController@fetchFavourites');
-        Route::post('/','FavouriteController@createFavourite');
+        Route::post('/create','FavouriteController@createFavourite');
         Route::put('/', 'FavouriteController@updateFavourite');
         Route::put('/delete', 'FavouriteController@deleteFavourite');
 
@@ -55,12 +55,14 @@ Route::group(['prefix'=>'background'], function(){
     });
 
     Route::group(['prefix'=>'news'], function(){
-        Route::get('/categorys', 'CategoryController@fetchCategorys');
-        Route::post('/categorys','CategoryController@createCategory');
-        Route::put('/categorys', 'CategoryController@updateCategory');
-        Route::put('/categorys/delete', 'CategoryController@deleteCategory');
+        Route::group(['prefix'=>'categorys'], function() {
+            Route::get('/', 'CategoryController@fetchCategorys');
+            Route::post('/','CategoryController@createCategory');
+            Route::put('/', 'CategoryController@updateCategory');
+            Route::put('/delete', 'CategoryController@deleteCategory');
 
-        Route::put('/updatePositions', 'CategoryController@updatePositions');
+            Route::put('/updatePositions', 'CategoryController@updatePositions');
+        });
     });
 // });
 

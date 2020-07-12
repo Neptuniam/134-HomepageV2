@@ -239,7 +239,7 @@ const actions = {
     updateCategory: ({commit, dispatch}, payload) => {
         // If id is 0, we are creating a new location
         if (payload.id == null) {
-            return axios.post('/news/categorys/',payload).then(response => {
+            return axios.post('/news/categorys/create',payload).then(response => {
                 dispatch('fetchCategorys')
             })
         } else {
