@@ -1,4 +1,4 @@
-zz<template>
+<template>
 	<div class="card color-overlay uk-box-shadow-hover-large" @click="openPreview(card)"
 		:class="{
 			'clickable': hasDesc,

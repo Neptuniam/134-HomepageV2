@@ -53,6 +53,15 @@ Route::group(['prefix'=>'background'], function(){
         Route::put('/updatePositions', 'FavouriteController@updatePositions');
         Route::post('/upload', 'FavouriteController@upload');
     });
+
+    Route::group(['prefix'=>'news'], function(){
+        Route::get('/categorys', 'CategoryController@fetchCategorys');
+        Route::post('/categorys','CategoryController@createCategory');
+        Route::put('/categorys', 'CategoryController@updateCategory');
+        Route::put('/categorys/delete', 'CategoryController@deleteCategory');
+
+        Route::put('/updatePositions', 'CategoryController@updatePositions');
+    });
 // });
 
 Route::group(['prefix'=>'notes'], function(){

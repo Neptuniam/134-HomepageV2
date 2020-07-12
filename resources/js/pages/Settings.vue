@@ -28,8 +28,8 @@ export default {
                 suppressScrollX: true
             },
             activeTab: {
-                title: 'Profile',
-                src: 'LoginSettings'
+                title: 'News',
+                src: 'NewsSettings'
             },
             tabs: [{
                     title: 'Profile',
@@ -43,6 +43,9 @@ export default {
                 }, {
                     title: 'Maps',
                     src: 'MapsSettings'
+                }, {
+                    title: 'News',
+                    src: 'NewsSettings'
                 }, {
                     title: 'Favourites',
                     src: 'FavSettings'

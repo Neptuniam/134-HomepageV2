@@ -9,6 +9,8 @@ Vue.component('BackgroundSettings',	require('./widgets/background/BackgroundSett
 Vue.component('BackgroundCard',		require('./widgets/background/BackgroundCard.vue').default);
 
 Vue.component('News',               require('./widgets/news/NewsDisplay.vue').default);
+Vue.component('NewsSettings',       require('./widgets/news/NewsSettings.vue').default);
+Vue.component('NewsRow',            require('./widgets/news/NewsRow.vue').default);
 
 Vue.component('Maps',               require('./widgets/maps/MapsDisplay.vue').default);
 Vue.component('MapsSettings',       require('./widgets/maps/MapsSettings.vue').default);

@@ -15,6 +15,7 @@ const state = {
     backgrounds: null,
 
     news: null,
+    categorys: null,
 
     notes: null,
 
@@ -42,6 +43,7 @@ const getters = {
     getBackgrounds: (state) => state.backgrounds,
 
     getNews: (state) => state.news,
+    getCategorys: (state) => state.categorys,
 
     getNotes: (state) => state.notes,
 
@@ -68,6 +70,7 @@ const mutations = {
     setBackgrounds: (state, payload) => { state.backgrounds = payload },
 
     setNews: (state, payload) => { state.news = payload },
+    setCategorys: (state, payload) => { state.categorys = payload },
 
     setNotes: (state, payload) => { state.notes = payload },
 
@@ -217,14 +220,40 @@ const actions = {
     },
 
     // News Controllers
-    fetchNews: ({commit}, payload) => {
-        return axios.get(`http://newsapi.org/v2/top-headlines?country=ca&category=${payload}&apiKey=${process.env.MIX_NEWS_KEY}`).then(response => {
+    fetchNews: ({commit, dispatch}, payload) => {
+        return axios.get(`https://content.guardianapis.com/search?q=${payload}&api-key=${process.env.MIX_GAURDIAN_KEY}`).then(response => {
             console.log('%c News ', 'background: #222; color: #bada55');
-            console.log(response.data.articles);
+            console.log(response.data.response);
 
-            commit('setNews', response.data.articles)
+            commit('setNews', response.data.response.results)
         })
     },
+    fetchCategorys: ({commit}) => {
+        return axios.get('/news/categorys/').then(response => {
+            console.log('%c Categorys ', 'background: #222; color: #bada55');
+            console.log(response.data);
+
+            commit('setCategorys', response.data)
+        })
+    },
+    updateCategory: ({commit, dispatch}, payload) => {
+        // If id is 0, we are creating a new location
+        if (payload.id == null) {
+            return axios.post('/news/categorys/',payload).then(response => {
+                dispatch('fetchCategorys')
+            })
+        } else {
+            return axios.put('/news/categorys/',payload).then(response => {
+                dispatch('fetchCategorys')
+            })
+        }
+    },
+    deleteCategory: ({commit, dispatch}, payload) => {
+        return axios.put('/news/categorys/delete',payload).then(response => {
+            dispatch('fetchCategorys')
+        })
+    },
+
 
     // Notes Controllers
     fetchNotes: ({commit}) => {

@@ -1,5 +1,5 @@
 <template>
-<div v-if="news" class="NewsDisplay">
+<div v-if="news && news.length" class="NewsDisplay">
     <div class="row middle-xs fullWidth">
         <div class="col-xs">
             <a v-if="index > 0" @click="index--" class="uk-icon previousIcon"
@@ -9,7 +9,7 @@
         <ul uk-tab class="col-xs-10 center-xs nomargin">
             <li v-for="category in categorys">
                 <a class="uk-text-capitalize textTitle tabsTitle noselect" @click="changeCat(category)">
-                    {{category}}
+                    {{category.title}}
                 </a>
             </li>
         </ul>
@@ -24,20 +24,22 @@
         Article {{index+1}} / {{news.length}}
     </div>
 
-    <div v-if="news[index].title" class="textSpecial headlineTitle" v-html="news[index].title.split(' -')[0]" />
+    <div v-if="news[index].webTitle" class="textSpecial headlineTitle" v-html="news[index].webTitle.split(' -')[0]" />
 
     <hr class="fullWidth">
 
-    <div v-if="news[index].content" class="textBody headlineContent" v-html="news[index].content.split('[+')[0]" />
+    <!-- New api doesnt provide a body -->
+    <!-- <div v-if="news[index].content" class="textBody headlineContent" v-html="news[index].content.split('[+')[0]" /> -->
 
 
     <div class="fullWidth textBody headlineSrc">
-        <a :href="news[index].url" target="_blank" class="headlineUrl">
-            {{news[index].url}}
+        <a :href="news[index].webUrl" target="_blank" class="headlineUrl">
+            {{news[index].webUrl}}
         </a>
 
         <br>
-        - {{news[index].source.name}}
+        {{util.createDisplayDate(news[index].webPublicationDate)}}
+        <!-- - {{news[index].source.name}} -->
     </div>
 </div>
 </template>
@@ -49,8 +51,7 @@ export default {
     data() {
         return {
             index: 0,
-            categorys: ['general', 'technology', 'sports', 'science', 'entertainment'],
-            activeCat: 'general'
+            activeCat: null
         }
     },
     computed: {
@@ -60,13 +61,14 @@ export default {
         },
 
         ...mapGetters('settings', {
+            categorys: 'getCategorys',
             news: 'getNews'
         })
     },
     methods: {
         changeCat(category) {
             this.activeCat = category
-            this.fetchNews()
+            this.fetchNews(category.title)
         },
 
         onKeyPress () {
@@ -78,6 +80,7 @@ export default {
         },
 
         ...mapActions('settings', {
+            fetchCategorys: 'fetchCategorys',
             fetchNews: 'fetchNews',
             setShowHome: 'setShowHome',
             setActivePage: 'setActivePage',
@@ -85,6 +88,13 @@ export default {
     },
     mounted() {
         document.addEventListener("keyup", this.onKeyPress);
+
+        if (!this.news) {
+            this.fetchCategorys().then(() => {
+                this.activeCat = this.categorys[0]
+                this.fetchNews(this.categorys[0].title)
+            })
+        }
     },
 }
 </script>
@@ -94,8 +104,7 @@ export default {
         margin-top: 30px;
         min-height: 650px;
 
-        min-width: 1050px;
-        max-width: 60vw;
+        min-width: 60vw;
 
         text-align: center;
     }
