@@ -14,7 +14,7 @@
     </div>
 
     <div class="row center-xs middle-xs textBody fullWidth forecast">
-        <div v-for="day in weather.forecast" class="col-xs day card uk-box-shadow-hover-xlarge">
+        <div v-for="day in weather.forecast" class="col-xs day card uk-box-shadow-hover-xlarge clickable" @click="showMore(day)">
             <div class="row middle-xs">
                 <div class="col-xs-8">
                     <i :class="getIcon(day.Day.IconPhrase)" />
@@ -53,7 +53,7 @@ export default {
                 'sunny': "sunny",
                 'hot': "hot",
                 'cold': "snowflake-cold",
-                'clear': "stars",
+                'clear': "clear",
                 'rain': "rain",
                 'cloudy': "cloudy",
                 'clouds': "cloudy",
@@ -90,23 +90,61 @@ export default {
         }),
     },
     methods: {
-        // parseAddress() {
-        //     if (this.address && this.address.formatted_address) {
-        //         let split = this.address.formatted_address.split(',')
-        //
-        //         if (split.length >= 2)
-        //             return split[1]
-        //     }
-        //
-        //     return ""
-        // },
+        showMore(day) {
+            console.log(day);
+            const parseTime = (time, title) => {
+                let keys = ''
+                for (const key in time)
+                    keys += `<li> ${key}: ${time[key]}`
+
+                let local = `
+                    <div class="col-xs-5 extraDetails card start-xs">
+                        <h2>${title} Time</h2>
+
+                        <div class="row middle-xs">
+                            <div class="col-xs-3 center-xs">
+                                <i class="${this.getIcon(time.IconPhrase, title == 'Night' ? 'night' : 'day')}"></i>
+                            </div>
+
+                            <div class="col-xs forecastTemp nospacing">
+                                <ul> ${keys} </ul>
+                            </div>
+                        </div>
+                    </div>`
+
+                return local
+            }
+
+            let str = `
+            <div class="card center-xs">
+                <h1>${this.getDay(day)}</h1>
+
+                <h3 style="margin-bottom: 100px;">
+                    Maximum: ${day.Temperature.Maximum.Value >= 0 ? '&nbsp;' : ''}${Math.round(day.Temperature.Maximum.Value)}&deg;
+                    <br>
+                    Minimum: ${day.Temperature.Minimum.Value >= 0 ? '&nbsp;' : ''}${Math.round(day.Temperature.Minimum.Value)}&deg;
+                </h3>
+
+                <div class="row around-xs" style="width: 90vw;">
+                    ${parseTime(day.Day, 'Day')}
+                    ${parseTime(day.Night, 'Night')}
+                <div>
+
+                <h3>
+                    <a href="${day.Link}" target="_blank">Desktop Link</a> - <a href="${day.MobileLink}" target="_blank">Mobile Link</a>
+                </h3>
+            </div>
+            `
+
+            this.$bus.$emit('showPreview', str)
+        },
 
         getDay(day) {
             let date = new Date(day.EpochDate*1000)
             return `${this.days[date.getDay()]}, ${this.months[date.getMonth()]} ${date.getDate()}`
         },
 
-        getIcon(curWeather) {
+        getIcon(curWeather, time='day') {
             var splitWeatherDesc = curWeather.toLowerCase().split(" ")
 
             // We currently use only daytime icons, cold only has a neutral icon
@@ -115,7 +153,9 @@ export default {
 
             for (let keyword of splitWeatherDesc)
                 if (this.weatherIconMap[keyword])
-                    return `wi wi-day-${this.weatherIconMap[keyword]}`
+                    return `wi wi-${time}-${this.weatherIconMap[keyword]}`
+
+            console.error('Failed to find icon for: ' + curWeather);
             return ''
         },
 
@@ -211,7 +251,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
     .Weather {
         height: 100% !important;
         width: 100% !important;
@@ -226,6 +266,8 @@ export default {
     .day {
         height: 60% !important;
         transition: all .1s ease-in-out;
+
+        color: black !important;
     }
     .day:hover {
         background: rgba(230, 230, 250, 0.95);
@@ -242,6 +284,13 @@ export default {
     .day:hover i {
         margin-top: 1vh !important;
         font-size: 10vh;
+    }
+
+    .extraDetails {
+        color: black;
+    }
+    .extraDetails i {
+        font-size: 7vh;
     }
 
     .forecastTemp {
