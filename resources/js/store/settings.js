@@ -221,7 +221,10 @@ const actions = {
 
     // News Controllers
     fetchNews: ({commit, dispatch}, payload) => {
-        return axios.get(`https://content.guardianapis.com/search?q=${payload}&api-key=${process.env.MIX_GAURDIAN_KEY}`).then(response => {
+        const dt = new Date()
+        const dateStr = `${dt.getFullYear()}-${dt.getMonth()+1}-${dt.getDate()}`
+
+        return axios.get(`https://content.guardianapis.com/search?q=${payload}&from-date=${dateStr}&api-key=${process.env.MIX_GAURDIAN_KEY}`).then(response => {
             console.log('%c News ', 'background: #222; color: #bada55');
             console.log(response.data.response);
 

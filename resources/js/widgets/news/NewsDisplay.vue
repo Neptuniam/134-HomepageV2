@@ -6,6 +6,20 @@
 </div> -->
 
 <div class="Widget" id="NewsDisplay">
+    <div v-if="categorys && categorys.length" class="row middle-xs fullWidth CategoryRow onHover">
+        <div class="col-xs">
+            <a v-if="catIndex > 0" @click="changeCat(-1)" class="uk-icon previousIcon" uk-icon="chevron-left" />
+        </div>
+
+        <div class="limitReadable Cateogory col-xs center-xs nomargin">
+            {{categorys[catIndex].title}}
+        </div>
+
+        <div class="col-xs">
+            <a v-if="catIndex < categorys.length-1" @click="changeCat(1)" class="uk-icon nextIcon" uk-icon="chevron-right" />
+        </div>
+    </div>
+    
     <div v-if="news && news.length" class="row middle-xs fullWidth headlineRow">
         <div class="col-xs onHover">
             <a v-if="index > 0" @click="index--" class="uk-icon previousIcon"
@@ -19,20 +33,6 @@
         <div class="col-xs onHover">
             <a v-if="index < news.length-1" @click="index++" class="uk-icon nextIcon"
                uk-icon="icon: chevron-right; ratio: 2" uk-tooltip="Next Article" />
-        </div>
-    </div>
-
-    <div v-if="categorys && categorys.length" class="row middle-xs fullWidth CategoryRow onHover">
-        <div class="col-xs">
-            <a v-if="catIndex > 0" @click="changeCat(-1)" class="uk-icon previousIcon" uk-icon="chevron-left" />
-        </div>
-
-        <div class="limitReadable Cateogory col-xs center-xs nomargin">
-            {{categorys[catIndex].title}}
-        </div>
-
-        <div class="col-xs">
-            <a v-if="catIndex < categorys.length-1" @click="changeCat(1)" class="uk-icon nextIcon" uk-icon="chevron-right" />
         </div>
     </div>
 </div>
