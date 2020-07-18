@@ -16,8 +16,7 @@ export default {
 
     mounted() {
         this.axios.get("https://quotes.rest/qod").then(response => {
-            console.log('%c Qoute of the Day', 'background: #222; color: #bada55');
-            console.log(response.data.contents.quotes);
+            util.trackResult('qotd', 1, response.data.contents.quotes)
 
             this.quote = response.data.contents.quotes[0].quote + " -" +response.data.contents.quotes[0].author
         })

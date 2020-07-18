@@ -7,6 +7,10 @@ Vue.config.productionTip = false
 // Register all Vue components in a components file for global access and cleaner code
 require('./components.js');
 
+// Include our utility function file
+require('./utilFunctions.js')
+Vue.prototype.util = window.util;
+
 
 // Import the Vue router and vuex store with its modules for managing state
 import VueRouter from 'vue-router'
@@ -64,9 +68,6 @@ const app = new Vue({
     el: '#app',
 });
 
-// Include our utility function file
-require('./utilFunctions.js')
-Vue.prototype.util = window.util;
 
 window.Swal = require('sweetalert2');
 

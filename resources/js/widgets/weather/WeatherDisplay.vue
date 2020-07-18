@@ -190,8 +190,7 @@ export default {
             this.$set(this.weather, 'expires', getExipery(locResponse.headers.expires))
 
 
-            console.log('%c Retrieved Weather ', 'background: #222; color: #bada55');
-            console.log(this.weather);
+            util.trackResult('weather', 1, this.weather)
             localStorage.setItem('LastWeatherDetails', JSON.stringify(this.weather))
         },
 
@@ -232,8 +231,7 @@ export default {
                 if (this.distanceBetween(weather.requestLoc, location) < 0.05 && this.checkExpirey(weather)) {
                     this.weather = weather
 
-                    console.log('%c Cached Weather ', 'background: #222; color: #bada55');
-                    console.log(this.weather);
+                    util.trackResult('weather', 0, weather)
                     return
                 }
             }

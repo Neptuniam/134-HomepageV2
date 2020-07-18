@@ -119,12 +119,10 @@ export default {
             // If there is data in the cache, the user hasn't moved locations and the data is still recent, avoid making too many api usages
             if (CachedMaps && this.matchLocations(payload, CachedMaps.payload) && this.checkTimeSince(CachedMaps.RetrievedDate)) {
                 this.directions = CachedMaps
-                console.log('%c Cached Directions ', 'background: #222; color: #bada55');
-                console.log(this.directions);
+                util.trackResult('maps', 0, this.directions)
 
                 this.createDisplay(this.directions.routes[0].legs[0].duration)
             } else {
-                console.log('falling back on api');
                 this.getDirections(payload)
             }
         },
@@ -177,7 +175,6 @@ export default {
         },
 
         async getDirections(payload) {
-            console.log('requesting direction');
             await this.$refs.map.$mapPromise
 
             let _this = this
@@ -193,8 +190,7 @@ export default {
                         _this.$set(_this.directions, 'RetrievedDate', new Date())
                         _this.$set(_this.directions, 'payload', payload)
 
-                        console.log('%c Retrieved Directions ', 'background: #222; color: #bada55');
-                        console.log(_this.directions);
+                        util.trackResult('maps', 1, _this.directions)
                         localStorage.setItem('LastMapsDetails', JSON.stringify(_this.directions))
 
                         _this.createDisplay(_this.directions.routes[0].legs[0].duration)

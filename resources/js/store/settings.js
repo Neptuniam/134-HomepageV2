@@ -137,8 +137,7 @@ const actions = {
     // Settings
     fetchWidgets: ({commit}) => {
         return axios.get('/widgets/').then(response => {
-            console.log('%c Widgets ', 'background: #222; color: #bada55');
-            console.log(response.data);
+            util.trackResult('widgets', 2, response.data)
 
             commit('setWidgets', response.data)
         })
@@ -151,8 +150,7 @@ const actions = {
     // Location Controllers
     fetchLocations: ({commit}) => {
         return axios.get('/locations/').then(response => {
-            console.log('%c Locations ', 'background: #222; color: #bada55');
-            console.log(response.data);
+            util.trackResult('locations', 2, response.data)
 
             commit('setLocations', response.data)
         })
@@ -178,14 +176,12 @@ const actions = {
     // Update User's map settings
     fetchMapsSettings: ({commit, dispatch}) => {
         return axios.get('/locations/settings').then(response => {
-            console.log('%c Maps Settings ', 'background: #222; color: #bada55');
-            console.log(response.data);
+            util.trackResult('maps settings', 2, response.data)
+
             commit('setMapsSettings', response.data[0])
-            // dispatch('fetchLocations')
         })
     },
     updateMapSettings: ({commit, dispatch}, payload) => {
-        console.log(payload);
         return axios.put('/locations/settings',payload).then(response => {
             dispatch('fetchMapsSettings')
         })
@@ -195,8 +191,7 @@ const actions = {
     // Favourites Controllers
     fetchFavourites: ({commit}) => {
         return axios.get('/favourites/').then(response => {
-            console.log('%c Favourites ', 'background: #222; color: #bada55');
-            console.log(response.data);
+            util.trackResult('favourites', 2, response.data)
 
             commit('setFavourites', response.data)
         })
@@ -225,16 +220,14 @@ const actions = {
         const dateStr = `${dt.getFullYear()}-${dt.getMonth()+1}-${dt.getDate()}`
 
         return axios.get(`https://content.guardianapis.com/search?q=${payload}&from-date=${dateStr}&api-key=${process.env.MIX_GAURDIAN_KEY}`).then(response => {
-            console.log('%c News ', 'background: #222; color: #bada55');
-            console.log(response.data.response);
+            util.trackResult('news', 1, response.data.response.results)
 
             commit('setNews', response.data.response.results)
         })
     },
     fetchCategorys: ({commit}) => {
         return axios.get('/news/categorys/').then(response => {
-            console.log('%c Categorys ', 'background: #222; color: #bada55');
-            console.log(response.data);
+            util.trackResult('categorys', 2, response.data)
 
             commit('setCategorys', response.data)
         })
@@ -261,8 +254,7 @@ const actions = {
     // Notes Controllers
     fetchNotes: ({commit}) => {
         return axios.get('/notes/').then(response => {
-            console.log('%c Notes ', 'background: #222; color: #bada55');
-            console.log(response.data);
+            util.trackResult('notes', 2, response.data)
 
             commit('setNotes', response.data)
         })
@@ -291,8 +283,7 @@ const actions = {
         return axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`).then(board => {
             // axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/actions?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`).then(actions => {
                 // board.data['actions'] = actions.data
-                console.log('%c Board ', 'background: #222; color: #bada55');
-                console.log(board.data);
+                util.trackResult('trello boards', 1, board.data)
 
                 commit('setBoard', board.data)
             // })
@@ -300,8 +291,7 @@ const actions = {
     },
     fetchTrelloCards: ({commit}) => {
         return axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/cards?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`).then(response => {
-            console.log('%c Cards ', 'background: #222; color: #bada55');
-            console.log(response.data);
+            util.trackResult('trello cards', 1, response.data)
 
             commit('setCards', response.data)
         })
@@ -309,8 +299,7 @@ const actions = {
 
     fetchBackgrounds: ({commit}) => {
         return axios.get('/background/all').then(response => {
-            console.log('%c Backgrounds ', 'background: #222; color: #bada55');
-            console.log(response.data);
+            util.trackResult('background', 2, response.data)
 
             commit('setBackgrounds', response.data)
         })

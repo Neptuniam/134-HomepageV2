@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 window.util = {
 	today: new Date(),
 
@@ -94,4 +96,23 @@ window.util = {
                 return `${months[month]} ${util.formatNum(day)}, ${year}`
         }
     },
+
+
+	trackResult(api, hit_source, result) {
+		let source = ''
+		if (hit_source == 0)
+			source = 'Cached'
+		else if (hit_source == 1)
+			source = 'Fetched'
+		else if (hit_source == 2)
+			source = 'In house'
+
+		console.log(`%c ${source} service: ${api} `, 'background: #222; color: #bada55');
+		console.log(result);
+
+		axios.post('/analytics/add_event', { api, hit_source}).catch(error => {
+			console.error('Error while recording event');
+			console.error(error);
+		})
+	}
 }

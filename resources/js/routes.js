@@ -1,5 +1,6 @@
 import Home from './pages/Home.vue';
 import Settings from './pages/Settings.vue';
+import Analytics from './pages/Analytics.vue';
 
 import News from './widgets/news/NewsPage.vue';
 import Trello from './widgets/trello/TrelloPage.vue';
@@ -15,6 +16,11 @@ const routes = [
 		path: '/settings',
 		name: 'Settings',
 		component: Settings,
+	},
+    {
+		path: '/analytics',
+		name: 'Analytics',
+		component: Analytics,
 	},
 	{
 		path: '/news',

@@ -14,6 +14,10 @@ Route::get('/', function () {
     return view('master');
 });
 
+Route::group(['prefix'=>'analytics'], function() {
+    Route::post('/add_event', 'AnalyticsController@addEvent');
+});
+
 Route::group(['prefix'=>'background'], function(){
     Route::get('/','Background@getBackground');
     Route::get('/all','Background@getList');

@@ -35,8 +35,7 @@ export default {
             this.$set(response.data.location, 'geocode', geolocation.data.results)
             this.$set(response.data, 'fetched', new Date())
 
-            console.log('%c Fetched geoLocation', 'background: #222; color: #bada55');
-            console.log(geolocation.data);
+            util.trackResult('geoLocation', 1, geolocation.data)
 
             this.setLocation(response.data.location)
             localStorage.setItem('LastLocation', JSON.stringify(response.data))
@@ -48,8 +47,7 @@ export default {
             let checkTimeSince = (cachedTime) => ((new Date().getTime() - new Date(cachedTime).getTime()) / 300000) < 1
 
             if (CachedLoc && 'fetched' in CachedLoc && checkTimeSince(CachedLoc.fetched)) {
-                console.log('%c Cached geoLocation', 'background: #222; color: #bada55');
-                console.log(CachedLoc);
+                util.trackResult('geolocation', 0, CachedLoc)
 
                 this.setLocation(CachedLoc.location)
             } else {
@@ -60,8 +58,7 @@ export default {
         getBackground() {
             // Hit the random background endpoint
             this.axios.get('/background/').then(background => {
-                console.log('%c Background', 'background: #222; color: #bada55');
-                console.log(background.data);
+                util.trackResult('background', 2, background.data)
 
                 document.body.style.background = "url('images/"+background.data+"')"
                 document.body.style.backgroundSize = "cover";
