@@ -11,7 +11,7 @@
 	    <tbody>
 			<TrelloRow v-for="trello in trellos" :key="trello.id" :trello="trello" />
 
-	        <TrelloRow :trello="{...blankObject}" />
+	        <TrelloRow :trello="blankObject" />
 	    </tbody>
 	</table>
 </template>

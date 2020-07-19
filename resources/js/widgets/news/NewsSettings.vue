@@ -18,7 +18,7 @@
             <NewsRow v-for="cat in categorys" :key="cat.id" :id="cat.id" :category="cat" />
         </span>
 
-        <NewsRow :category="{...blankObject}" />
+        <NewsRow :category="blankObject" />
     </tbody>
 </table>
 </template>

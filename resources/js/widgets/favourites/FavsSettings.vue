@@ -24,7 +24,7 @@
             <FavsRow v-for="fav in favourites" :key="fav.id" :id="fav.id" :favourite="fav" />
         </span>
 
-        <FavsRow :favourite="{...blankObject}" />
+        <FavsRow :favourite="blankObject" />
     </tbody>
 </table>
 </template>

@@ -22,7 +22,7 @@
         <tbody class="textBody">
             <MapsRow  v-for="location in locations" :key="location.id" :location="location" />
 
-            <MapsRow :location="{...blankObject}" />
+            <MapsRow :location="blankObject" />
         </tbody>
     </table>
 </div>
