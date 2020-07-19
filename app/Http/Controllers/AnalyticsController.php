@@ -7,6 +7,10 @@ use App\Analytics;
 use Illuminate\Http\Request;
 
 class AnalyticsController extends Controller {
+    public function fetchEvents() {
+        return Analytics::get();
+    }
+
     public function addEvent(Request $request) {
         $event = $request->all();
 

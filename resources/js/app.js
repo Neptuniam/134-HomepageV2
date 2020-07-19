@@ -30,6 +30,8 @@ import UIkit from 'uikit/dist/js/uikit.min.js'
 // Import Flexbox (grid system)
 import flexbox from 'flexboxgrid/dist/flexboxgrid.min.css'
 
+import Chart from 'vue2-frappe'
+
 // Standard libraries
 // window._   = require('lodash');
 window.marked = require("marked");
@@ -58,6 +60,8 @@ Vue.use(VueGoogleMaps, {
     // libraries: 'places', // This is required if you use the Autocomplete plugin
   },
 })
+
+Vue.use(Chart)
 
 
 const router = new VueRouter({routes});

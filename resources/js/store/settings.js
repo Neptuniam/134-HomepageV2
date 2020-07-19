@@ -25,6 +25,8 @@ const state = {
     // Users
     users: null,
     user: null,
+
+    events: null,
 }
 const getters = {
     getActivePage: (state) => state.activePage,
@@ -53,6 +55,8 @@ const getters = {
     // Users
     getUsers: (state) => state.users,
     getUser: (state) => state.user,
+
+    getEvents: (state) => state.events
 }
 const mutations = {
     setActivePage: (state, payload) => { state.activePage = payload; },
@@ -79,7 +83,9 @@ const mutations = {
 
     //Users
     setUsers: (state, payload) => { state.users = payload; },
-    setUser: (state, payload) =>  { state.user = payload; }
+    setUser: (state, payload) =>  { state.user = payload; },
+
+    setEvents: (state, payload) => { state.events = payload }
 }
 const actions = {
     setActivePage: ({commit}, payload) => {
@@ -324,7 +330,17 @@ const actions = {
                 return axios.post(payload.route, data)
             }
         }
-    }
+    },
+
+    fetchAnalytics: ({commit}) => {
+        return axios.get('/analytics').then(response => {
+            util.trackResult('analytics', 2, response.data)
+
+            commit('setEvents', response.data)
+
+            return response
+        })
+    },
 }
 
 export default {

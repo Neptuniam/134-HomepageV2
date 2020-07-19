@@ -15,6 +15,7 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix'=>'analytics'], function() {
+    Route::get('', 'AnalyticsController@fetchEvents');
     Route::post('/add_event', 'AnalyticsController@addEvent');
 });
 
