@@ -7,13 +7,17 @@
 
         <DistinctApi />
 
-        <div class="row fullWidth">
+        <div class="row fullWidth" style="padding-left: 10px !important;">
             <div class="col-xs">
+                <AverageUsage />
+
                 <SourceType />
             </div>
 
             <div class="col-xs">
                 <ApiUsage />
+
+                <Details />
             </div>
         </div>
 

@@ -73,5 +73,7 @@ export default {
 </script>
 
 <style scoped>
-
+    .card {
+        margin: 10px 0px !important;
+    }
 </style>
