@@ -1,24 +1,19 @@
 <template>
-<div class="card">
-    <div v-if="distinct && distinct.length">
-        <h2>
-            Api Usages history
-        </h2>
+<div v-if="distinct && distinct.length" class="card">
+    <h2>
+        Api Usages history
+    </h2>
 
-        <vue-frappe
-            ref="chart"
-            type="line"
-            id="TimelineUsages"
-            :colors="['blue', 'yellow', 'orange']"
-            :labels="labels"
-            :dataSets="[dailyData]"
-            :height="300"
-            :valuesOverPoints="true"
-        />
-    </div>
-    <div v-else>
-        <div uk-spinner="ratio: 5"></div>
-    </div>
+    <vue-frappe
+        ref="chart"
+        type="line"
+        id="TimelineUsages"
+        :colors="['blue', 'yellow', 'orange']"
+        :labels="labels"
+        :dataSets="[dailyData]"
+        :height="300"
+        :valuesOverPoints="true"
+    />
 </div>
 </template>
 

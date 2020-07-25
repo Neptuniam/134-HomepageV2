@@ -1,50 +1,45 @@
 <template>
-<div class="card">
-    <div v-if="distinct && distinct.length">
-        <h2>
-            Average Usage
-        </h2>
+<div v-if="distinct && distinct.length" class="card">
+    <h2>
+        Average Usage
+    </h2>
 
-        <div class="row">
-            <div class="col-xs-6 row top-xs">
-                <div class="col-xs-3">
-                    <span class="uk-icon" :uk-icon="`icon: ${daily.symbol}; ratio: 3`"
-                            :uk-tooltip="`You're currently ${daily.message} your daily average`">
-                    </span>
-                </div>
-
-                <div class="col-xs start-xs">
-                    <div class="mainAverage">
-                        {{daily.todaysAverage}}
-                    </div>
-
-                    <div class="subAverage">
-                        {{daily.dailyAverage}}
-                    </div>
-                </div>
+    <div class="row">
+        <div class="col-xs-6 row top-xs">
+            <div class="col-xs-3">
+                <span class="uk-icon" :uk-icon="`icon: ${daily.symbol}; ratio: 3`"
+                        :uk-tooltip="`You're currently ${daily.message} your daily average`">
+                </span>
             </div>
 
-            <div class="col-xs-6 row top-xs">
-                <div class="col-xs-3">
-                    <span class="uk-icon" :uk-icon="`icon: ${daily.symbol}; ratio: 3`"
-                            :uk-tooltip="`You're currently ${daily.message} your weekly average`">
-                    </span>
+            <div class="col-xs start-xs">
+                <div class="mainAverage">
+                    {{Math.round(daily.todaysAverage)}}
                 </div>
 
-                <div class="col-xs start-xs">
-                    <div class="mainAverage">
-                        {{daily.todaysAverage}}
-                    </div>
-
-                    <div class="subAverage">
-                        {{daily.dailyAverage}}
-                    </div>
+                <div class="subAverage">
+                    {{Math.round(daily.dailyAverage)}}
                 </div>
             </div>
         </div>
-    </div>
-    <div v-else>
-        <div uk-spinner="ratio: 5"></div>
+
+        <div class="col-xs-6 row top-xs">
+            <div class="col-xs-3">
+                <span class="uk-icon" :uk-icon="`icon: ${daily.symbol}; ratio: 3`"
+                        :uk-tooltip="`You're currently ${daily.message} your weekly average`">
+                </span>
+            </div>
+
+            <div class="col-xs start-xs">
+                <div class="mainAverage">
+                    {{Math.round(daily.todaysAverage)}}
+                </div>
+
+                <div class="subAverage">
+                    {{Math.round(daily.dailyAverage)}}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </template>

@@ -1,23 +1,18 @@
 <template>
-<div class="card">
-    <div v-if="distinct && distinct.length">
-        <h2>
-            Api Sources
-        </h2>
+<div v-if="distinct && distinct.length" class="card">
+    <h2>
+        Api Sources
+    </h2>
 
-        <vue-frappe
-            ref="chart"
-            type="pie"
-            id="sourceUsages"
-            :colors="['blue', 'yellow', 'orange']"
-            :labels="['Cached', 'Fetched', 'In House']"
-            :dataSets="[sourceData]"
-            :height="300"
-        />
-    </div>
-    <div v-else>
-        <!-- <div uk-spinner="ratio: 5"></div> -->
-    </div>
+    <vue-frappe
+        ref="chart"
+        type="donut"
+        id="sourceUsages"
+        :colors="['blue', 'yellow', 'orange']"
+        :labels="['Cached', 'Fetched', 'In House']"
+        :dataSets="[sourceData]"
+        :height="300"
+    />
 </div>
 </template>
 
@@ -67,8 +62,5 @@ export default {
 </script>
 
 <style scoped>
-    .card {
-        margin: 10px 0px !important;
-    }
 
 </style>

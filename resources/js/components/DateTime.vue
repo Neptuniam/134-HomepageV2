@@ -67,6 +67,8 @@ export default {
 
 
 <style scoped>
+/* @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap'); */
+
     .clock {
         position: absolute;
         top: 0px;
@@ -77,6 +79,7 @@ export default {
     }
 
     .time {
+        /* font-family: 'Orbitron', sans-serif !important; */
         font-size: 1.7rem;
     }
 

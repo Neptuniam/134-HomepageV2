@@ -1,30 +1,25 @@
 <template>
-<div class="card">
-    <div v-if="distinct && distinct.length">
-        <h2>
-            Your API Usage Details
-        </h2>
+<div v-if="distinct && distinct.length" class="card">
+    <h2>
+        Your API Usage Details
+    </h2>
 
-        <div class="row middle-xs">
-            <div class="col-xs-3">
-                <span class="uk-icon" :uk-icon="`icon: more-vertical; ratio: 3`"
-                        :uk-tooltip="`Your most and least used apis`">
-                </span>
+    <div class="row middle-xs">
+        <div class="col-xs-3">
+            <span class="uk-icon" :uk-icon="`icon: more-vertical; ratio: 3`"
+                    :uk-tooltip="`Your most and least used apis`">
+            </span>
+        </div>
+
+        <div class="col-xs start-xs text">
+            <div class="mainAverage" :uk-tooltip="`Total Events; ${distinct[0].events}`">
+                {{distinct[0].label | capitalizeWords}}
             </div>
 
-            <div class="col-xs start-xs text">
-                <div class="mainAverage" :uk-tooltip="`Total Events; ${distinct[0].events}`">
-                    {{distinct[0].label}}
-                </div>
-
-                <div class="subAverage" :uk-tooltip="`Total Events; ${distinct[distinct.length-1].events}`">
-                    {{distinct[distinct.length-1].label}}
-                </div>
+            <div class="subAverage" :uk-tooltip="`Total Events; ${distinct[distinct.length-1].events}`">
+                {{distinct[distinct.length-1].label | capitalizeWords}}
             </div>
         </div>
-    </div>
-    <div v-else>
-        <!-- <div uk-spinner="ratio: 5"></div> -->
     </div>
 </div>
 </template>

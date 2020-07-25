@@ -7,7 +7,7 @@
 
         <DistinctApi />
 
-        <div class="row fullWidth" style="padding-left: 10px !important;">
+        <div class="row fullWidth nopadding" style="margin-left: 0px !important;">
             <div class="col-xs">
                 <AverageUsage />
 
@@ -23,7 +23,7 @@
 
         <Timeline />
 
-        <div class="row fullWidth">
+        <div class="row fullWidth nopadding" style="margin-left: 0px !important;">
             <div class="col-xs">
                 <DayUsage />
             </div>
@@ -79,5 +79,9 @@ export default {
 
     .Analytics h2 {
         text-align: left;
+    }
+
+    .Analytics .row .card {
+        margin: 10px 0px !important;
     }
 </style>

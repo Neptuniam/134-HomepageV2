@@ -1,23 +1,18 @@
 <template>
-<div class="card">
-    <div v-if="distinct && distinct.length">
-        <h2>
-            Api Users
-        </h2>
+<div v-if="distinct && distinct.length" class="card">
+    <h2>
+        Api Users
+    </h2>
 
-        <vue-frappe
-            ref="chart"
-            type="pie"
-            id="userUsages"
-            :colors="['blue', 'yellow', 'orange']"
-            :labels="labels"
-            :dataSets="[userData]"
-            :height="300"
-        />
-    </div>
-    <div v-else>
-        <div uk-spinner="ratio: 5"></div>
-    </div>
+    <vue-frappe
+        ref="chart"
+        type="donut"
+        id="userUsages"
+        :colors="['blue', 'yellow', 'orange']"
+        :labels="labels"
+        :dataSets="[userData]"
+        :height="300"
+    />
 </div>
 </template>
 

@@ -1,30 +1,23 @@
 <template>
-<div class="card">
-    <div v-if="distinct && distinct.length">
-        <h2>
-            Api Usages by Source
-        </h2>
+<div v-if="distinct && distinct.length" class="card">
+    <h2>
+        Api Usages by Source
+    </h2>
 
-        <vue-frappe
-            ref="chart"
-            type="bar"
-            id="apiHits"
-            :colors="['blue', 'yellow', 'orange']"
-            :labels="labels"
-            :dataSets="[cachedData, fetchedData, inhouseData]"
-            :height="300"
-            :barOptions="{
-                depth: 2,
-                spaceRatio: 0.2,
-                stacked: 0
-            }"
-            :valuesOverPoints="true"
-        >
-        </vue-frappe>
-    </div>
-    <div v-else>
-        <div uk-spinner="ratio: 5"></div>
-    </div>
+    <vue-frappe
+        ref="chart"
+        type="bar"
+        id="apiHits"
+        :colors="['blue', 'yellow', 'orange']"
+        :labels="labels"
+        :dataSets="[cachedData, fetchedData, inhouseData]"
+        :height="350"
+        :barOptions="{
+            depth: 2,
+            spaceRatio: 0.4,
+            stacked: 1
+        }"
+    />
 </div>
 </template>
 
@@ -40,28 +33,28 @@ export default {
     computed: {
         labels() {
             if (this.distinct) {
-                return this.distinct.map(api => api.title)
+                return this.distinct.map(api => this.$options.filters.capitalizeWords(api.title))
             }
         },
 
         cachedData() {
             return {
                 chartType: 'bar',
-                name: 'Cached Services',
+                name: 'Cached Uses',
                 values: this.distinct.map(api => api.cached.length)
             }
         },
         fetchedData() {
             return {
                 chartType: 'bar',
-                name: 'Fetched Services',
+                name: 'Fetched Uses',
                 values: this.distinct.map(api => api.fetched.length)
             }
         },
         inhouseData() {
             return {
                 chartType: 'bar',
-                name: 'In house Services',
+                name: 'In house Uses',
                 values: this.distinct.map(api => api.inHouse.length)
             }
         },
@@ -99,7 +92,7 @@ export default {
     },
 
     mounted() {
-        this.distinct = this.processEvents()
+        this.distinct = this.processEvents().sort((a, b) => a.label - b.label).sort((a, b) => (a.inHouse.length) - (b.inHouse.length))
     },
 }
 </script>

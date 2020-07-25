@@ -9,6 +9,7 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Poiret+One|Roboto|Arima+Madurai" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
 
         <!-- Weather icons -->
         <link rel="stylesheet" href="weatherIcons/weather-icons.css">

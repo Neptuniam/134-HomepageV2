@@ -1,23 +1,19 @@
 <template>
-<div class="card">
-    <div v-if="distinct && distinct.length">
-        <h2>
-            Api Usages
-        </h2>
+<div v-if="distinct && distinct.length" class="card">
+    <h2>
+        Api Usages
+    </h2>
 
-        <vue-frappe
-            ref="chart"
-            type="pie"
-            id="apiPieData"
-            :labels="labels"
-            :dataSets="[apiData]"
-            :height="300"
-            :valuesOverPoints="true"
-        />
-    </div>
-    <div v-else>
-        <!-- <div uk-spinner="ratio: 5"></div> -->
-    </div>
+    <vue-frappe
+        ref="chart"
+        type="donut"
+        id="apiPieData"
+        :colors="['blue', 'yellow', 'orange']"
+        :labels="labels"
+        :dataSets="[apiData]"
+        :height="300"
+        :valuesOverPoints="true"
+    />
 </div>
 </template>
 
@@ -32,7 +28,7 @@ export default {
     },
     computed: {
         labels() {
-            return this.distinct.map(api => api.label)
+            return this.distinct.map(api => this.$options.filters.capitalizeWords(api.label))
         },
 
         apiData() {
@@ -67,7 +63,7 @@ export default {
     },
 
     mounted() {
-        this.distinct = this.processEvents()
+        this.distinct = this.processEvents().sort((a, b) => b.events - a.events)
     },
 }
 </script>

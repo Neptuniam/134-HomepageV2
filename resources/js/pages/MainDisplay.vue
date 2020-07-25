@@ -35,7 +35,7 @@ export default {
             this.$set(response.data.location, 'geocode', geolocation.data.results)
             this.$set(response.data, 'fetched', new Date())
 
-            util.trackResult('geoLocation', 1, geolocation.data)
+            util.trackResult('geolocation', 1, geolocation.data)
 
             this.setLocation(response.data.location)
             localStorage.setItem('LastLocation', JSON.stringify(response.data))

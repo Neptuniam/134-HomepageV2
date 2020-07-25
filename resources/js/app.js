@@ -11,6 +11,8 @@ require('./components.js');
 require('./utilFunctions.js')
 Vue.prototype.util = window.util;
 
+require('./directives.js')
+
 
 // Import the Vue router and vuex store with its modules for managing state
 import VueRouter from 'vue-router'
