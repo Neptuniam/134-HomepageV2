@@ -13,7 +13,6 @@
             </div>
 
             <div class="col-xs start-xs text">
-                <!-- {{ distinct[0].label }} -->
                 <div class="mainAverage" :uk-tooltip="`Total Events; ${distinct[0].events}`">
                     {{distinct[0].label}}
                 </div>

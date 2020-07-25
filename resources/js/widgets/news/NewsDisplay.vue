@@ -1,10 +1,4 @@
 <template>
-<!-- <div class="">
-    <a v-if="news && news.length" class="Widget limitReadable News" :href="news[0].webUrl" target="_blank">
-        {{news[0].webTitle}}
-    </a>
-</div> -->
-
 <div class="Widget" id="NewsDisplay">
     <div v-if="categorys && categorys.length" class="row middle-xs fullWidth CategoryRow onHover">
         <div class="col-xs">
@@ -19,10 +13,10 @@
             <a v-if="catIndex < categorys.length-1" @click="changeCat(1)" class="uk-icon nextIcon" uk-icon="chevron-right" />
         </div>
     </div>
-    
-    <div v-if="news && news.length" class="row middle-xs fullWidth headlineRow">
-        <div class="col-xs onHover">
-            <a v-if="index > 0" @click="index--" class="uk-icon previousIcon"
+
+    <div v-if="news && news.length" class="row top-xs fullWidth headlineRow">
+        <div class="col-xs">
+            <a v-if="index > 0" @click="index--" class="uk-icon previousIcon onHover"
                uk-icon="icon: chevron-left; ratio: 2" uk-tooltip="Previous Article" />
         </div>
 
@@ -30,8 +24,8 @@
             {{news[index].webTitle}}
         </a>
 
-        <div class="col-xs onHover">
-            <a v-if="index < news.length-1" @click="index++" class="uk-icon nextIcon"
+        <div class="col-xs">
+            <a v-if="index < news.length-1" @click="index++" class="uk-icon nextIcon onHover"
                uk-icon="icon: chevron-right; ratio: 2" uk-tooltip="Next Article" />
         </div>
     </div>
@@ -107,10 +101,10 @@ export default {
     }
 
     #NewsDisplay .onHover{
-        visibility: hidden;
+        display: none;
     }
 
     #NewsDisplay:hover .onHover{
-        visibility: visible;
+        display: flex;
     }
 </style>
