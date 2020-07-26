@@ -1,40 +1,48 @@
 <template>
-<div class="row center-xs NotesDisplay">
+<div class="row start-xs NotesDisplay">
     <div class="col-xs-2 scrollSpace savedNotes">
         <div v-for="(note, index) in notes">
-            <p @click="changeNotes(note)" class="textBody uk-text-truncate savedNote nomargin clickable">
-                {{note && note.body ? note.body.replace(/#/g, "").split('  ')[0] : ''}}
-            </p>
+            <hr>
 
-            <div v-if="note.id === currentNote.id" class="controlButtons">
-                <div class="row center-xs">
-                    <button v-if="mode == 'edit'" @click="toggleMark" type="button" class="col-xs uk-button uk-button-text uk-text-capitalize">
-                        {{showMark ? 'Hide ' : 'Show '}} Mark
-                    </button>
+            <div :class="{'activeNote': note.id === currentNote.id}" class="savedNote">
+                <p @click="changeNotes(note)" class="textBody uk-text-truncate nomargin clickable">
+                    {{note && note.body ? note.body.replace(/#/g, "").split('  ')[0] : ''}}
+                </p>
 
-                    <button @click="startDelete(note)" type="button" class="col-xs uk-button uk-button-text uk-text-capitalize">
-                        Delete Note
-                    </button>
-                </div>
+                <div v-if="note.id === currentNote.id" class="controlButtons">
+                    <div class="updatedAt">
+                        <!-- {{findAuthorName(note)}} -  -->
+                        {{note.updated_at.split(' ')[0].replace(/-/g, ' / ')}}
+                    </div>
 
-                <div class="center-xs updatedAt">
-                    {{findAuthorName(note)}} - {{note.updated_at.split(' ')[0].replace(/-/g, '/')}}
+                    <div class="row start-xs bottom-xs">
+                        <button v-if="mode == 'edit'" class="col-xs uk-button uk-button-text uk-text-capitalize" @click="toggleMark">
+                            <span uk-icon="icon: code; ratio: 0.8" /> {{showMark ? 'Hide ' : 'Show '}} Mark
+                        </button>
+                        <button v-else class="col-xs uk-button uk-button-text uk-text-capitalize" @click="changeNotes(note)">
+                            <span uk-icon="icon: pencil; ratio: 0.8" /> Edit
+                        </button>
+
+                        <button class="col-xs uk-button uk-button-text uk-text-capitalize" @click="startDelete(note)">
+                            <span uk-icon="icon: trash; ratio: 0.8" /> Delete
+                        </button>
+                    </div>
                 </div>
             </div>
-
-            <hr v-if="index < notes.length-1">
         </div>
 
-        <div class="row center-xs">
-            <button @click="changeNotes({id: null, body: ''})" type="button" class="col-xs-8 uk-button-default uk-icon-button newButton" uk-icon="plus" />
+        <div class="row center-xs newButton">
+            <button class="col-xs-9 uk-button-default uk-icon-button" @click="changeNotes({id: null, body: ''})">
+                <span uk-icon="icon: plus; ratio: 0.9"></span> New Note
+            </button>
         </div>
     </div>
 
-    <div class="col-xs row fullWidth scrollSpace">
-        <hr class="uk-divider-vertical">
-
-        <textarea v-if="mode === 'edit'" @input="debounce" v-model="currentNote.body" class="col-xs noteBody textBody fullWidth"></textarea>
-        <hr v-if="mode === 'edit' && showMark" class="uk-divider-vertical secondHR">
+    <div class="col-xs row scrollSpace NoteEditor nomargin">
+        <template v-if="mode === 'edit'">
+            <textarea @input="debounce" v-model="currentNote.body" class="col-xs noteBody textBody fullWidth"></textarea>
+            <hr v-if="showMark" class="uk-divider-vertical secondHR">
+        </template>
 
         <div v-if="showMark || mode === 'view'" class="col-xs noteBody textBody fullWidth" v-html="compiledMarkdown"></div>
     </div>
@@ -75,11 +83,25 @@ export default {
         },
 
         startDelete(note) {
-            if (confirm('Are you sure you want to delete this note?')) {
-                this.deleteNote(note).then(() => {
-                    this.currentNote = this.notes[0]
-                })
-            }
+            Swal.fire({
+				position: 'top',
+
+				title: 'Are you sure you want to delete this note?',
+				text: 'This can\'t be undone!',
+				icon: 'warning',
+
+				showCancelButton: true,
+				confirmButtonColor: '#f0506e',
+				confirmButtonText: 'Yes, delete!',
+				cancelButtonColor: '#222',
+				cancelButtonText: 'No, cancel'
+			}).then(res => {
+                if (res.value) {
+                    this.deleteNote(note).then(() => {
+                        this.currentNote = this.notes[0]
+                    })
+                }
+            })
         },
 
         toggleMode() {
@@ -157,22 +179,20 @@ export default {
 
 <style>
 .NotesDisplay {
-    width: 90vw;
+    width: 100vw;
 
-    color: rgb(245, 245, 245) !important;
-    background-color: rgba(75, 75, 75, 0.75);
-
-    border-radius: 10px;
-    /* margin-bottom: 40px; */
+    background-color: #2A47BC;
+    opacity: 80%;
 }
 
 .scrollSpace {
-    height: 80vh;
-    overflow: auto;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .NotesDisplay .uk-divider-vertical {
-    height: 80vh;
+    height: 100vh;
     margin: 0 !important;
     position: absolute;
 }
@@ -186,63 +206,82 @@ export default {
 
 .NotesDisplay .col-xs-2 {
     padding: 0px;
-    min-width: 230px;
-    max-width: 230px;
+    min-width: 250px;
+    max-width: 250px;
 }
 
 .savedNotes {
-    text-align: left;
-    font-weight: 600px;
     font-size: 20px;
+    font-weight: 600;
+    color: #BBC3D5;
 
     overflow-x: hidden;
+
+    padding-top: 80px !important;
+
+    position: relative;
 }
 
 .savedNote {
-    padding: 10px 0;
+    padding: 10px 5px;
     margin: 0;
 }
 
 .savedNote:hover {
-    background-color: rgba(150, 150, 150, 0.5);
+    background-color: rgba(200, 200, 200, 0.15);
 }
 
-.savedNotes button {
-    color: rgb(245, 245, 245) !important;
-    margin: 20px 0;
+.activeNote {
+    color: #F0F0F2 !important;
+    font-size: 22px;
+
+    background-color: rgba(200, 200, 200, 0.25);
+}
+
+.controlButtons, .controlButtons button {
+    color: #F0F0F2 !important;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.controlButtons button {
+    margin: 15px 0px 0px;
 }
 
 .savedNotes hr {
     margin: 0;
 }
 
-.controlButtons {
-    padding: 0 10px;
+.newButton {
+    position: absolute;
+    bottom: 10px;
+
+    width: 100%;
+}
+.newButton button {
+    font-size: 16px;
+    color: white !important;
+}
+.newButton span {
+    margin-right: 5px;
 }
 
-.controlButtons button {
-    margin: 5px;
-    max-width: 50%;
+.NoteEditor, .noteBody {
+    font-size: 22px !important;
+    font-weight: 350 !important;
+    color: black !important;
 }
+.NoteEditor {
+    border-radius: 30px 0px 0px 30px;
+    background-color: #F0F0F2;
+    opacity: 80%;
 
-.controlButtons .updatedAt {
-    font-weight: 300px;
-    font-size: 15px;
-    margin: 5px 0;
+    padding: 20px 30px;
+
 }
-
-
 .noteBody {
-    font-weight: 350px;
-    font-size: 20px;
-    text-align: left;
-    /* color: rgb(225, 225, 225) !important; */
-
-    background-color: rgba(0, 0, 0, 0);
     border-width: 0px;
-
-    padding: 5px;
-    margin: 0 10px;
+    /* background-color: #F0F0F2 !important; */
 }
 
 textarea:focus {
@@ -250,6 +289,6 @@ textarea:focus {
 }
 
 .noteBody h1, .noteBody h2, .noteBody h3, .noteBody h4, .noteBody h5, .noteBody h6, .noteBody ul {
-    color: rgb(225, 225, 225) !important;
+    color: black !important;
 }
 </style>

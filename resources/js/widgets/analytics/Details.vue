@@ -59,9 +59,6 @@ export default {
 
     mounted() {
         this.distinct = this.processEvents().sort((a, b) => b.events - a.events)
-
-        console.log(this.distinct[0]);
-
     },
 }
 </script>
