@@ -291,4 +291,13 @@ textarea:focus {
 .noteBody h1, .noteBody h2, .noteBody h3, .noteBody h4, .noteBody h5, .noteBody h6, .noteBody ul {
     color: black !important;
 }
+.noteBody p {
+    margin: 0 !important;
+}
+.noteBody li {
+    margin-bottom: 10px;
+}
+.noteBody li li {
+    margin-bottom: 0px !important;
+}
 </style>

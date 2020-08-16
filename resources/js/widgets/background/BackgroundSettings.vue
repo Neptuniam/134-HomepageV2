@@ -69,7 +69,7 @@ export default {
 
 	span {
 		position: fixed;
-		top: 110px;
+		top: 60px;
 		left: 10px;
 
 		color: black;

@@ -15,16 +15,16 @@
     </div>
 
     <div v-if="news && news.length" class="row top-xs fullWidth headlineRow">
-        <div class="col-xs">
+        <div class="col-xs-1">
             <a v-if="index > 0" @click="index--" class="uk-icon previousIcon onHover"
                uk-icon="icon: chevron-left; ratio: 2" uk-tooltip="Previous Article" />
         </div>
 
-        <a class="limitReadable News col-xs-10 center-xs nomargin" :href="news[index].webUrl" target="_blank">
+        <a class="News col-xs center-xs nomargin" :href="news[index].webUrl" target="_blank">
             {{news[index].webTitle}}
         </a>
 
-        <div class="col-xs">
+        <div class="col-xs-1">
             <a v-if="index < news.length-1" @click="index++" class="uk-icon nextIcon onHover"
                uk-icon="icon: chevron-right; ratio: 2" uk-tooltip="Next Article" />
         </div>
@@ -40,7 +40,7 @@ export default {
 
     data() {
         return {
-            index: 0,
+            index: Math.floor(Math.random() * 10),
             catIndex: 0
         }
     },
@@ -97,7 +97,10 @@ export default {
     }
 
     .limitReadable {
-        max-width: 1200px;
+        /* max-width: 80vw; */
+    }
+    .col-xs-1 {
+        max-width: 50px;
     }
 
     #NewsDisplay .onHover{
