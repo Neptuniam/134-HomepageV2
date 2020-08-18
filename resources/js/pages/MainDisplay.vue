@@ -1,13 +1,16 @@
 <template>
 <div class="row center-xs middle-xs Homepage nomargin uk-animation-fade">
-    <router-view />
+    <Idle v-if="showIdle" />
 
-    <ControlBar />
+    <template v-else>
+        <router-view />
 
-    <DateTime />
+        <ControlBar />
 
-    <FilePreviewer />
+        <DateTime />
 
+        <FilePreviewer />
+    </template>
 </div>
 </template>
 
@@ -16,7 +19,8 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     data() {
         return {
-            toPreview: null
+            toPreview: null,
+            showIdle: false
         }
     },
     computed: {
@@ -92,6 +96,21 @@ export default {
         this.fetchUsers()
         this.getLocation()
         this.getBackground()
+    },
+
+    mounted() {
+        var timer = setTimeout(() => {
+            this.showIdle = true
+        }, 30000)
+
+        document.addEventListener('mousemove', () => {
+            clearTimeout(timer);
+            this.showIdle = false
+
+            timer = setTimeout(() => {
+                this.showIdle = true
+            }, 30000)
+        })
     },
 }
 </script>

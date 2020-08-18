@@ -47,7 +47,7 @@ export default {
         return {
             months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"],
             days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-            weather: null,
+            // weather: null,
             curLoc: null,
             weatherIconMap: {
                 'sunny': "sunny",
@@ -84,9 +84,19 @@ export default {
         }
     },
     computed: {
+        weather: {
+            set(val) {
+                this.setWeather(val)
+            },
+            get() {
+                return this.getWeather
+            }
+        },
+
         ...mapGetters('settings', {
             location:  'getLocation',
             address:   'getAddress',
+            getWeather:'getWeather',
         }),
     },
     methods: {
@@ -222,7 +232,7 @@ export default {
             return new Date(weather.expires) > new Date()
         },
 
-        getWeather(location) {
+        findWeather(location) {
             // Check the localstorage for previous data first
             let weather = JSON.parse(localStorage.getItem('LastWeatherDetails'))
 
@@ -238,13 +248,17 @@ export default {
 
             // Otherwise, fallback on hitting api
             this.requestWeather(location)
-        }
+        },
+
+        ...mapActions('settings', {
+            setWeather: 'setWeather',
+        })
     },
     mounted() {
-        this.getWeather(this.location)
+        this.findWeather(this.location)
 
         if (this.widget && this.widget.interval)
-            setInterval(this.getWeather(this.location), this.widget.interval * 60000)
+            setInterval(this.findWeather(this.location), this.widget.interval * 60000)
     },
 }
 </script>

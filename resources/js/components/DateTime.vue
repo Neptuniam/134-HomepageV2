@@ -1,5 +1,5 @@
 <template>
-<div class="clock textBody clickable noselect" @click="changeTZ" :uk-tooltip="tooltip()">
+<div class="textBody clickable noselect" :class="componentClass" @click="changeTZ" :uk-tooltip="tooltip()">
     <div class="time clickable">
         {{time}}
     </div>
@@ -15,6 +15,13 @@
 
 <script>
 export default {
+    props: {
+        componentClass: {
+            type: String,
+            default: 'clock'
+        }
+    },
+
     data() {
         return {
             utcTime: false,
@@ -78,6 +85,8 @@ export default {
         color: white;
     }
 
+
+
     .time {
         /* font-family: 'Orbitron', sans-serif !important; */
         font-size: 1.7rem;
@@ -87,6 +96,12 @@ export default {
         font-size: 1.2rem;
     }
 
+    .center-idle .time {
+        font-size: 6rem !important
+    }
+    .center-idle .date {
+        font-size: 4rem !important;
+    }
     /* div {
         padding: 0;
     } */

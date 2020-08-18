@@ -14,6 +14,8 @@ const state = {
 
     backgrounds: null,
 
+    weather: null,
+
     news: null,
     categorys: null,
 
@@ -44,6 +46,8 @@ const getters = {
 
     getBackgrounds: (state) => state.backgrounds,
 
+    getWeather: (state) => state.weather,
+
     getNews: (state) => state.news,
     getCategorys: (state) => state.categorys,
 
@@ -72,6 +76,8 @@ const mutations = {
     setMapsSettings: (state, payload) => { state.mapsSettings = payload },
 
     setBackgrounds: (state, payload) => { state.backgrounds = payload },
+
+    setWeather: (state, payload) => { state.weather = payload },
 
     setNews: (state, payload) => { state.news = payload },
     setCategorys: (state, payload) => { state.categorys = payload },
@@ -218,6 +224,10 @@ const actions = {
         return axios.put('/favourites/delete',payload).then(response => {
             dispatch('fetchFavourites')
         })
+    },
+
+    setWeather: ({commit}, payload) => {
+        commit('setWeather', payload)
     },
 
     // News Controllers
