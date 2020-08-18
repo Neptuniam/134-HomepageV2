@@ -101,15 +101,15 @@ export default {
     mounted() {
         var timer = setTimeout(() => {
             this.showIdle = true
-        }, 30000)
+        }, 5000)
 
         document.addEventListener('mousemove', () => {
-            clearTimeout(timer);
-            this.showIdle = false
+            // clearTimeout(timer);
+            // this.showIdle = false
 
             timer = setTimeout(() => {
                 this.showIdle = true
-            }, 30000)
+            }, 5000)
         })
     },
 }

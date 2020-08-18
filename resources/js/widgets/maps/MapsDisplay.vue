@@ -43,19 +43,41 @@ export default {
 
             origin: { title: 'loc', lat: 0, lng: 0 },
             destination: null,
-            travelMode: null,
 
             showingMap: false,
             directions: null,
-            travelText: null,
         }
     },
     computed: {
+        travelText: {
+            get() {
+                return this.getTravelText ? this.getTravelText.travelText : ''
+            },
+            set(val) {
+                this.setTravelText({
+                    travelText: val,
+                    travelMode: this.travelMode
+                })
+            }
+        },
+        travelMode: {
+            get() {
+                return this.getTravelText ? this.getTravelText.travelMode : ''
+            },
+            set(val) {
+                this.setTravelText({
+                    travelText: this.travelText,
+                    travelMode: val
+                })
+            }
+        },
+
         ...mapGetters('settings', {
             userLat: 'getLat',
             userLng: 'getLng',
             locations: 'getLocations',
             mapsSettings: 'getMapsSettings',
+            getTravelText: 'getTravelText'
         })
     },
     methods: {
@@ -207,7 +229,8 @@ export default {
         ...mapActions('settings', {
             setAddress: 'setAddress',
             fetchMapsSettings: 'fetchMapsSettings',
-            fetchLocations: 'fetchLocations'
+            fetchLocations: 'fetchLocations',
+            setTravelText: 'setTravelText'
         })
     },
     async mounted() {

@@ -1,20 +1,31 @@
 <template>
-<div class="IdleDisplay row center-xs middle-xs animated fadeIn">
-    <div v-if="weather" class="col-xs-6 row middle-xs center-xs weather">
-        <div class="col-xs-6 end-xs">
-            <i :class="getIcon(weather.current.IconPhrase)" />
+<div class="IdleDisplay row middle-xs animated fadeIn">
+    <div class="container row center-xs middle-xs">
+        <div v-if="weather" class="col-xs-7 row middle-xs center-xs weather">
+            <div class="col-xs-4 end-xs">
+                <i :class="getIcon(weather.current.IconPhrase)" />
+            </div>
+
+            <span class="col-xs start-xs">
+                <div>
+                    {{Math.round(weather.current.value)}}&deg; C
+                </div>
+                {{weather.current.IconPhrase}}
+            </span>
         </div>
 
-        <span class="col-xs start-xs">
-            <div>
-                {{Math.round(weather.current.value)}}&deg; C
-            </div>
-            {{weather.current.IconPhrase}}
-        </span>
-    </div>
+        <!-- <div class="col-xs-1">
 
-    <div class="col-xs start-xs">
-        <DateTime componentClass="center-idle" />
+        </div> -->
+
+        <div class="col-xs start-xs">
+            <DateTime componentClass="center-idle" />
+        </div>
+
+
+        <div v-if="getTravelText" class="col-xs-12 travelText">
+            {{getTravelText.travelText}}
+        </div>
     </div>
 
     <!-- <a v-if="news" class="row center-xs middle-xs News" :href="news[index].webUrl" target="_blank">
@@ -69,7 +80,8 @@ export default {
 
         ...mapGetters('settings', {
             weather: 'getWeather',
-            news: 'getNews'
+            news: 'getNews',
+            getTravelText: 'getTravelText'
         })
     },
 
@@ -102,6 +114,10 @@ export default {
         width: 100vw;
 
         background: rgba(200,200,200,0.4);
+    }
+    .container {
+        height: 600px;
+        width: 100vw;
     }
 
     .animated {
@@ -151,5 +167,9 @@ export default {
     }
     a {
         color: black;
+    }
+
+    .travelText {
+        font-size: 3rem;
     }
 </style>

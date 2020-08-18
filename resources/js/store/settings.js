@@ -10,6 +10,8 @@ const state = {
     widgets: null,
     locations: null,
     favourites: null,
+
+    travelText: null,
     mapsSettings: null,
 
     backgrounds: null,
@@ -42,6 +44,8 @@ const getters = {
     getWidgets: (state) => state.widgets,
     getLocations: (state) => state.locations,
     getFavourites: (state) => state.favourites,
+
+    getTravelText: (state) => state.travelText,
     getMapsSettings: (state) => state.mapsSettings,
 
     getBackgrounds: (state) => state.backgrounds,
@@ -73,6 +77,8 @@ const mutations = {
     setWidgets: (state, payload) => { state.widgets = payload },
     setLocations: (state, payload) => { state.locations = payload },
     setFavourites: (state, payload) => { state.favourites = payload },
+
+    setTravelText: (state, payload) => { state.travelText = payload },
     setMapsSettings: (state, payload) => { state.mapsSettings = payload },
 
     setBackgrounds: (state, payload) => { state.backgrounds = payload },
@@ -185,6 +191,10 @@ const actions = {
         })
     },
 
+
+    setTravelText: ({commit}, payload) => {
+        commit('setTravelText', payload)
+    },
     // Update User's map settings
     fetchMapsSettings: ({commit, dispatch}) => {
         return axios.get('/locations/settings').then(response => {
