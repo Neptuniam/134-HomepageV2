@@ -1,21 +1,51 @@
 <template>
 <div class="row center-xs middle-xs textBody textColor">
-    <div class="LoginSettings">
-        <div v-if="activeUser" class="row center-xs nomargin">
-            <h1>Welcome, {{activeUser.name}}!</h1>
+    <div class="uk-card uk-card-default uk-card-body roundedButton LoginSettings start-xs">
+        <div v-if="activeUser">
+            <h1  class="uk-card-title">
+                Welcome, {{activeUser.name}}!
+            </h1>
+
+            <div class="spacer">
+
+            </div>
         </div>
 
-        <div class="inputRow">
+        <!-- <div class="inputRow"> -->
             <CustomInput placeholder="Username" :inputData.sync="name" />
 
-            <CustomInput placeholder="Password" :inputData.sync="pass" />
-        </div>
+            <CustomInput
+                placeholder="Password"
+                :inputType="passwordType"
+                :inputData.sync="pass"
+                :append-icon="passwordType == 'password' ? 'EyeOff' : 'eye'"
+                @appendIconClick="passwordType = passwordType == 'password' ? 'text' : 'password'"
+            />
+
+        <!-- </div> -->
 
         <div class="row center-xs buttonsRow">
-            <CustomButton title="Log in" color="primary" class="col-xs-5 uk-text-capitalize" :click="login" />
+            <CustomButton
+                title="Log in"
+                color="primary"
+                class="col-xs-5 uk-text-capitalize"
+                :click="login"
+            />
 
-            <CustomButton v-if="activeUser && activeUser.id == 1" title="Create Profile" color="secondary" class="col-xs-5 uk-text-capitalize" :click="create" />
+            <CustomButton v-if="activeUser && activeUser.id == 1"
+                title="Change Password"
+                color="secondary"
+                class="col-xs-5 uk-text-capitalize"
+                :click="create"
+            />
         </div>
+
+        <!-- <CustomButton
+            title="New User"
+            color="text"
+            :click="login"
+        /> -->
+
     </div>
 </div>
 </template>
@@ -25,8 +55,10 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     data() {
         return {
-            name: null,
-            pass: null,
+            name: 'Liam',
+            pass: 'liam',
+
+            passwordType: 'password'
         }
     },
     computed: {
@@ -55,6 +87,13 @@ export default {
                     status: 'danger'
                 })
             }
+
+            // this.axios.post('/user/login', { name: this.name, pass: this.pass}).then(({ data }) => {
+            //     console.log(data);
+            //     if ('id' in data) {
+            //         localStorage.setItem('activeUser', data.id);
+            //     }
+            // })
         },
 
         create() {
@@ -80,28 +119,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
     .LoginSettings {
         width: 500px;
+
+        margin-top: 50px;
     }
 
-    h1 {
+
+    .LoginSettings input {
+        background: white !important;
+    }
+
+    .LoginSettings .buttonsRow {
+        margin-top: 40px;
+    }
+
+    /* h1 {
         font-weight: 550px !important;
-    }
-
-    /* .inputRow {
-        margin: 50px 0;
-    }
-
-    .uk-form-label {
-        text-align: left;
-        width: 100%;
-
-        margin-top: 25px;
-        padding-left: 15px;
-    }
-
-    .uk-button {
-        font-size: 18px;
     } */
 </style>

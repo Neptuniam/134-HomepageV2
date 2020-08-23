@@ -33,4 +33,18 @@ class UserController extends Controller {
     public function fetchUsers() {
         return Users::get();
     }
+
+
+    public function login(Request $request) {
+        $user = $request->all();
+
+        $exists = Users::where('name', $user['name'])->where('pass', $user['pass'])->first();
+
+        // If the requested user exists, set it as the session user for other controllers
+        if ($exists) {
+            session(['user' => $user]);
+        }
+
+        return $exists;
+    }
 }

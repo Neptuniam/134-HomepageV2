@@ -1,8 +1,5 @@
 <template>
 <div class="row center-xs middle-xs Homepage nomargin uk-animation-fade">
-    <Idle v-if="showIdle" />
-
-    <template v-else>
         <router-view />
 
         <ControlBar />
@@ -10,19 +7,12 @@
         <DateTime />
 
         <FilePreviewer />
-    </template>
 </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
 export default {
-    data() {
-        return {
-            toPreview: null,
-            showIdle: false
-        }
-    },
     computed: {
         ...mapGetters('settings', {
             widgets:    'getWidgets',
@@ -30,6 +20,7 @@ export default {
             location:   'getLocation'
         })
     },
+
     methods: {
         async fetchLocation() {
             // Retrieve the users location on created
@@ -69,14 +60,14 @@ export default {
             })
         },
 
-        ...mapActions('settings', {
-            setShowHome: 'setShowHome',
-            setActivePage: 'setActivePage',
-            setLocation: 'setLocation',
-            fetchUser: 'fetchUser',
-            fetchUsers: 'fetchUsers',
-            fetchWidgets: 'fetchWidgets',
-        })
+        ...mapActions('settings', [
+            'setShowHome',
+            'setActivePage',
+            'setLocation',
+            'fetchUser',
+            'fetchUsers',
+            'fetchWidgets',
+        ])
     },
     created() {
         this.fetchUser().then(() => {
@@ -96,22 +87,7 @@ export default {
         this.fetchUsers()
         this.getLocation()
         this.getBackground()
-    },
-
-    mounted() {
-        var timer = setTimeout(() => {
-            this.showIdle = true
-        }, 5000)
-
-        document.addEventListener('mousemove', () => {
-            // clearTimeout(timer);
-            // this.showIdle = false
-
-            timer = setTimeout(() => {
-                this.showIdle = true
-            }, 5000)
-        })
-    },
+    }
 }
 </script>
 

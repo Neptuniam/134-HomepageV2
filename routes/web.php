@@ -33,6 +33,9 @@ Route::group(['prefix'=>'background'], function(){
         Route::put('/','UserController@setUser');
         Route::post('/','UserController@createUser');
     });
+    Route::group(['prefix'=>'user'], function(){
+        Route::post('/login','UserController@login');
+    });
 
     Route::group(['prefix'=>'widgets'], function(){
         Route::get('/','WidgetController@fetchWidgets');

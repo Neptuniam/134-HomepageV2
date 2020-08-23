@@ -1,10 +1,11 @@
 <template>
-	<button :class="`uk-button ${buttonColour} roundedButton ripple`"
+	<button :class="`uk-button ${buttonColour} roundedButton bigForm noSelect ripple`"
 			@click="action" :disabled="loading || isDisabled"
 	>
 		<span v-if="loading" uk-spinner />
-		<span v-if="icon" :uk-icon="icon" />
-		<span v-else v-html="title" />
+		<span v-else>
+			{{title}}
+		</span>
 	</button>
 </template>
 
@@ -19,10 +20,6 @@ export default {
 		title: {
 			type: String,
 			default: "SUBMIT"
-		},
-		icon: {
-			type: String,
-			default: null
 		},
 
 		color: {
@@ -72,7 +69,7 @@ export default {
 </script>
 
 <!-- Ripple from: https://codeburst.io/create-a-material-design-ripple-effect-without-js-9d3cbee25b3e -->
-<style>
+<style scoped>
 	.ripple {
 		position: relative;
 		overflow: hidden;
@@ -102,10 +99,55 @@ export default {
 		transition: 0s;
 	}
 
-</style>
-<style scoped>
 	button {
 		-webkit-tap-highlight-color:transparent;
+	}
+
+	.extraSpacing {
+		margin-top: 50px !important
+	}
+</style>
+
+<style>
+	.uk-button {
+		margin: 15px auto !important;
+		line-height: 42px !important;
+	}
+
+	.uk-button:disabled {
+		color: #2c3e50 !important;
+		cursor: not-allowed !important;
+	}
+
+	.uk-button-primary {
+		/* background: var(--main-gradient) !important; */
+		color: white !important;
+	}
+	.uk-button-secondary {
+		/* background-color: white !important; */
+		/* border: 1.5px var(--primary-blue) solid !important; */
+		/* color: var(--primary-blue) !important; */
+	}
+	.uk-button-danger {
+		/* background: var(--danger-gradient) !important; */
+		color: white !important;
+	}
+	.uk-button-accent {
+		/* background: var(--accent-gradient); */
+		color: white !important;
+	}
+	.uk-button-default, .uk-button-muted {
+		color: #333 !important;
+	}
+	.uk-button-text {
+		color: #333 !important;
+	}
+
+	button {
+		-webkit-tap-highlight-color:transparent;
+	}
+
+	.uk-icon.uk-spinner {
 		color: white !important;
 	}
 </style>

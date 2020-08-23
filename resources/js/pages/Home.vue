@@ -1,6 +1,8 @@
 <template>
 <div v-if="activeUser && location && widgets" class="row center-xs middle-xs nomargin Home">
-    <div class="col-xs-10">
+    <Idle v-if="showIdle" />
+
+    <div v-show="!showIdle" class="col-xs-10">
         <Weather v-if="isActive('Weather')" />
 
         <Maps v-if="isActive('Maps')" />
@@ -19,6 +21,12 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
+    data() {
+        return {
+            timer: null,
+            showIdle: false
+        }
+    },
     computed: {
         ...mapGetters('settings', {
             activeUser: 'getUser',
@@ -30,7 +38,22 @@ export default {
         isActive(title) {
             let found = this.widgets.find(widget => widget.title == title)
             return found && found.status == 1
+        },
+
+        setTimer() {
+            this.showIdle = false
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => this.showIdle = true, 60000)
         }
+    },
+
+    mounted() {
+        // Show a simple idle screen once the user hasn't been active for a min
+        this.setTimer()
+        document.addEventListener('mousemove', () => this.setTimer())
+    },
+    destroyed() {
+        clearTimeout(this.timer)
     },
 }
 </script>

@@ -33,6 +33,10 @@ div {
 	padding: 0 !important;
 }
 
+.scaper {
+	height: 40px;
+}
+
 .clickable {
 	cursor: pointer !important;
 }

@@ -1,25 +1,25 @@
 <template>
 <div v-if="widgets && widgets.length" class="ControlBar">
 	<div v-if="$route.name == 'Home'" class="row start-xs middle-xs pageControl">
-        <router-link to="/settings" class="col-xs">
+        <router-link to="/settings" class="col-xs-3">
             <span class="uk-icon" uk-icon="icon: cog; ratio:2;" uk-tooltip="Settings" />
         </router-link>
 
-        <!-- <router-link v-if="isActive('News')" to="/news" class="col-xs">
+        <!-- <router-link v-if="isActive('News')" to="/news" class="col-xs-3">
             <span class="uk-icon" uk-icon="icon: world; ratio: 2" uk-tooltip="News"/>
         </router-link> -->
 
-        <router-link v-if="isActive('Trello')" to="/trello" class="col-xs" style="position: relative;">
+        <router-link v-if="isActive('Trello')" to="/trello" class="col-xs-3" style="position: relative;">
             <span class="uk-icon" uk-icon="icon: gitter; ratio: 2;" uk-tooltip="View Trello Cards" />
 
 			<TrelloDisplay />
         </router-link>
 
-        <router-link v-if="isActive('Notes')" to="/notes" class="col-xs">
+        <router-link v-if="isActive('Notes')" to="/notes" class="col-xs-3">
             <span class="uk-icon" uk-icon="icon: pencil; ratio: 2;" uk-tooltip="Personal Notes" />
         </router-link>
 
-		<router-link v-if="isActive('Analytics')" to="/analytics" class="col-xs">
+		<router-link v-if="isActive('Analytics')" to="/analytics" class="col-xs-3">
             <span class="uk-icon" uk-icon="icon: database; ratio: 2;" uk-tooltip="Analytics" />
         </router-link>
     </div>
