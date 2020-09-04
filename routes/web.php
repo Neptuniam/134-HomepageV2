@@ -55,7 +55,7 @@ Route::group(['prefix'=>'background'], function(){
     });
 
     Route::group(['prefix'=>'favourites'], function(){
-        Route::get('/', 'FavouriteController@fetchFavourites');
+        Route::get('/{userid}', 'FavouriteController@fetchFavourites');
         Route::post('/','FavouriteController@createFavourite');
         Route::put('/', 'FavouriteController@updateFavourite');
         Route::put('/delete', 'FavouriteController@deleteFavourite');

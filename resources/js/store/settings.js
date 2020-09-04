@@ -221,8 +221,8 @@ const actions = {
 
 
     // Favourites Controllers
-    fetchFavourites: ({commit}) => {
-        return axios.get('/favourites/').then(response => {
+    fetchFavourites: ({commit}, payload) => {
+        return axios.get(`/favourites/${payload}`).then(response => {
             util.trackResult('favourites', 2, response.data)
 
             commit('setFavourites', response.data)

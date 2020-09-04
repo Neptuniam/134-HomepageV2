@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use App\Favourite;
 
 class FavouriteController extends Controller {
-    public function fetchFavourites() {
-        if ($user = session('user'))
-            return Favourite::where('user_id', $user['id'])->orderBy('pos')->get();
+    public function fetchFavourites($userid) {
+        // if ($user = session('user'))
+        return Favourite::where('user_id', $userid)->orderBy('pos')->get();
     }
 
     public function createFavourite(Request $request) {
