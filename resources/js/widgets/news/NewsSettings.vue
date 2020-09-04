@@ -1,6 +1,6 @@
 <template>
-<table class="FavsSettings uk-table uk-table-striped">
-    <div class="row start-xs middle-xs textBody HeaderRow">
+<SettingsTable>
+    <template v-slot:headers>
         <div class="col-xs-1">
             Sort
         </div>
@@ -11,38 +11,35 @@
 
         <div class="col-xs-2 center-xs nopadding">
         </div>
-    </div>
+    </template>
 
-    <tbody>
+    <template v-slot:body>
         <span uk-sortable="handle: .uk-sortable-handle">
-            <NewsRow v-for="cat in categorys" :key="cat.id" :id="cat.id" :category="cat" />
+            <NewsRow v-for="cat in getCategorys" :key="cat.id" :id="cat.id" :dataObject="cat" />
         </span>
 
-        <NewsRow :category="blankObject" />
-    </tbody>
-</table>
+        <NewsRow :dataObject="blankObject" />
+    </template>
+</SettingsTable>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     data() {
         return {
-            blankObject: {id: null, user_id: null, title: ''},
+            blankObject: {id: null, name: null, pass: null},
             updatedOrder: null
         }
     },
+
     computed: {
-        ...mapGetters('settings', {
-            categorys: 'getCategorys',
-            activeUser: 'getUser',
-        })
+        ...mapGetters('settings', [ 'getCategorys' ])
     },
+
     methods: {
-        ...mapActions('settings', {
-            fetchCategorys: 'fetchCategorys'
-        })
+        ...mapActions('settings', [ 'fetchCategorys' ])
     },
 
     mounted() {
@@ -56,7 +53,7 @@ export default {
 
             for (let i = 0; i < e.target.children.length; i++) {
                 let child = e.target.children[i]
-                let fav = _this.categorys.find(fav => fav.id == child.id)
+                let fav = _this.getCategorys.find(fav => fav.id == child.id)
 
                 if (fav) {
                     _this.updatedOrder.push(fav)
@@ -73,6 +70,3 @@ export default {
     },
 }
 </script>
-
-<style>
-</style>

@@ -1,6 +1,6 @@
 <template>
-<table class="FavsSettings uk-table uk-table-striped">
-    <div class="row start-xs middle-xs textBody HeaderRow">
+<SettingsTable>
+    <template v-slot:headers>
         <div class="col-xs-1">
             Sort
         </div>
@@ -17,16 +17,16 @@
 
         <div class="col-xs-2 center-xs nopadding">
         </div>
-    </div>
+    </template>
 
-    <tbody>
+    <template v-slot:body>
         <span uk-sortable="handle: .uk-sortable-handle">
-            <FavsRow v-for="fav in favourites" :key="fav.id" :id="fav.id" :favourite="fav" />
+            <FavsRow v-for="fav in getFavourites" :key="fav.id" :id="fav.id" :dataObject="fav" />
         </span>
 
-        <FavsRow :favourite="blankObject" />
-    </tbody>
-</table>
+        <FavsRow :dataObject="blankObject" />
+    </template>
+</SettingsTable>
 </template>
 
 <script>
@@ -40,15 +40,11 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('settings', {
-            favourites: 'getFavourites',
-            activeUser: 'getUser',
-        })
+        ...mapGetters('settings', ['getFavourites'])
     },
+
     methods: {
-        ...mapActions('settings', {
-            fetchFavourites: 'fetchFavourites'
-        })
+        ...mapActions('settings', ['fetchFavourites'])
     },
 
     mounted() {
@@ -62,7 +58,7 @@ export default {
 
             for (let i = 0; i < e.target.children.length; i++) {
                 let child = e.target.children[i]
-                let fav = _this.favourites.find(fav => fav.id == child.id)
+                let fav = _this.getFavourites.find(fav => fav.id == child.id)
 
                 if (fav) {
                     _this.updatedOrder.push(fav)
@@ -79,6 +75,3 @@ export default {
     },
 }
 </script>
-
-<style>
-</style>

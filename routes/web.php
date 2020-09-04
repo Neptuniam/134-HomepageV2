@@ -30,8 +30,10 @@ Route::group(['prefix'=>'background'], function(){
 // Route::group(['prefix'=>'settings'], function(){
     Route::group(['prefix'=>'users'], function(){
         Route::get('/','UserController@fetchUsers');
-        Route::put('/','UserController@setUser');
         Route::post('/','UserController@createUser');
+        Route::put('/','UserController@updateUser');
+        Route::delete('/{userId}','UserController@deleteUser');
+        Route::put('/{userId}','UserController@setUser');
     });
     Route::group(['prefix'=>'user'], function(){
         Route::post('/login','UserController@login');

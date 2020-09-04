@@ -45,12 +45,16 @@
 </template>
 
 <script>
+import Account from 'vue-material-design-icons/Account.vue'
+import Lock from 'vue-material-design-icons/Lock.vue'
 import Eye from 'vue-material-design-icons/EyeOutline.vue'
 import EyeOff from 'vue-material-design-icons/EyeOffOutline.vue'
 import close from 'vue-material-design-icons/Close.vue'
 
 export default {
 	components: {
+		Account,
+		Lock,
 		Eye,
 		EyeOff,
 		close,
@@ -249,6 +253,7 @@ export default {
 		margin: auto !important;
 
 		position: relative;
+		background: white !important;
 	}
 
 	label {

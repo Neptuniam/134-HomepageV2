@@ -49,7 +49,8 @@ export default {
             let users = []
 
             for (const event of this.events) {
-                const name = this.users.find(user => user.id == event.user_id).name
+                const user = this.users.find(user => user.id == event.user_id) || {}
+                const name = user.name || 'Deleted'
                 let obj = users.find(day => day.label == name)
 
                 if (obj) {

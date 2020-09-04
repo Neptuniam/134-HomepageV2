@@ -76,6 +76,43 @@ window.util = {
 			return null
 		}
 	},
+
+	/*
+		Description: Pads numbers, mainly used for times to ensure it's two digits (but is dynamic)
+		In: <Number/String> num - to pad, <Number> digit - Numbers of digits to return the number with
+		Out: <String> paddedNumber
+		Error: digit should be positive
+	*/
+	zeroPadding(num, digit) {
+		var zero = '';
+		for (var i = 0; i < digit; i++)
+			zero += '0';
+		return (zero + num).slice(-digit);
+	},
+
+	/*
+		Description: Converts 24 hour times to 12
+		In: <Number/String> num
+		Out: <Number> convertedNum
+	*/
+	convert24To12(num) {
+		return num > 13 ? num - 12 : num
+	},
+
+	/*
+		Description: Creates a very human readable Time String
+		In: <Date/String> Time
+		Out: <String> HumanReadableTime
+		Error: Time must be a date in some format
+		Function Dependencies: ensureDateObject, convert24To12, zeroPadding
+	*/
+	createTime(time) {
+		time = util.ensureDateObject(time)
+
+		if (time)
+			return `${util.convert24To12(time.getHours())}:${util.zeroPadding(time.getMinutes(), 2)}:${util.zeroPadding(time.getSeconds(), 2)} ${time.getHours() < 12 ? 'am' : 'pm'}`
+	},
+
 	/*
         Description: Creates a very human readable Date String
         In: <Date/String> Date

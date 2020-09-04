@@ -1,7 +1,7 @@
 <template>
-<div v-if="mapsSettings" class="row center-xs middle-xs fullWidth">
+<div v-if="mapsSettings && remainingLocations && remainingLocations.length" class="row center-xs middle-xs fullWidth">
 	<div class="col-xs-3">
-		<span class="row uk-form-label fullWidth textColor textBody">
+		<!-- <span class="row uk-form-label fullWidth textColor textBody">
 			Home Location
 		</span>
 
@@ -12,11 +12,20 @@
 					{{location.title}}
 				</option>
 			</select>
-		</div>
+		</div> -->
+
+		<custom-select
+			:options="remainingLocations"
+			title="Home Location"
+			value="id"
+			display="title"
+			:selected.sync="mapsSettings.home_id"
+			@change="updateMapSettings(mapsSettings)"
+		/>
 	</div>
 
 	<div class="col-xs-3">
-		<span class="row uk-form-label fullWidth textColor textBody">
+		<!-- <span class="row uk-form-label fullWidth textColor textBody">
 			Favourite Location
 		</span>
 
@@ -27,11 +36,20 @@
 					{{location.title}}
 				</option>
 			</select>
-		</div>
+		</div> -->
+
+		<custom-select
+			:options="remainingLocations"
+			title="Favourite Location"
+			value="id"
+			display="title"
+			:selected.sync="mapsSettings.fav_id"
+			@change="updateMapSettings(mapsSettings)"
+		/>
 	</div>
 
-	<div class="col-xs-3">
-		<span class="row uk-form-label fullWidth textColor textBody">
+	<div class="col-xs-3 start-xs">
+		<!-- <span class="row uk-form-label fullWidth textColor textBody">
 			Transportation Method
 		</span>
 
@@ -42,7 +60,27 @@
 				<option value="TRANSIT">Bus</option>
 				<option value="WALKING">Walking</option>
 			</select>
-		</div>
+		</div> -->
+
+		<custom-select
+			title="Transportation Method"
+			:selected.sync="mapsSettings.method"
+			@change="updateMapSettings(mapsSettings)"
+		>
+			<template v-slot:option="{ selectOption, filterOption }">
+				<option v-if="filterOption('Driving')" @click="selectOption('DRIVING', 'Driving')" value="DRIVING">
+					Driving
+				</option>
+
+				<option v-if="filterOption('Bus')" @click="selectOption('TRANSIT', 'Bus')" value="TRANSIT">
+					Bus
+				</option>
+
+				<option v-if="filterOption('Walking')" @click="selectOption('WALKING', 'Walking')" value="WALKING">
+					Walking
+				</option>
+			</template>
+		</custom-select>
 	</div>
 </div>
 </template>

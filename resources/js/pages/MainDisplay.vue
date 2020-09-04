@@ -198,6 +198,9 @@ export default {
     .blueText {
     	color: blue !important;
     }
+    .darkText {
+        color: black !important;
+    }
 
     .swal2-content {
         /* font-size: 30px !important; */

@@ -117,38 +117,48 @@ const actions = {
     },
 
     fetchUser: ({commit, dispatch}) => {
-        let user = window.localStorage.getItem('activeUser')
+        let user = JSON.parse(window.localStorage.getItem('activeUser'))
 
-        if (!user || !(user = JSON.parse(user))) {
-            UIkit.notification({message: "Failed to find active user from local storage", status:'danger'})
-            return Promise.reject('user_not_found')
+        if (user) {
+            return dispatch('setActiveUser', user)
         } else {
-            dispatch('setActiveUser', user)
-            return axios.put('/users', user)
+            UIkit.notification({
+                message: "Failed to find active user from local storage",
+                status: 'danger'
+            })
+
+            return Promise.reject('user_not_found')
         }
     },
 
     setActiveUser: ({commit, dispatch}, payload) => {
         window.localStorage.setItem('activeUser', JSON.stringify(payload));
-        return axios.put('/users', payload).then(() => {
+
+        return axios.put(`/users/${payload.id}`).then(() => {
             commit('setUser', payload)
         })
     },
 
     fetchUsers: ({commit}) => {
         return axios.get('/users').then(response => {
-            // console.log('%c Users', 'background: #222; color: #bada55');
-            // console.log(response.data);
             commit('setUsers', response.data)
         })
     },
     createUser: ({commit, dispatch}, payload) => {
+        // All other settings pages are rows tied to the current user. This one is different
+        delete payload.user_id
+
         return axios.post('/users',payload).then(response => {
-            console.log(response);
             payload.id = response.data
             dispatch('fetchUsers')
-            dispatch('setActiveUser', payload)
+            // dispatch('setActiveUser', payload)
         })
+    },
+    updateUser: ({commit}, payload) => {
+        return axios.put('/users/', payload)
+    },
+    deleteUser: ({commit}, payload) => {
+        return axios.delete(`/users/${payload.id}`)
     },
 
 

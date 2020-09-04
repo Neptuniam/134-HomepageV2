@@ -30,11 +30,20 @@ export default {
             activeTab: {
                 title: 'Profile',
                 src: 'LoginSettings'
-            },
-            tabs: [{
-                    title: 'Profile',
-                    src: 'LoginSettings'
-                }, {
+            }
+        }
+    },
+    computed: {
+        tabs() {
+            let loginTab = {
+                title: 'Profile',
+                src: 'LoginSettings'
+            }
+            let usersTab = {
+                title: 'Users',
+                src: 'UsersSettings'
+            }
+            let settingsTabs = [{
                     title: 'Widgets',
                     src: 'WidgetsSettings'
                 }, {
@@ -54,9 +63,22 @@ export default {
                     src: 'TrelloSettings'
                 },
             ]
-        }
-    },
-    computed: {
+
+            if (this.activeUser && this.activeUser.id == 1) {
+                return [
+                    loginTab,
+                    usersTab,
+                    ...settingsTabs
+                ]
+            } else {
+                return [
+                    loginTab,
+                    ...settingsTabs
+                ]
+            }
+        },
+
+
         ...mapGetters('settings', {
             activeUser: 'getUser',
         })
@@ -82,7 +104,7 @@ export default {
 
     .uk-tab>*>a {
         font-weight: 600;
-        font-size: 4vh !important;
+        font-size: 3.5vh !important;
         color: rgb(100, 100, 100) !important;
     }
     .uk-tab>*>a:hover {
@@ -93,7 +115,8 @@ export default {
         color: black !important;
     }
 
-    input, select, .uk-input, .uk-select, textarea {
+    /* input, select,  */
+    .uk-input, .uk-select, textarea {
         border-radius: 10px !important;
         background: rgb(235,235,235) !important;
         /* background: rgba(60,60,60,0.7) !important;

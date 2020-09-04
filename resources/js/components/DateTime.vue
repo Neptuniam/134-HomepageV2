@@ -28,9 +28,9 @@ export default {
 
             time: null,
             date: null,
-            months: ['Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec'],
         }
     },
+    
     methods: {
         updateTime() {
             var cd = new Date();
@@ -39,8 +39,8 @@ export default {
             if (this.utcTime)
                 cd = new Date(cd.toISOString().replace("Z",""))
 
-            this.time = `${this.convert24To12(cd.getHours())}:${this.zeroPadding(cd.getMinutes(), 2)}:${this.zeroPadding(cd.getSeconds(), 2)} ${cd.getHours() < 12 ? 'am' : 'pm'}`
-            this.date = `${this.months[cd.getMonth()]} ${this.zeroPadding(cd.getDate(), 2)}, ${this.zeroPadding(cd.getFullYear(), 4)}`
+            this.time = util.createTime(cd)
+            this.date = util.createDisplayDate(cd)
         },
 
         changeTZ() {
@@ -49,25 +49,15 @@ export default {
             this.updateTime()
         },
 
-        convert24To12(num) {
-            return num > 12 ? num-12 : num
-        },
-
-        zeroPadding(num, digit) {
-            var zero = '';
-            for (var i = 0; i < digit; i++)
-                zero += '0';
-            return (zero + num).slice(-digit);
-        },
-
         tooltip() {
             return `Showing time in <i>${this.utcTime ? 'UTC' : 'Local'} Time </i>.<br>Click to switch.`
         },
     },
+
     created() {
         this.updateTime();
         setInterval(this.updateTime, 1000);
-    },
+    }
 }
 </script>
 

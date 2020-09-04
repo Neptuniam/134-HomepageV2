@@ -69,7 +69,7 @@ export default {
     }
 
     .rowHeight {
-        height: 3rem;
+        height: 55px;
         /* padding: 10px 0px; */
     }
 

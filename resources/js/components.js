@@ -45,6 +45,10 @@ Vue.component('UserUsage',          require('./widgets/analytics/UserUsage.vue')
 
 Vue.component('WidgetsSettings',    require('./components/WidgetsSettings.vue').default);
 Vue.component('LoginSettings',      require('./components/LoginSettings.vue').default);
+Vue.component('UsersSettings',    require('./components/UsersSettings.vue').default);
+Vue.component('SettingsTable',    require('./components/SettingsTable.vue').default);
+Vue.component('UsersRow',    require('./components/UsersRow.vue').default);
+Vue.component('SettingsControlButtons',    require('./components/SettingsControlButtons.vue').default);
 
 
 Vue.component('DateTime',           require('./components/DateTime.vue').default);
@@ -53,6 +57,7 @@ Vue.component('FilePreviewer',      require('./components/FilePreviewer.vue').de
 
 Vue.component('CustomInput',        require('./components/CustomInput.vue').default);
 Vue.component('CustomButton',       require('./components/CustomButton.vue').default);
+Vue.component('CustomSelect',       require('./components/CustomSelect.vue').default);
 
 
 // Packages

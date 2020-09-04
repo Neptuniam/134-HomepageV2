@@ -2,29 +2,31 @@
 <div>
     <MapsUserSettings />
 
-    <table class="uk-table uk-table-striped">
-        <thead>
-            <tr>
-                <th class="uk-text-capitalize">
-                    Title
-                </th>
-                <th class="uk-text-capitalize">
-                    Address
-                </th>
-                <th class="uk-text-capitalize">
-                    Lat
-                </th>
-                <th class="uk-text-capitalize">
-                    Long
-                </th>
-            </tr>
-        </thead>
-        <tbody class="textBody">
-            <MapsRow  v-for="location in locations" :key="location.id" :location="location" />
+    <SettingsTable>
+        <template v-slot:headers>
+            <div class="col-xs uk-text-capitalize">
+                Title
+            </div>
+            <div class="col-xs uk-text-capitalize nopadding">
+                Address
+            </div>
+            <div class="col-xs uk-text-capitalize nopadding">
+                Lat
+            </div>
+            <div class="col-xs uk-text-capitalize nopadding">
+                Long
+            </div>
 
-            <MapsRow :location="blankObject" />
-        </tbody>
-    </table>
+            <div class="col-xs-2 center-xs nopadding">
+            </div>
+        </template>
+
+        <template v-slot:body>
+            <MapsRow v-for="locations in getLocations" :key="locations.id" :dataObject="locations" />
+
+            <MapsRow :dataObject="blankObject" />
+        </template>
+    </SettingsTable>
 </div>
 </template>
 
@@ -38,17 +40,11 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('settings', {
-            locations:  'getLocations',
-            activeUser: 'getUser',
-        })
+        ...mapGetters('settings', ['getLocations'])
     },
 
     methods: {
-        ...mapActions('settings', {
-			fetchMapsSettings:  'fetchMapsSettings',
-			fetchLocations:     'fetchLocations',
-        })
+        ...mapActions('settings', [ 'fetchMapsSettings', 'fetchLocations' ])
     },
 
     mounted() {

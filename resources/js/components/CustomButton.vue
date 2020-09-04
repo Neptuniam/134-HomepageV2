@@ -110,7 +110,7 @@ export default {
 
 <style>
 	.uk-button {
-		margin: 15px auto !important;
+		/* margin: 15px auto !important; */
 		line-height: 42px !important;
 	}
 
