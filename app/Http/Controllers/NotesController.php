@@ -8,9 +8,8 @@ use Illuminate\Http\Request;
 use App\Notes;
 
 class NotesController extends Controller {
-    public function fetchNotes() {
-        if ($user = session('user'))
-            return Notes::where('author_id', $user['id'])->get();
+    public function fetchNotes($userID) {
+        return Notes::where('author_id', $userID)->get();
     }
 
     public function createNote(Request $request) {

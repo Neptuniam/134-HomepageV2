@@ -26,8 +26,7 @@ export default {
         },
 
         ...mapGetters('settings', {
-            favourites: 'getFavourites',
-            activeUser: 'getUser'
+            favourites: 'getFavourites'
         })
     },
 
@@ -43,8 +42,7 @@ export default {
     },
 
     mounted() {
-        console.log('this.activeUser', this.activeUser);
-        this.fetchFavourites(this.activeUser.id)
+        this.fetchFavourites()
     },
 }
 </script>

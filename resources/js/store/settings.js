@@ -163,8 +163,8 @@ const actions = {
 
 
     // Settings
-    fetchWidgets: ({commit}) => {
-        return axios.get('/widgets/').then(response => {
+    fetchWidgets: ({commit, getters}) => {
+        return axios.get(`/widgets/${getters.getUser.id}`).then(response => {
             util.trackResult('widgets', 2, response.data)
 
             commit('setWidgets', response.data)
@@ -176,8 +176,8 @@ const actions = {
 
 
     // Location Controllers
-    fetchLocations: ({commit}) => {
-        return axios.get('/locations/').then(response => {
+    fetchLocations: ({commit, getters}) => {
+        return axios.get(`/locations/${getters.getUser.id}`).then(response => {
             util.trackResult('locations', 2, response.data)
 
             commit('setLocations', response.data)
@@ -206,8 +206,8 @@ const actions = {
         commit('setTravelText', payload)
     },
     // Update User's map settings
-    fetchMapsSettings: ({commit, dispatch}) => {
-        return axios.get('/locations/settings').then(response => {
+    fetchMapsSettings: ({commit, getters, dispatch}) => {
+        return axios.get(`/locations/settings/${getters.getUser.id}`).then(response => {
             util.trackResult('maps settings', 2, response.data)
 
             commit('setMapsSettings', response.data[0])
@@ -221,8 +221,8 @@ const actions = {
 
 
     // Favourites Controllers
-    fetchFavourites: ({commit}, payload) => {
-        return axios.get(`/favourites/${payload}`).then(response => {
+    fetchFavourites: ({commit, getters}) => {
+        return axios.get(`/favourites/${getters.getUser.id}`).then(response => {
             util.trackResult('favourites', 2, response.data)
 
             commit('setFavourites', response.data)
@@ -261,8 +261,8 @@ const actions = {
             commit('setNews', response.data.response.results)
         })
     },
-    fetchCategorys: ({commit}) => {
-        return axios.get('/news/categorys/').then(response => {
+    fetchCategorys: ({commit, getters}) => {
+        return axios.get(`/news/categorys/${getters.getUser.id}`).then(response => {
             util.trackResult('categorys', 2, response.data)
 
             commit('setCategorys', response.data)
@@ -288,8 +288,8 @@ const actions = {
 
 
     // Notes Controllers
-    fetchNotes: ({commit}) => {
-        return axios.get('/notes/').then(response => {
+    fetchNotes: ({commit, getters}) => {
+        return axios.get(`/notes/${getters.getUser.id}`).then(response => {
             util.trackResult('notes', 2, response.data)
 
             commit('setNotes', response.data)

@@ -8,9 +8,8 @@ use App\Location;
 use App\MapsUserSettings;
 
 class LocationController extends Controller {
-    public function fetchLocations() {
-        if ($user = session('user'))
-            return Location::where('user_id', $user['id'])->get();
+    public function fetchLocations($userID) {
+        return Location::where('user_id', $userID)->get();
     }
 
     public function createLocation(Request $request) {
@@ -31,9 +30,8 @@ class LocationController extends Controller {
 
 
     // MapsSettings
-    public function fetchMapSettings() {
-        if ($user = session('user'))
-            return MapsUserSettings::where('user_id', $user['id'])->get();
+    public function fetchMapSettings($userID) {
+        return MapsUserSettings::where('user_id', $userID)->get();
     }
 
     public function updateMapSettings(Request $request) {

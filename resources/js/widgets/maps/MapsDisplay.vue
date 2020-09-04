@@ -179,11 +179,11 @@ export default {
 
             // Prettify the times for display
             return {
-                departureTime:  this.convert24To12(departureDate.getHours()) + ':' +
-                                this.zeroPadding(departureDate.getMinutes(), 2),
+                departureTime:  util.convert24To12(departureDate.getHours()) + ':' +
+                                util.zeroPadding(departureDate.getMinutes(), 2),
 
-                arrivalTime:    this.convert24To12(arrivalDate.getHours()) + ':' +
-                                this.zeroPadding(arrivalDate.getMinutes(), 2)
+                arrivalTime:    util.convert24To12(arrivalDate.getHours()) + ':' +
+                                util.zeroPadding(arrivalDate.getMinutes(), 2)
             }
         },
 

@@ -14,20 +14,19 @@ Route::get('/', function () {
     return view('master');
 });
 
-Route::group(['prefix'=>'analytics'], function() {
-    Route::get('', 'AnalyticsController@fetchEvents');
-    Route::post('/add_event', 'AnalyticsController@addEvent');
-});
+Route::group(['middleware' => ['cors']], function(){
+    Route::group(['prefix'=>'analytics'], function() {
+        Route::get('', 'AnalyticsController@fetchEvents');
+        Route::post('/add_event', 'AnalyticsController@addEvent');
+    });
 
-Route::group(['prefix'=>'background'], function(){
-    Route::get('/','Background@getBackground');
-    Route::get('/all','Background@getList');
-    Route::post('/upload', 'Background@upload');
-    Route::post('/delete', 'Background@delete');
-});
+    Route::group(['prefix'=>'background'], function(){
+        Route::get('/','Background@getBackground');
+        Route::get('/all','Background@getList');
+        Route::post('/upload', 'Background@upload');
+        Route::post('/delete', 'Background@delete');
+    });
 
-
-// Route::group(['prefix'=>'settings'], function(){
     Route::group(['prefix'=>'users'], function(){
         Route::get('/','UserController@fetchUsers');
         Route::post('/','UserController@createUser');
@@ -40,21 +39,21 @@ Route::group(['prefix'=>'background'], function(){
     });
 
     Route::group(['prefix'=>'widgets'], function(){
-        Route::get('/','WidgetController@fetchWidgets');
+        Route::get('/{userId}','WidgetController@fetchWidgets');
         Route::put('/','WidgetController@updateWidget');
     });
 
     Route::group(['prefix'=>'locations'], function(){
-        Route::get('/', 'LocationController@fetchLocations');
+        Route::get('/{userId}', 'LocationController@fetchLocations');
         Route::post('/','LocationController@createLocation');
         Route::put('/', 'LocationController@updateLocation');
         Route::put('/delete', 'LocationController@deleteLocation');
 
-        Route::get('/settings', 'LocationController@fetchMapSettings');
+        Route::get('/settings/{userId}', 'LocationController@fetchMapSettings');
         Route::put('/settings', 'LocationController@updateMapSettings');
     });
 
-    Route::group(['middleware' => ['cors'], 'prefix'=>'favourites'], function(){
+    Route::group(['prefix'=>'favourites'], function(){
         Route::get('/{userid}', 'FavouriteController@fetchFavourites');
         Route::post('/','FavouriteController@createFavourite');
         Route::put('/', 'FavouriteController@updateFavourite');
@@ -66,7 +65,7 @@ Route::group(['prefix'=>'background'], function(){
 
     Route::group(['prefix'=>'news'], function(){
         Route::group(['prefix'=>'categorys'], function() {
-            Route::get('/', 'CategoryController@fetchCategorys');
+            Route::get('/{userid}', 'CategoryController@fetchCategorys');
             Route::post('/create','CategoryController@createCategory');
             Route::put('/', 'CategoryController@updateCategory');
             Route::put('/delete', 'CategoryController@deleteCategory');
@@ -74,11 +73,11 @@ Route::group(['prefix'=>'background'], function(){
             Route::put('/updatePositions', 'CategoryController@updatePositions');
         });
     });
-// });
 
-Route::group(['prefix'=>'notes'], function(){
-    Route::get('/', 'NotesController@fetchNotes');
-    Route::post('/','NotesController@createNote');
-    Route::put('/', 'NotesController@updateNote');
-    Route::put('/delete', 'NotesController@deleteNote');
+    Route::group(['prefix'=>'notes'], function(){
+        Route::get('/{userid}', 'NotesController@fetchNotes');
+        Route::post('/','NotesController@createNote');
+        Route::put('/', 'NotesController@updateNote');
+        Route::put('/delete', 'NotesController@deleteNote');
+    });
 });

@@ -36,7 +36,7 @@
         <HourUsage />
     </div>
     <div v-else>
-        <!-- <div uk-spinner="ratio: 5"></div> -->
+        <div uk-spinner="ratio: 5"></div>
     </div>
 </div>
 </template>

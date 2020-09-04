@@ -7,9 +7,8 @@ use Illuminate\Http\Request;
 use App\Category;
 
 class CategoryController extends Controller {
-    public function fetchCategorys() {
-        if ($user = session('user'))
-            return Category::where('user_id', $user['id'])->orderBy('pos')->get();
+    public function fetchCategorys($userID) {
+        return Category::where('user_id', $userID)->orderBy('pos')->get();
     }
 
     public function createCategory(Request $request) {
