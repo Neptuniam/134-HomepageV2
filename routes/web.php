@@ -54,7 +54,7 @@ Route::group(['prefix'=>'background'], function(){
         Route::put('/settings', 'LocationController@updateMapSettings');
     });
 
-    Route::group(['prefix'=>'favourites'], function(){
+    Route::group(['middleware' => ['cors'], 'prefix'=>'favourites'], function(){
         Route::get('/{userid}', 'FavouriteController@fetchFavourites');
         Route::post('/','FavouriteController@createFavourite');
         Route::put('/', 'FavouriteController@updateFavourite');
