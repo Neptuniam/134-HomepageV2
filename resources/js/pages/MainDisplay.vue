@@ -1,6 +1,6 @@
 <template>
 <div class="row center-xs middle-xs Homepage nomargin uk-animation-fade">
-        <router-view />
+        <router-view v-if="activeUser" />
 
         <ControlBar />
 

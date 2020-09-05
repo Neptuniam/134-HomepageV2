@@ -80,4 +80,11 @@ Route::group(['middleware' => ['cors']], function(){
         Route::put('/', 'NotesController@updateNote');
         Route::put('/delete', 'NotesController@deleteNote');
     });
+
+    Route::group(['prefix'=>'trello'], function(){
+        Route::get('/{userid}', 'TrelloController@fetchTrellos');
+        Route::post('/','TrelloController@createTrello');
+        Route::put('/', 'TrelloController@updateTrello');
+        Route::put('/delete', 'TrelloController@deleteTrello');
+    });
 });

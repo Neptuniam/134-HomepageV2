@@ -1,32 +1,48 @@
 <template>
-	<table class="FavsSettings uk-table uk-table-striped">
-		<thead>
-			<tr>
-				<th class="uk-text-capitalize">
-					Board ID
-				</th>
-			</tr>
-		</thead>
+<SettingsTable>
+    <template v-slot:headers>
+        <div class="col-xs">
+            Board ID
+        </div>
 
-	    <tbody>
-			<TrelloRow v-for="trello in trellos" :key="trello.id" :trello="trello" />
+        <div class="col-xs">
+            Developer Key
+        </div>
+        <div class="col-xs">
+            Token
+        </div>
 
-	        <TrelloRow :trello="blankObject" />
-	    </tbody>
-	</table>
+        <div class="col-xs-2">
+        </div>
+    </template>
+
+    <template v-slot:body>
+        <TrelloRow v-for="credential in getTrelloCreds" :key="credential.id" :dataObject="credential" />
+
+        <TrelloRow :dataObject="blankObject" />
+    </template>
+</SettingsTable>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
-	data() {
-	    return {
-	        trellos: [{id: 1, board: '5e0b302d93a3935125fd3503'}],
-			blankObject: {id: 0, board: null}
-	    }
-	},
+    data() {
+        return {
+            blankObject: {id: null, user_id: null, board_id: null, developer_key: null, token: null}
+        }
+    },
+    computed: {
+        ...mapGetters('settings', ['getTrelloCreds'])
+    },
+
+    methods: {
+        ...mapActions('settings', ['fetchTrelloCredentials'])
+    },
+
+    mounted() {
+        this.fetchTrelloCredentials()
+    }
 }
 </script>
-
-<style scoped>
-
-</style>

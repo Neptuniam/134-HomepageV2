@@ -1,45 +1,50 @@
 <template>
-<div v-if="board && cards" class="start-xs TrelloContainer">
-    <div class="headerContainer">
-        <a :href="board.shortUrl" target="_blank" class="center-xs">
-            <h1 class="textTitle"> {{board.name}} </h1>
-        </a>
-
-        <ul uk-tab class="center-xs">
-            <li v-for="tab in tabs" :class="{'uk-active': activeTab.title === tab.title}" @click="activeTab = tab">
-                <a class="uk-text-capitalize">
-                    {{ tab.title }}
+<div>
+    <div v-if="boards && boards.length">
+        <div v-for="board in boards" class="start-xs TrelloContainer">
+            <div class="headerContainer">
+                <a :href="board.shortUrl" target="_blank" class="center-xs">
+                    <h1 class="textTitle"> {{board.name}} </h1>
                 </a>
-            </li>
-        </ul>
-    </div>
 
-    <!-- {{activeTab}} -->
-
-    <div v-if="activeTab && 'list' in activeTab && 'title' in activeTab" class="BuilderContainer">
-        <CardBuilder :list="activeTab.list" :title="activeTab.title" />
-    </div>
-
-
-    <off-canvas-container v-if="board.actions && board.actions.length">
-        <button class="uk-icon-button" uk-icon="list" uk-toggle="target: #offcanvas-flip" />
-
-        <off-canvas id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
-            <div class="uk-offcanvas-bar">
-                <h1 class="textSpecial"> Actions </h1>
-
-                <div v-for="action in board.actions" class="card">
-                    <div style="font-size: 18px;">
-                        {{action.data.card.name}}
-                    </div>
-
-                    <div style="font-size: 14px;">
-                        {{util.readableDay(action.date)}} - {{action.type}}
-                    </div>
-                </div>
+                <ul uk-tab class="center-xs">
+                    <li v-for="tab in tabs" :class="{'uk-active': activeTab.title === tab.title}" @click="activeTab = tab">
+                        <a class="uk-text-capitalize">
+                            {{ tab.title }}
+                        </a>
+                    </li>
+                </ul>
             </div>
-        </off-canvas>
-    </off-canvas-container>
+
+            <div v-if="activeTab && 'list' in activeTab && 'title' in activeTab" class="BuilderContainer">
+                <CardBuilder :list="activeTab.list" :title="activeTab.title" />
+            </div>
+
+
+            <off-canvas-container v-if="board.actions && board.actions.length">
+                <button class="uk-icon-button" uk-icon="list" uk-toggle="target: #offcanvas-flip" />
+
+                <off-canvas id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
+                    <div class="uk-offcanvas-bar">
+                        <h1 class="textSpecial"> Actions </h1>
+
+                        <div v-for="action in board.actions" class="card">
+                            <div style="font-size: 18px;">
+                                {{action.data.card.name}}
+                            </div>
+
+                            <div style="font-size: 14px;">
+                                {{util.readableDay(action.date)}} - {{action.type}}
+                            </div>
+                        </div>
+                    </div>
+                </off-canvas>
+            </off-canvas-container>
+        </div>
+    </div>
+    <div v-else>
+        <div uk-spinner="ratio: 5"></div>
+    </div>
 </div>
 </template>
 
@@ -56,8 +61,8 @@ export default {
             ]
         },
         ...mapGetters('settings', {
-            board:  'getBoard',
-            cards:  'getCards',
+            boards:  'getBoards',
+            cards:   'getCards',
         })
     },
 
@@ -90,7 +95,7 @@ export default {
             this.done = {}
             this.noDue = []
 
-            if (!this.cards)
+            if (!(this.cards && this.cards.length))
                 await this.fetchCards()
 
             // Seperate cards into lists by due date
@@ -118,12 +123,14 @@ export default {
         },
 
         ...mapActions('settings', {
+            fetchTrelloCredentials: 'fetchTrelloCredentials',
             fetchBoard: 'fetchBoard',
             fetchCards: 'fetchTrelloCards',
         })
     },
 
-    mounted() {
+    async mounted() {
+        await this.fetchTrelloCredentials()
         this.fetchBoard()
         this.processCards()
     },

@@ -23,8 +23,9 @@ const state = {
 
     notes: null,
 
-    board: null,
-    cards: null,
+    trelloCreds: null,
+    boards: [],
+    cards: [],
 
     // Users
     users: null,
@@ -38,7 +39,7 @@ const getters = {
 
     getLat:  (state) => state.lat,
     getLng:  (state) => state.lng,
-    getLocation: (state) => {return state.lat && state.lng ? state.lat+','+state.lng : null},
+    getLocation: (state) => state.lat && state.lng ? state.lat+','+state.lng : null,
 
     // Settings
     getWidgets: (state) => state.widgets,
@@ -57,7 +58,8 @@ const getters = {
 
     getNotes: (state) => state.notes,
 
-    getBoard: (state) => state.board,
+    getTrelloCreds: (state) => state.trelloCreds,
+    getBoards: (state) => state.boards,
     getCards: (state) => state.cards,
 
     // Users
@@ -90,8 +92,9 @@ const mutations = {
 
     setNotes: (state, payload) => { state.notes = payload },
 
-    setBoard: (state, payload) => { state.board = payload },
-    setCards: (state, payload) => { state.cards = payload },
+    setTrelloCreds: (state, payload) => { state.trelloCreds = payload },
+    pushBoard: (state, payload) => { state.boards.push(payload) },
+    pushCards: (state, payload) => { state.cards = [...state.cards, ...payload] },
 
     //Users
     setUsers: (state, payload) => { state.users = payload; },
@@ -315,21 +318,46 @@ const actions = {
 
 
     // Trello Controllers
-    fetchBoard: ({commit}) => {
-        return axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`).then(board => {
-            // axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/actions?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`).then(actions => {
-                // board.data['actions'] = actions.data
-                util.trackResult('trello boards', 1, board.data)
+    fetchTrelloCredentials: ({ commit, getters }) => {
+        return axios.get(`/trello/${getters.getUser.id}`).then(trelloCreds => {
+            util.trackResult('trello credentials', 2, trelloCreds.data)
 
-                commit('setBoard', board.data)
-            // })
+            commit('setTrelloCreds', trelloCreds.data)
         })
     },
+    updateTrelloCredentials: ({commit, dispatch}, payload) => {
+        // If id is 0, we are creating a object
+        if (payload.id == null) {
+            return axios.post('/trello/',payload).then(response => {
+                dispatch('fetchTrelloCredentials')
+            })
+        } else {
+            return axios.put('/trello/',payload).then(response => {
+                dispatch('fetchTrelloCredentials')
+            })
+        }
+    },
+    deleteTrelloCredentials: ({commit, dispatch}, payload) => {
+        return axios.put('/trello/delete', payload).then(response => {
+            dispatch('fetchTrelloCredentials')
+        })
+    },
+    fetchBoard: ({commit, getters}) => {
+        for (let credential of getters.getTrelloCreds) {
+            return axios.get(`https://api.trello.com/1/boards/${credential.board_id}?key=${credential.developer_key}&token=${credential.token}`).then(board => {
+                util.trackResult('trello boards', 1, board.data)
+
+                commit('pushBoard', board.data)
+            })
+        }
+    },
     fetchTrelloCards: ({commit}) => {
+        state.cards = []
+
         return axios.get(`https://api.trello.com/1/boards/5e0b302d93a3935125fd3503/cards?key=${process.env.MIX_TRELLO_KEY}&token=${process.env.MIX_TELLO_TOKEN}`).then(response => {
             util.trackResult('trello cards', 1, response.data)
 
-            commit('setCards', response.data)
+            commit('pushCards', response.data)
         })
     },
 

@@ -56,7 +56,7 @@ export default {
             set(val) {
                 this.setTravelText({
                     travelText: val,
-                    travelMode: this.travelMode
+                    // travelMode: this.travelMode
                 })
             }
         },
