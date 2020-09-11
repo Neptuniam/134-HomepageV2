@@ -87,4 +87,20 @@ Route::group(['middleware' => ['cors']], function(){
         Route::put('/', 'TrelloController@updateTrello');
         Route::put('/delete', 'TrelloController@deleteTrello');
     });
+
+
+    // For Max
+    Route::group(['prefix'=>'courses'], function(){
+        Route::get('/{userid}', 'CourseController@fetchCourses');
+        Route::post('/','CourseController@createCourse');
+        Route::put('/', 'CourseController@updateCourse');
+        Route::delete('/{userid}', 'CourseController@deleteCourse');
+    });
+    Route::group(['prefix'=>'assignments'], function(){
+        Route::get('/{course_id}', 'AssignmentController@fetchAssignments');
+        Route::get('/sorted/{user_id}', 'AssignmentController@fetchSortedAssignments');
+        Route::post('/','AssignmentController@createAssignment');
+        Route::put('/', 'AssignmentController@updateAssignment');
+        Route::delete('/{userid}', 'AssignmentController@deleteAssignment');
+    });
 });
