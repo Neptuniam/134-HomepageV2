@@ -6,6 +6,7 @@ Welcome to the 134 Homepage V2 rebuilt in VueJS and Laravel with UIkit and flexb
 ### Features included in this version of the homepage include:
 * Local Weather forecast
 * Maps Directions api
+* Personalized map locations
 * Custom Favourites links
 * Custom Notes App
 * News API
@@ -13,11 +14,10 @@ Welcome to the 134 Homepage V2 rebuilt in VueJS and Laravel with UIkit and flexb
 * Trello API Tracker
 * Real time date/time
 * Randomized custom wallpaper
-
 * Separate user profiles
 * Configuring custom widget settings
-* Personalized map locations
 * Personalized Favourites Bar
+* API usage analytics
 
 ------
 
