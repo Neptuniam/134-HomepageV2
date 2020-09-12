@@ -10,6 +10,7 @@ class Course extends Model {
     public $table = 'max_courses';
 
     public $fillable = [
+        "user_id",
         "course_name",
         "prof_name",
         "colour"
