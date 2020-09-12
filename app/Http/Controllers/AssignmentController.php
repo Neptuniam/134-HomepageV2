@@ -28,6 +28,6 @@ class AssignmentController extends Controller {
     }
 
     public function fetchSortedAssignments($user_id) {
-        return Assignment::get()->sortBy('assignment_dueDate');
+        return Assignment::orderBy('assignment_dueDate', 'asc')->get();
     }
 }
