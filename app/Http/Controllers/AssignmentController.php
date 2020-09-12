@@ -23,8 +23,8 @@ class AssignmentController extends Controller {
         return Assignment::find($course['id']);
     }
 
-    public function deleteAssignment($id) {
-        Assignment::find($course[$id])->delete();
+    public function deleteAssignment($assignment_id) {
+        Assignment::find($assignment_id)->delete();
     }
 
     public function fetchSortedAssignments($user_id) {

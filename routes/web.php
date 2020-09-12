@@ -100,7 +100,7 @@ Route::group(['middleware' => ['cors']], function(){
         Route::get('/{course_id}', 'AssignmentController@fetchAssignments');
         Route::get('/sorted/{user_id}', 'AssignmentController@fetchSortedAssignments');
         Route::post('/','AssignmentController@createAssignment');
+        Route::delete('/{assignment_id}', 'AssignmentController@deleteAssignment');
         Route::put('/', 'AssignmentController@updateAssignment');
-        Route::delete('/{course_id}', 'AssignmentController@deleteAssignment');
     });
 });

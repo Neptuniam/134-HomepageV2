@@ -23,7 +23,7 @@ class CourseController extends Controller {
         return Course::find($course['id']);
     }
 
-    public function deleteCourse($id) {
-        Course::find($course[$id])->delete();
+    public function deleteCourse($course_id) {
+        Course::find($course_id)->delete();
     }
 }
