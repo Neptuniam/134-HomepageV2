@@ -1,5 +1,6 @@
 // Pages
 Vue.component('maindisplay',        require('./pages/MainDisplay.vue').default);
+Vue.component('settings',        require('./pages/Settings.vue').default);
 Vue.component('Idle',        require('./pages/Idle.vue').default);
 
 

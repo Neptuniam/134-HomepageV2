@@ -85,7 +85,7 @@ export default {
                 return
             }
 
-            this.axios.post('/user/login', this.user).then(({ data }) => {
+            this.axios.post('/user/login', this.user).then(async ({ data }) => {
                 UIkit.notification({
                     message: `<span uk-icon=\'icon: check\'></span> Logged in to '${data.name}'`,
                     status: 'success'
@@ -93,11 +93,13 @@ export default {
 
                 // Save the new account to localStorage without showing the pass
                 delete data.pass
-                this.setActiveUser(data)
+                await this.setActiveUser(data)
 
                 // Update the users widgets
                 this.fetchWidgets()
-            }).catch(() => {
+            }).catch((error) => {
+                console.log('error', error);
+                
                 UIkit.notification({
                     message: `<span uk-icon=\'icon: close\'></span> Failed to login to '${this.user.name}'!`,
                     status: 'danger'

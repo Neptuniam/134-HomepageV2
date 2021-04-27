@@ -20,7 +20,7 @@
     		<span class="uk-icon-button clickable deleteBackground" @click="deleteBackground"
 				uk-icon="trash" uk-tooltip="Delete" />
 	    </div>
-
+			
 		<div class="col-xs-3" />
 	</div>
 </div>

@@ -1,12 +1,13 @@
 <template>
 <div class="row center-xs middle-xs Homepage nomargin uk-animation-fade">
-        <router-view v-if="activeUser" />
+    <router-view v-if="activeUser" />
+    <settings v-else />
 
-        <ControlBar />
+    <ControlBar />
 
-        <DateTime />
+    <DateTime />
 
-        <FilePreviewer />
+    <FilePreviewer />
 </div>
 </template>
 

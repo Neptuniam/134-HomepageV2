@@ -104,3 +104,6 @@ Route::group(['middleware' => ['cors']], function(){
         Route::put('/', 'AssignmentController@updateAssignment');
     });
 });
+Route::group(['middleware' => ['cors']], function(){
+
+});
