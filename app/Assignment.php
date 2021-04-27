@@ -12,6 +12,7 @@ class Assignment extends Model {
         'assignment_name',
         'assignment_dueDate',
         'assignment_status',
-        'priority'
+        'priority',
+        'notes'
     ];
 }
