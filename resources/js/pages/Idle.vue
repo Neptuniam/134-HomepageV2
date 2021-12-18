@@ -2,7 +2,7 @@
 <div class="IdleDisplay row middle-xs animated fadeIn">
     <div class="container row center-xs middle-xs">
         <div v-if="weather" class="col-xs-7 row middle-xs center-xs weather">
-            <div class="col-xs-4 end-xs">
+            <div class="col-xs-5 end-xs">
                 <i :class="getIcon(weather.current.IconPhrase)" />
             </div>
 
@@ -25,6 +25,9 @@
 
         <div v-if="getTravelText" class="col-xs-12 travelText">
             {{getTravelText.travelText}}
+        </div>
+        <div v-else-if="newsWidget">
+            <News :widget="newsWidget" />
         </div>
     </div>
 
@@ -77,11 +80,15 @@ export default {
     },
 
     computed: {
+        newsWidget() {
+            return (this.widgets || []).find(widget => widget.title == 'News')
+        },
 
         ...mapGetters('settings', {
             weather: 'getWeather',
             news: 'getNews',
-            getTravelText: 'getTravelText'
+            getTravelText: 'getTravelText',
+            widgets:    'getWidgets'
         })
     },
 
@@ -104,6 +111,11 @@ export default {
 }
 </script>
 
+<style>
+    .clock {
+        display: none !important;
+    }
+</style>
 <style scoped>
     .IdleDisplay {
         position: fixed;
@@ -146,14 +158,14 @@ export default {
         /* margin-top: 100px; */
     }
     .weather i {
-        font-size: 10rem;
+        font-size: 7rem;
     }
 
     .weather div {
-        font-size: 6rem;
+        font-size: 4rem;
     }
     .weather span {
-        font-size: 4rem;
+        font-size: 2rem;
         /* margin-top: 40px; */
     }
 

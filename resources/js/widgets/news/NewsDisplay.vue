@@ -71,8 +71,24 @@ export default {
             this.fetchNews(this.categorys[0].title)
         })
 
-        if (this.widget && this.widget.interval)
-            setInterval(this.fetchNews(this.categorys[0].title), this.widget.interval * 60000)
+        if (this.widget && this.widget.interval) {
+            var firstIndex = this.index
+
+            setInterval(() => {
+                this.index++
+
+                if (this.index >= this.news.length) {
+                    this.index = 0
+                } else if (this.index == firstIndex) {
+                    this.catIndex++
+
+                    if (this.catIndex >= this.categorys.length)
+                        this.catIndex = 0
+                    this.index == 0
+                    firstIndex = 0
+                }
+            }, this.widget.interval * 60000)
+        }
     },
 }
 </script>

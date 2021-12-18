@@ -30,7 +30,7 @@ export default {
             date: null,
         }
     },
-    
+
     methods: {
         updateTime() {
             var cd = new Date();
@@ -87,10 +87,10 @@ export default {
     }
 
     .center-idle .time {
-        font-size: 6rem !important
+        font-size: 4rem !important
     }
     .center-idle .date {
-        font-size: 4rem !important;
+        font-size: 2.5rem !important;
     }
     /* div {
         padding: 0;
