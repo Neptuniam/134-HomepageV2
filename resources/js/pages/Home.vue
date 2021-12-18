@@ -41,7 +41,7 @@ export default {
         },
 
         setTimer() {
-            this.showIdle = true
+            this.showIdle = false
             clearTimeout(this.timer)
             this.timer = setTimeout(() => this.showIdle = true, 60000)
         }
