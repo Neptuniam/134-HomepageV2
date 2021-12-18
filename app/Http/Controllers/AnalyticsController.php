@@ -7,7 +7,14 @@ use App\Analytics;
 use Illuminate\Http\Request;
 
 class AnalyticsController extends Controller {
-    public function fetchEvents() {
+    public function fetchEvents(Request $request) {
+        $payload = $request->all();
+
+        if (isset($payload['from']) && isset($payload['to'])) {
+            return Analytics::where('created_at', '>=', $payload['from'])
+                ->where('created_at', '<=', $payload['to'])
+                ->get();
+        }
         return Analytics::get();
     }
 

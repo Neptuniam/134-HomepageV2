@@ -31,6 +31,7 @@ Vue.component('TrelloRow',    		require('./widgets/trello/TrelloRow.vue').defaul
 Vue.component('CardBuilder',      	require('./widgets/trello/CardBuilder.vue').default);
 Vue.component('Card',      			require('./widgets/trello/Card.vue').default);
 
+Vue.component('QueryAnalytics',     require('./widgets/analytics/QueryAnalytics.vue').default);
 Vue.component('DistinctApi',        require('./widgets/analytics/DistinctApi.vue').default);
 Vue.component('Timeline',           require('./widgets/analytics/Timeline.vue').default);
 Vue.component('AverageUsage',       require('./widgets/analytics/AverageUsage.vue').default);

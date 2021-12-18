@@ -16,7 +16,7 @@ Route::get('/', function () {
 
 Route::group(['middleware' => ['cors']], function(){
     Route::group(['prefix'=>'analytics'], function() {
-        Route::get('', 'AnalyticsController@fetchEvents');
+        Route::post('/', 'AnalyticsController@fetchEvents');
         Route::post('/add_event', 'AnalyticsController@addEvent');
     });
 

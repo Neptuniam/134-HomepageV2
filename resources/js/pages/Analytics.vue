@@ -1,6 +1,15 @@
 <template>
 <div class="Analytics fullWidth">
-    <div v-if="events">
+    <QueryAnalytics />
+
+
+    <div v-if="events == null">
+        <div uk-spinner="ratio: 5"></div>
+    </div>
+    <div v-else-if="!events.length" class="row center-xs fullWidth" style="padding-top: 100px">
+        <h2>No events to show</h2>
+    </div>
+    <div v-else="events">
         <h1>
             Total Requests made: {{events.length}}
         </h1>
@@ -35,30 +44,17 @@
 
         <HourUsage />
     </div>
-    <div v-else>
-        <div uk-spinner="ratio: 5"></div>
-    </div>
 </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 export default {
     computed: {
         ...mapGetters('settings', {
             events: 'getEvents',
         })
-    },
-    methods: {
-
-        ...mapActions('settings', {
-            fetchAnalytics: 'fetchAnalytics',
-        })
-    },
-
-    mounted() {
-        this.fetchAnalytics()
-    },
+    }
 }
 </script>
 

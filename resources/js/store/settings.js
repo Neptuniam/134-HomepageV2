@@ -390,8 +390,11 @@ const actions = {
         }
     },
 
-    fetchAnalytics: ({commit}) => {
-        return axios.get('/analytics').then(response => {
+    fetchAnalytics: ({commit}, payload) => {
+        // Clear the events to show the spinner during request
+        commit('setEvents', null)
+
+        return axios.post('/analytics', payload).then(response => {
             util.trackResult('analytics', 2, response.data)
 
             commit('setEvents', response.data)
