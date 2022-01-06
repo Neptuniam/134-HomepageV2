@@ -61,8 +61,6 @@ export default {
 }
 </script>
 
-
-
 <style scoped>
 /* @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap'); */
 

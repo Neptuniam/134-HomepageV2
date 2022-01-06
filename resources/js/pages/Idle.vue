@@ -14,10 +14,6 @@
             </span>
         </div>
 
-        <!-- <div class="col-xs-1">
-
-        </div> -->
-
         <div class="col-xs start-xs">
             <DateTime componentClass="center-idle" />
         </div>
@@ -30,10 +26,6 @@
             <News :widget="newsWidget" />
         </div>
     </div>
-
-    <!-- <a v-if="news" class="row center-xs middle-xs News" :href="news[index].webUrl" target="_blank">
-        {{news[index].webTitle}}
-    </a> -->
 </div>
 </template>
 
@@ -108,14 +100,16 @@ export default {
             return ''
         },
     },
+
+    mounted() {
+        document.getElementsByClassName('clock')[0].style.display = 'none';
+    },
+    destroyed() {
+        document.getElementsByClassName('clock')[0].style.display = 'block';
+    }
 }
 </script>
 
-<style>
-    .clock {
-        display: none !important;
-    }
-</style>
 <style scoped>
     .IdleDisplay {
         position: fixed;
