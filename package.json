@@ -25,7 +25,7 @@
     },
     "dependencies": {
         "flexboxgrid": "^6.3.1",
-        "marked": "^0.7.0",
+        "marked": "^4.0.10",
         "sweetalert2": "^9.13.1",
         "uikit": "^3.4.1",
         "vue-axios": "^2.1.5",
