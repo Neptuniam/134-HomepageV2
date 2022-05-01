@@ -158,7 +158,7 @@ const actions = {
         })
     },
     updateUser: ({commit}, payload) => {
-        return axios.put('/users/', payload)
+        return axios.put('/users', payload)
     },
     deleteUser: ({commit}, payload) => {
         return axios.delete(`/users/${payload.id}`)
@@ -174,7 +174,7 @@ const actions = {
         })
     },
     updateWidget: ({commit}, payload) => {
-        return axios.put('/widgets/',payload)
+        return axios.put('/widgets',payload)
     },
 
 
@@ -189,11 +189,11 @@ const actions = {
     updateLocation: ({commit, dispatch}, payload) => {
         // If id is 0, we are creating a new location
         if (payload.id == null) {
-            return axios.post('/locations/',payload).then(response => {
+            return axios.post('/locations',payload).then(response => {
                 dispatch('fetchLocations')
             })
         } else {
-            return axios.put('/locations/',payload).then(response => {
+            return axios.put('/locations',payload).then(response => {
                 dispatch('fetchLocations')
             })
         }
@@ -235,11 +235,11 @@ const actions = {
         console.log('updateFavourite', payload.id);
         // If id is 0, we are creating a new location
         if (payload.id == null) {
-            return axios.post('/favourites/',payload).then(response => {
+            return axios.post('/favourites',payload).then(response => {
                 dispatch('fetchFavourites')
             })
         } else {
-            return axios.put('/favourites/',payload).then(response => {
+            return axios.put('/favourites',payload).then(response => {
                 dispatch('fetchFavourites')
             })
         }
@@ -279,7 +279,7 @@ const actions = {
                 dispatch('fetchCategorys')
             })
         } else {
-            return axios.put('/news/categorys/',payload).then(response => {
+            return axios.put('/news/categorys',payload).then(response => {
                 dispatch('fetchCategorys')
             })
         }
@@ -329,11 +329,11 @@ const actions = {
     updateTrelloCredentials: ({commit, dispatch}, payload) => {
         // If id is 0, we are creating a object
         if (payload.id == null) {
-            return axios.post('/trello/',payload).then(response => {
+            return axios.post('/trello',payload).then(response => {
                 dispatch('fetchTrelloCredentials')
             })
         } else {
-            return axios.put('/trello/',payload).then(response => {
+            return axios.put('/trello',payload).then(response => {
                 dispatch('fetchTrelloCredentials')
             })
         }

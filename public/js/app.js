@@ -48548,7 +48548,7 @@ var actions = {
   },
   updateUser: function updateUser(_ref8, payload) {
     var commit = _ref8.commit;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/users/', payload);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/users', payload);
   },
   deleteUser: function deleteUser(_ref9, payload) {
     var commit = _ref9.commit;
@@ -48565,7 +48565,7 @@ var actions = {
   },
   updateWidget: function updateWidget(_ref11, payload) {
     var commit = _ref11.commit;
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/widgets/', payload);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/widgets', payload);
   },
   // Location Controllers
   fetchLocations: function fetchLocations(_ref12) {
@@ -48582,11 +48582,11 @@ var actions = {
 
     // If id is 0, we are creating a new location
     if (payload.id == null) {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/locations/', payload).then(function (response) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/locations', payload).then(function (response) {
         dispatch('fetchLocations');
       });
     } else {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/locations/', payload).then(function (response) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/locations', payload).then(function (response) {
         dispatch('fetchLocations');
       });
     }
@@ -48634,11 +48634,11 @@ var actions = {
     console.log('updateFavourite', payload.id); // If id is 0, we are creating a new location
 
     if (payload.id == null) {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/favourites/', payload).then(function (response) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/favourites', payload).then(function (response) {
         dispatch('fetchFavourites');
       });
     } else {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/favourites/', payload).then(function (response) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/favourites', payload).then(function (response) {
         dispatch('fetchFavourites');
       });
     }
@@ -48683,7 +48683,7 @@ var actions = {
         dispatch('fetchCategorys');
       });
     } else {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/news/categorys/', payload).then(function (response) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/news/categorys', payload).then(function (response) {
         dispatch('fetchCategorys');
       });
     }
@@ -48739,11 +48739,11 @@ var actions = {
 
     // If id is 0, we are creating a object
     if (payload.id == null) {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/trello/', payload).then(function (response) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/trello', payload).then(function (response) {
         dispatch('fetchTrelloCredentials');
       });
     } else {
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/trello/', payload).then(function (response) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/trello', payload).then(function (response) {
         dispatch('fetchTrelloCredentials');
       });
     }
