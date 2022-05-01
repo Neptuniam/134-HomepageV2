@@ -13,6 +13,7 @@
             placeholder="Username"
             :inputData.sync="user.name"
             prepend-icon="Account"
+            @enter="login"
         />
 
         <CustomInput
@@ -22,6 +23,7 @@
             prepend-icon="Lock"
             :append-icon="passwordType == 'password' ? 'EyeOff' : 'eye'"
             @appendIconClick="passwordType = passwordType == 'password' ? 'text' : 'password'"
+            @enter="login"
         />
 
         <!-- <label for="rememberMe">
@@ -99,7 +101,7 @@ export default {
                 this.fetchWidgets()
             }).catch((error) => {
                 console.log('error', error);
-                
+
                 UIkit.notification({
                     message: `<span uk-icon=\'icon: close\'></span> Failed to login to '${this.user.name}'!`,
                     status: 'danger'

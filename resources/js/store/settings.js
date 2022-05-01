@@ -232,6 +232,7 @@ const actions = {
         })
     },
     updateFavourite: ({commit, dispatch}, payload) => {
+        console.log('updateFavourite', payload.id);
         // If id is 0, we are creating a new location
         if (payload.id == null) {
             return axios.post('/favourites/',payload).then(response => {

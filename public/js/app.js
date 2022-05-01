@@ -2709,6 +2709,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -19419,7 +19421,8 @@ var render = function() {
               },
               "update:input-data": function($event) {
                 return _vm.$set(_vm.user, "name", $event)
-              }
+              },
+              enter: _vm.login
             }
           }),
           _vm._v(" "),
@@ -19441,7 +19444,8 @@ var render = function() {
               appendIconClick: function($event) {
                 _vm.passwordType =
                   _vm.passwordType == "password" ? "text" : "password"
-              }
+              },
+              enter: _vm.login
             }
           }),
           _vm._v(" "),
@@ -48627,8 +48631,8 @@ var actions = {
   updateFavourite: function updateFavourite(_ref19, payload) {
     var commit = _ref19.commit,
         dispatch = _ref19.dispatch;
+    console.log('updateFavourite', payload.id); // If id is 0, we are creating a new location
 
-    // If id is 0, we are creating a new location
     if (payload.id == null) {
       return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/favourites/', payload).then(function (response) {
         dispatch('fetchFavourites');
