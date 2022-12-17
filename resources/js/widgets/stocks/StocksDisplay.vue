@@ -44,24 +44,21 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 export default {
   mounted() {
-    
+    document.getElementById('TradingViewPort').style.visibility="visible"
+  },
+  destroyed() {
+    document.getElementById('TradingViewPort').style.visibility="hidden"
   }
 }
 </script>
 
 <style>
   #TradingViewPort {
-    display: block !important;
-
     position: fixed;
     bottom: 0px;
     left: 0px;
-
-    /* width: 410px !important;
-    height: 400px !important; */
 
     z-index: 1;
   }

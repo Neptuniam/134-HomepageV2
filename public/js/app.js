@@ -3408,7 +3408,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       clearTimeout(this.timer);
       this.timer = setTimeout(function () {
         return _this.showIdle = true;
-      }, 60000);
+      }, 10000);
     }
   },
   mounted: function mounted() {
@@ -6692,7 +6692,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 //
 //
 //
@@ -6738,9 +6737,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    document.getElementById('TradingViewPort').style.visibility = "visible";
+  },
+  destroyed: function destroyed() {
+    document.getElementById('TradingViewPort').style.visibility = "hidden";
+  }
 });
 
 /***/ }),
@@ -8383,7 +8386,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n#TradingViewPort {\n  display: block !important;\n\n  position: fixed;\n  bottom: 0px;\n  left: 0px;\n\n  /* width: 410px !important;\n  height: 400px !important; */\n\n  z-index: 1;\n}\n", ""]);
+exports.push([module.i, "\n#TradingViewPort {\n  position: fixed;\n  bottom: 0px;\n  left: 0px;\n\n  z-index: 1;\n}\n", ""]);
 
 // exports
 
