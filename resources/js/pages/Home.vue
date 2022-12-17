@@ -12,8 +12,10 @@
         <hr v-if="isActive('News') && isActive('QOTD')">
 
         <QOTD v-if="isActive('QOTD')" class="" />
-
+        
         <Favourites v-if="isActive('Favourites')" />
+        
+        <Stocks />
     </div>
 </div>
 </template>
@@ -46,7 +48,6 @@ export default {
             this.timer = setTimeout(() => this.showIdle = true, 60000)
         }
     },
-
     mounted() {
         // Show a simple idle screen once the user hasn't been active for a min
         this.setTimer()

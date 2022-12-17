@@ -25,6 +25,8 @@ Vue.component('FavsRow',        	require('./widgets/favourites/FavsRow.vue').def
 
 Vue.component('QOTD',               require('./widgets/QOTD/QotdDisplay.vue').default);
 
+Vue.component('Stocks',               require('./widgets/stocks/StocksDisplay.vue').default);
+
 Vue.component('TrelloDisplay',      require('./widgets/trello/TrelloDisplay.vue').default);
 Vue.component('TrelloSettings',    	require('./widgets/trello/TrelloSettings.vue').default);
 Vue.component('TrelloRow',    		require('./widgets/trello/TrelloRow.vue').default);

@@ -17,6 +17,28 @@
 
         <!-- Main CSS stylesheet -->
         <link rel="stylesheet" type="text/css" href="css/main.css">
+
+        <!-- <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js"></script> -->
+
+        <div class="tradingview-widget-container" id="TradingViewPort" style="display: none">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+                {
+                    "symbol": "TSX:VFV",
+                    "width": 350,
+                    "height": 160,
+                    "locale": "en",
+                    "dateRange": "1D",
+                    "colorTheme": "light",
+                    "trendLineColor": "rgba(41, 98, 255, 1)",
+                    "underLineColor": "rgba(41, 98, 255, 0.3)",
+                    "underLineBottomColor": "rgba(41, 98, 255, 0)",
+                    "isTransparent": false,
+                    "autosize": false,
+                    "largeChartUrl": ""
+                }
+            </script>
+        </div>
     </head>
     <body>
         <div id='app'>
