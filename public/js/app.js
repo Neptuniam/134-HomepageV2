@@ -3408,7 +3408,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       clearTimeout(this.timer);
       this.timer = setTimeout(function () {
         return _this.showIdle = true;
-      }, 10000);
+      }, 60000);
     }
   },
   mounted: function mounted() {
@@ -6739,10 +6739,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    document.getElementById('TradingViewPort').style.visibility = "visible";
+    if (document.getElementById('TradingViewPort')) document.getElementById('TradingViewPort').style.visibility = "visible";
   },
   destroyed: function destroyed() {
-    document.getElementById('TradingViewPort').style.visibility = "hidden";
+    if (document.getElementById('TradingViewPort')) document.getElementById('TradingViewPort').style.visibility = "hidden";
   }
 });
 
@@ -7496,6 +7496,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['widget'],
@@ -7572,6 +7585,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       var str = "\n            <div class=\"card center-xs\">\n                <h1>".concat(this.getDay(day), "</h1>\n\n                <h3 style=\"margin-bottom: 100px;\">\n                    Maximum: ").concat(day.Temperature.Maximum.Value >= 0 ? '&nbsp;' : '').concat(Math.round(day.Temperature.Maximum.Value), "&deg;\n                    <br>\n                    Minimum: ").concat(day.Temperature.Minimum.Value >= 0 ? '&nbsp;' : '').concat(Math.round(day.Temperature.Minimum.Value), "&deg;\n                </h3>\n\n                <div class=\"row around-xs\" style=\"width: 90vw;\">\n                    ").concat(parseTime(day.Day, 'Day'), "\n                    ").concat(parseTime(day.Night, 'Night'), "\n                <div>\n\n                <h3>\n                    <a href=\"").concat(day.Link, "\" target=\"_blank\">Desktop Link</a> - <a href=\"").concat(day.MobileLink, "\" target=\"_blank\">Mobile Link</a>\n                </h3>\n            </div>\n            ");
       this.$bus.$emit('showPreview', str);
+    },
+    getCardColour: function getCardColour(temp) {
+      var _avg = (temp.Maximum.Value + temp.Minimum.Value) / 2;
+
+      return 30 + 240 * (30 - _avg) / 60;
     },
     getDay: function getDay(day) {
       var date = new Date(day.EpochDate * 1000);
@@ -7652,8 +7670,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                 util.trackResult('weather', 1, _this2.weather);
                 localStorage.setItem('LastWeatherDetails', JSON.stringify(_this2.weather));
+                console.log(_this2.weather.current);
 
-              case 22:
+              case 23:
               case "end":
                 return _context.stop();
             }
@@ -8481,7 +8500,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.Weather {\n    height: 100% !important;\n    width: 100% !important;\n\n    margin: 0 0 5vh 0;\n}\n.forecast {\n    height: 28vh;\n}\n.day {\n    height: 60% !important;\n    transition: all .1s ease-in-out;\n\n    color: black !important;\n}\n.day:hover {\n    background: rgba(230, 230, 250, 0.95);\n\n    height: 100% !important;\n    min-width: 35% !important;\n    transform: scale(1);\n}\n.day i {\n    margin-top: 2vh !important;\n    font-size: 5vh;\n}\n.day:hover i {\n    margin-top: 1vh !important;\n    font-size: 10vh;\n}\n.extraDetails {\n    color: black;\n}\n.extraDetails i {\n    font-size: 7vh;\n}\n.forecastTemp {\n    font-size: 3vh;\n    text-align: left;\n}\n.day:hover .forecastTemp {\n    font-size: 5vh;\n    /* text-align: right; */\n}\n.forecastDesc {\n    margin-top: 1vh;\n}\n.forecastDay, .forecastDesc {\n    font-size: 2vh;\n}\n.day:hover .forecastDay, .day:hover .forecastDesc {\n    font-size: 4vh;\n}\n.day hr {\n    /* margin: 10px 0px 5px 0px; */\n    margin: 0px;\n    border-color: grey;\n}\n.curDescription, .curDescription input {\n    font-size: 4vw;\n}\n", ""]);
+exports.push([module.i, "\n.Weather {\n    height: 100% !important;\n    width: 80% !important;\n\n    margin: -10px auto 5vh auto;\n}\n.card, .day, .day i, .day .forecastTemp, .day .forecastDay, .day .forecastDesc {\n    transition: all .1s ease-in-out;\n}\n.forecast {\n    /* position: relative;\n    top: -10px; */\n    height: 24vh;\n}\n.card:hover {\n    border-width: 5px !important;\n}\n.day {\n    height: 70% !important;\n\n    color: black !important;\n}\n.day:hover {\n    background: rgba(230, 230, 250, 0.95);\n\n    height: 100% !important;\n    min-width: 35% !important;\n    transform: scale(1);\n}\n.day i {\n    margin-top: 2vh !important;\n    font-size: 6vh;\n}\n.day:hover i {\n    margin-top: 1vh !important;\n    font-size: 8vh;\n}\n.extraDetails {\n    color: black;\n}\n.extraDetails i {\n    font-size: 7vh;\n}\n.forecastTemp {\n    font-size: 3vh;\n    text-align: left;\n}\n.day:hover .forecastTemp {\n    font-size: 4vh;\n    /* text-align: right; */\n}\n.forecastDesc {\n    margin-top: 0.5vh;\n}\n.forecastDay, .forecastDesc {\n    font-size: 2vh;\n}\n.day:hover .forecastDay, .day:hover .forecastDesc {\n    font-size: 3.5vh;\n}\n.day hr {\n    /* margin: 10px 0px 5px 0px; */\n    margin: 0px;\n    border-color: grey;\n}\n\n/* .curDescription, .curDescription input {\n    font-size: 4vw;\n} */\n#currentWeather div {\n    display: inline-block;\n    float: right;\n}\n.floatLeft {\n    float: left !important;\n}\n#currentWeather>div {\n    font-size: 4vw;\n}\n#currentWeatherDetails {\n    position: relative;\n    left: -1vw;\n\n    font-size: 2vw;\n    font-weight: 500;\n    text-align: left;\n    margin-left: 2.5vw;\n    /* width: 100%; */\n}\n#currentWeather i {\n    font-size: 4.5vw;\n    position: relative;\n    top: 1vw;\n}\n", ""]);
 
 // exports
 
@@ -23141,14 +23160,14 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.weather
-    ? _c("div", { staticClass: "row fullWidth Weather" }, [
+    ? _c("div", { staticClass: "row Weather" }, [
         _vm.weather && _vm.weather.current
           ? _c(
               "div",
               {
-                staticClass:
-                  "row curDescription textSpecial fullWidth nopadding",
+                staticClass: "textSpecial fullWidth nopadding",
                 attrs: {
+                  id: "currentWeather",
                   "uk-tooltip":
                     _vm.address && _vm.address.formatted_address
                       ? _vm.address.formatted_address
@@ -23156,13 +23175,7 @@ var render = function() {
                 }
               },
               [
-                _c("div", { staticClass: "col-xs center-xs" }, [
-                  _c("i", {
-                    class: _vm.getIcon(_vm.weather.current.IconPhrase)
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-xs-7 center-xs" }, [
+                _c("div", { staticClass: "start-xs floatLeft" }, [
                   _vm._v(
                     "\n            " +
                       _vm._s(_vm.weather.location.LocalizedName) +
@@ -23170,12 +23183,26 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-xs center-xs" }, [
-                  _vm._v(
-                    "\n            " +
-                      _vm._s(Math.round(_vm.weather.current.value)) +
-                      "° C\n        "
-                  )
+                _c("div", { staticClass: "start-xs" }, [
+                  _c("div", { staticClass: "floatLeft" }, [
+                    _c("i", {
+                      class: _vm.getIcon(_vm.weather.current.IconPhrase)
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { attrs: { id: "currentWeatherDetails" } }, [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(Math.round(_vm.weather.current.value)) +
+                        "° C\n                "
+                    ),
+                    _c("br"),
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(_vm.weather.current.IconPhrase) +
+                        "\n            "
+                    )
+                  ])
                 ])
               ]
             )
@@ -23192,6 +23219,10 @@ var render = function() {
               {
                 staticClass:
                   "col-xs day card uk-box-shadow-hover-xlarge clickable",
+                style:
+                  "border: 2px solid hsla(" +
+                  _vm.getCardColour(day.Temperature) +
+                  ", 70%, 50%, 0.35)",
                 on: {
                   click: function($event) {
                     return _vm.showMore(day)

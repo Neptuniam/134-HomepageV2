@@ -46,10 +46,12 @@
 <script>
 export default {
   mounted() {
-    document.getElementById('TradingViewPort').style.visibility="visible"
+    if (document.getElementById('TradingViewPort'))
+      document.getElementById('TradingViewPort').style.visibility="visible"
   },
   destroyed() {
-    document.getElementById('TradingViewPort').style.visibility="hidden"
+    if (document.getElementById('TradingViewPort'))
+      document.getElementById('TradingViewPort').style.visibility="hidden"
   }
 }
 </script>

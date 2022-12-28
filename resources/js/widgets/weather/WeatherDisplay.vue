@@ -1,20 +1,33 @@
 <template>
-<div v-if="weather" class="row fullWidth Weather">
-    <div v-if="weather && weather.current" class="row curDescription textSpecial fullWidth nopadding"
-        :uk-tooltip="address && address.formatted_address ? address.formatted_address : 'Could not find Address'">
-        <div class="col-xs center-xs">
-            <i :class="getIcon(weather.current.IconPhrase)" />
-        </div>
-        <div class="col-xs-7 center-xs">
+<div v-if="weather" class="row Weather">
+    <div v-if="weather && weather.current"
+        class="textSpecial fullWidth nopadding"
+        id="currentWeather"
+        :uk-tooltip="address && address.formatted_address ? address.formatted_address : 'Could not find Address'"
+    >
+        <div class="start-xs floatLeft">
             {{weather.location.LocalizedName}}
         </div>
-        <div class="col-xs center-xs">
-            {{Math.round(weather.current.value)}}&deg; C
+
+        <div class="start-xs">
+            <div class="floatLeft">
+                <i :class="getIcon(weather.current.IconPhrase)" />
+            </div>
+
+            <div id="currentWeatherDetails">
+                {{Math.round(weather.current.value)}}&deg; C
+                <br>
+                {{ weather.current.IconPhrase }}
+            </div>
         </div>
     </div>
 
     <div class="row center-xs middle-xs textBody fullWidth forecast">
-        <div v-for="day in weather.forecast" class="col-xs day card uk-box-shadow-hover-xlarge clickable" @click="showMore(day)">
+        <div v-for="day in weather.forecast"
+            class="col-xs day card uk-box-shadow-hover-xlarge clickable"
+            @click="showMore(day)"
+            :style="`border: 2px solid hsla(${getCardColour(day.Temperature)}, 70%, 50%, 0.35)`"
+        >
             <div class="row middle-xs">
                 <div class="col-xs-8">
                     <i :class="getIcon(day.Day.IconPhrase)" />
@@ -149,6 +162,11 @@ export default {
             this.$bus.$emit('showPreview', str)
         },
 
+        getCardColour(temp) {
+            const _avg = (temp.Maximum.Value + temp.Minimum.Value) / 2
+            return 30 + 240 * (30 - _avg) / 60;
+        },
+
         getDay(day) {
             let date = new Date(day.EpochDate*1000)
             return `${this.days[date.getDay()]}, ${this.months[date.getMonth()]} ${date.getDate()}`
@@ -202,6 +220,8 @@ export default {
 
             util.trackResult('weather', 1, this.weather)
             localStorage.setItem('LastWeatherDetails', JSON.stringify(this.weather))
+
+            console.log(this.weather.current);
         },
 
         distanceBetween(cachedLoc, curLoc) {
@@ -266,18 +286,26 @@ export default {
 <style>
     .Weather {
         height: 100% !important;
-        width: 100% !important;
+        width: 80% !important;
 
-        margin: 0 0 5vh 0;
+        margin: -10px auto 5vh auto;
+    }
+    .card, .day, .day i, .day .forecastTemp, .day .forecastDay, .day .forecastDesc {
+        transition: all .1s ease-in-out;
     }
 
     .forecast {
-        height: 28vh;
+        /* position: relative;
+        top: -10px; */
+        height: 24vh;
+    }
+
+    .card:hover {
+        border-width: 5px !important;
     }
 
     .day {
-        height: 60% !important;
-        transition: all .1s ease-in-out;
+        height: 70% !important;
 
         color: black !important;
     }
@@ -291,11 +319,11 @@ export default {
 
     .day i {
         margin-top: 2vh !important;
-        font-size: 5vh;
+        font-size: 6vh;
     }
     .day:hover i {
         margin-top: 1vh !important;
-        font-size: 10vh;
+        font-size: 8vh;
     }
 
     .extraDetails {
@@ -310,18 +338,18 @@ export default {
         text-align: left;
     }
     .day:hover .forecastTemp {
-        font-size: 5vh;
+        font-size: 4vh;
         /* text-align: right; */
     }
 
     .forecastDesc {
-        margin-top: 1vh;
+        margin-top: 0.5vh;
     }
     .forecastDay, .forecastDesc {
         font-size: 2vh;
     }
     .day:hover .forecastDay, .day:hover .forecastDesc {
-        font-size: 4vh;
+        font-size: 3.5vh;
     }
 
 
@@ -331,7 +359,34 @@ export default {
         border-color: grey;
     }
 
-    .curDescription, .curDescription input {
+    /* .curDescription, .curDescription input {
         font-size: 4vw;
+    } */
+
+    #currentWeather div {
+        display: inline-block;
+        float: right;
+    }
+    .floatLeft {
+        float: left !important;
+    }
+
+    #currentWeather>div {
+        font-size: 4vw;
+    }
+    #currentWeatherDetails {
+        position: relative;
+        left: -1vw;
+
+        font-size: 2vw;
+        font-weight: 500;
+        text-align: left;
+        margin-left: 2.5vw;
+        /* width: 100%; */
+    }
+    #currentWeather i {
+        font-size: 4.5vw;
+        position: relative;
+        top: 1vw;
     }
 </style>
