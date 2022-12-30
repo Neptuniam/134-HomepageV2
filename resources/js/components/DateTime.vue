@@ -50,7 +50,7 @@ export default {
         },
 
         tooltip() {
-            return `Showing time in <i>${this.utcTime ? 'UTC' : 'Local'} Time </i>.<br>Click to switch.`
+            return `<i>${this.utcTime ? 'UTC' : 'Local'} Time</i>.<br>Click to switch.`
         },
     },
 

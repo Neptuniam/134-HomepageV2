@@ -15,7 +15,7 @@
             </div>
 
             <div id="currentWeatherDetails">
-                {{Math.round(weather.current.value)}}&deg; C
+                <span style="font-size: 3.5vw">{{ Math.round(weather.current.value) }}&deg; C</span>
                 <br>
                 {{ weather.current.IconPhrase }}
             </div>
@@ -26,10 +26,10 @@
         <div v-for="day in weather.forecast"
             class="col-xs day card uk-box-shadow-hover-xlarge clickable"
             @click="showMore(day)"
-            :style="`border: 2px solid hsla(${getCardColour(day.Temperature)}, 70%, 50%, 0.35)`"
+            :style="`border-image: linear-gradient(to right, ${getCardColour(day.Temperature.Maximum.Value)}, ${getCardColour(day.Temperature.Minimum.Value)}) 1;`"
         >
             <div class="row middle-xs">
-                <div class="col-xs-8">
+                <div class="col-xs-7">
                     <i :class="getIcon(day.Day.IconPhrase)" />
                 </div>
 
@@ -163,8 +163,10 @@ export default {
         },
 
         getCardColour(temp) {
-            const _avg = (temp.Maximum.Value + temp.Minimum.Value) / 2
-            return 30 + 240 * (30 - _avg) / 60;
+            // const _avg = (temp.Maximum.Value + temp.Minimum.Value) / 2
+            const _colour = 30 + 240 * (30 - temp) / 60;
+            // return 30 + 240 * (30 - _avg) / 60;
+            return `hsla(${_colour}, 70%, 50%, 0.35)`
         },
 
         getDay(day) {
@@ -377,9 +379,11 @@ export default {
     #currentWeatherDetails {
         position: relative;
         left: -1vw;
+        top: 1.4vw;
 
-        font-size: 2vw;
+        font-size: 1.5vw;
         font-weight: 500;
+        line-height: 1.8vw;
         text-align: left;
         margin-left: 2.5vw;
         /* width: 100%; */

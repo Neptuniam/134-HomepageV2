@@ -2494,7 +2494,7 @@ __webpack_require__.r(__webpack_exports__);
       this.updateTime();
     },
     tooltip: function tooltip() {
-      return "Showing time in <i>".concat(this.utcTime ? 'UTC' : 'Local', " Time </i>.<br>Click to switch.");
+      return "<i>".concat(this.utcTime ? 'UTC' : 'Local', " Time</i>.<br>Click to switch.");
     }
   },
   created: function created() {
@@ -7587,9 +7587,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.$bus.$emit('showPreview', str);
     },
     getCardColour: function getCardColour(temp) {
-      var _avg = (temp.Maximum.Value + temp.Minimum.Value) / 2;
+      // const _avg = (temp.Maximum.Value + temp.Minimum.Value) / 2
+      var _colour = 30 + 240 * (30 - temp) / 60; // return 30 + 240 * (30 - _avg) / 60;
 
-      return 30 + 240 * (30 - _avg) / 60;
+
+      return "hsla(".concat(_colour, ", 70%, 50%, 0.35)");
     },
     getDay: function getDay(day) {
       var date = new Date(day.EpochDate * 1000);
@@ -8500,7 +8502,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.Weather {\n    height: 100% !important;\n    width: 80% !important;\n\n    margin: -10px auto 5vh auto;\n}\n.card, .day, .day i, .day .forecastTemp, .day .forecastDay, .day .forecastDesc {\n    transition: all .1s ease-in-out;\n}\n.forecast {\n    /* position: relative;\n    top: -10px; */\n    height: 24vh;\n}\n.card:hover {\n    border-width: 5px !important;\n}\n.day {\n    height: 70% !important;\n\n    color: black !important;\n}\n.day:hover {\n    background: rgba(230, 230, 250, 0.95);\n\n    height: 100% !important;\n    min-width: 35% !important;\n    transform: scale(1);\n}\n.day i {\n    margin-top: 2vh !important;\n    font-size: 6vh;\n}\n.day:hover i {\n    margin-top: 1vh !important;\n    font-size: 8vh;\n}\n.extraDetails {\n    color: black;\n}\n.extraDetails i {\n    font-size: 7vh;\n}\n.forecastTemp {\n    font-size: 3vh;\n    text-align: left;\n}\n.day:hover .forecastTemp {\n    font-size: 4vh;\n    /* text-align: right; */\n}\n.forecastDesc {\n    margin-top: 0.5vh;\n}\n.forecastDay, .forecastDesc {\n    font-size: 2vh;\n}\n.day:hover .forecastDay, .day:hover .forecastDesc {\n    font-size: 3.5vh;\n}\n.day hr {\n    /* margin: 10px 0px 5px 0px; */\n    margin: 0px;\n    border-color: grey;\n}\n\n/* .curDescription, .curDescription input {\n    font-size: 4vw;\n} */\n#currentWeather div {\n    display: inline-block;\n    float: right;\n}\n.floatLeft {\n    float: left !important;\n}\n#currentWeather>div {\n    font-size: 4vw;\n}\n#currentWeatherDetails {\n    position: relative;\n    left: -1vw;\n\n    font-size: 2vw;\n    font-weight: 500;\n    text-align: left;\n    margin-left: 2.5vw;\n    /* width: 100%; */\n}\n#currentWeather i {\n    font-size: 4.5vw;\n    position: relative;\n    top: 1vw;\n}\n", ""]);
+exports.push([module.i, "\n.Weather {\n    height: 100% !important;\n    width: 80% !important;\n\n    margin: -10px auto 5vh auto;\n}\n.card, .day, .day i, .day .forecastTemp, .day .forecastDay, .day .forecastDesc {\n    transition: all .1s ease-in-out;\n}\n.forecast {\n    /* position: relative;\n    top: -10px; */\n    height: 24vh;\n}\n.card:hover {\n    border-width: 5px !important;\n}\n.day {\n    height: 70% !important;\n\n    color: black !important;\n}\n.day:hover {\n    background: rgba(230, 230, 250, 0.95);\n\n    height: 100% !important;\n    min-width: 35% !important;\n    transform: scale(1);\n}\n.day i {\n    margin-top: 2vh !important;\n    font-size: 6vh;\n}\n.day:hover i {\n    margin-top: 1vh !important;\n    font-size: 8vh;\n}\n.extraDetails {\n    color: black;\n}\n.extraDetails i {\n    font-size: 7vh;\n}\n.forecastTemp {\n    font-size: 3vh;\n    text-align: left;\n}\n.day:hover .forecastTemp {\n    font-size: 4vh;\n    /* text-align: right; */\n}\n.forecastDesc {\n    margin-top: 0.5vh;\n}\n.forecastDay, .forecastDesc {\n    font-size: 2vh;\n}\n.day:hover .forecastDay, .day:hover .forecastDesc {\n    font-size: 3.5vh;\n}\n.day hr {\n    /* margin: 10px 0px 5px 0px; */\n    margin: 0px;\n    border-color: grey;\n}\n\n/* .curDescription, .curDescription input {\n    font-size: 4vw;\n} */\n#currentWeather div {\n    display: inline-block;\n    float: right;\n}\n.floatLeft {\n    float: left !important;\n}\n#currentWeather>div {\n    font-size: 4vw;\n}\n#currentWeatherDetails {\n    position: relative;\n    left: -1vw;\n    top: 1.4vw;\n\n    font-size: 1.5vw;\n    font-weight: 500;\n    line-height: 1.8vw;\n    text-align: left;\n    margin-left: 2.5vw;\n    /* width: 100%; */\n}\n#currentWeather i {\n    font-size: 4.5vw;\n    position: relative;\n    top: 1vw;\n}\n", ""]);
 
 // exports
 
@@ -23191,11 +23193,12 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { attrs: { id: "currentWeatherDetails" } }, [
-                    _vm._v(
-                      "\n                " +
-                        _vm._s(Math.round(_vm.weather.current.value)) +
-                        "° C\n                "
-                    ),
+                    _c("span", { staticStyle: { "font-size": "3.5vw" } }, [
+                      _vm._v(
+                        _vm._s(Math.round(_vm.weather.current.value)) + "° C"
+                      )
+                    ]),
+                    _vm._v(" "),
                     _c("br"),
                     _vm._v(
                       "\n                " +
@@ -23220,9 +23223,11 @@ var render = function() {
                 staticClass:
                   "col-xs day card uk-box-shadow-hover-xlarge clickable",
                 style:
-                  "border: 2px solid hsla(" +
-                  _vm.getCardColour(day.Temperature) +
-                  ", 70%, 50%, 0.35)",
+                  "border-image: linear-gradient(to right, " +
+                  _vm.getCardColour(day.Temperature.Maximum.Value) +
+                  ", " +
+                  _vm.getCardColour(day.Temperature.Minimum.Value) +
+                  ") 1;",
                 on: {
                   click: function($event) {
                     return _vm.showMore(day)
@@ -23231,7 +23236,7 @@ var render = function() {
               },
               [
                 _c("div", { staticClass: "row middle-xs" }, [
-                  _c("div", { staticClass: "col-xs-8" }, [
+                  _c("div", { staticClass: "col-xs-7" }, [
                     _c("i", { class: _vm.getIcon(day.Day.IconPhrase) })
                   ]),
                   _vm._v(" "),
