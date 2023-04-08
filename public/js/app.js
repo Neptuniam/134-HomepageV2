@@ -2467,6 +2467,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     componentClass: {
@@ -2476,25 +2497,33 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      utcTime: false,
       time: null,
-      date: null
+      date: null,
+      timezones: [{
+        title: 'Toronto',
+        value: 'America/Toronto'
+      }, {
+        title: 'Newfies',
+        value: 'America/St_johns'
+      }, {
+        title: 'Britland',
+        value: 'Europe/London'
+      }]
     };
   },
   methods: {
+    toTimezone: function toTimezone(timezone) {
+      return util.createTime(new Date(new Date().toLocaleString("en-US", {
+        timeZone: timezone
+      })));
+    },
+    toUTC: function toUTC() {
+      return util.createTime(new Date(new Date().toISOString().replace("Z", "")));
+    },
     updateTime: function updateTime() {
-      var cd = new Date(); // If the user has clicked the time, convert TO UTC
-
-      if (this.utcTime) cd = new Date(cd.toISOString().replace("Z", ""));
+      var cd = new Date();
       this.time = util.createTime(cd);
       this.date = util.createDisplayDate(cd);
-    },
-    changeTZ: function changeTZ() {
-      this.utcTime = !this.utcTime;
-      this.updateTime();
-    },
-    tooltip: function tooltip() {
-      return "<i>".concat(this.utcTime ? 'UTC' : 'Local', " Time</i>.<br>Click to switch.");
     }
   },
   created: function created() {
@@ -7951,7 +7980,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap'); */\n.clock[data-v-3e8aff86] {\n        position: absolute;\n        top: 0px;\n        right: 10px;\n}\n.clock[data-v-3e8aff86]:hover {\n        color: white;\n}\n.time[data-v-3e8aff86] {\n        /* font-family: 'Orbitron', sans-serif !important; */\n        font-size: 1.7rem;\n}\n.date[data-v-3e8aff86] {\n        font-size: 1.2rem;\n}\n.center-idle .time[data-v-3e8aff86] {\n        font-size: 4rem !important\n}\n.center-idle .date[data-v-3e8aff86] {\n        font-size: 2.5rem !important;\n}\n    /* div {\n        padding: 0;\n    } */\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap'); */\n.clock[data-v-3e8aff86] {\n        position: absolute;\n        top: 0px;\n        right: 10px;\n}\n.clock[data-v-3e8aff86]:hover {\n        color: white;\n}\nbutton[data-v-3e8aff86] {\n        padding-top: 5px;\n        padding-right: 0px;\n        background: none !important;\n        border: none !important;\n}\n.uk-dropdown.uk-open.uk-dropdown-bottom-right[data-v-3e8aff86] {\n        padding: 15px;\n}\nhr[data-v-3e8aff86] {\n        margin: 30px 0px 10px !important;\n}\n.time[data-v-3e8aff86] {\n        /* font-family: 'Orbitron', sans-serif !important; */\n        font-size: 1.7rem;\n}\n.date[data-v-3e8aff86] {\n        font-size: 1.2rem;\n}\n.timezone>span[data-v-3e8aff86]:first-of-type {\n        float: left;\n}\n.timezone>span[data-v-3e8aff86]:last-of-type {\n        float: right;\n}\n.center-idle .time[data-v-3e8aff86] {\n        font-size: 4rem !important\n}\n.center-idle .date[data-v-3e8aff86] {\n        font-size: 2.5rem !important;\n}\n    /* div {\n        padding: 0;\n    } */\n", ""]);
 
 // exports
 
@@ -19403,21 +19432,58 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "textBody clickable noselect",
-      class: _vm.componentClass,
-      attrs: { "uk-tooltip": _vm.tooltip() },
-      on: { click: _vm.changeTZ }
+      staticClass: "uk-inline textBody clickable noselect",
+      class: _vm.componentClass
     },
     [
-      _c("div", { staticClass: "time clickable" }, [
-        _vm._v("\n        " + _vm._s(_vm.time) + "\n    ")
+      _c("button", { attrs: { type: "button" } }, [
+        _c("div", { staticClass: "time clickable" }, [
+          _vm._v("\n            " + _vm._s(_vm.time) + "\n        ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "date clickable" }, [
+          _vm._v("\n            " + _vm._s(_vm.date) + "\n        ")
+        ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "date clickable" }, [
-        _vm._v("\n        " + _vm._s(_vm.date) + "\n    ")
-      ]),
-      _vm._v(" "),
-      _vm.utcTime ? _c("div", [_vm._v("\n        UTC Time\n    ")]) : _vm._e()
+      _c(
+        "div",
+        { attrs: { "uk-dropdown": "mode: click" } },
+        [
+          _c("div", { staticClass: "timezone fullWidth" }, [
+            _c("span", [_vm._v("\n                UTC:\n            ")]),
+            _vm._v(" "),
+            _c("span", [
+              _vm._v(
+                "\n                " + _vm._s(_vm.toUTC()) + "\n            "
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          !!_vm.timezones && !!_vm.timezones.length ? _c("hr") : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.timezones, function(timezone) {
+            return _c("div", { staticClass: "timezone fullWidth" }, [
+              _c("span", [
+                _vm._v(
+                  "\n                " +
+                    _vm._s(timezone.title) +
+                    ":\n            "
+                )
+              ]),
+              _vm._v(" "),
+              _c("span", [
+                _vm._v(
+                  "\n                " +
+                    _vm._s(_vm.toTimezone(timezone.value)) +
+                    "\n            "
+                )
+              ])
+            ])
+          })
+        ],
+        2
+      )
     ]
   )
 }
@@ -49147,7 +49213,7 @@ window.util = {
   	Out: <Number> convertedNum
   */
   convert24To12: function convert24To12(num) {
-    return num > 13 ? num - 12 : num;
+    return num >= 13 ? num - 12 : num;
   },
 
   /*

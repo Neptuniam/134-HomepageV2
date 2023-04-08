@@ -96,7 +96,7 @@ window.util = {
 		Out: <Number> convertedNum
 	*/
 	convert24To12(num) {
-		return num > 13 ? num - 12 : num
+		return num >= 13 ? num - 12 : num
 	},
 
 	/*

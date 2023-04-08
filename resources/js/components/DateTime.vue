@@ -1,14 +1,35 @@
 <template>
-<div class="textBody clickable noselect" :class="componentClass" @click="changeTZ" :uk-tooltip="tooltip()">
-    <div class="time clickable">
-        {{time}}
-    </div>
-    <div class="date clickable">
-        {{date}}
-    </div>
+<div class="uk-inline textBody clickable noselect" :class="componentClass">
+    <button type="button">
+        <div class="time clickable">
+            {{time}}
+        </div>
+        <div class="date clickable">
+            {{date}}
+        </div>
+    </button>
+    <div uk-dropdown="mode: click">
+        <div class="timezone fullWidth">
+            <span>
+                UTC:
+            </span>
 
-    <div v-if="utcTime">
-        UTC Time
+            <span>
+                {{ toUTC() }}
+            </span>
+        </div>
+
+        <hr v-if="!!timezones && !!timezones.length">
+
+        <div v-for="timezone in timezones" class="timezone fullWidth">
+            <span>
+                {{ timezone.title }}:
+            </span>
+            
+            <span>
+                {{ toTimezone(timezone.value) }}
+            </span>
+        </div>
     </div>
 </div>
 </template>
@@ -24,34 +45,40 @@ export default {
 
     data() {
         return {
-            utcTime: false,
-
             time: null,
             date: null,
+
+            timezones: [
+                {
+                    title: 'Toronto',
+                    value: 'America/Toronto'
+                },
+                {
+                    title: 'Newfies',
+                    value: 'America/St_johns'
+                },
+                {
+                    title: 'Britland',
+                    value: 'Europe/London'
+                }
+            ]
         }
     },
 
     methods: {
-        updateTime() {
-            var cd = new Date();
+        toTimezone(timezone) {
+            return util.createTime(new Date(new Date().toLocaleString("en-US", {timeZone: timezone})))
+        },
+        toUTC() {
+            return util.createTime(new Date(new Date().toISOString().replace("Z","")))
+        },
 
-            // If the user has clicked the time, convert TO UTC
-            if (this.utcTime)
-                cd = new Date(cd.toISOString().replace("Z",""))
+        updateTime() {
+            const cd = new Date();
 
             this.time = util.createTime(cd)
             this.date = util.createDisplayDate(cd)
-        },
-
-        changeTZ() {
-            this.utcTime = !this.utcTime
-
-            this.updateTime()
-        },
-
-        tooltip() {
-            return `<i>${this.utcTime ? 'UTC' : 'Local'} Time</i>.<br>Click to switch.`
-        },
+        }
     },
 
     created() {
@@ -73,6 +100,18 @@ export default {
         color: white;
     }
 
+    button {
+        padding-top: 5px;
+        padding-right: 0px;
+        background: none !important;
+        border: none !important;
+    }
+    .uk-dropdown.uk-open.uk-dropdown-bottom-right {
+        padding: 15px;
+    }
+    hr {
+        margin: 30px 0px 10px !important;
+    }
 
 
     .time {
@@ -82,6 +121,13 @@ export default {
 
     .date {
         font-size: 1.2rem;
+    }
+
+    .timezone>span:first-of-type {
+        float: left;
+    }
+    .timezone>span:last-of-type {
+        float: right;
     }
 
     .center-idle .time {
