@@ -6128,7 +6128,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   props: ['widget'],
   data: function data() {
     return {
-      index: Math.floor(Math.random() * 10),
+      index: 0,
       catIndex: 0
     };
   },
@@ -6153,7 +6153,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _this2 = this;
 
     this.fetchCategorys().then(function () {
-      _this2.fetchNews(_this2.categorys[0].title);
+      _this2.fetchNews(_this2.categorys[0].title).then(function () {
+        _this2.index = Math.floor(Math.random() * _this2.news.length);
+      });
     });
 
     if (this.widget && this.widget.interval) {

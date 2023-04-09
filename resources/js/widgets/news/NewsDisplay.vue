@@ -40,7 +40,7 @@ export default {
 
     data() {
         return {
-            index: Math.floor(Math.random() * 10),
+            index: 0,
             catIndex: 0
         }
     },
@@ -68,7 +68,9 @@ export default {
 
     mounted() {
         this.fetchCategorys().then(() => {
-            this.fetchNews(this.categorys[0].title)
+            this.fetchNews(this.categorys[0].title).then(() => {
+                this.index = Math.floor(Math.random() * this.news.length)
+            })
         })
 
         if (this.widget && this.widget.interval) {
