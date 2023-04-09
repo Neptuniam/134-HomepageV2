@@ -1,19 +1,6 @@
 <template>
 <div v-if="mapsSettings && remainingLocations && remainingLocations.length" class="row center-xs middle-xs fullWidth">
 	<div class="col-xs-3">
-		<!-- <span class="row uk-form-label fullWidth textColor textBody">
-			Home Location
-		</span>
-
-		<div class="uk-form-controls fullWidth">
-			<select class="uk-select" @change="updateMapSettings(mapsSettings)" v-model="mapsSettings.home_id">
-				<option value=""></option>
-				<option v-for="location in remainingLocations" :value="location.id">
-					{{location.title}}
-				</option>
-			</select>
-		</div> -->
-
 		<custom-select
 			:options="remainingLocations"
 			title="Home Location"
@@ -25,19 +12,6 @@
 	</div>
 
 	<div class="col-xs-3">
-		<!-- <span class="row uk-form-label fullWidth textColor textBody">
-			Favourite Location
-		</span>
-
-		<div class="uk-form-controls fullWidth">
-			<select class="uk-select" @change="updateMapSettings(mapsSettings)" v-model="mapsSettings.fav_id">
-				<option value=""></option>
-				<option v-for="location in remainingLocations" :value="location.id">
-					{{location.title}}
-				</option>
-			</select>
-		</div> -->
-
 		<custom-select
 			:options="remainingLocations"
 			title="Favourite Location"
@@ -49,19 +23,6 @@
 	</div>
 
 	<div class="col-xs-3 start-xs">
-		<!-- <span class="row uk-form-label fullWidth textColor textBody">
-			Transportation Method
-		</span>
-
-		<div class="uk-form-controls fullWidth">
-			<select class="uk-select" @change="updateMapSettings(mapsSettings)" v-model="mapsSettings.method">
-				<option value=""></option>
-				<option value="DRIVING">Driving</option>
-				<option value="TRANSIT">Bus</option>
-				<option value="WALKING">Walking</option>
-			</select>
-		</div> -->
-
 		<custom-select
 			title="Transportation Method"
 			:selected.sync="mapsSettings.method"

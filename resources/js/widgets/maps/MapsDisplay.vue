@@ -62,7 +62,7 @@ export default {
         },
         travelMode: {
             get() {
-                return this.getTravelText ? this.getTravelText.travelMode : ''
+                return this?.getTravelText?.travelMode || this?.mapsSettings?.method
             },
             set(val) {
                 this.setTravelText({

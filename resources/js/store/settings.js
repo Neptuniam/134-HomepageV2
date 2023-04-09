@@ -210,10 +210,22 @@ const actions = {
     },
     // Update User's map settings
     fetchMapsSettings: ({commit, getters, dispatch}) => {
+        console.log('fetching settings');
         return axios.get(`/locations/settings/${getters.getUser.id}`).then(response => {
+            console.log('response', response);
             util.trackResult('maps settings', 2, response.data)
 
-            commit('setMapsSettings', response.data[0])
+            if (!!response.data && !!response.data.length) {
+                commit('setMapsSettings', response.data[0])
+            } else {
+                commit('setMapsSettings', {
+                    id: 0,
+                    fav_id: null,
+                    home_id: null,
+                    method: null,
+                    user_id: getters.getUser.id
+                })
+            }
         })
     },
     updateMapSettings: ({commit, dispatch}, payload) => {
@@ -232,7 +244,6 @@ const actions = {
         })
     },
     updateFavourite: ({commit, dispatch}, payload) => {
-        console.log('updateFavourite', payload.id);
         // If id is 0, we are creating a new location
         if (payload.id == null) {
             return axios.post('/favourites',payload).then(response => {

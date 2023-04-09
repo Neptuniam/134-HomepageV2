@@ -5526,7 +5526,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     travelMode: {
       get: function get() {
-        return this.getTravelText ? this.getTravelText.travelMode : '';
+        var _this$getTravelText, _this$mapsSettings;
+
+        return (this === null || this === void 0 ? void 0 : (_this$getTravelText = this.getTravelText) === null || _this$getTravelText === void 0 ? void 0 : _this$getTravelText.travelMode) || (this === null || this === void 0 ? void 0 : (_this$mapsSettings = this.mapsSettings) === null || _this$mapsSettings === void 0 ? void 0 : _this$mapsSettings.method);
       },
       set: function set(val) {
         this.setTravelText({
@@ -6006,45 +6008,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -48852,9 +48815,22 @@ var actions = {
     var commit = _ref16.commit,
         getters = _ref16.getters,
         dispatch = _ref16.dispatch;
+    console.log('fetching settings');
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/locations/settings/".concat(getters.getUser.id)).then(function (response) {
+      console.log('response', response);
       util.trackResult('maps settings', 2, response.data);
-      commit('setMapsSettings', response.data[0]);
+
+      if (!!response.data && !!response.data.length) {
+        commit('setMapsSettings', response.data[0]);
+      } else {
+        commit('setMapsSettings', {
+          id: 0,
+          fav_id: null,
+          home_id: null,
+          method: null,
+          user_id: getters.getUser.id
+        });
+      }
     });
   },
   updateMapSettings: function updateMapSettings(_ref17, payload) {
@@ -48876,8 +48852,8 @@ var actions = {
   updateFavourite: function updateFavourite(_ref19, payload) {
     var commit = _ref19.commit,
         dispatch = _ref19.dispatch;
-    console.log('updateFavourite', payload.id); // If id is 0, we are creating a new location
 
+    // If id is 0, we are creating a new location
     if (payload.id == null) {
       return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/favourites', payload).then(function (response) {
         dispatch('fetchFavourites');

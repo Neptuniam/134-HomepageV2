@@ -36,7 +36,13 @@ class LocationController extends Controller {
 
     public function updateMapSettings(Request $request) {
         $mapSettings = $request->all();
-        MapsUserSettings::find($mapSettings['id'])->update($mapSettings);
+        
+        if (isset($mapSettings['id']) && $mapSettings['id'] > 0) {
+            MapsUserSettings::find($mapSettings['id'])->update($mapSettings);
+        } else {
+            MapsUserSettings::create($mapSettings);
+        }
+        
         return MapsUserSettings::find($mapSettings['id']);
     }
 
