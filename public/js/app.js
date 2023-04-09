@@ -48881,7 +48881,7 @@ var actions = {
         dispatch = _ref22.dispatch;
     var dt = new Date();
     var dateStr = "".concat(dt.getFullYear(), "-").concat(dt.getMonth() + 1, "-").concat(dt.getDate());
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://content.guardianapis.com/search?q=".concat(payload, "&from-date=").concat(dateStr, "&api-key=").concat("174b5789-d127-4eec-bafa-89afd40c53b3")).then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("https://content.guardianapis.com/search?q=".concat(payload, "&from-date=").concat(dateStr, "&api-key=").concat("f9e13740-e1f8-4093-8508-cb41d52b8848")).then(function (response) {
       util.trackResult('news', 1, response.data.response.results);
       commit('setNews', response.data.response.results);
     });
